@@ -44,42 +44,15 @@ const StackCandidate = ({route: {params}, navigation, style}) => {
     );
 }
 
-const Home = () => {
-	return(
-		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-			<Text>Esta es la de Home</Text>
-		</View>
-	)
-}
-const Notifications = () => {
-	return(
-		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-			<Text>Esta es la de Home</Text>
-		</View>
-	)
-}
-const Profile = () => {
-	return(
-		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-			<Text>Esta es la de Home</Text>
-		</View>
-	)
-}
-const Settings = () => {
-	return(
-		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-			<Text>Esta es la de Home</Text>
-		</View>
-	)
-}
-
 export default () => {
   return (
 	<NavigationContainer>
 		<Stack.Navigator
+			initialRouteName={'Main'}
 			screenOptions={{headerShown: false}}
 		>
-			<Stack.Screen name="Main" component={StackCandidate} />
+			<Stack.Screen name='AuthLogin' component={AuthLogin} />
+			<Stack.Screen name="Unlogged" component={StackCandidate} />
 		</Stack.Navigator>
 	</NavigationContainer>
   );
