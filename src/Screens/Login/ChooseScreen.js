@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Image, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, Alert, BackHandler, TouchableWithoutFeedback} from 'react-native';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../colors/colorsApp'
 import {useNavigation, useNotification, useOrientation} from '../../hooks';
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import { selectVisibleSliders, setVisibleSliders } from '../../slices/varSlice';
 import tw from 'twrnc';
+import { useFocusEffect } from '@react-navigation/native';
 
 let key = 'Language'
 let show = undefined
@@ -54,9 +55,11 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
     const {handlePath} = useNavigation()
 
-    useEffect(() => {
-        handlePath('Leave')
-    }, [contador])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Leave')
+        }, [])
+    );
     
     const getOption = async () => {
         if(!now){

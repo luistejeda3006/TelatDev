@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {StyleSheet, View, Text, StatusBar, SafeAreaView, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {HeaderLandscape, HeaderPortrait} from '../../components';
 import {useNavigation, useOrientation, useScroll} from '../../hooks';
@@ -7,6 +7,7 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../colo
 import {isIphone} from '../../access/requestedData';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import tw from 'twrnc';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer}}}) => {
     const [contador, setContador] = useState(0)
@@ -32,9 +33,11 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
     const {lg, ori, name, location, salary, description, benefits, requeriments} = initialState
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
-    useEffect(() => {
-        handlePath('Vacants')
-    },[contador])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Vacants')
+        }, [])
+    );
     
     return (
         <View style={{flex: 1, backgroundColor: '#fff'}}>

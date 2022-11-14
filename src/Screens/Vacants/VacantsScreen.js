@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {StyleSheet, View, Text, FlatList, Image, Keyboard, StatusBar, SafeAreaView, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, FailedNetwork, InputFilter, RadioButton} from '../../components';
 import DeviceInfo from 'react-native-device-info';
@@ -8,6 +8,7 @@ import {isIphone, live, login, urlJobs} from '../../access/requestedData';
 import {BallIndicator} from 'react-native-indicators';
 import { barStyle, barStyleBackground, SafeAreaBackground } from '../../colors/colorsApp';
 import tw from 'twrnc';
+import { useFocusEffect } from '@react-navigation/native';
 
 let data = null;
 
@@ -27,9 +28,11 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         'initial': orientation
     });
 
-    useEffect(() => {
-        handlePath('Choose')
-    },[])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Choose')
+        }, [])
+    );
     
     const {isTablet} = DeviceInfo;
     const [filter, setFilter] = useState('');

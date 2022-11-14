@@ -2,6 +2,12 @@ export {default as TitleForms} from './Form/Text';
 export {default as InputForm} from './Form/Input';
 export {default as Picker} from './Form/Picker';
 export {default as Calendar} from './Form/Calendar';
+export {default as Card} from './Card';
+export {default as BottomNavBar} from './BottomNavBar';
+export {default as DrawerItem} from './DrawerItem';
+export {default as Select} from './Select'
+export {default as Switch} from './Switch'
+export {default as MaskInput} from './MaskInput'
 
 export {default as Politics} from './Politics';
 export {default as InputFilter} from './InputFilter';

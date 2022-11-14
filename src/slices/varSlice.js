@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    visibleSliders: true,
+    visibleSliders: false, //cambiar a TRUE para ver los sliders
 }
 
 export const navSlice = createSlice({

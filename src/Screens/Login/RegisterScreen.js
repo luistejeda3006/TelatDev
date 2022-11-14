@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, FailedNetwork} from '../../components';
 import {ProgressSteps} from 'react-native-progress-steps';
@@ -9,6 +9,7 @@ import {useOrientation, useConnection, useNavigation} from '../../hooks';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import { barStyle, barStyleBackground, SafeAreaBackground } from '../../colors/colorsApp';
+import { useFocusEffect } from '@react-navigation/native';
 
 let routes = 'currentRoute'
 export default ({navigation, route: {params: {language, orientation, country}}}) => {
@@ -27,9 +28,11 @@ export default ({navigation, route: {params: {language, orientation, country}}})
         'initial': orientation
     });
 
-    useEffect(() => {
-        handlePath('Choose')
-    },[contador])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Choose')
+        }, [])
+    );
 
     useEffect(() => {
         askForConnection()

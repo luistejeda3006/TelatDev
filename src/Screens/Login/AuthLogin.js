@@ -23,23 +23,34 @@ export default ({navigation}) => {
     const [language, setLanguage] = useState(current);
     const [contador, setContador] = useState(0);
 
-    /* useFocusEffect(
-        useCallback(() => {
-            const unsubscribe = () => 
-        
-            return () => unsubscribe();
+    useFocusEffect(
+        useCallback(async () => {
+            let data = null;
+            data = await AsyncStorage.getItem(keyTokenInfo) || '';
+            if(data){
+                if(contador === 1) setContador(contador + 1)
+                setTimeout(() => {
+                    navigation.navigate('Logged', {language: current, orientation: orientation});
+                }, 100) //estaba en 5600
+            }
+            else {
+                setTimeout(() => {
+                    navigation.navigate('Unlogged', {language: current, orientation: orientation});
+                }, 100) //estaba en 5600
+            }
         }, [])
-      ); */
+      );
 
     useEffect(async () => {
         let dataNotification = 'dataNotification'
         await AsyncStorage.removeItem(dataNotification)
     })
 
-    useEffect(async () => {
+    /* useEffect(async () => {
         let data = null;
         data = await AsyncStorage.getItem(keyTokenInfo) || '';
         if(data){
+            if(contador === 1) setContador(contador + 1)
             setTimeout(() => {
                 navigation.navigate('Logged', {language: current, orientation: orientation});
             }, 5600) //estaba en 5600
@@ -49,7 +60,7 @@ export default ({navigation}) => {
                 navigation.navigate('Unlogged', {language: current, orientation: orientation});
             }, 5600) //estaba en 5600
         }
-    },[contador])
+    },[contador]) */
 
     return (
         <>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, TextInput, Alert, StatusBar, Keyboard, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
 import {barStyle, Blue, SafeAreaBackground} from '../../colors/colorsApp'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Modal} from '../../components';
 import {Button} from 'react-native-paper';
 import tw from 'twrnc';
+import { useFocusEffect } from '@react-navigation/native';
 
 let contador = 0;
 let sendNotification = 'sendNotification'
@@ -59,9 +60,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         getIsLogged()
     },[cuenta])
 
-    useEffect(() => {
-        handlePath('Choose')
-    },[cuenta])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Choose')
+        }, [])
+    );
 
     useEffect(() => {
         let timer1 = setTimeout(() => {
