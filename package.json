@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@native-html/table-plugin": "^5.3.1",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/datetimepicker": "^6.5.5",
     "@react-native-community/netinfo": "^9.3.6",
@@ -34,12 +35,14 @@
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-recaptcha-v2": "^1.1.0",
     "react-native-htmlview": "^0.16.0",
+    "react-native-image-picker": "^4.10.1",
     "react-native-indicators": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-mask-input": "^1.2.2",
     "react-native-modal": "^13.0.1",
     "react-native-orientation": "^3.1.3",
     "react-native-paper": "^4.12.5",
+    "react-native-pell-rich-editor": "^1.8.8",
     "react-native-permissions": "^3.6.1",
     "react-native-picker-select": "^8.0.4",
     "react-native-progress-steps": "^1.3.4",

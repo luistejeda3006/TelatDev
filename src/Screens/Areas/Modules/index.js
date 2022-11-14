@@ -1,4 +1,4 @@
 export {default as BettingScreen} from './BettingScreen';
 export {default as MyPrenomineScreen} from './MyPrenomineScreen';
-/* export {default as TicketsScreen} from '../Modules/Tickets/TicketsScreen';
-export {default as TicketsDetailScreen} from '../Modules/Tickets/TicketsDetailScreen'; */
+export {default as ChecksScreen} from './ChecksScreen';
+export {default as GazetteScreen} from './GazetteScreen';

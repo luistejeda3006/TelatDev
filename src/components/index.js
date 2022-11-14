@@ -8,6 +8,10 @@ export {default as DrawerItem} from './DrawerItem';
 export {default as Select} from './Select'
 export {default as Switch} from './Switch'
 export {default as MaskInput} from './MaskInput'
+export {default as Pagination} from './Pagination'
+export {default as MultiTextEditable} from './MultiTextEditable'
+export {default as Message} from './Message'
+export {default as Camera} from './Camera'
 
 export {default as Politics} from './Politics';
 export {default as InputFilter} from './InputFilter';

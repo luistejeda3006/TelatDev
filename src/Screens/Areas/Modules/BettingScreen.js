@@ -102,7 +102,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 setLoaded(true)
                 setTimeout(() => {
                     setLoading(false)
-                }, 1000)
+                }, 500)
                 
             }
         }

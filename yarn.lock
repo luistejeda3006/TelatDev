@@ -865,6 +865,11 @@
   resolved "https://registry.yarnpkg.com/@expo/sdk-runtime-versions/-/sdk-runtime-versions-1.0.0.tgz#d7ebd21b19f1c6b0395e50d78da4416941c57f7c"
   integrity sha512-Doz2bfiPndXYFPMRwPyGa1k5QaKDVpY806UJj570epIiMzWaYyCtobasyfC++qfIXVb5Ocy7r3tP9d62hAQ7IQ==
 
+"@formidable-webview/webshell@2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@formidable-webview/webshell/-/webshell-2.6.0.tgz#64704c0b513206e71b23118b3c9d096f0d545005"
+  integrity sha512-FwQQDajg1xs7W3CUiUNJMvdjgLjKLDGzs0XPzoVg0Dunhold1Jg7w5pihUdvVugFlNtkSpXMA+du9QDHE8lmpg==
+
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"
@@ -1172,6 +1177,21 @@
   dependencies:
     css-to-react-native "^3.0.0"
     csstype "^3.0.8"
+
+"@native-html/plugins-core@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@native-html/plugins-core/-/plugins-core-1.3.0.tgz#f1f24622097551930d9dab0214c4929d00f7446e"
+  integrity sha512-vce35gqGJKa2oPDZVa2sKjucFFVK+3g8quLayeXiJtj5LzuS8TWGrBFTS5O4ToUtE02AJkCDOLwAguCzK2HWdQ==
+
+"@native-html/table-plugin@^5.3.1":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@native-html/table-plugin/-/table-plugin-5.3.1.tgz#12d34869c2ff3e5f45de6ff6a8b5aba1471a8a03"
+  integrity sha512-zz1ww7tUgIY6fMnKYejKHacaUBV+yjuWDBWDwSp4SP0CFiLAbmLIER0UGw0kI58lAVgbWzdEJUX0dmeBG0qevA==
+  dependencies:
+    "@formidable-webview/webshell" "2.6.0"
+    "@native-html/plugins-core" "1.3.0"
+    "@types/prop-types" "^15.7.4"
+    prop-types "^15.7.2"
 
 "@native-html/transient-render-engine@11.2.3":
   version "11.2.3"
@@ -1695,7 +1715,7 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.1.tgz#dfd20e2dc35f027cdd6c1908e80a5ddc7499670e"
   integrity sha512-ri0UmynRRvZiiUJdiz38MmIblKK+oH30MztdBVR95dv/Ubw6neWSb8u1XpRb72L4qsZOhz+L+z9JD40SJmfWow==
 
-"@types/prop-types@*":
+"@types/prop-types@*", "@types/prop-types@^15.7.4":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
@@ -6419,6 +6439,11 @@ react-native-htmlview@^0.16.0:
     entities "^1.1.1"
     htmlparser2-without-node-native "^3.9.2"
 
+react-native-image-picker@^4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.10.1.tgz#eb7e02124e8e649a89e4fcabb72d0312a65fe340"
+  integrity sha512-tPA9UtboEsZ8qtm7pX9WInlo9sf0J2ArJgP4uVgKw1QNrwkRX/kZQ6uzOSN747Dhj9WS42ce4RN+rFK86J13DQ==
+
 react-native-indicators@^0.17.0:
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.17.0.tgz#92f95efaf5fb53be576dfe4e1980a25655a93f55"
@@ -6465,6 +6490,11 @@ react-native-paper@^4.12.5:
     "@callstack/react-theme-provider" "^3.0.7"
     color "^3.1.2"
     react-native-iphone-x-helper "^1.3.1"
+
+react-native-pell-rich-editor@^1.8.8:
+  version "1.8.8"
+  resolved "https://registry.yarnpkg.com/react-native-pell-rich-editor/-/react-native-pell-rich-editor-1.8.8.tgz#c6299635de49d8facfded7175d064c0ff89dbc7d"
+  integrity sha512-pPpj3rVEbmOcGbUMiutuQhpxp5HzOQlhVGhZ6B7aWlsliWWDtsi+lu3RXNV+g62PcQ07qDDtZwKOx1fSzff6HQ==
 
 react-native-permissions@^3.6.1:
   version "3.6.1"

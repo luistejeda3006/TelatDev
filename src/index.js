@@ -9,7 +9,9 @@ import {VacantsScreen, VacantDetailScreen} from './Screens/Vacants'
 import {ContactScreen} from './Screens/Areas/RRHH'
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerEmployees, OptionsMenuScreen} from './Screens/Drawer';
-import { BettingScreen, MyPrenomineScreen} from './Screens/Areas/Modules';
+import {BettingScreen, ChecksScreen, GazetteScreen, MyPrenomineScreen} from './Screens/Areas/Modules';
+import {TicketsScreen, TicketsDetailScreen} from './Screens/Areas/Modules/Tickets'
+import {VacationDetailScreen, VacationScreen} from './Screens/Areas/Modules/Vacations';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -53,8 +55,15 @@ const StackEmployee = ({route: {params}, navigation, style}) => {
 			<Stack.Screen name='Bettings' component={BettingScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 			<Stack.Screen name='Prenomine' component={MyPrenomineScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 
-			{/* <Stack.Screen name='Tickets' component={TicketsScreen} initialParams={{language: params.language, orientation: params.orientation}}/>            
-			<Stack.Screen name='TicketsDetail' component={TicketsDetailScreen} initialParams={{language: params.language, orientation: params.orientation}}/> */}
+			<Stack.Screen name='Tickets' component={TicketsScreen} initialParams={{language: params.language, orientation: params.orientation}}/>            
+			<Stack.Screen name='TicketsDetail' component={TicketsDetailScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+
+			<Stack.Screen name='Vacation' component={VacationScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+			<Stack.Screen name='VacationDetail' component={VacationDetailScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+
+			<Stack.Screen name='Checks' component={ChecksScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+			<Stack.Screen name='Gazette' component={GazetteScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+
 		</Stack.Navigator>
     );
 }

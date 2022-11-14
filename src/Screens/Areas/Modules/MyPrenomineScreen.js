@@ -9,11 +9,11 @@ import {urlNomina, live, login, isIphone} from '../../../access/requestedData';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectBonos, selectFechas, selectHasBono, selectInfo, selectMensual, selectPeriodos, selectQuincena, setBonos, setFechas, setHasBono, setInfo, setMensual, setPeriodos, setQuincena } from '../../../slices/prenominaSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectBonos, selectFechas, selectHasBono, selectInfo, selectMensual, selectPeriodos, selectQuincena, setBonos, setFechas, setHasBono, setInfo, setMensual, setPeriodos, setQuincena} from '../../../slices/prenominaSlice';
 import useKeyboardHeight from 'react-native-use-keyboard-height'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
