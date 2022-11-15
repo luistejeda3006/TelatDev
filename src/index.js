@@ -9,7 +9,7 @@ import {VacantsScreen, VacantDetailScreen} from './Screens/Vacants'
 import {ContactScreen} from './Screens/Areas/RRHH'
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerEmployees, OptionsMenuScreen} from './Screens/Drawer';
-import {BettingScreen, ChecksScreen, GazetteScreen, MyPrenomineScreen} from './Screens/Areas/Modules';
+import {BettingScreen, ChecksScreen, GazetteScreen, MyMoneyScreen, MyPrenomineScreen, PrenomineScreen} from './Screens/Areas/Modules';
 import {TicketsScreen, TicketsDetailScreen} from './Screens/Areas/Modules/Tickets'
 import {VacationDetailScreen, VacationScreen} from './Screens/Areas/Modules/Vacations';
 
@@ -53,6 +53,8 @@ const StackEmployee = ({route: {params}, navigation, style}) => {
 			<Stack.Screen name='PersonalUSA' component={InfoPersonalScreenUSA} initialParams={{language: params.language, orientation: params.orientation}}/>
 
 			<Stack.Screen name='Bettings' component={BettingScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+
+			<Stack.Screen name='GeneralPrenomine' component={PrenomineScreen} initialParams={{language: params.language, orientation: params.orientation}}/>   
 			<Stack.Screen name='Prenomine' component={MyPrenomineScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 
 			<Stack.Screen name='Tickets' component={TicketsScreen} initialParams={{language: params.language, orientation: params.orientation}}/>            
@@ -64,6 +66,7 @@ const StackEmployee = ({route: {params}, navigation, style}) => {
 			<Stack.Screen name='Checks' component={ChecksScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 			<Stack.Screen name='Gazette' component={GazetteScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 
+			<Stack.Screen name='Money' component={MyMoneyScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 		</Stack.Navigator>
     );
 }

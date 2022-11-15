@@ -68,7 +68,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const {active, initialDate_start, timestamp_start, show_start, initialDate_end, timestamp_end, show_end, initial, ending, data, visible, hide} = initialState;
     
-    useEffect(async () => {
+    const getGaceta = async () => {
         try{
             setLoading(true)
             token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
@@ -97,9 +97,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             const {response} = await request.json();
             if(response.status === 200){
                 setTimeout(() => {
+                    setInitialState({...initialState, data: response})
                     setLoading(false)
                 }, 500)
-                setInitialState({...initialState, data: response})
             }
             else if(response.status === 401){
                 Alert.alert(
@@ -134,6 +134,10 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             setLoading(false)
             console.log('algo pasó con el internet')
         }
+    }
+
+    useEffect(() => {
+        getGaceta()
     },[initial, ending])
 
     const handleChangeModule = (id) => {
@@ -150,8 +154,17 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         if(timestamp !== undefined){
             if(añoSeleccionado <= añoPermitido){
                 let date = new Date(timestamp)
-                let dia = date.toLocaleDateString().substring(3,5)
-                let mes = date.toLocaleDateString().substring(0,2)
+                let mes = date.toLocaleDateString().substring(3,5)
+                let dia = date.toLocaleDateString().substring(0,2)
+
+                let mesAndroid = null;
+                if(mes.includes('/')){
+                    mesAndroid = mes.substring(0,1)
+                } else {
+                    mesAndroid = mes
+                }
+                mesAndroid = mesAndroid < 10 ? `0${mesAndroid}` : mesAndroid
+
                 let año = date.getFullYear()
 
                 let diaIOS = parseInt(date.getDate())
@@ -161,14 +174,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
 
                 let isIOS = isIphone ? true : false
-                let forSent = !isIOS ? año + '-' + dia + '-' + mes : año + '-' + mesIOS + '-' + diaIOS
-                console.log('forsent: ', forSent)
+                let forSent = !isIOS ? año + '-' + mesAndroid + '-' + dia : año + '-' + mesIOS + '-' + diaIOS
                 switch (type) {
                     case 'start':
-                        setInitialState({...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mes + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent})
+                        setInitialState({...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent})
                         break;
                     case 'end':
-                        setInitialState({...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mes + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent})
+                        setInitialState({...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent})
                         break;
                     default:
                         break;

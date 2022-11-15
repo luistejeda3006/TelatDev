@@ -21,18 +21,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         }, [])
     );
 
-    useEffect(async ()=> {
-        let keyAccessed = 'keyAccess';
-        let datita = await AsyncStorage.getItem(keyAccessed) || '0';
-        
-        if(datita) {
-            await AsyncStorage.removeItem(keyAccessed).then( () => AsyncStorage.setItem(keyAccessed, '1'));
-        }
-        else {
-            await AsyncStorage.setItem(keyAccessed, AsyncStorage.setItem(keyAccessed, '1'));
-        }
-    },[contador])
-
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
         'name': 'portrait-primary',
@@ -100,7 +88,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={tw`self-stretch items-${leftPosition ? 'start' : 'end'} justify-center pb-2 ml-${hasBottomLine ? 2 : 0}`}>
-                <Text style={tw`text-sm`}>{title}</Text>
+                <Text style={tw`text-sm text-[#000]`}>{title}</Text>
             </View>
         )
     }

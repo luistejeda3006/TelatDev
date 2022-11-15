@@ -95,13 +95,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     
             const {response, status} = await request.json();
             if(status === 200){
-                dispatch(setData(response.quiniela))
-                dispatch(setPoints(response.puntos))
-                dispatch(setGlobal(response.posiciones))
-                dispatch(setInstructions(response.instructions))
-                setLoaded(true)
                 setTimeout(() => {
+                    dispatch(setData(response.quiniela))
+                    dispatch(setPoints(response.puntos))
+                    dispatch(setGlobal(response.posiciones))
+                    dispatch(setInstructions(response.instructions))
                     setLoading(false)
+                    setLoaded(true)
                 }, 500)
                 
             }
@@ -644,7 +644,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         return(
             <View style={tw`h-12.5 self-stretch flex-row border-b border-b-[#dadada] border-l border-l-[#dadada] border-r border-r-[#dadada] mx-1`}>
                 <View style={tw`flex-2 justify-center pl-2.5 text-xs`}>
-                    <Text>{type}</Text>
+                    <Text style={tw`text-[#000]`}>{type}</Text>
                 </View>
                 <View style={tw`flex-1 justify-center items-center`}>
                     <Text style={tw`text-[${Blue}] font-bold text-xs`}>{pointsWinner}</Text>
@@ -855,13 +855,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             <>
                                 <View style={tw`flex-row h-12.5 self-stretch bg-[#f7f7f7] justify-center items-center border border-[#dadada] mx-1`}>
                                     <View style={tw`flex-2 justify-center items-start pl-2.5`}>
-                                        <Text style={tw`text-xs text-center font-bold`}>{language === '1' ? 'Fase' : 'Stage'}</Text>
+                                        <Text style={tw`text-xs text-center font-bold text-[#000]`}>{language === '1' ? 'Fase' : 'Stage'}</Text>
                                     </View>
                                     <View style={tw`flex-1 justify-center items-center`}>
-                                        <Text style={tw`text-xs text-center font-bold`}>{language === '1' ? 'Acertar ganador' : 'Guess winner'}</Text>
+                                        <Text style={tw`text-xs text-center font-bold text-[#000]`}>{language === '1' ? 'Acertar ganador' : 'Guess winner'}</Text>
                                     </View>
                                     <View style={tw`flex-1 justify-center items-center`}>
-                                        <Text style={tw`text-xs text-center font-bold`}>{language === '1' ? 'Acertar resultado' : 'Guess result'}</Text>
+                                        <Text style={tw`text-xs text-center font-bold text-[#000]`}>{language === '1' ? 'Acertar resultado' : 'Guess result'}</Text>
                                     </View>
                                 </View>
                                 <FlatList

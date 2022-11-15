@@ -8,6 +8,7 @@ import {getCurrentDate} from '../../../js/dates';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import tw from 'twrnc';
+import { useFocusEffect } from '@react-navigation/native';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
@@ -23,13 +24,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'initial': orientation
     });
 
-    useEffect(async () => {
-        askForConnection()
-    },[])
-
-    useEffect(() => {
-        handlePath('Dashboard')
-    },[])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Dashboard')
+        }, [])
+    );
 
     const [initialState, setInitialState] = useState({
         loading: false,

@@ -40,11 +40,11 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     const {height} = useWindowDimensions()
     const keyHeight = useKeyboardHeight()
 
-    useEffect(()=>{  
+    useEffect(() => {  
         if (keyboardActive){
           const diff = (parseFloat((height - keyHeight)/2))
           setContentBottom(diff)
-        } else{
+        } else {
           setContentBottom(0)
         }
     },[keyHeight, keyboardActive])
@@ -142,7 +142,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         if(calendar || resume || editForm.visibleMenu) setLoading(false)
     }, [calendar, resume, editForm.visibleMenu])
     
-    useEffect(async () => {
+    const getPrenomina = async () => {
         if(cuenta === 0){
             setLoading(true)
             cuenta = cuenta + 1;
@@ -150,15 +150,15 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         
         data = await AsyncStorage.getItem(keyUserInfo) || '{}';
         data = JSON.parse(data);
-
+    
         token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
         token = JSON.parse(token);
-
+    
         params = {
             id_usuario: data.data.datos_personales.id_usuario,
             id_puesto: data.data.datos_laborales.id_puesto,
         }
-
+    
         const body = {
             'action': 'get_my_prenomina',
             'data': {
@@ -171,7 +171,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             'live': live,
             'login': login
         }
-
+    
         const request = await fetch(urlNomina, {
             method: 'POST',
             headers: {
@@ -180,7 +180,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             },
             body: JSON.stringify(body)
         });
-
+    
         const {response} = await request.json();
         if(response.status === 200){
             setLoading(false)
@@ -210,14 +210,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             dispatch(setHasBono(has_bono))
             dispatch(setMensual(response.prenomina_info.mensual))
             dispatch(setQuincena(quincena))
-            setIdPeriodo(id_periodo ? response.periodos[0].value : false)
+            setIdPeriodo(response.periodos[0].value)
             setCurrentPeriodo(!currentPeriodo ? response.periodos[0].label : currentPeriodo)
         }
-
+    
         else if(response.status === 400){
             setError(true)
         }
-
+    
         else if(response.status === 401){
             Alert.alert(
                 language === 1 ? 'Sesión Expirada' : 'Expired Session',
@@ -231,7 +231,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             navigation.navigate('AuthLogin')
             setLoading(false)
         }
-
+    
         else if(response.status === 406){
             Alert.alert(
                 language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
@@ -249,7 +249,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             await AsyncStorage.removeItem(keyTokenInfo)
             navigation.navigate('AuthLogin')
         }
-
+    
         else{
             Alert.alert(
                 language === 1 ? 'Sesión Inválida' : 'Invalid Session',
@@ -263,11 +263,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             await AsyncStorage.removeItem(keyUserInfo)
             navigation.navigate('AuthLogin')
         }
+    }
+
+    useEffect(() => {
+        getPrenomina()
     },[hasConnection, id_periodo, refresh])
 
     const handlePeriodos = async (id, dia, btn_editar) => {
         try{
-            askForConnection()
             setLoading(true)
             id = id
             setIdEdit(id)
@@ -284,6 +287,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 'live': live,
                 'login': login
             }
+            console.log('body: ', body)
 
             const request = await fetch(urlNomina, {
                 method: 'POST',
@@ -319,7 +323,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         catch(e){
             console.log('Algo pasó con el internet')
             setLoading(false)
-            askForConnection()
         }
     }
 
@@ -334,13 +337,13 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 shadowRadius: 6.27, borderRadius: 15}} onPress={() => handlePeriodos(id, dia, btn_editar)}>
                     <View style={{height: 20, alignSelf: 'stretch', flexDirection: 'row'}}>
                         <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end'}}>
-                            <Text style={{fontSize: 14}}>{dia}</Text>
+                            <Text style={{fontSize: 14, color: '#000'}}>{dia}</Text>
                         </View>
                         <View style={{justifyContent: 'flex-start', alignItems: 'center', marginHorizontal: 4}}>
                             <Text style={{color: '#adadad'}}>|</Text>
                         </View>
                         <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 14}}> {fecha}</Text>
+                            <Text style={{fontSize: 14, color: '#000'}}> {fecha}</Text>
                         </View>
                     </View>
                     {
@@ -415,7 +418,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         }catch(e){
             setLoading(false)
             console.log('error con la conexion')
-            askForConnection()
         }
     }
 
@@ -482,7 +484,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         }catch(e){
             console.log('hay un problema en el internet...')
             setLoading(false)
-            askForConnection()
             setInitialState({...initialState, calendar: false})
         }
     }
@@ -523,7 +524,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         }catch(e){
             console.log('hay un problema en el internet...')
             setLoading(false)
-            askForConnection()
             setInitialState({...initialState, editForm: {...editForm, visibleMenu: false}})
         }
     }
@@ -567,7 +567,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         }catch(e){
             console.log('hay un problema en el internet...')
             setLoading(false)
-            askForConnection()
             setInitialState({...initialState, editForm: {...editForm, visibleMenu: false}})
 
         }
@@ -606,7 +605,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             }
         }catch(e){
             setLoading(false)
-            askForConnection()
         }
     }
 
@@ -643,7 +641,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             }
         }catch(e){
             setLoading(false)
-            askForConnection()
             setInitialState({...initialState, editForm: {...editForm, comment: '', showComment: false}, calendar: false})
             setDeleteVisibility(false)
         }
@@ -713,31 +710,31 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <View style={{marginTop: 5}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
-                                                <Text style={{fontSize: 14}}>{info.alta && `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}`}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{info.alta && `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}`}</Text>
                                             </View>
                                         </View>
                     
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{language === '1' ? 'Horario Lunes - Jueves' : 'Schedule Monday - Thuesday'}</Text>
-                                                <Text style={{fontSize: 14}}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
                                             </View>
                     
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{language === '1' ? 'Horario Viernes' : 'Schedule Friday'}</Text>
-                                                <Text>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
                                             </View>
                                         </View>
 
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{language === '1' ? 'Horario Sábado' : 'Schedule Saturday'}</Text>
-                                                <Text style={{fontSize: 14}}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
                                             </View>
                     
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{language === '1' ? 'Horario Domingo' : 'Schedule Sunday'}</Text>
-                                                <Text>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
                                             </View>
                                         </View>
 
@@ -748,17 +745,17 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                     <View style={{flexDirection: 'row', marginTop: 7}}>
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Bono [Prod.]' : 'Bonus [Prod.]'}</Text>
-                                                            <Text style={{fontSize: 14}}>{bonos.Q1 ? `$${bonos.Q1}` : '$0.00'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{bonos.Q1 ? `$${bonos.Q1}` : '$0.00'}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={{flexDirection: 'row', marginTop: 7}}>
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Bono [Perm.]' : 'Bonus [Perm.]'}</Text>
-                                                            <Text style={{fontSize: 14}}>{bonos.bono_permanencia ? `$${bonos.bono_permanencia}` : '$0.00'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{bonos.bono_permanencia ? `$${bonos.bono_permanencia}` : '$0.00'}</Text>
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Bono [Exce.]' : 'Bonus [Exce.]'}</Text>
-                                                            <Text>{bonos.bono_asistencia ? `$${bonos.bono_asistencia}` : '$0.00'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{bonos.bono_asistencia ? `$${bonos.bono_asistencia}` : '$0.00'}</Text>
                                                         </View>
                                                     </View>
                                                 </>
@@ -770,18 +767,18 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                                             <View style={{flex: 1}}>
                                                                 <Text style={styles.title}>{language === '1' ? 'Bono' : 'Bonus'}</Text>
-                                                                <Text style={{fontSize: 14}}>{bonos.Q1 ? `$${bonos.Q1}` : '$0.00'}</Text>
+                                                                <Text style={{fontSize: 14, color: '#000'}}>{bonos.Q1 ? `$${bonos.Q1}` : '$0.00'}</Text>
                                                             </View>
                                                         </View>
                                                     :
                                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                                             <View style={{flex: 1}}>
                                                                 <Text style={styles.title}>{language === '1' ? 'Bono (P)' : 'Bonus (P)'}</Text>
-                                                                <Text style={{fontSize: 14}}>{bonos.bono_permanencia ? `$${bonos.bono_permanencia}` : '$0.00'}</Text>
+                                                                <Text style={{fontSize: 14, color: '#000'}}>{bonos.bono_permanencia ? `$${bonos.bono_permanencia}` : '$0.00'}</Text>
                                                             </View>
                                                             <View style={{flex: 1}}>
                                                                 <Text style={styles.title}>{language === '1' ? 'Bono (AP)' : 'Bonus (AP)'}</Text>
-                                                                <Text>{bonos.bono_asistencia ? `$${bonos.bono_asistencia}` : '$0.00'}</Text>
+                                                                <Text style={{fontSize: 14, color: '#000'}}>{bonos.bono_asistencia ? `$${bonos.bono_asistencia}` : '$0.00'}</Text>
                                                             </View>
                                                         </View>
                                                 :
@@ -829,7 +826,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 10,flexDirection: 'row'}}>
                                             <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => handleVisiblePeriodos()}>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <Text style={{fontSize: 17}}>{currentPeriodo}</Text>
+                                                    <Text style={{fontSize: 17, color: '#000'}}>{currentPeriodo}</Text>
                                                 </View>
                                                 <View style={{width: 'auto'}}>
                                                     <Icon name='caret-down' size={15} color={'#000'} />
@@ -917,35 +914,35 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
                                                             {/* info.alta.substring(0,10) */}
-                                                            <Text style={{fontSize: 14}}>{info.alta && `${info.alta.substring(8,10)}•${info.alta.substring(5,7)}•${info.alta.substring(0,4)}`}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.alta && `${info.alta.substring(8,10)}•${info.alta.substring(5,7)}•${info.alta.substring(0,4)}`}</Text>
                                                         </View>
                                 
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Puesto' : 'Position'}</Text>
-                                                            <Text>{info.pren_puesto}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.pren_puesto}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={{flexDirection: 'row', marginTop: 15}}>
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Horario Lunes - Jueves' : 'Schedule Monday - Thuesday'}</Text>
-                                                            <Text style={{fontSize: 14}}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
                                                         </View>
                                 
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Horario Viernes' : 'Schedule Friday'}</Text>
-                                                            <Text>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
                                                         </View>
                                                     </View>
 
                                                     <View style={{flexDirection: 'row', marginTop: 15}}>
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Horario Sábado' : 'Schedule Saturday'}</Text>
-                                                            <Text style={{fontSize: 14}}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
                                                         </View>
                                 
                                                         <View style={{flex: 1}}>
                                                             <Text style={styles.title}>{language === '1' ? 'Horario Domingo' : 'Schedule Sunday'}</Text>
-                                                            <Text>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000'}}>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
                                                         </View>
                                                     </View>
                                                     {
@@ -985,7 +982,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                 <View style={{height: 'auto', alignSelf: 'stretch', alignItems: 'flex-end', justifyContent: 'flex-end', flexDirection: 'row', marginBottom: 10}}>
                                                     <TouchableOpacity style={[styles.picker, {flexDirection: 'row', marginBottom: 0, flex: 1, justifyContent: 'center', alignItems: 'center'}]} onPress={() => handleVisiblePeriodos()}>
                                                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                            <Text>{currentPeriodo}</Text>
+                                                            <Text style={{color: '#000'}}>{currentPeriodo}</Text>
                                                         </View>
                                                         <View style={{width: 'auto'}}>
                                                             <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1062,14 +1059,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                         <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Día' : 'Day'}</Text>
                                         <View style={[styles.box, {justifyContent: 'center'}]}>
-                                            <Text>{asistencia.dia ? asistencia.dia : ''}</Text>
+                                            <Text style={{color: '#000'}}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                         </View>
                                     </View>
                                     <View style={{width: 6}}></View>
                                     <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                         <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Tipo Asistencia' : 'Assistance Type'}</Text>
                                         <View style={[styles.box, {justifyContent: 'center'}]}>
-                                            <Text>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                            <Text style={{color: '#000'}}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -1080,7 +1077,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Día' : 'Day'}</Text>
                                             <View style={[styles.box, {justifyContent: 'center'}]}>
-                                                <Text>{asistencia.dia ? asistencia.dia : ''}</Text>
+                                                <Text style={{color: '#000'}}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                             </View>
                                         </View>
                                         <View style={{width: 6}}></View>
@@ -1100,7 +1097,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                     </View>
                                                 :
                                                     <View style={[styles.box, {justifyContent: 'center'}]}>
-                                                        <Text>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                                        <Text style={{color: '#000'}}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
                                                     </View>
                                                     
                                             }
@@ -1111,7 +1108,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Día' : 'Day'}</Text>
                                             <View style={[styles.box, {justifyContent: 'center'}]}>
-                                                <Text>{asistencia.dia ? asistencia.dia : ''}</Text>
+                                                <Text style={{color: '#000'}}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                             </View>
                                         </View>
                                         <View style={{width: 6}}></View>
@@ -1153,7 +1150,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         />
                                     :
                                         <View style={[styles.box, {justifyContent: 'center'}]}>
-                                            <Text>{asistencia.horario ? asistencia.horario : 'N/A'}</Text>
+                                            <Text style={{color: '#000'}}>{asistencia.horario ? asistencia.horario : 'N/A'}</Text>
                                         </View>
                                         
                                 }
@@ -1162,7 +1159,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                 <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Horario checada' : 'Check Schedule'}</Text>
                                 <View style={[styles.box,{justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text>{asistencia.checada ? asistencia.checada : 'N/A'}</Text>
+                                    <Text style={{color: '#000'}}>{asistencia.checada ? asistencia.checada : 'N/A'}</Text>
                                 </View>
                             </View>
                         </View>
@@ -1170,14 +1167,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                 <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Horario comida' : 'Meal Schedule'}</Text>
                                 <View style={[styles.box,{justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text>{asistencia.checadacom ? asistencia.checadacom : 'N/A'}</Text>
+                                    <Text style={{color: '#000'}}>{asistencia.checadacom ? asistencia.checadacom : 'N/A'}</Text>
                                 </View>
                             </View>
                             <View style={{width:6}}></View>
                             <View style={{flex: 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
                                 <Text style={[styles.title, {marginBottom: 4}]}>{language === '1' ? 'Tiempo' : 'Time'}</Text>
                                 <View style={[styles.box,{justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text>{asistencia.tiempocom ? asistencia.tiempocom : 'N/A' }</Text>
+                                    <Text style={{color: '#000'}}>{asistencia.tiempocom ? asistencia.tiempocom : 'N/A' }</Text>
                                 </View>
                             </View>
                         </View>
@@ -1265,7 +1262,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             <View style={{backgroundColor: '#00B800', width: 14, height: 14, borderRadius: 8}}/>
                                         </View>
                                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                            <Text style={{fontSize: 15, fontWeight: 'bold'}}>{x.hora}</Text>
+                                            <Text style={{fontSize: 15, fontWeight: 'bold', color: '#000'}}>{x.hora}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -1310,60 +1307,60 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Asistencias' : 'Assistance'}</Text>
-                                            <Text>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Descansos' : 'Breaks'}</Text>
-                                            <Text>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Faltas' : 'Absence'}</Text>
-                                            <Text>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Faltas Justificadas' : 'Justified Absence'}</Text>
-                                            <Text>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Día Festivo' : 'Holiday'}</Text>
-                                            <Text>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Día Festivo Trabajado' : 'Holiday Worked'}</Text>
-                                            <Text>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Incapacidad' : 'Inability'}</Text>
-                                            <Text>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Permiso Sin Goce' : 'Permission Without Enjoyment'}</Text>
-                                            <Text>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Permiso Con Goce' : 'Permission With Joy'}</Text>
-                                            <Text>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Vacaciones' : 'Vacations'}</Text>
-                                            <Text>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
                                         </View>
                                     </View>
 
@@ -1375,18 +1372,18 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Incidencias' : 'Incidence'}</Text>
-                                            <Text>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 7, paddingHorizontal: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={styles.title}>{language === '1' ? 'Retardos' : 'Time Delay'}</Text>
-                                            <Text>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
                                         </View>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Viernes Salida a las 4pm' : 'Leave Early on Friday'}</Text>
-                                            <Text>{info_resumen.salida_viernes === 'SI' ? language === '1' ? 'SI' : 'YES' : 'NO'}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.salida_viernes === 'SI' ? language === '1' ? 'SI' : 'YES' : 'NO'}</Text>
                                         </View>
                                     </View>
                                 </>
@@ -1395,84 +1392,83 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Asistencias' : 'Assistance'}</Text>
-                                            <Text>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Descansos' : 'Breaks'}</Text>
-                                            <Text>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Faltas' : 'Absence'}</Text>
-                                            <Text>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Faltas Justificadas' : 'Justified Absence'}</Text>
-                                            <Text>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Día Festivo' : 'Holiday'}</Text>
-                                            <Text>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Día Festivo Trabajado' : 'Holiday Worked'}</Text>
-                                            <Text>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Incapacidad' : 'Inability'}</Text>
-                                            <Text>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={styles.title}>{language === '1' ? 'Permiso Sin Goce' : 'Permission Without Enjoyment'}</Text>
-                                            <Text>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Permiso Con Goce' : 'Permission With Joy'}</Text>
-                                            <Text>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', padding: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={styles.title}>{language === '1' ? 'Vacaciones' : 'Vacations'}</Text>
-                                            <Text>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Trabajo en Casa' : 'Home Office'}</Text>
-                                            <Text>{info_resumen.HO === 'N/A' ? '-' : info_resumen.HO}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.HO === 'N/A' ? '-' : info_resumen.HO}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Incidencias' : 'Incidence'}</Text>
-                                            <Text>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 7, paddingHorizontal: 7}}>
                                         <View style={{flex: 1}}>
                                             <Text style={styles.title}>{language === '1' ? 'Retardos' : 'Time Delay'}</Text>
-                                            <Text>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
                                         <View style={{flex: 1, marginLeft: 6}}>
                                             <Text style={[styles.title]}>{language === '1' ? 'Viernes Salida a las 4pm' : 'Leave Early on Friday'}</Text>
-                                            <Text>{info_resumen.salida_viernes === 'SI' ? language === '1' ? 'SI' : 'YES' : 'NO'}</Text>
+                                            <Text style={{color: '#000'}}>{info_resumen.salida_viernes === 'SI' ? language === '1' ? 'SI' : 'YES' : 'NO'}</Text>
                                         </View>
                                         <View style={{width: 4}}></View>
-                                        <View style={{flex: 1, marginLeft: 6}}>
-                                        </View>
+                                        <View style={{flex: 1, marginLeft: 6}}/>
                                     </View>
                                 </>
                         }

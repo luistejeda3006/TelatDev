@@ -548,7 +548,7 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true, down = true}) => {
         return (
             <View style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'center', justifyContent: 'center', paddingBottom: 0, marginLeft: hasBottomLine ? 7 : 0}}>
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
             </View>
         )
     }
@@ -630,10 +630,10 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         return(
             <View style={{flexDirection: 'row', borderTopWidth: 1, borderBottomWidth: .5, borderColor: '#dadada', flex: 1}}>
                 <View style={{width: '20%', height: 'auto', padding: 15, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 14}}>{id}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 14, color: '#000'}}>{id}</Text>
                 </View>
                 <View style={{flex: 1, height: 'auto', justifyContent: 'center'}}>
-                    <Text style={{fontSize: 14}}>{dia}</Text>
+                    <Text style={{fontSize: 14, color: '#000'}}>{dia}</Text>
                 </View>
             </View>
         )
@@ -721,7 +721,7 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                             <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 25}}>
                                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => handleVisiblePeriodos()}>
                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                        <Text>{currentPeriodo}</Text>
+                                        <Text style={{color: '#000'}}>{currentPeriodo}</Text>
                                     </View>
                                     <View style={{width: 'auto'}}>
                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -754,50 +754,50 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <View style={styles.legends}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DC</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_correspondientes}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_correspondientes}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <View style={styles.legends}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DD</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_disfrutados}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_disfrutados}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <View style={[styles.legends, {backgroundColor: '#BFCCE7'}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DP</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_pendientes}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_pendientes}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <View style={[styles.legends, {backgroundColor: '#E5E2D2'}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>PA</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_periodos_anterior}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                     <View style={[styles.legends, {backgroundColor: '#C3E5C4'}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>TD</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.total_dias}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.total_dias}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -807,42 +807,42 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
                                                     <View style={[styles.legends, {marginRight: 10}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DC</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_correspondientes}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_correspondientes}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={[styles.legends, {marginRight: 10}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DD</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_disfrutados}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_disfrutados}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={[styles.legends, {backgroundColor: '#BFCCE7', marginRight: 10}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>DP</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_pendientes}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_pendientes}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={[styles.legends, {backgroundColor: '#E5E2D2', marginRight: 10}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>PA</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_periodos_anterior}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={[styles.legends, {backgroundColor: '#C3E5C4', marginRight: 10}]}>
                                                         <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12}}>TD</Text>
+                                                            <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
                                                         </View>
                                                         <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold'}}>{prima_vacacional.total_dias}</Text>
+                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.total_dias}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -905,13 +905,13 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                         <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', paddingTop: 8}}>
                             <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start, show_end: false})})}>
                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text>{requestVacation.initialDate_start}</Text>
+                                    <Text style={{color: '#000'}}>{requestVacation.initialDate_start}</Text>
                                 </View>
                             </TouchableOpacity>
                             <View style={{width: 4}}></View>
                             <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end, show_start: false})})}>
                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text>{requestVacation.initialDate_end}</Text>
+                                    <Text style={{color: '#000'}}>{requestVacation.initialDate_end}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -1010,9 +1010,9 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                         <Title title={language === '1' ? 'DÍAS SOLICITADOS' : 'REQUESTED DAYS'} icon={'calendar'} tipo={1} itCloses={() => setDetailsVisibility(!detailsVisibility)} hasBottom={false} vertical={false}/>
                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8, paddingBottom: 8, alignSelf: 'stretch'}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold',}}>{language === '1' ? 'Días de Vacaciones Solicitados' : 'Vacation Days Requested'}</Text>
+                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>{language === '1' ? 'Días de Vacaciones Solicitados' : 'Vacation Days Requested'}</Text>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                    <Text>{language === '1' ? 'Fecha: ' : 'Date: '} </Text>
+                                    <Text style={{color: '#000'}}>{language === '1' ? 'Fecha: ' : 'Date: '} </Text>
                                     <View style={{backgroundColor: '#C3E5C4', borderRadius: 3, padding: 3, paddingHorizontal: 6}}>
                                         <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold'}}>{details.fechas}</Text>
                                     </View>
@@ -1021,10 +1021,10 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                         </View>
                         <View style={{flexDirection: 'row', backgroundColor: '#F7F7F7'}} onPress={() => setInitialState({...initialState, areLegendsHiden: !areLegendsHiden})}>
                             <View style={{width: '20%', height: 'auto', padding: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontWeight: 'bold', fontSize: 16}}>No.</Text>
+                                <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000'}}>No.</Text>
                             </View>
                             <View style={{flex: 1, height: 'auto', justifyContent: 'center'}}>
-                                <Text style={{fontWeight: 'bold', fontSize: 16}}>{language === '1' ? 'Días Solicitados' : 'Requested Days'}</Text>
+                                <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000'}}>{language === '1' ? 'Días Solicitados' : 'Requested Days'}</Text>
                             </View>
                         </View>
                         <FlatList

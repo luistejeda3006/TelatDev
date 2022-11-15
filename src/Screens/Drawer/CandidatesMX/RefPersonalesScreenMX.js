@@ -7,7 +7,7 @@ import {useOrientation, useNavigation, useScroll} from '../../../hooks'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
     const {handlePath} = useNavigation()
@@ -15,27 +15,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const [info, setInfo] = useState({})
     const [contador, setContador] = useState(0)
 
-    navigation.addListener('focus', () => {
-        setContador(contador + 1);
-    });
-
     useFocusEffect(
         useCallback(() => {
             handlePath('Dashboard')
         }, [])
     );
-
-    useEffect(async ()=> {
-        let keyAccessed = 'keyAccess';
-        let datita = await AsyncStorage.getItem(keyAccessed) || '0';
-        
-        if(datita) {
-            await AsyncStorage.removeItem(keyAccessed).then( () => AsyncStorage.setItem(keyAccessed, '1'));
-        }
-        else {
-            await AsyncStorage.setItem(keyAccessed, AsyncStorage.setItem(keyAccessed, '1'));
-        }
-    },[contador])
 
     useEffect(async () => {
         let data = null;
@@ -62,7 +46,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={tw`self-stretch items-${leftPosition ? 'start' : 'end'} justify-center pb-2 ml-${hasBottomLine ? 2 : 0}`}>
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={tw`text-sm text-[#000]`}>{title}</Text>
             </View>
         )
     }

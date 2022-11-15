@@ -149,7 +149,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getTickets = async () => {
-        askForConnection()
         try{
             if(cuenta === 0){
                 setLoading(true)
@@ -187,9 +186,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         
             const {response} = await request.json();
             if(response.status === 200){
-                dispatch(setTickets(response.data))
-                dispatch(setPermissions(response.permisos))
                 setTimeout(() => {
+                    dispatch(setTickets(response.data))
+                    dispatch(setPermissions(response.permisos))
                     setLoading(false)
                 }, 500)
             }
@@ -200,7 +199,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getArchivados = async (initial = false, ending = false, tipo = undefined) => {
-        askForConnection()
         let data = null;
         token = null;
         data = await AsyncStorage.getItem(keyUserInfo) || '[]';
@@ -250,7 +248,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getExpedientes = async () => {
-        askForConnection()
         let data = null;
         token = null;
         data = await AsyncStorage.getItem(keyUserInfo) || '[]';
@@ -328,10 +325,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             console.log('e:', e)
         }
     }
-
-    useEffect(() => {
-        askForConnection()
-    },[])
 
     useEffect(() => {
         requestPermissions()
@@ -413,7 +406,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const handleActionUno = async (value, label) => {
-        askForConnection()
         try{
             if(value !== 'SEL'){
                 const body = {
@@ -453,7 +445,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const handleActionDos = async (value, label) => {
-        askForConnection()
         try{
             if(value !== 'SEL'){
                 const body = {
@@ -506,7 +497,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const handleValues = async () => {
-        askForConnection()
         if(idTipo !== 'SEL' && idConcepto !== 'SEL' && idUbicacion !== 'SEL' && mensaje !== ''){
             try{
                 setLoading(true)
@@ -564,17 +554,25 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         }
     }
 
-    const handleDate = useCallback(({ nativeEvent: { timestamp } }, type) => {
+    const handleDate = ({nativeEvent: {timestamp}}, type) => {
         let valida = new Date(timestamp)
         let añoSeleccionado = parseInt(valida.getFullYear());
-        let añoPermitido = (parseInt(getCurrentDate().substring(0, 4)) + 1);
+        let añoPermitido = (parseInt(getCurrentDate().substring(0,4)) + 1);
 
-        if (timestamp !== undefined) {
-            if (añoSeleccionado <= añoPermitido) {
-                /* askForConnection() */
+        if(timestamp !== undefined){
+            if(añoSeleccionado <= añoPermitido){
                 let date = new Date(timestamp)
-                let dia = date.toLocaleDateString().substring(3, 5)
-                let mes = date.toLocaleDateString().substring(0, 2)
+                let mes = date.toLocaleDateString().substring(3,5)
+                let dia = date.toLocaleDateString().substring(0,2)
+
+                let mesAndroid = null;
+                if(mes.includes('/')){
+                    mesAndroid = mes.substring(0,1)
+                } else {
+                    mesAndroid = mes
+                }
+                mesAndroid = mesAndroid < 10 ? `0${mesAndroid}` : mesAndroid
+
                 let año = date.getFullYear()
 
                 let diaIOS = parseInt(date.getDate())
@@ -583,55 +581,54 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
                 mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
 
-                let isIOS = Platform.OS === 'ios' ? true : false
-                let forSent = !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS
-
+                let isIOS = isIphone ? true : false
+                let forSent = !isIOS ? año + '-' + mesAndroid + '-' + dia : año + '-' + mesIOS + '-' + diaIOS
                 switch (type) {
-                case 'start':
-                    setInitialState({ ...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mes + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent })
-                    getArchivados(forSent, ending, 1)
-                    break;
-                case 'end':
-                    setInitialState({ ...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mes + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent })
-                    getArchivados(initial, forSent, 1)
-                    break;
-                default:
-                    break;
+                    case 'start':
+                        setInitialState({...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent})
+                        getArchivados(forSent, ending, 1)
+                        break;
+                    case 'end':
+                        setInitialState({...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent})
+                        getArchivados(initial, forSent, 1)
+                        break;
+                    default:
+                        break;
                 }
             }
             else {
                 Alert.alert(
-                    'Fecha Inválida',
-                    'No puede seleccionar fechas anteriores a la actúal',
+                    language === '1' ? 'Fecha Inválida' : 'Invalid Date',
+                    language === '1' ? 'No puede seleccionar fechas anteriores a la actúal' : 'You cannot select dates prior to the current date.',
                     [
-                        { text: 'OK' }
+                        { text: 'OK'}
                     ]
                 )
                 switch (type) {
                     case 'start':
-                        setInitialState({ ...initialState, show_start: !show_start});
+                        setInitialState({...initialState, show_start: !show_start});
                         break;
                     case 'end':
-                        setInitialState({ ...initialState, show_end: !show_end});
+                        setInitialState({...initialState, show_end: !show_end});
                         break;
                     default:
-                    break;
+                        break;
                 }
             }
         }
-        else {
+        else{
             switch (type) {
                 case 'start':
-                    setInitialState({ ...initialState, show_start: !show_start });
+                    setInitialState({...initialState, show_start: !show_start});
                     break;
                 case 'end':
-                    setInitialState({ ...initialState, show_end: !show_end });
+                    setInitialState({...initialState, show_end: !show_end});
                     break;
                 default:
                     break;
             }
         }
-    })
+    }
 
     const reloading = () => {
         setLoading(true)

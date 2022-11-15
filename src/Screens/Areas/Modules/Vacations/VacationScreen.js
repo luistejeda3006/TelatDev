@@ -95,9 +95,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         
             const {response} = await request.json();
             if(response.status === 200){
-                dispatch(setEmpleados(response.empleados))
-                dispatch(setTemporalEmpleado(response.empleados))
                 setTimeout(() => {
+                    dispatch(setEmpleados(response.empleados))
+                    dispatch(setTemporalEmpleado(response.empleados))
                     setLoading(false)
                 }, 500)
             }

@@ -22,7 +22,7 @@ export default ({title = 'Información Personal', icon, Imagen = undefined, size
                     }
                 </View>
                 <View style={{height: 50, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start', marginTop: 5, marginLeft: 10, flex: 1}}>
-                    <Text style={{fontSize: 16}}>{title}</Text>
+                    <Text style={{fontSize: 16, color: '#000'}}>{title}</Text>
                 </View>
             </View>
         </TouchableOpacity>
