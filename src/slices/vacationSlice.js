@@ -16,8 +16,6 @@ export const navSlice = createSlice({
         hideEmpleadoTemporal: (state, action) => {state.temporalEmpleados = state.temporalEmpleados.map(x => x.id_empleado === action.payload ? ({...x, oculta: !x.oculta}) : ({...x, oculta: true}))},
         actionVacation: (state, action) => {state.empleados = state.empleados.map(x => x.id === action.payload.id ? ({...x, ...action.payload.empleado}) : x)},
         actionTemporalVacation: (state, action) => {state.temporalEmpleados = state.temporalEmpleados.map(x => x.id === action.payload.id ? ({...x, ...action.payload.empleado}) : x)},
-        /* actionSolicitud: (state, action) => {state.empleados = state.empleados.map(x => x.id_empleado === action.payload.id ? ({...x, solicitud_pendiente: action.payload.tipo === '1' ? true : false}) : x)},
-        actionSolicitudTemporal: (state, action) => {state.temporalEmpleados = state.temporalEmpleados.map(x => x.id_empleado === action.payload.id ? ({...x, solicitud_pendiente: action.payload.tipo === '1' ? true : false}) : x)} */
     }
 })
 

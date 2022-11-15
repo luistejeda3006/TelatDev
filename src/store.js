@@ -1,6 +1,6 @@
 import { applyMiddleware, configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
-import {moneySlice, navigationSlice, nominaSlice, orientationSlice, prenominaSlice, ticketSlice, vacationSlice, varSlice, worldCupSlice} from './slices'
+import {moneySlice, navigationSlice, nominaSlice, orientationSlice, prenominaSlice, statisticsSlice, ticketSlice, vacationSlice, varSlice, worldCupSlice} from './slices'
 
 applyMiddleware
 export const store = configureStore({
@@ -11,6 +11,7 @@ export const store = configureStore({
         navMoney: moneySlice,
         navNominas: nominaSlice,
         navTicket: ticketSlice,
+        navStatistics: statisticsSlice,
         navVacation: vacationSlice,
         navWorldCup: worldCupSlice,
         navVariables: varSlice,

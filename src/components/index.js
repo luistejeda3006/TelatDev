@@ -12,6 +12,7 @@ export {default as Pagination} from './Pagination'
 export {default as MultiTextEditable} from './MultiTextEditable'
 export {default as Message} from './Message'
 export {default as Camera} from './Camera'
+export {default as MultiSelect} from './MultiSelect';
 
 export {default as Politics} from './Politics';
 export {default as InputFilter} from './InputFilter';
