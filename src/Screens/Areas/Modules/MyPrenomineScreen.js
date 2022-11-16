@@ -14,6 +14,7 @@ import {selectBonos, selectFechas, selectHasBono, selectInfo, selectMensual, sel
 import useKeyboardHeight from 'react-native-use-keyboard-height'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useFocusEffect} from '@react-navigation/native';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
@@ -34,6 +35,10 @@ let quincena = null;
 
 
 export default ({navigation, route: {params: {language, orientation, id_puesto, id_usuario, btn_editar = false, origin = 1}}}) => {
+
+    token = useSelector(selectTokenInfo)
+    data = useSelector(selectUserInfo)
+
     const [contentBottom, setContentBottom] = useState(0);
     const [keyboardActive, setKeyboardActive] = useState(false)
 
@@ -147,12 +152,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             setLoading(true)
             cuenta = cuenta + 1;
         }
-        
-        data = await AsyncStorage.getItem(keyUserInfo) || '{}';
-        data = JSON.parse(data);
-    
-        token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-        token = JSON.parse(token);
     
         params = {
             id_usuario: data.data.datos_personales.id_usuario,
@@ -203,6 +202,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                     }
                 }
             }
+            /* setIdPeriodo(response.periodos[0].value) */
+            setCurrentPeriodo(!currentPeriodo ? response.periodos[0].label : currentPeriodo)
             dispatch(setFechas(response.fechas))
             dispatch(setPeriodos(response.periodos))
             dispatch(setInfo(response.prenomina_info))
@@ -210,8 +211,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             dispatch(setHasBono(has_bono))
             dispatch(setMensual(response.prenomina_info.mensual))
             dispatch(setQuincena(quincena))
-            setIdPeriodo(response.periodos[0].value)
-            setCurrentPeriodo(!currentPeriodo ? response.periodos[0].label : currentPeriodo)
         }
     
         else if(response.status === 400){
@@ -219,6 +218,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         }
     
         else if(response.status === 401){
+            console.log('body: ', body)
             Alert.alert(
                 language === 1 ? 'Sesión Expirada' : 'Expired Session',
                 language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -426,9 +426,9 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     }
 
     const handleActionUno = (value, label) => {
-        cuenta = 0;
         setIdPeriodo(value)
         setCurrentPeriodo(label)
+        cuenta = 0;
     }
     
     const handleActionDos = (value, index) => {

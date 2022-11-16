@@ -1,26 +1,30 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, TextInput, Image, Alert, SafeAreaView, StatusBar, Platform, RefreshControl, TouchableWithoutFeedback} from 'react-native'
-import { HeaderLandscape, HeaderPortrait, Modal, Select, MultiText, ModalLoading, FailedNetwork, Title, BottomNavBar} from '../../../../components'
-import { useConnection, useNavigation, useOrientation, useScroll } from '../../../../hooks'
+import {HeaderLandscape, HeaderPortrait, Modal, Select, MultiText, ModalLoading, FailedNetwork, Title, BottomNavBar} from '../../../../components'
+import {useConnection, useNavigation, useOrientation, useScroll} from '../../../../hooks'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { barStyle, barStyleBackground, Blue, SafeAreaBackground } from '../../../../colors/colorsApp';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp';
 import DeviceInfo from 'react-native-device-info';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getCurrentDate } from '../../../../js/dates';
-import { urlVacaciones, live, login, isIphone } from '../../../../access/requestedData';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
-import { actionTemporalVacation, actionVacation, actionSolicitud, actionSolicitudTemporal } from '../../../../slices/vacationSlice';
-import { useFocusEffect } from '@react-navigation/native';
+import {getCurrentDate} from '../../../../js/dates';
+import {urlVacaciones, live, login, isIphone} from '../../../../access/requestedData';
+import {useDispatch, useSelector} from 'react-redux';
+import {actionTemporalVacation, actionVacation} from '../../../../slices/vacationSlice';
+import {useFocusEffect} from '@react-navigation/native';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 
 let token = null;
-let keyTokenInfo = 'tokenInfo';
-let change = 'change';
+let user = null;
 
-export default ({navigation, route: {params: {language, orientation, id_usuario, id_empleado, solicitud_pendiente}}}) => {
+let language = ''
+
+export default ({navigation, route: {params: {orientation, id_usuario, id_empleado, solicitud_pendiente}}}) => {
     const dispatch = useDispatch()
-    
+    language = useSelector(selectLanguageApp)
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     const listRef = useRef(null)
     const [index, setIndex] = useState(0)
     const [contador, setContador] = useState(0)
@@ -102,8 +106,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         askForConnection()
         try{
             setLoading(true)
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'get_detalle_vacaciones',
                 'data': {
@@ -115,6 +117,8 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
                 'live': live,
                 'login': login
             }
+
+            console.log('body: ', body)
 
             const request = await fetch(urlVacaciones, {
                 method: 'POST',
@@ -166,8 +170,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         if(requestVacation.initialDate_end !== '--/--/----'){
             try{
                 setLoading(true)
-                token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-                token = JSON.parse(token);
                 const inicio = (requestVacation.initialDate_start).substring(6,10) + '-' + (requestVacation.initialDate_start).substring(3,5) + '-' + (requestVacation.initialDate_start).substring(0,2)
                 const fin = requestVacation.fin;
 
@@ -250,8 +252,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         askForConnection()
         try{
             setLoading(true)
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'delete_solicitud_vac',
                 'data': {
@@ -305,8 +305,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
             askForConnection()
             try{
                 setLoading(true)
-                token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-                token = JSON.parse(token);
                 const inicio = (requestVacation.initialDate_start).substring(6,10) + '-' + (requestVacation.initialDate_start).substring(3,5) + '-' + (requestVacation.initialDate_start).substring(0,2)
                 const fin = (requestVacation.initialDate_end).substring(6,10) + '-' + (requestVacation.initialDate_end).substring(3,5) + '-' + (requestVacation.initialDate_end).substring(0,2)
                 
@@ -438,9 +436,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         askForConnection()
         setLoading(true)
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
-    
             const body = {
                 'action': 'get_detalle_solicitud',
                 'data': {
@@ -488,9 +483,6 @@ export default ({navigation, route: {params: {language, orientation, id_usuario,
         askForConnection()
         try{
             setLoading(true)
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
-    
             const body = {
                 'action': 'aprobar_solicitud_vac',
                 'data': {

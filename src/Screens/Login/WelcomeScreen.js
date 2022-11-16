@@ -8,14 +8,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
 import { useFocusEffect } from '@react-navigation/native';
-import { setLanguageApp } from '../../slices/varSlice';
+import { setLanguageApp, setTokenInfo, setUserInfo } from '../../slices/varSlice';
 
 let orientation = 'PORTRAIT';
+let keyLanguage = 'Language';
+let keyUserInfo = 'userInfo';
+let keyTokenInfo = 'tokenInfo';
 
 export default ({navigation, route: {params}}) => {
     const dispatch = useDispatch()
-    const keyLanguage = 'Language';
-    
     const [language, setLanguage] = useState()
     orientation = useSelector(selectOrientation)
     const [contador, setContador] = useState(0);
@@ -31,6 +32,12 @@ export default ({navigation, route: {params}}) => {
     const getLanguage = async () => {
         let data = null;
         data = await AsyncStorage.getItem(keyLanguage) || '1';
+        let token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
+        token = JSON.parse(token);
+        let user = await AsyncStorage.getItem(keyUserInfo) || '{}';
+        user = JSON.parse(user);
+        dispatch(setTokenInfo(token))
+        dispatch(setUserInfo(user))
         dispatch(setLanguageApp(data))
         setLanguage(data)
     }
@@ -71,7 +78,7 @@ export default ({navigation, route: {params}}) => {
         useCallback(() => {
             setTimeout(() => {
                 navigation.navigate('Dashboard', {language: language, orientation: orientationInfo.initial});
-            }, (contador === 1 || contador === 0) ? 100 : 1) //AQUI ERAN 4000 en el primero
+            }, (contador === 1 || contador === 0) ? 4000 : 1) //AQUI ERAN 4000 en el primero
         }, [])
     );
    

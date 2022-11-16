@@ -1,29 +1,30 @@
 import React, {useState, useEffect, useCallback} from 'react'
-import { StyleSheet, View, ScrollView, Image, Text, Keyboard, StatusBar, SafeAreaView, Platform, RefreshControl} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { HeaderPortrait, HeaderLandscape, ModalLoading, FailedNetwork, Title, BottomNavBar, Pagination } from '../../../../components'
+import {StyleSheet, View, ScrollView, Image, Text, Keyboard, StatusBar, SafeAreaView, Platform, RefreshControl} from 'react-native'
+import {TouchableOpacity } from 'react-native-gesture-handler'
+import {HeaderPortrait, HeaderLandscape, ModalLoading, FailedNetwork, Title, BottomNavBar, Pagination} from '../../../../components'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useConnection, useNavigation, useOrientation, useScroll } from '../../../../hooks';
-import { isIphone, live, login, urlVacaciones } from '../../../../access/requestedData';
-import { hideEmpleado, hideEmpleadoTemporal, selectEmpleados, selectTemporalEmpleados, setEmpleados, setTemporalEmpleado } from '../../../../slices/vacationSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import {useConnection, useNavigation, useOrientation, useScroll} from '../../../../hooks';
+import {isIphone, live, login, urlVacaciones} from '../../../../access/requestedData';
+import {hideEmpleado, hideEmpleadoTemporal, selectEmpleados, selectTemporalEmpleados, setEmpleados, setTemporalEmpleado} from '../../../../slices/vacationSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 
-let keyUserInfo = 'userInfo';
 let id_usuario = '';
 let id_puesto = '';
-let data = null;
 let token = null;
-let keyTokenInfo = 'tokenInfo';
+let user = null;
 let cuenta = 0;
 let filtro = ''
 let empleados = null;
 let temporalEmpleados = null;
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     empleados = useSelector(selectEmpleados)
     temporalEmpleados = useSelector(selectTemporalEmpleados)
     const dispatch = useDispatch()
@@ -63,15 +64,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             cuenta = cuenta + 1;
         }
         try{
-            data = null;
-            token = null;
-            data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-            data = JSON.parse(data);
-            id_usuario = data.data.datos_personales.id_usuario
-            id_puesto = data.data.datos_laborales.id_puesto
-    
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
+            id_usuario = user.data.datos_personales.id_usuario
+            id_puesto = user.data.datos_laborales.id_puesto
     
             const body = {
                 'action': 'get_vacaciones',

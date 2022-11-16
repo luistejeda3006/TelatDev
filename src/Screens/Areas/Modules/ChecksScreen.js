@@ -8,15 +8,22 @@ import {getCurrentDate} from '../../../js/dates';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 let token = null;
+let user = null;
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     const {handlePath} = useNavigation();
     const {hasConnection, askForConnection} = useConnection();
+
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
         'name': 'portrait-primary',
@@ -45,23 +52,16 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const getInformation = async () => {
         try{
-            let data = null;
-            data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-            data = JSON.parse(data);
-            
             setInitialState({...initialState, loading: true})
             const body = {
                 'action': 'get_calendario',
                 'data': {
-                    'id_usuario': data.data.datos_personales.id_usuario,
+                    'id_usuario': user.data.datos_personales.id_usuario,
                     'fecha_inicio': completa
                 },
                 'live': live,
                 'login': login
             }
-            
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
     
             const request = await fetch(urlNomina, {
                 method: 'POST',

@@ -9,17 +9,19 @@ import {isIphone, live, login, urlNomina} from '../../../access/requestedData';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleHideNomina, selectNominas, setNominas} from '../../../slices/nominaSlice';
 import * as Animatable from 'react-native-animatable';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
-let keyTokenInfo = 'tokenInfo';
-let keyUserInfo = 'userInfo';
 let cuenta = 0;
 let token = null;
-let data = null;
+let user = null;
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
     const dispatch = useDispatch()
-    
+
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     data = useSelector(selectNominas)
 
     const [longitud, setLongitud] = useState(0)
@@ -52,12 +54,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const getInformation = async () => {
         try{
-            let user = await AsyncStorage.getItem(keyUserInfo) || '{}';
-            user = JSON.parse(user);
-    
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
-    
             params = {
                 id_usuario: user.data.datos_personales.id_usuario,
                 id_puesto: user.data.datos_laborales.id_puesto,
@@ -114,7 +110,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 animation={longitud > 1 ? 'fadeIn' : undefined} duration={1000}
                 style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'center', justifyContent: 'center', paddingBottom: down ? 7 : 0, marginLeft: hasBottomLine ? 7 : 0}}
             >
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
             </Animatable.View>
         )
     }

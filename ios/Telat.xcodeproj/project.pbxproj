@@ -18,6 +18,7 @@
 		8EC5711B291EB72400DFA4EC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */; };
 		8EC57123291EC43A00DFA4EC /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EC5711F291EBF8300DFA4EC /* FontAwesome.ttf */; };
 		8EC57124291EC43A00DFA4EC /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57120291EBF8300DFA4EC /* MaterialCommunityIcons.ttf */; };
+		8EE352182925701D00F0CFB6 /* QBImagePicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EE352172925701C00F0CFB6 /* QBImagePicker.storyboard */; };
 		C76B45A0278C4F57ADAC0511 /* basillion.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6222A335004A1C94921731 /* basillion.ttf */; };
 		E0A492BB966B188626CB61E5 /* Pods_Telat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E012DE12798C07CFF8C70D3A /* Pods_Telat.framework */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8EC5711F291EBF8300DFA4EC /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		8EC57120291EBF8300DFA4EC /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		8EE352172925701C00F0CFB6 /* QBImagePicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = QBImagePicker.storyboard; path = "../node_modules/react-native-image-crop-picker/ios/QBImagePicker/QBImagePicker/QBImagePicker.storyboard"; sourceTree = "<group>"; };
 		B8F8579B3F824028B50BDF80 /* chivy.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = chivy.ttf; path = ../assets/fonts/chivy.ttf; sourceTree = "<group>"; };
 		CC6222A335004A1C94921731 /* basillion.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = basillion.ttf; path = ../assets/fonts/basillion.ttf; sourceTree = "<group>"; };
 		E012DE12798C07CFF8C70D3A /* Pods_Telat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +130,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8EE352172925701C00F0CFB6 /* QBImagePicker.storyboard */,
 				8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* Telat */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -276,6 +279,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EE352182925701D00F0CFB6 /* QBImagePicker.storyboard in Resources */,
 				8EC57123291EC43A00DFA4EC /* FontAwesome.ttf in Resources */,
 				8EC57124291EC43A00DFA4EC /* MaterialCommunityIcons.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,

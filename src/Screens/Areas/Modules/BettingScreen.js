@@ -7,11 +7,11 @@ import {useConnection, useNavigation, useOrientation} from '../../../hooks'
 import * as Animatable from 'react-native-animatable';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { useDispatch, useSelector } from 'react-redux'
-import { actionItem, selectData, selectPoints, selectFilteredData, selectQuinielas, setData, setFilteredData, setDataSelected, setQuinielas, setFilteredSelected, setPoints, selectGlobal, setGlobal, selectInstructions, setInstructions} from '../../../slices/worldCupSlice'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import {useDispatch, useSelector} from 'react-redux'
+import {actionItem, selectData, selectPoints, selectFilteredData, selectQuinielas, setData, setFilteredData, setDataSelected, setQuinielas, setFilteredSelected, setPoints, selectGlobal, setGlobal, selectInstructions, setInstructions} from '../../../slices/worldCupSlice'
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice'
 
 let data = [];
 let points = [];
@@ -23,14 +23,16 @@ let game = undefined;
 
 let filteredData = [];
 let quinielas = [];
-let keyTokenInfo = 'tokenInfo';
-let keyUserInfo = 'userInfo';
 
 let id_usuario = null;
 let token = ''
+let user = ''
 let cuenta = 0;
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     const refGroup = useRef()
     const refQuiniela = useRef()
     const dispatch = useDispatch()
@@ -62,12 +64,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     });
 
     const getInformation = async () => {
-        let data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
-
-        token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-        token = JSON.parse(token);
+        id_usuario = user.data.datos_personales.id_usuario
         
         try{
             if(cuenta === 0){

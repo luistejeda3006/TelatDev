@@ -11,7 +11,7 @@ import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '..
 import {useDispatch, useSelector} from 'react-redux';
 import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlice';
 import {selectOrientation} from '../../slices/orientationSlice';
-import {setVisibleSliders} from '../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo, setTokenInfo, setUserInfo, setVisibleSliders} from '../../slices/varSlice';
 import UpdateAvailable from '../../components/UpdateAvailable';
 import tw from 'twrnc';
 
@@ -19,6 +19,8 @@ let currentLanguage = null;
 let gender = null;
 let picture = null;
 let token = null;
+let user = null;
+
 let data = null;
 let keyUserInfo = 'userInfo';
 let lastNotify = 'lastNotify';
@@ -42,16 +44,20 @@ let screen = '';
 let access = '';
 let orientation = '';
 let info_version = null;
+let language = null;
 
 export default ({navigation}) => {
     orientation = useSelector(selectOrientation)
+    language = useSelector(selectLanguageApp)
+    user = useSelector(selectUserInfo)
+    token = useSelector(selectTokenInfo)
+    
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
     const dispatch = useDispatch()
 
     const {isTablet} = DeviceInfo;
     const keyLanguage = 'Language';
-    const [language, setLanguage] = useState('')
     const [enabled, setEnabled] = useState(false)
     const [contador, setContador] = useState(0)
     const [modules, setModules] = useState([])
@@ -94,32 +100,17 @@ export default ({navigation}) => {
         setLoading(true)
     }
     
-    const getLanguage = async () => {
-        let data = null;
-        data = await AsyncStorage.getItem(keyLanguage) || '1';
-        setLanguage(data)
-        currentLanguage = data;
-    }
-
-    useEffect(() => {
-        getLanguage()
-    },[contador])
-    
     useEffect(async () => {
-        let data = null;
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        
-        if(data.tipo === 'MX'){
-            gender = data.data.datos_personales.genero
-            picture = data.data.datos_personales.foto_url
+        if(user.tipo === 'MX'){
+            gender = user.data.datos_personales.genero
+            picture = user.data.datos_personales.foto_url
         }
         else {
             gender = null
         }
         
         return undefined
-    },[contador])
+    },[])
 
     useEffect(() => {
         const backAction = async () => {
@@ -228,19 +219,14 @@ export default ({navigation}) => {
     const getInformation = async () => {
         setRefreshing(true)
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
-            data = await AsyncStorage.getItem(keyUserInfo) || '{}';
-            data = JSON.parse(data);
-            
-            id_usuario = data.data.datos_personales.id_usuario
+            id_usuario = user.data.datos_personales.id_usuario
             const body = {
                 'login': login,
                 'action': 'get_modulos',
                 'live': live,
                 'data': {
                     'id_usuario': id_usuario,
-                    'language':currentLanguage,
+                    'language':language,
                     'token': valueNotificationToken
                 }
             }
@@ -292,11 +278,9 @@ export default ({navigation}) => {
                     setNotificacion(false)
                 }
 
-                actual = await AsyncStorage.getItem(keyUserInfo);
-                actual = JSON.parse(actual)
                 let obj = {
-                    token: actual.token,
-                    tipo: actual.tipo,
+                    token: user.token,
+                    tipo: user.tipo,
                     data: response.data
                 }
                 
@@ -328,7 +312,7 @@ export default ({navigation}) => {
 
     useEffect(() => {
         getInformation()
-    },[hasConnection, contador, arrived])
+    },[hasConnection, arrived])
 
     useEffect(async () =>  {
         try{

@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {View, Text, StyleSheet, Platform, ScrollView, FlatList, TouchableOpacity, Image, Linking, StatusBar, SafeAreaView, Alert, RefreshControl, Dimensions} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { Camera, FailedNetwork, HeaderLandscape, HeaderPortrait, Message, ModalLoading, Modal, MultiText, MultiTextEditable, Select, Title, BottomNavBar } from '../../../../components'
-import { useConnection, useOrientation, useNavigation, useScroll } from '../../../../hooks'
+import {Camera, FailedNetwork, HeaderLandscape, HeaderPortrait, Message, ModalLoading, Modal, MultiText, MultiTextEditable, Select, Title, BottomNavBar} from '../../../../components'
+import {useConnection, useOrientation, useNavigation, useScroll} from '../../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground, Yellow } from '../../../../colors/colorsApp'
+import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground, Yellow} from '../../../../colors/colorsApp'
 import HTMLView from 'react-native-htmlview'
 import DeviceInfo from 'react-native-device-info';
-import { isIphone, live, login, urlTickets } from '../../../../access/requestedData'
+import {isIphone, live, login, urlTickets} from '../../../../access/requestedData'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Animatable from 'react-native-animatable';
 import Picker from 'react-native-picker-select';
 import HTML from 'react-native-render-html';
-import TableRenderer, { tableModel } from '@native-html/table-plugin';
+import TableRenderer, {tableModel} from '@native-html/table-plugin';
 import WebView from 'react-native-webview';
-import { useDispatch } from 'react-redux';
-import { actionTicket } from '../../../../slices/ticketSlice';
-import { useFocusEffect } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {actionTicket} from '../../../../slices/ticketSlice';
+import {useFocusEffect} from '@react-navigation/native';
+import {selectTokenInfo} from '../../../../slices/varSlice';
 
 let token = null;
-let keyTokenInfo = 'tokenInfo';
 
 const htmlProps = {
     WebView,
@@ -39,6 +39,7 @@ const htmlProps = {
 
 export default ({navigation, route: {params: {id, id_usuario, id_puesto, active, is_table, html, cuenta, orientation}}}) => {
     const dispatch = useDispatch()
+    token = useSelector(selectTokenInfo)
 
     cuenta = cuenta;
     const language = '1';
@@ -108,9 +109,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
 
     const getTicketDetail = async () => {
         try{
-            token = null;
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'get_ticket_detail',
                 'data': {

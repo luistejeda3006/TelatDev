@@ -14,12 +14,12 @@ import {formatDate, getCurrentDate, getLastDayMonth} from '../../../../js/dates'
 import {useDispatch, useSelector} from 'react-redux';
 import {selectPermissions, selectTickets, setTickets, setPermissions, addTicket, formTicket, selectForm} from '../../../../slices/ticketSlice';
 import {useFocusEffect} from '@react-navigation/native';
+import {selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 
 let id_usuario = '';
 let id_puesto = '';
 let token = null;
-let keyUserInfo = 'userInfo';
-let keyTokenInfo = 'tokenInfo';
+let user = null;
 let cuenta = 0;
 let tickets = []
 let permissions = {}
@@ -27,6 +27,8 @@ let form = {}
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
     const refTickets = useRef()
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
     tickets = useSelector(selectTickets)
     permissions = useSelector(selectPermissions)
     form = useSelector(selectForm)
@@ -154,15 +156,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 setLoading(true)
                 cuenta = cuenta + 1;
             }
-            let data = null;
-            token = null;
-            data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-            data = JSON.parse(data);
-            id_usuario = data.data.datos_personales.id_usuario
-            id_puesto = data.data.datos_laborales.id_puesto
-    
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
+            id_usuario = user.data.datos_personales.id_usuario
+            id_puesto = user.data.datos_laborales.id_puesto
     
             const body = {
                 'action': 'get_tickets',
@@ -199,15 +194,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getArchivados = async (initial = false, ending = false, tipo = undefined) => {
-        let data = null;
-        token = null;
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
-        id_puesto = data.data.datos_laborales.id_puesto
-
-        token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-        token = JSON.parse(token);
+        id_usuario = user.data.datos_personales.id_usuario
+        id_puesto = user.data.datos_laborales.id_puesto
 
         try{
             if(tipo) {
@@ -248,16 +236,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getExpedientes = async () => {
-        let data = null;
-        token = null;
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
-        id_puesto = data.data.datos_laborales.id_puesto
-
-        token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-        token = JSON.parse(token);
-
+        id_usuario = user.data.datos_personales.id_usuario
+        id_puesto = user.data.datos_laborales.id_puesto
         try{
             const body = {
                 'action': 'get_expedientes_seguridad',
@@ -288,15 +268,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     const getAddTicket = async () => {
-        let data = null;
-        token = null;
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
-        id_puesto = data.data.datos_laborales.id_puesto
-
-        token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-        token = JSON.parse(token);
+        id_usuario = user.data.datos_personales.id_usuario
+        id_puesto = user.data.datos_laborales.id_puesto
         try{
             const body = {
                 'action': 'add_ticket',

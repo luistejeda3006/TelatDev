@@ -12,15 +12,22 @@ import * as Animatable from 'react-native-animatable';
 import {BallIndicator} from 'react-native-indicators';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../../colors/colorsApp';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
 let token = null;
+let user = null;
 let id_usuario = null;
 let tipo = null;
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    const dispatch = useDispatch()
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     const refGaceta = useRef()
     const [loading, setLoading] = useState(false)
     const [reload, setReload] = useState(true)
@@ -35,11 +42,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
-    useEffect(async () => {
-        let data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
-        tipo = data.tipo
+    useEffect(() => {
+        id_usuario = user.data.datos_personales.id_usuario
+        tipo = user.tipo
     },[])
 
     useFocusEffect(
@@ -71,8 +76,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const getGaceta = async () => {
         try{
             setLoading(true)
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'get_gaceta',
                 'data': {

@@ -9,12 +9,14 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc'
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAgente, selectOperaciones, selectPeriodos, setAgente, setOperaciones, setPeriodos } from '../../../slices/moneySlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectAgente, selectOperaciones, selectPeriodos, setAgente, setOperaciones, setPeriodos} from '../../../slices/moneySlice';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 let token = null;
+let user = null;
 let data = null;
 let id_usuario = null;
 let cuenta = 0;
@@ -27,6 +29,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     agente = useSelector(selectAgente)
     periodos = useSelector(selectPeriodos)
     operaciones = useSelector(selectOperaciones)
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
 
     const [contador, setContador] = useState(0);
     const [visiblePeriodo, setVisiblePeriodo] = useState(false)
@@ -127,9 +131,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(async () => {
-        let data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
+        id_usuario = user.data.datos_personales.id_usuario
     },[])
 
     useFocusEffect(
@@ -144,16 +146,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 cuenta = cuenta + 1;
                 setInitialState({...initialState, loading: true})
             }
-            
-            token = await AsyncStorage.getItem(keyTokenInfo) || '[]';
-            token = JSON.parse(token);
 
-            data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-            data = JSON.parse(data);
             const body = {
                 'action': 'get_info_money',
                 'data': {
-                    'id_empleado': data.data.datos_personales.id_empleado,
+                    'id_empleado': user.data.datos_personales.id_empleado,
                     'id_periodo': id_periodo,
                     'id_usuario': id_usuario
                 },
@@ -175,7 +172,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 const body = {
                     'action': 'get_metricas',
                     'data': {
-                        'id_empleado': data.data.datos_personales.id_empleado,
+                        'id_empleado': user.data.datos_personales.id_empleado,
                         'id_periodo': id_periodo,
                         'id_usuario': id_usuario
                     },
