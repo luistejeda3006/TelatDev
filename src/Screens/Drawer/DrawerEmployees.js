@@ -1,4 +1,4 @@
-import React,{useCallback, useEffect, useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import {View, Image, Alert, ImageBackground, StatusBar, ScrollView, Text, Platform, TouchableWithoutFeedback} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNotification, useOrientation} from '../../hooks'
@@ -8,7 +8,7 @@ import {barStyle, barStyleBackground, Blue, Orange} from '../../colors/colorsApp
 import {useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
+import { selectLanguageApp } from '../../slices/varSlice';
 
 let currentLanguage = null;
 let isLogged = 'isLogged'
@@ -18,6 +18,8 @@ let orientation = null;
 
 export default (props) => {
     orientation = useSelector(selectOrientation)
+    currentLanguage = useSelector(selectLanguageApp)
+
     const sendNotification = 'sendNotification'
     const dataNotification = 'dataNotification'
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
@@ -35,17 +37,6 @@ export default (props) => {
     useEffect(() => {
         props.navigation.closeDrawer()
     },[orientation])
-
-    /* props.navigation.addListener('focus', () => {
-        setContador(contador + 1);
-        currentLanguage = props.language
-    }); */
-
-    useFocusEffect(
-        useCallback(() => {
-            currentLanguage = props.language
-        }, [])
-    );
 
     useEffect(() => {
         setTimeout(async () => {

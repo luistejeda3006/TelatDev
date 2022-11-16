@@ -4,14 +4,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useOrientation} from '../../hooks';
 import {BallIndicator} from 'react-native-indicators';
 import {Orange} from '../../colors/colorsApp';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
 import { useFocusEffect } from '@react-navigation/native';
+import { setLanguageApp } from '../../slices/varSlice';
 
 let orientation = 'PORTRAIT';
 
-export default ({navigation, route: {params: {language}}}) => {
+export default ({navigation, route: {params}}) => {
+    const dispatch = useDispatch()
+    const keyLanguage = 'Language';
+    
+    const [language, setLanguage] = useState()
     orientation = useSelector(selectOrientation)
     const [contador, setContador] = useState(0);
     const {orientationInfo} = useOrientation({
@@ -23,6 +28,17 @@ export default ({navigation, route: {params: {language}}}) => {
     
     const [info, setInfo] = useState({})
     
+    const getLanguage = async () => {
+        let data = null;
+        data = await AsyncStorage.getItem(keyLanguage) || '1';
+        dispatch(setLanguageApp(data))
+        setLanguage(data)
+    }
+    
+    useEffect(() => {
+        getLanguage()
+    },[])
+
     useEffect(async () => {
         let data = null;
         let keyUserInfo = 'userInfo';

@@ -45,7 +45,7 @@ export default ({handleAddElement, information, label}) => {
             <View style={styles.container}>
                 <TouchableOpacity style={styles.box} onPress={() => setShowList(!showList)}>
                     <View style={{flex: 1, alignSelf: 'stretch', justifyContent:'center'}}>
-                        <Text style={{fontSize: 15}}>{label}</Text>
+                        <Text style={{fontSize: 15, color: '#000'}}>{label}</Text>
                     </View>
                     <Icon name={!showList ? 'caret-down' : 'times'} size={15} color='#000' />
                 </TouchableOpacity>

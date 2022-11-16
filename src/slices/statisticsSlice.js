@@ -20,6 +20,8 @@ const initialState = {
     empleados_razon_social: [],
     body_1_master: [],
     body_2_master: [],
+    body_1: [],
+    body_2: [],
 }
 
 export const navSlice = createSlice({
@@ -40,16 +42,19 @@ export const navSlice = createSlice({
 
         setTrainingCategorias: (state, action) => {state.training_categorias = action.payload},
         setTrainingGrafico: (state, action) => {state.training_grafico = action.payload},
-        setEmpleadoUbicacion: (state, action) => {state.empleados_ubicacion = action.payload},
+        setEmpleadosUbicacion: (state, action) => {state.empleados_ubicacion = action.payload},
         setEdificios: (state, action) => {state.edificios = action.payload},
         setEmpleadosAreas: (state, action) => {state.empleados_areas = action.payload},
         setEmpleadosRazonSocial: (state, action) => {state.empleados_razon_social = action.payload},
         setBodyMasterUno: (state, action) => {state.body_1_master = action.payload},
         setBodyMasterDos: (state, action) => {state.body_2_master = action.payload},
+
+        setBodyUno: (state, action) => {state.body_1 = action.payload},
+        setBodyDos: (state, action) => {state.body_2 = action.payload},
     }
 })
 
-export const {setTiempoReal, setPeriodos, setAltasBajasIRP, setTraining, setAltasBajasQuincenas, setAltasGrafico, setBajasGrafico, setMotivoBajasValue,  setLegendsMotivoBaja, setDetalleAltas, setDetalleBajas, setTrainingCategorias, setTrainingGrafico, setEmpleadoUbicacion, setEdificios, setEmpleadosAreas, setEmpleadosRazonSocial, setBodyMasterUno, setBodyMasterDos} = navSlice.actions
+export const {setTiempoReal, setPeriodos, setAltasBajasIRP, setTraining, setAltasBajasQuincenas, setAltasGrafico, setBajasGrafico, setMotivoBajasValue,  setLegendsMotivoBaja, setDetalleAltas, setDetalleBajas, setTrainingCategorias, setTrainingGrafico, setEmpleadosUbicacion, setEdificios, setEmpleadosAreas, setEmpleadosRazonSocial, setBodyUno, setBodyDos, setBodyMasterUno, setBodyMasterDos} = navSlice.actions
 
 export const selectTiempoReal = (state) => state.navStatistics.tiempo_real;
 export const selectPeriodos = (state) => state.navStatistics.periodos;
@@ -72,6 +77,9 @@ export const selectEdificios = (state) => state.navStatistics.edificios
 
 export const selectEmpleadosAreas = (state) => state.navStatistics.empleados_areas
 export const selectEmpleadosRazonSocial = (state) => state.navStatistics.empleados_razon_social
+
+export const selectBodyUno = (state) => state.navStatistics.body_1
+export const selectBodyDos = (state) => state.navStatistics.body_2
 
 export const selectBodyMasterUno = (state) => state.navStatistics.body_1_master
 export const selectBodyMasterDos = (state) => state.navStatistics.body_2_master

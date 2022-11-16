@@ -89,25 +89,20 @@ export default ({navigation}) => {
         'rotationDegrees': 0,
         'initial': 'PORTRAIT'
     });
-
-    /* useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setContador(contador + 1);
-        });
-
-        return unsubscribe
-    }) */
-
+    
     const reloading = () => {
         setLoading(true)
     }
     
-    useEffect(async () => {
+    const getLanguage = async () => {
         let data = null;
         data = await AsyncStorage.getItem(keyLanguage) || '1';
         setLanguage(data)
         currentLanguage = data;
-        return undefined
+    }
+
+    useEffect(() => {
+        getLanguage()
     },[contador])
     
     useEffect(async () => {

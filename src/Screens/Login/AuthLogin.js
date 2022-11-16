@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
 import { selectChange, setChange } from '../../slices/navigationSlice';
 import { useFocusEffect } from '@react-navigation/native';
-
+import Orientation from 'react-native-orientation';
 import tw from 'twrnc';
 
 let keyTokenInfo = 'tokenInfo';
@@ -39,28 +39,20 @@ export default ({navigation}) => {
                 }, 100) //estaba en 5600
             }
         }, [])
-      );
+    );
 
-    useEffect(async () => {
+    useEffect(() => {
+        Orientation.lockToPortrait()
+    }, [])
+
+    const removeNotification = async () => {
         let dataNotification = 'dataNotification'
         await AsyncStorage.removeItem(dataNotification)
-    })
+    }
 
-    /* useEffect(async () => {
-        let data = null;
-        data = await AsyncStorage.getItem(keyTokenInfo) || '';
-        if(data){
-            if(contador === 1) setContador(contador + 1)
-            setTimeout(() => {
-                navigation.navigate('Logged', {language: current, orientation: orientation});
-            }, 5600) //estaba en 5600
-        }
-        else {
-            setTimeout(() => {
-                navigation.navigate('Unlogged', {language: current, orientation: orientation});
-            }, 5600) //estaba en 5600
-        }
-    },[contador]) */
+    useEffect(() => {
+        removeNotification()
+    })
 
     return (
         <>

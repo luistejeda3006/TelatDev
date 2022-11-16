@@ -13,7 +13,7 @@ import { Modal, Title, UpdateAvailable, Sliders } from '../../components';
 import { selectAccess, selectScreen, setAccess } from '../../slices/navigationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import { selectVisibleSliders, setVisibleSliders } from '../../slices/varSlice';
+import { selectVisibleSliders, setLanguageApp, setVisibleSliders } from '../../slices/varSlice';
 import tw from 'twrnc';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -37,15 +37,15 @@ let visibleSliders = true;
 let info_version = null;
 
 export default ({navigation, route: {params: {orientation, language_}}}) => {
+    const dispatch = useDispatch()
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
-    visibleSliders = useSelector(selectVisibleSliders)
 
-    const dispatch = useDispatch()
+    visibleSliders = useSelector(selectVisibleSliders)
 
     //let now = useIsDrawerOpen()
     let now = false
-    const [language, setLanguage] = useState(language_)
+    const [language, setLanguage] = useState()
     const [isHide, setIsHide] = useState(true)
     const [vacantsUsa, setVacantsUsa] = useState(false)
     const [notificacion, setNotificacion] = useState(false)
@@ -55,12 +55,23 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
     const {handlePath} = useNavigation()
 
+    useEffect(() => {
+        getLanguage()
+    },[])
+
     useFocusEffect(
         useCallback(() => {
             handlePath('Leave')
         }, [])
     );
     
+    const getLanguage = async () => {
+        let current = null;
+        current = await AsyncStorage.getItem(key) || '1';
+        dispatch(setLanguageApp(current))
+        setLanguage(current)
+    }
+
     const getOption = async () => {
         if(!now){
             optionExists = await AsyncStorage.getItem(Option) || undefined;
@@ -245,12 +256,26 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
     const {arrived} = useNotification()
 
+    
     useEffect(() => {
         handleNotification()
     },[arrived])
-
+    
     const handleLanguage = async (language) => {
-        setLanguage(language === '1' ? '2' : '1')
+        data = null;
+        if(language === '2') {
+            setLanguage('1')
+        }
+        else {
+            setLanguage('2')
+        }
+        data = await AsyncStorage.getItem(key) || '';
+        if(data) {
+            await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, language === '1' ? '2' : '1'));
+        }
+        else {
+            data = await AsyncStorage.setItem(key, language === '1' ? '2' : '1');
+        }
     }
     
     const orientationInfo = {

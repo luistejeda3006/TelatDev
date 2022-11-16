@@ -12,7 +12,7 @@ import {isIphone, live, login, urlReportes} from '../../../access/requestedData'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAltasBajasIRP, selectAltasBajasQuincenas, selectAltasGrafico, selectBajasGrafico, selectBodyMasterDos, selectBodyMasterUno, selectDetalleAltas, selectDetalleBajas, selectEdificios, selectEmpleadosAreas, selectEmpleadosRazonSocial, selectEmpleadosUbicacion, selectLegendsMotivoBaja, selectMotivoBajasValue, selectTiempoReal, selectTraining, selectTrainingCategorias, selectTrainingGrafico } from '../../../slices/statisticsSlice';
+import { selectAltasBajasIRP, selectAltasBajasQuincenas, selectAltasGrafico, selectBajasGrafico, selectBodyDos, selectBodyMasterDos, selectBodyMasterUno, selectBodyUno, selectDetalleAltas, selectDetalleBajas, selectEdificios, selectEmpleadosAreas, selectEmpleadosRazonSocial, selectEmpleadosUbicacion, selectLegendsMotivoBaja, selectMotivoBajasValue, selectTiempoReal, selectTraining, selectTrainingCategorias, selectTrainingGrafico } from '../../../slices/statisticsSlice';
 import { selectPeriodos } from '../../../slices/moneySlice';
 
 let keyUserInfo = 'userInfo';
@@ -23,49 +23,7 @@ let id_usuario = null;
 let cuenta = 0;
 let data = {}
 
-/* let tiempo_real = {}
-let periodos = []
-let altas_bajas_irp = []
-let training = {}
-let altas_bajas_quincenas = {}
-let altas_grafico = []
-let bajas_grafico = []
-let motivo_bajas_value = []
-let legends_motivo_baja = []
-let detalle_altas = []
-let detalle_bajas = []
-let training_categorias = []
-let training_grafico = []
-let empleados_ubicacion = []
-let edificios = []
-let empleados_areas = []
-let empleados_razon_social = []
-let body_1_master = []
-let body_2_master = [] */
-
 export default ({navigation, route: {params: {orientation}}}) => {
-    const dispatch = useDispatch()
-    /* tiempo_real = useSelector(selectTiempoReal)
-    periodos = useSelector(selectPeriodos)
-    altas_bajas_irp = useSelector(selectAltasBajasIRP)
-    training = useSelector(selectTraining)
-    altas_bajas_quincenas = useSelector(selectAltasBajasQuincenas)
-    altas_grafico = useSelector(selectAltasGrafico)
-    bajas_grafico = useSelector(selectBajasGrafico)
-    motivo_bajas_value = useSelector(selectMotivoBajasValue)
-    legends_motivo_baja = useSelector(selectLegendsMotivoBaja)
-    detalle_altas = useSelector(selectDetalleAltas)
-    detalle_bajas = useSelector(selectDetalleBajas)
-    training_categorias = useSelector(selectTrainingCategorias)
-    training_categorias = useSelector(selectTrainingCategorias)
-    training_grafico = useSelector(selectTrainingGrafico)
-    empleados_ubicacion = useSelector(selectEmpleadosUbicacion)
-    edificios = useSelector(selectEdificios)
-    empleados_areas = useSelector(selectEmpleadosAreas)
-    empleados_razon_social = useSelector(selectEmpleadosRazonSocial)
-    body_1_master = useSelector(selectBodyMasterUno)
-    body_2_master = useSelector(selectBodyMasterDos) */
-
     const {isTablet} = DeviceInfo;
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     
@@ -183,6 +141,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
         edificios: [],
         empleados_areas: [],
         empleados_razon_social: [],
+        body_1:[],
+        body_2:[],
         body_1_master: [],
         body_2_master: [],
         altas: false,
@@ -211,8 +171,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
             {id: 7, title: 'Bajas'},
             {id: 8, title: 'Activos'},
         ],
-        body_1:[],
-        body_2:[],
         body_horizontal: [],
         empleados: [
             {id: 1, name: 'Operaciones', data: [30,20,40], edificio: 'Presa Salinillas'},
@@ -278,16 +236,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
         edificios,
         empleados_areas,
         empleados_razon_social,
+        body_1,
+        body_2,
         body_1_master,
         body_2_master,
-
         section,
         headers_1,
         headers_2,
         headers_3,
         hearder_all,
-        body_1,
-        body_2,
         body_horizontal,
         body_horizontal_master,
         last,
@@ -590,8 +547,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 
                 setInitialState({...initialState, 
                     loading: false,
-                    periodos: respuestita.periodos,
                     tiempo_real: response.inf_tiempo_real,
+                    periodos: respuestita.periodos,
                     altas_bajas_quincenas: obj,
                     altas_bajas_irp: respuestita.data_altas_bajas_irp,
                     altas_grafico: respuestita.altas_grafico,
@@ -609,19 +566,22 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     empleados_areas: response.empleados_areas,
                     body_1: response.training.body_1,
                     body_2: response.training.body_2,
-                    body_horizontal: response.training.body_horizontal,
-                    body_horizontal_master: response.training.body_horizontal,
                     body_1_master: response.training.body_1,
                     body_2_master: response.training.body_2,
                     data_años: fin,
-                    content: true,
                     areas: response.areas,
                     title: response.areas[0].label,
+                    content: true,
                     legends: res.legends,
                     legendsIRP: res.legends_index,
                     generalIRP: finGeneral,
-                    dataIRP: finito
+                    dataIRP: finito,
+                    body_horizontal: response.training.body_horizontal,
+                    body_horizontal_master: response.training.body_horizontal,
                 })
+
+                //información con redux, nada más llegar acomodar y hacer que ya no cargue,  unica recarga con refresh control
+
                 setLoadingContent(false)
                 setCurrentQuincena(!currentQuincena ? respuestita.periodos[0].label : currentQuincena)
                 setCurrentArea(response.areas[0].label)
@@ -1047,10 +1007,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                     <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginRight: 6}}>
                                         <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
                                     </View>
-                                    <Text style={{fontWeight: 'bold', fontSize: 12}}>{campanna}</Text>
+                                    <Text style={{fontWeight: 'bold', fontSize: 12, color: '#000'}}>{campanna}</Text>
                                 </>
                             :
-                                <Text style={{fontSize: 14}}>{campanna}</Text>
+                                <Text style={{fontSize: 14, color: '#000'}}>{campanna}</Text>
                         }
                     </View>
                 </View>
@@ -1076,14 +1036,14 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         </View>
                     :
                         <View style={{height: 'auto', alignSelf: 'stretch', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, flexDirection: 'row', borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                            <View style={{flex: 1, backgroundColor: Blue, height: 35, justifyContent: 'center', alignItems: 'center', borderBottomStartRadius: 16}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{altas}</Text>
+                            <View style={{flex: 1, backgroundColor: Blue, height: 30, justifyContent: 'center', alignItems: 'center', borderBottomStartRadius: 16}}>
+                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{altas}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#2ca02c', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{activos}</Text>
+                            <View style={{flex: 1, backgroundColor: '#2ca02c', height: 30, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{activos}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#ff0000', height: 35, justifyContent: 'center', alignItems: 'center', borderBottomEndRadius: 16}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{bajas}</Text>
+                            <View style={{flex: 1, backgroundColor: '#ff0000', height: 30, justifyContent: 'center', alignItems: 'center', borderBottomEndRadius: 16}}>
+                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{bajas}</Text>
                             </View>
                         </View>
                 }
@@ -1126,10 +1086,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <View style={{justifyContent: 'flex-start', paddingLeft: 5, flexDirection: 'row', height: '100%'}}>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 12}}>{name}</Text>
+                            <Text style={{fontSize: 12, color: '#000'}}>{name}</Text>
                         </View>
                         <View style={{width: 40, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderTopEndRadius: 16, borderBottomEndRadius: 16, borderLeftColor: '#dadada', borderLeftWidth: 1}}>
-                            <Text style={{fontWeight: 'bold'}}>{total}</Text>
+                            <Text style={{fontWeight: 'bold', color: '#000'}}>{total}</Text>
                         </View>
                     </View>
                 </View>
@@ -1146,10 +1106,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <View style={{justifyContent: 'flex-start', paddingLeft: 8, flexDirection: 'row', height: '100%'}}>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 14}}>{name}</Text>
+                            <Text style={{fontSize: 14, color: '#000'}}>{name}</Text>
                         </View>
                         <View style={{width: 40, backgroundColor: '#f7f7f7', justifyContent: 'center', alignItems: 'center', borderLeftColor: '#CBCBCB', borderLeftWidth: 1, borderTopEndRadius: 16, borderBottomEndRadius: 16}}>
-                            <Text style={{fontWeight: 'bold'}}>{total}</Text>
+                            <Text style={{fontWeight: 'bold', color: '#000'}}>{total}</Text>
                         </View>
                     </View>
                 </View>
@@ -1353,7 +1313,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     ?
                         <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
                             <View style={{width: 'auto', justifyContent: 'center'}}>
                                 <TouchableOpacity onPress={() => handleChangeVisibility(title)}>
@@ -1366,7 +1326,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         ?
                             <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                                 <View style={{flex: 1, justifyContent: 'center'}}>
-                                    <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                    <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                                 </View>
                                 <View style={{width: 'auto', justifyContent: 'center'}}>
                                     <TouchableOpacity onPress={() =>  handleChangeVisibility(title)}>
@@ -1376,7 +1336,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         :
                             <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, borderBottomColor: Blue, borderBottomWidth: .5}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
         )
     }
@@ -1403,7 +1363,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <Title title={'Altas y Bajas por Quincena'} icon={'chart-line'} tipo={2} vertical={false}/>
                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text>{currentQuincena}</Text>
+                        <Text style={{color: '#000'}}>{currentQuincena}</Text>
                     </View>
                     <View style={{width: 'auto'}}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1455,7 +1415,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
                     <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: '#383838', fontSize: 18}}>Altas</Text>
+                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Altas</Text>
                         </View>
                         <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
@@ -1492,7 +1452,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
                     <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: '#383838', fontSize: 18}}>Bajas</Text>
+                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Bajas</Text>
                         </View>
                         <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
@@ -1671,7 +1631,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 </View>
                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text>{currentArea}</Text>
+                        <Text style={{color: '#000'}}>{currentArea}</Text>
                     </View>
                     <View style={{width: 'auto'}}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1715,7 +1675,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-                        <Text>{currentSubarea}</Text>
+                        <Text style={{color: '#000'}}>{currentSubarea}</Text>
                     </View>
                     <View style={{width: 'auto'}}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1935,7 +1895,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                     <View style={{justifyContent: 'flex-start', paddingLeft: 4}}>
                         <Text style={{fontSize: 15, color: color}}>{countTitle}</Text>
-                        <Text style={{fontSize: 10, color:'#383838'}}>{title}</Text>
+                        <Text style={{fontSize: 10, color:'#000'}}>{title}</Text>
                     </View>
                 </View>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -1998,7 +1958,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                        <Text>{currentQuincena}</Text>
+                                                        <Text style={{color: '#000'}}>{currentQuincena}</Text>
                                                     </View>
                                                     <View style={{width: 'auto'}}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -2057,7 +2017,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
                                                     <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                                                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: '#383838', fontSize: 18}}>Altas</Text>
+                                                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Altas</Text>
                                                         </View>
                                                         <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                                                             <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
@@ -2095,7 +2055,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
                                                     <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                                                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: '#383838', fontSize: 18}}>Bajas</Text>
+                                                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Bajas</Text>
                                                         </View>
                                                         <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                                                             <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
@@ -2252,7 +2212,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 </View>
                                                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                        <Text>{currentArea}</Text>
+                                                        <Text style={{color: '#000'}}>{currentArea}</Text>
                                                     </View>
                                                     <View style={{width: 'auto'}}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -2297,7 +2257,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                        <Text>{currentSubarea}</Text>
+                                                        <Text style={{color: '#000'}}>{currentSubarea}</Text>
                                                     </View>
                                                     <View style={{width: 'auto'}}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />

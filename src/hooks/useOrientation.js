@@ -14,9 +14,9 @@ export default (initialState = {}) => {
     }
 
     useEffect(() => {
-        Orientation.addOrientationListener('namedOrientationDidChange', handleOrientationDidChange);
+        Orientation.addOrientationListener(handleOrientationDidChange);
         return () => {
-            Orientation.removeOrientationListener('namedOrientationDidChange', handleOrientationDidChange);
+            Orientation.removeOrientationListener(handleOrientationDidChange);
         }
     })
 
