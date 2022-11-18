@@ -23,7 +23,7 @@ export default ({title = '', tipo = 1, orientation, visible}) => {
                 }
             </View>
             <View style={{height: 'auto', justifyContent: 'center', alignItems: 'center', padding: 16}}>
-                <Text style={{fontWeight: 'bold', fontSize: 24, textAlign: 'center'}}>{title}</Text>
+                <Text style={{fontWeight: 'bold', fontSize: 24, textAlign: 'center',color: '#000'}}>{title}</Text>
             </View>
         </Modal>
     )

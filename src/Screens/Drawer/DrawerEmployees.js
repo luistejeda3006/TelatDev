@@ -7,8 +7,8 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, Orange} from '../../colors/colorsApp'
 import {useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
+import {selectLanguageApp} from '../../slices/varSlice';
 import tw from 'twrnc';
-import { selectLanguageApp } from '../../slices/varSlice';
 
 let currentLanguage = null;
 let isLogged = 'isLogged'
@@ -31,7 +31,7 @@ export default (props) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     useEffect(() => {

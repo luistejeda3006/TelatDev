@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler, FlatList} from 'react-native';
+import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'react-native';
 import {InputForm, Picker, Calendar, TitleForms} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -7,9 +7,8 @@ import DeviceInfo from 'react-native-device-info';
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Blue } from '../../../../colors/colorsApp';
+import {Blue} from '../../../../colors/colorsApp';
 
 let inicial = null;
 let terminal = null;
@@ -32,7 +31,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     
     const first = {label: 'Select', value: 'SEL'};

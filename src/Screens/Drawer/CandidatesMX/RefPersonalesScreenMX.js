@@ -1,19 +1,22 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useOrientation, useNavigation, useScroll} from '../../../hooks'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
-import tw from 'twrnc';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc';
+
+let data = ''
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
 
     useFocusEffect(
         useCallback(() => {
@@ -21,11 +24,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         }, [])
     );
 
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
+    useEffect(() => {
         let obj = {
             referencias_personales: data.data.referencias_personales ? data.data.referencias_personales : '',
         }
@@ -38,7 +37,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)

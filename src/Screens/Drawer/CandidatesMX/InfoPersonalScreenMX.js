@@ -1,19 +1,23 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, View, Text, Image, ScrollView, StatusBar, SafeAreaView} from 'react-native';
+import {View, Text, Image, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useNavigation, useOrientation, useScroll} from '../../../hooks'
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
+import {useFocusEffect} from '@react-navigation/native';
+import {selectUserInfo} from '../../../slices/varSlice'
+import {useSelector} from 'react-redux';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
+
+let user = '';
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    user = useSelector(selectUserInfo)
+
     const {handlePath} = useNavigation();
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
 
     useFocusEffect(
         useCallback(() => {
@@ -25,60 +29,56 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
+    useEffect(() => {
         let obj = {
-            picture: data.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${data.data.datos_personales.foto}` : '',
-            name: data.data.datos_personales.nombre_completo,
-            birth_date: data.data.datos_personales.fecha_nacimiento,
-            age: data.data.datos_personales.edad,
-            gender: data.data.datos_personales.genero === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE',
-            curp: data.data.datos_personales.curp,
-            rfc: data.data.datos_personales.rfc,
-            homoclave: data.data.datos_personales.homoclave,
-            birth_place: data.data.datos_personales.lugar_nacimiento ? data.data.datos_personales.lugar_nacimiento : 'N/A',
-            country: data.data.datos_personales.info_pais ? data.data.datos_personales.info_pais : 'N/A',
-            nationality: data.data.datos_personales.nacionalidad ? data.data.datos_personales.nacionalidad : 'N/A',
-            residence_time: data.data.datos_personales.tiempo_residencia ? data.data.datos_personales.tiempo_residencia : 'N/A',
-            laboral_permission: data.data.datos_personales.permiso_laboral ? data.data.datos_personales.permiso_laboral === '0' ? language === '1' ? 'NO' : 'NO' : language === '1' ? 'SÍ' : 'YES' : 'N/A',
-            migratory_document_type: data.data.datos_personales.tipo_documento ? data.data.datos_personales.tipo_documento.toUpperCase() : 'N/A' ,
-            document_number: data.data.datos_personales.num_documento ? data.data.datos_personales.num_documento : 'N/A',
-            marital_status: data.data.datos_personales.estado_civil ? language === '1' ? data.data.datos_personales.estado_civil : data.data.datos_personales.estado_civil === 'SOLTERO' ? 'SINGLE' : 'MARRIED' : 'N/A',
-            children_number: data.data.datos_personales.info_hijos ? data.data.datos_personales.info_hijos : 'N/A',
-            economic_dependents: data.data.datos_personales.info_depen_economicos ? data.data.datos_personales.info_depen_economicos : 'N/A',
-            lived_abroad: data.data.datos_personales.info_vivio_extranjero === '0' ? language === '1' ? 'NO' : 'NO' : language === '1' ? 'SÍ' : 'YES',
-            time_abroad: data.data.datos_personales.info_tiempo_extranjero ? data.data.datos_personales.info_tiempo_extranjero : 'N/A',
-            return_motives: data.data.datos_personales.info_motivo_regreso ? data.data.datos_personales.info_motivo_regreso : 'N/A' ,
-            abroad_place: data.data.datos_personales.info_lugar_extranjero ? data.data.datos_personales.info_lugar_extranjero : 'N/A',
-            cand_medio_reclutamiento: data.data.datos_personales.cand_medio_reclutamiento ? language === '1' ? data.data.datos_personales.cand_medio_reclutamiento : data.data.datos_personales.cand_medio_reclutamiento === 'Bolsa de Empleo' ? 'Job Board' : data.data.datos_personales.cand_medio_reclutamiento === 'Redes Sociales' ? 'Social media' : data.data.datos_personales.cand_medio_reclutamiento === 'Referido' ? 'Referred' : data.data.datos_personales.cand_medio_reclutamiento === 'Otro' ? 'Other' : data.data.datos_personales.cand_medio_reclutamiento : 'N/A',
-            cand_medio_reclutamiento_desc: data.data.datos_personales.cand_medio_reclutamiento_descripcion ? data.data.datos_personales.cand_medio_reclutamiento_descripcion : 'N/A',
-            alta_datos: data.data.datos_personales.alta_datos ? data.data.datos_personales.alta_datos : 'N/A',
-            city: data.data.datos_personales.ciudad ? data.data.datos_personales.ciudad : 'N/A',
-            delegacion_municipio: data.data.datos_personales.delegacion ? data.data.datos_personales.delegacion : 'N/A',
-            colonia: data.data.datos_personales.colonia ? data.data.datos_personales.colonia : 'N/A',
-            calle: data.data.datos_personales.calle ? data.data.datos_personales.calle : 'N/A' ,
-            int_number: data.data.datos_personales.numero_int ? data.data.datos_personales.numero_int : 'N/A',
-            ext_number: data.data.datos_personales.numero_ext ? data.data.datos_personales.numero_ext : 'N/A',
-            references: data.data.datos_personales.referencias ? data.data.datos_personales.referencias : 'N/A',
-            cp: data.data.datos_personales.cp ? data.data.datos_personales.cp : 'N/A',
-            email: data.data.datos_personales.info_email ? data.data.datos_personales.info_email : 'N/A',
-            personal_phone: data.data.datos_personales.info_telefono_celular ? data.data.datos_personales.info_telefono_celular : 'N/A',
-            home_phone: data.data.datos_personales.info_telefono_fijo ? data.data.datos_personales.info_telefono_fijo : 'N/A',
-            ciudad_fiscal: data.data.datos_personales.ciudad_fiscal ? data.data.datos_personales.ciudad_fiscal : 'N/A',
-            delegacion_fiscal: data.data.datos_personales.delegacion_fiscal ? data.data.datos_personales.delegacion_fiscal : 'N/A',
-            colonia_fiscal: data.data.datos_personales.colonia_fiscal ? data.data.datos_personales.colonia_fiscal : 'N/A',
-            calle_fiscal: data.data.datos_personales.calle_fiscal ? data.data.datos_personales.calle_fiscal : 'N/A',
-            numero_ext_fiscal: data.data.datos_personales.numero_ext_fiscal ? data.data.datos_personales.numero_ext_fiscal : 'N/A',
-            numero_int_fiscal: data.data.datos_personales.numero_int_fiscal ? data.data.datos_personales.numero_int_fiscal : 'N/A',
-            cp_fiscal: data.data.datos_personales.cp_fiscal ? data.data.datos_personales.cp_fiscal : 'N/A',
+            picture: user.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${user.data.datos_personales.foto}` : '',
+            name: user.data.datos_personales.nombre_completo,
+            birth_date: user.data.datos_personales.fecha_nacimiento,
+            age: user.data.datos_personales.edad,
+            gender: user.data.datos_personales.genero === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE',
+            curp: user.data.datos_personales.curp,
+            rfc: user.data.datos_personales.rfc,
+            homoclave: user.data.datos_personales.homoclave,
+            birth_place: user.data.datos_personales.lugar_nacimiento ? user.data.datos_personales.lugar_nacimiento : 'N/A',
+            country: user.data.datos_personales.info_pais ? user.data.datos_personales.info_pais : 'N/A',
+            nationality: user.data.datos_personales.nacionalidad ? user.data.datos_personales.nacionalidad : 'N/A',
+            residence_time: user.data.datos_personales.tiempo_residencia ? user.data.datos_personales.tiempo_residencia : 'N/A',
+            laboral_permission: user.data.datos_personales.permiso_laboral ? user.data.datos_personales.permiso_laboral === '0' ? language === '1' ? 'NO' : 'NO' : language === '1' ? 'SÍ' : 'YES' : 'N/A',
+            migratory_document_type: user.data.datos_personales.tipo_documento ? user.data.datos_personales.tipo_documento.toUpperCase() : 'N/A' ,
+            document_number: user.data.datos_personales.num_documento ? user.data.datos_personales.num_documento : 'N/A',
+            marital_status: user.data.datos_personales.estado_civil ? language === '1' ? user.data.datos_personales.estado_civil : user.data.datos_personales.estado_civil === 'SOLTERO' ? 'SINGLE' : 'MARRIED' : 'N/A',
+            children_number: user.data.datos_personales.info_hijos ? user.data.datos_personales.info_hijos : 'N/A',
+            economic_dependents: user.data.datos_personales.info_depen_economicos ? user.data.datos_personales.info_depen_economicos : 'N/A',
+            lived_abroad: user.data.datos_personales.info_vivio_extranjero === '0' ? language === '1' ? 'NO' : 'NO' : language === '1' ? 'SÍ' : 'YES',
+            time_abroad: user.data.datos_personales.info_tiempo_extranjero ? user.data.datos_personales.info_tiempo_extranjero : 'N/A',
+            return_motives: user.data.datos_personales.info_motivo_regreso ? user.data.datos_personales.info_motivo_regreso : 'N/A' ,
+            abroad_place: user.data.datos_personales.info_lugar_extranjero ? user.data.datos_personales.info_lugar_extranjero : 'N/A',
+            cand_medio_reclutamiento: user.data.datos_personales.cand_medio_reclutamiento ? language === '1' ? user.data.datos_personales.cand_medio_reclutamiento : user.data.datos_personales.cand_medio_reclutamiento === 'Bolsa de Empleo' ? 'Job Board' : user.data.datos_personales.cand_medio_reclutamiento === 'Redes Sociales' ? 'Social media' : user.data.datos_personales.cand_medio_reclutamiento === 'Referido' ? 'Referred' : user.data.datos_personales.cand_medio_reclutamiento === 'Otro' ? 'Other' : user.data.datos_personales.cand_medio_reclutamiento : 'N/A',
+            cand_medio_reclutamiento_desc: user.data.datos_personales.cand_medio_reclutamiento_descripcion ? user.data.datos_personales.cand_medio_reclutamiento_descripcion : 'N/A',
+            alta_datos: user.data.datos_personales.alta_datos ? user.data.datos_personales.alta_datos : 'N/A',
+            city: user.data.datos_personales.ciudad ? user.data.datos_personales.ciudad : 'N/A',
+            delegacion_municipio: user.data.datos_personales.delegacion ? user.data.datos_personales.delegacion : 'N/A',
+            colonia: user.data.datos_personales.colonia ? user.data.datos_personales.colonia : 'N/A',
+            calle: user.data.datos_personales.calle ? user.data.datos_personales.calle : 'N/A' ,
+            int_number: user.data.datos_personales.numero_int ? user.data.datos_personales.numero_int : 'N/A',
+            ext_number: user.data.datos_personales.numero_ext ? user.data.datos_personales.numero_ext : 'N/A',
+            references: user.data.datos_personales.referencias ? user.data.datos_personales.referencias : 'N/A',
+            cp: user.data.datos_personales.cp ? user.data.datos_personales.cp : 'N/A',
+            email: user.data.datos_personales.info_email ? user.data.datos_personales.info_email : 'N/A',
+            personal_phone: user.data.datos_personales.info_telefono_celular ? user.data.datos_personales.info_telefono_celular : 'N/A',
+            home_phone: user.data.datos_personales.info_telefono_fijo ? user.data.datos_personales.info_telefono_fijo : 'N/A',
+            ciudad_fiscal: user.data.datos_personales.ciudad_fiscal ? user.data.datos_personales.ciudad_fiscal : 'N/A',
+            delegacion_fiscal: user.data.datos_personales.delegacion_fiscal ? user.data.datos_personales.delegacion_fiscal : 'N/A',
+            colonia_fiscal: user.data.datos_personales.colonia_fiscal ? user.data.datos_personales.colonia_fiscal : 'N/A',
+            calle_fiscal: user.data.datos_personales.calle_fiscal ? user.data.datos_personales.calle_fiscal : 'N/A',
+            numero_ext_fiscal: user.data.datos_personales.numero_ext_fiscal ? user.data.datos_personales.numero_ext_fiscal : 'N/A',
+            numero_int_fiscal: user.data.datos_personales.numero_int_fiscal ? user.data.datos_personales.numero_int_fiscal : 'N/A',
+            cp_fiscal: user.data.datos_personales.cp_fiscal ? user.data.datos_personales.cp_fiscal : 'N/A',
         }
         setInfo(obj)
 

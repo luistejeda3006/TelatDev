@@ -9,7 +9,6 @@ import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground, Yellow} 
 import HTMLView from 'react-native-htmlview'
 import DeviceInfo from 'react-native-device-info';
 import {isIphone, live, login, urlTickets} from '../../../../access/requestedData'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Animatable from 'react-native-animatable';
 import Picker from 'react-native-picker-select';
 import HTML from 'react-native-render-html';
@@ -190,7 +189,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     }
 
     const handleActionDos = (value, label) => {
-        console.log('label: ', value)
         setInitialState({...initialState, motivo: value})
     }
 
@@ -667,26 +665,26 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10, flexDirection: 'row'}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Tipo de ticket'}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.tipo ? detail.tipo : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.tipo ? detail.tipo : '-'}</Text>
                                             </View>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Concepto'}</Text>
-                                                <Text>{detail?.concepto ? detail.concepto : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.concepto ? detail.concepto : '-'}</Text>
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10, flexDirection: 'row'}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Prioridad'}</Text>
-                                                <Text style={{fontWeight: 'bold', color: detail.prioridadBackgroundColor}}>{detail?.prioridad ? detail.prioridad : '-'}</Text>
+                                                <Text style={{fontWeight: 'bold', color: detail.prioridadBackgroundColor, fontSize: 14}}>{detail?.prioridad ? detail.prioridad : '-'}</Text>
                                             </View>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Creado'}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.creado ? detail.creado : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.creado ? detail.creado : '-'}</Text>
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10}}>
                                             <Text style={styles.title}>{'Solicitado por: '}</Text>
-                                            <Text style={{fontSize: 14}}>{detail?.solicitado ? detail.solicitado : '-'}</Text>
+                                            <Text style={{fontSize: 14, color: '#000'}}>{detail?.solicitado ? detail.solicitado : '-'}</Text>
                                         </View>
                                         {
                                             (!detail.asignado || edit) && permisos.btn_asignar
@@ -696,7 +694,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 3}}>
                                                         <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: detail.asignado ? '#CBCBCB' : '#d53f40', height: detail.asignado ? detail.asignado > 33 ? 'auto' : 'auto' : 35, paddingVertical: 6}]} onPress={() => setInitialState({...initialState, visibleResponsables: true})}>
                                                             <View style={{flex: 1}}>
-                                                                <Text style={{fontSize: 14}}>{detail.asignado ? detail.asignado : 'Seleccione una opción'}</Text>
+                                                                <Text style={{fontSize: 14, color: '#000'}}>{detail.asignado ? detail.asignado : 'Seleccione una opción'}</Text>
                                                             </View>
                                                             <View style={{width: 'auto'}}>
                                                                 <Icon name='caret-down' size={20} color={detail.asignado ? '#CBCBCB' : '#d53f40'} />
@@ -721,7 +719,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
                                                     <View style={{height: 'auto', flex: 1, justifyContent: 'center'}}>
                                                         <Text style={styles.title}>{'Asignado a: '}</Text>
-                                                        <Text style={{fontSize: 14}}>{detail?.asignado ? detail.asignado : '-'}</Text>
+                                                        <Text style={{fontSize: 14, color: '#000'}}>{detail?.asignado ? detail.asignado : '-'}</Text>
                                                     </View>
                                                     {
                                                         (active !== 2 && active !== 4) && permisos.btn_asignar && (detail.estado === 'Proceso' || detail.estado === 'Pendiente')
@@ -741,36 +739,36 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10, flexDirection: 'row'}}>
                                             <View style={{height: 'auto', flex: 1, justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'Asignado: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.fecha_asignado ? detail.fecha_asignado : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.fecha_asignado ? detail.fecha_asignado : '-'}</Text>
                                             </View>
                                             <View style={{height: 'auto', flex:1 , justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'Terminado: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.fecha_terminado ? detail.fecha_terminado : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.fecha_terminado ? detail.fecha_terminado : '-'}</Text>
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10, flexDirection: 'row'}}>
                                             <View style={{height: 'auto', flex: 1, justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'Cerrado: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.fecha_cierre ? detail.fecha_cierre : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.fecha_cierre ? detail.fecha_cierre : '-'}</Text>
                                             </View>
                                             <View style={{height: 'auto', flex:1 , justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'Archivado: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.fecha_archivado ? detail.fecha_archivado : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.fecha_archivado ? detail.fecha_archivado : '-'}</Text>
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10, flexDirection: 'row'}}>
                                             <View style={{height: 'auto', flex: 1, justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'T. Atención: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '-'}</Text>
                                             </View>
                                             <View style={{height: 'auto', flex:1 , justifyContent: 'center'}}>
                                                 <Text style={styles.title}>{'T. Resolución: '}</Text>
-                                                <Text style={{fontSize: 14}}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '-'}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '-'}</Text>
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', marginTop: 10}}>
                                             <Text style={styles.title}>{'Detalle: '}</Text>
-                                            <Text style={{fontSize: 14}}>{detail.detalle ? detail.detalle : '-'}</Text>
+                                            <Text style={{fontSize: 14, color: '#000'}}>{detail.detalle ? detail.detalle : '-'}</Text>
                                         </View>
                                     </>
                                 :
@@ -1216,5 +1214,17 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flexGrow:1,
+    },
+    p: {
+        color: '#000'
+    },
+    li: {
+        color: '#000'
+    },
+    font: {
+        color: '#000'
+    },
+    div: {
+        color: '#000'
     },
 })

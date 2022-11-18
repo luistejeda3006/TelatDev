@@ -10,7 +10,7 @@ import DeviceInfo from 'react-native-device-info';
 import {baseUrl, contactPhoneNumber, live, login, siteKey, urlJobs} from '../../../../access/requestedData';
 import {useOrientation, useConnection} from '../../../../hooks';
 import {useFormikContext} from 'formik';
-import { Blue } from '../../../../colors/colorsApp';
+import {Blue} from '../../../../colors/colorsApp';
 import tw from 'twrnc'
 
 let currentOrientation = null;
@@ -32,7 +32,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     
     const [checked, setChecked] = useState(false);

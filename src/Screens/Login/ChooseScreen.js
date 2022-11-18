@@ -1,21 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Image, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, Alert, BackHandler, TouchableWithoutFeedback} from 'react-native';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../colors/colorsApp'
-import {useNavigation, useNotification, useOrientation} from '../../hooks';
+import {useNavigation, useNotification} from '../../hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isIphone, live, login, urlApp, urlJobs, version} from '../../access/requestedData';
 import messaging from '@react-native-firebase/messaging'
 import PushNotification from "react-native-push-notification";
 import * as Animatable from 'react-native-animatable';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Modal, Title, UpdateAvailable, Sliders } from '../../components';
-//import { useIsDrawerOpen } from '@react-navigation/drawer';
-import { selectAccess, selectScreen, setAccess } from '../../slices/navigationSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import {Modal, Title, UpdateAvailable, Sliders} from '../../components';
+import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import { selectVisibleSliders, setLanguageApp, setVisibleSliders } from '../../slices/varSlice';
+import {selectVisibleSliders, setLanguageApp, setVisibleSliders} from '../../slices/varSlice';
+import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
 
 let key = 'Language'
 let show = undefined
@@ -263,19 +262,13 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     
     const handleLanguage = async (language) => {
         data = null;
-        if(language === '2') {
-            setLanguage('1')
-        }
-        else {
-            setLanguage('2')
-        }
+        if(language === '2') setLanguage('1')
+        else setLanguage('2')
+
         data = await AsyncStorage.getItem(key) || '';
-        if(data) {
-            await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, language === '1' ? '2' : '1'));
-        }
-        else {
-            data = await AsyncStorage.setItem(key, language === '1' ? '2' : '1');
-        }
+
+        if(data) await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, language === '1' ? '2' : '1'));
+        else data = await AsyncStorage.setItem(key, language === '1' ? '2' : '1');
     }
     
     const orientationInfo = {

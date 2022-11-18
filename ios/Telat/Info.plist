@@ -33,10 +33,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSCameraUsageDescription</key>
 	<string>Cuando permites el uso de tu cámara, podrás enviar evidencias fotográficas de las fallas técnicas en tu lugar de trabajo.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Cuando permites el uso de tu Micrófono, podrás grabar y envíar audios para que conozcamos tu nivel de inglés.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

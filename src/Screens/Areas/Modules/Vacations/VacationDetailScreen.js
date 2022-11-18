@@ -34,7 +34,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     

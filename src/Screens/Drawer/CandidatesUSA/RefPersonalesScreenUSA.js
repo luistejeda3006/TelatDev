@@ -1,52 +1,31 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
-import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {HeaderPortrait, HeaderLandscape} from '../../../components';
 import DeviceInfo from 'react-native-device-info';
-import Orientation from 'react-native-orientation';
 import {useNavigation, useOrientation} from '../../../hooks'
-import Icon from 'react-native-vector-icons/FontAwesome';
-import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow } from '../../../colors/colorsApp';
-import { isIphone } from '../../../access/requestedData';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
+import {isIphone} from '../../../access/requestedData';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectUserInfo} from '../../../slices/varSlice';
+
+let data = ''
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
 
-    navigation.addListener('focus', () => {
-        setContador(contador + 1);
-    });
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Dashboard')
+        }, [])
+    );
 
     useEffect(() => {
-        handlePath('Dashboard')
-    },[contador])
-
-    useEffect(async ()=> {
-        let keyAccessed = 'keyAccess';
-        let datita = await AsyncStorage.getItem(keyAccessed) || '0';
-        
-        if(datita) {
-            await AsyncStorage.removeItem(keyAccessed).then( () => AsyncStorage.setItem(keyAccessed, '1'));
-        }
-        else {
-            await AsyncStorage.setItem(keyAccessed, AsyncStorage.setItem(keyAccessed, '1'));
-        }
-    },[contador])
-
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        let obj = {
-            referencias_personales: data.data.referencias_personales ? data.data.referencias_personales : '',
-        }
-
+        let obj = {referencias_personales: data.data.referencias_personales ? data.data.referencias_personales : ''}
         setInfo(obj)
-        return undefined
     },[])
 
     const status = true;
@@ -60,7 +39,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'flex-end', justifyContent: 'center', marginBottom: hasBottomLine ? 7 : 0, marginLeft: hasBottomLine ? 7 : 0}}>
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
             </View>
         )
     }
@@ -89,7 +68,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         &&
                             info.referencias_personales.map(x => 
                                 <View style={{justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%', marginBottom: !isTablet() ? 20 : 35}} key={x.nombre}>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#74A9C4', borderColor: Blue, borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 15, borderTopEndRadius: 15}}>
+                                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: Blue, borderColor: Blue, borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 15, borderTopEndRadius: 15}}>
                                         <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>{`Reference ${x.id}`}</Text>
                                     </View>
                                     {

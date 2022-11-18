@@ -1,15 +1,19 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
+import {View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useNavigation, useOrientation, useScroll} from '../../../hooks'
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
-import { isIphone } from '../../../access/requestedData';
-import tw from 'twrnc';
+import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc';
+
+let data = ''
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
@@ -24,16 +28,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
+    useEffect(() => {
         let obj = {
             contacto: data.data.informacion_medica.infom_contacto ? data.data.informacion_medica.infom_contacto : 'N/A',
             telefono: data.data.informacion_medica.infom_telefono ? data.data.informacion_medica.infom_telefono : 'N/A',

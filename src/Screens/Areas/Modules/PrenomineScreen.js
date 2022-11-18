@@ -4,7 +4,6 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../c
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Title, BottomNavBar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components'
 import {useConnection, useNavigation, useOrientation, useScroll} from '../../../hooks'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isIphone, live, login, urlNomina} from '../../../access/requestedData';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleHideNomina, selectNominas, setNominas} from '../../../slices/nominaSlice';
@@ -31,7 +30,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {handleScroll, translateY, paddingTop} = useScroll(orientationInfo.initial)
 
@@ -132,7 +131,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         {
                             empleados.length >= 1
                             ?
-                                <View style={{width: 30, height: 30, backgroundColor: Blue, borderRadius: 35, justifyContent: 'center', alignItems: 'center', paddingTop: oculta ? 1 : 0, paddingBottom: !oculta ? 1 : 0, paddingLeft: .5}}>
+                                <View style={{width: 30, height: 30, backgroundColor: Blue, borderRadius: 35, justifyContent: 'center', alignItems: 'center', paddingTop: oculta ? 1 : 0, paddingBottom: !oculta ? 1 : 0, paddingLeft: isIphone ? .5 : 0}}>
                                     <IonIcons name={oculta ? 'chevron-down' : 'chevron-up'} size={30} color={'#fff'} />
                                 </View>
                             :

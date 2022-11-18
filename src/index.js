@@ -73,12 +73,13 @@ const StackEmployee = ({route: {params}, navigation, style}) => {
 }
 
 const DrawerEmployeeRoute = ({route: {params}}) => {
+
     return (
         <Drawer.Navigator
 			screenOptions={{headerShown: false, drawerPosition: 'right', drawerStyle: {width: '80%'}, sceneContainerStyle: {backgroundColor: 'transparent'}}}
-            drawerContent={(props) =>  <DrawerEmployees initialParams={{language: params.language, orientation: params.orientation}} {...props} />}
+            drawerContent={(props) =>  <DrawerEmployees initialParams={{language: '1'}} {...props} />}
         >
-            <Stack.Screen name={'Modules'} initialParams={{language: params.language, orientation: params.orientation}} component={StackEmployee} />
+            <Stack.Screen name={'Modules'} initialParams={{language: '1'}} component={StackEmployee} />
         </Drawer.Navigator>
     );
 }

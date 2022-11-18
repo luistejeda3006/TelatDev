@@ -9,9 +9,9 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {useDispatch, useSelector} from 'react-redux'
 import {actionItem, selectData, selectPoints, selectFilteredData, selectQuinielas, setData, setFilteredData, setDataSelected, setQuinielas, setFilteredSelected, setPoints, selectGlobal, setGlobal, selectInstructions, setInstructions} from '../../../slices/worldCupSlice'
-import tw from 'twrnc';
 import {useFocusEffect} from '@react-navigation/native'
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice'
+import tw from 'twrnc';
 
 let data = [];
 let points = [];
@@ -60,7 +60,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const getInformation = async () => {

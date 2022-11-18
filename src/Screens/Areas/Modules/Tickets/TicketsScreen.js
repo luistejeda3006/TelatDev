@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {isIphone, live, login, urlTickets} from '../../../../access/requestedData';
 import {formatDate, getCurrentDate, getLastDayMonth} from '../../../../js/dates';

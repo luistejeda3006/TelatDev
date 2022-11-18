@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 import {BallIndicator} from 'react-native-indicators';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../../colors/colorsApp';
-import tw from 'twrnc';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
@@ -37,7 +36,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)

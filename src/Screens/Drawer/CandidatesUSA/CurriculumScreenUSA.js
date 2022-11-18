@@ -1,38 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useNavigation, useOrientation} from '../../../hooks'
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectUserInfo} from '../../../slices/varSlice';
 import tw from 'twrnc';
 
+let data = ''
+
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
 
-    navigation.addListener('focus', () => {
-        setContador(contador + 1);
-    });
-
-    useEffect(() => {
-        handlePath('Dashboard')
-    },[contador])
-
-    useEffect(async ()=> {
-        let keyAccessed = 'keyAccess';
-        let datita = await AsyncStorage.getItem(keyAccessed) || '0';
-        
-        if(datita) {
-            await AsyncStorage.removeItem(keyAccessed).then( () => AsyncStorage.setItem(keyAccessed, '1'));
-        }
-        else {
-            await AsyncStorage.setItem(keyAccessed, AsyncStorage.setItem(keyAccessed, '1'));
-        }
-    },[contador])
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Dashboard')
+        }, [])
+    );
 
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
@@ -41,11 +31,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'initial': orientation
     });
 
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
+    useEffect(() => {
         let obj = {
             languages: data.data.curriculum.idiomas,
             level_computers: data.data.curriculum.curr_usa_computadora ? data.data.curriculum.curr_usa_computadora : 'N/A',
@@ -61,7 +47,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={tw`self-stretch items-${leftPosition ? 'start' : 'end'} justify-center pb-2 ml-${hasBottomLine ? 2 : 0}`}>
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
             </View>
         )
     }

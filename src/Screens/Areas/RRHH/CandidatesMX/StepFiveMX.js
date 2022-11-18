@@ -5,7 +5,7 @@ import {getCurrentDate} from '../../../../js/dates';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useOrientation} from '../../../../hooks';
-import {live, login, urlJobs, PUBLIC_API_KEY, ID_APP, origen, contactPhoneNumber} from '../../../../access/requestedData';
+import {live, login, urlJobs, origen, contactPhoneNumber} from '../../../../access/requestedData';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
@@ -53,7 +53,7 @@ export default ({language, orientation, navigation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {contactoEmergencia_5, telefonoEmergencia_5, tipoSangre_5, alergias_5, medicamentos_5, enfermedades_5} = values;
 

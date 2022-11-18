@@ -10,7 +10,7 @@ import {isIphone, live, login, urlVacaciones} from '../../../../access/requested
 import {hideEmpleado, hideEmpleadoTemporal, selectEmpleados, selectTemporalEmpleados, setEmpleados, setTemporalEmpleado} from '../../../../slices/vacationSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 
 let id_usuario = '';
 let id_puesto = '';
@@ -20,11 +20,13 @@ let cuenta = 0;
 let filtro = ''
 let empleados = null;
 let temporalEmpleados = null;
+let language = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation, route: {params: {orientation}}}) => {
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
-
+    language = useSelector(selectLanguageApp)
+    
     empleados = useSelector(selectEmpleados)
     temporalEmpleados = useSelector(selectTemporalEmpleados)
     const dispatch = useDispatch()
@@ -39,7 +41,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {handleScroll, translateY, paddingTop} = useScroll(orientationInfo.initial)
 

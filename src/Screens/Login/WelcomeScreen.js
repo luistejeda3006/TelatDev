@@ -6,9 +6,9 @@ import {BallIndicator} from 'react-native-indicators';
 import {Orange} from '../../colors/colorsApp';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
+import {useFocusEffect} from '@react-navigation/native';
+import {setLanguageApp, setTokenInfo, setUserInfo} from '../../slices/varSlice';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
-import { setLanguageApp, setTokenInfo, setUserInfo } from '../../slices/varSlice';
 
 let orientation = 'PORTRAIT';
 let keyLanguage = 'Language';
@@ -24,7 +24,7 @@ export default ({navigation, route: {params}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     
     const [info, setInfo] = useState({})
@@ -78,7 +78,7 @@ export default ({navigation, route: {params}}) => {
         useCallback(() => {
             setTimeout(() => {
                 navigation.navigate('Dashboard', {language: language, orientation: orientationInfo.initial});
-            }, (contador === 1 || contador === 0) ? 4000 : 1) //AQUI ERAN 4000 en el primero
+            }, (contador === 1 || contador === 0) ? 100 : 1) //AQUI ERAN 4000 en el primero
         }, [])
     );
    

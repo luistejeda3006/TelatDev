@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import {View, Text, ScrollView, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, StatusBar} from 'react-native'
 import {useConnection, useOrientation, useNavigation, useForm, useScroll} from '../../../hooks'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +7,7 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../c
 import {HeaderPortrait, HeaderLandscape, Input, Modal, MultiText, ModalLoading, FailedNetwork, Title} from '../../../components'
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import Picker from 'react-native-picker-select';
-import { isIphone, live, login, urlJobs } from '../../../access/requestedData';
+import {isIphone, live, login, urlJobs} from '../../../access/requestedData';
 import RNFetchBlob from 'rn-fetch-blob'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import tw from 'twrnc'
@@ -54,7 +54,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 

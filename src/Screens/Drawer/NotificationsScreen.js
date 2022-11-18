@@ -7,7 +7,7 @@ import {BallIndicator} from 'react-native-indicators';
 import {isIphone, live, login, urlApp} from '../../access/requestedData';
 import messaging from '@react-native-firebase/messaging'
 import {barStyle, barStyleBackground, Orange, SafeAreaBackground} from '../../colors/colorsApp';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
 
 let token = undefined;
@@ -19,7 +19,6 @@ let lastNotifyCand = 'lastNotifyCand';
 export default ({navigation, route: {params: {language, orientation, origin = 1}}}) => {
     const {handlePath} = useNavigation()
     const {askForConnection, hasConnection} = useConnection()
-    const [contador, setContador] = useState(0)
     const [loading, setLoading] = useState(false)
     const [notifications, setNotifications] = useState([])
 
@@ -31,7 +30,7 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
 
     const getNotificaciones = async () => {
         try{
-            if(contador === 0) setLoading(true)
+            setLoading(true)
             let valueNotificationToken = null
             valueNotificationToken = await messaging().getToken();
             const body = {
@@ -74,13 +73,13 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
 
     useEffect(() => {
         getNotificaciones()
-    },[contador, hasConnection])
+    },[hasConnection])
 
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)

@@ -44,7 +44,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     
     const first = {label: language === '1' ? 'Seleccionar' : 'Select', value: 'SEL'};

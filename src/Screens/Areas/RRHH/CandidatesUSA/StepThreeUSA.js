@@ -6,9 +6,9 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {contactEmail, ID_APP, live, login, origen, PUBLIC_API_KEY, urlJobs} from '../../../../access/requestedData';
+import {contactEmail, live, login, origen, urlJobs} from '../../../../access/requestedData';
 import {getCurrentDate} from '../../../../js/dates';
-import { Blue } from '../../../../colors/colorsApp';
+import {Blue} from '../../../../colors/colorsApp';
 
 let currentOne = null;
 let currentTwo = null;
@@ -49,7 +49,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const [filters, setFilters] = useState({

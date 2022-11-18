@@ -1,19 +1,16 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Alert, Linking, BackHandler} from 'react-native';
-import {Modal, InputForm, Politics, Picker, TitleForms, CheckBox} from '../../../../components';
+import {InputForm, Politics, Picker, TitleForms, CheckBox} from '../../../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import {ProgressStep} from 'react-native-progress-steps';
 import DeviceInfo from 'react-native-device-info';
 import {baseUrl, live, login, siteKey, urlJobs, contactEmail} from '../../../../access/requestedData';
-import {useOrientation, useConnection} from '../../../../hooks';
+import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
-import { Blue } from '../../../../colors/colorsApp';
+import {Blue} from '../../../../colors/colorsApp';
 
-let currentOrientation = null;
-let keyOrientation = 'Orientation';
-let age = null;
 export default ({navigation, language, orientation, ...rest}) => {
     const {isTablet} = DeviceInfo;
     const input_nom = useRef()
@@ -30,7 +27,6 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     const first = {label: 'Select', value: 'SEL'};
     const [verified, setVerified] = useState('')
-    const [initialState, setInitialState] = useState(0)
     const [recruitmentData, setRecruitmentData] = useState([])
     const [checked, setChecked] = useState(false);
 
@@ -38,7 +34,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     useEffect(() => {

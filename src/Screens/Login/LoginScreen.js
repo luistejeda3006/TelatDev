@@ -10,8 +10,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Modal} from '../../components';
 import {Button} from 'react-native-paper';
+import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
 
 let contador = 0;
 let sendNotification = 'sendNotification'
@@ -25,7 +25,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const {isTablet} = DeviceInfo;
     const [visible, setVisible] = useState(false);
     const [show, setShow] = useState(false);
-    const [cuenta, setCuenta] = useState(0)
 
     const [bodyMessage, setBodyMessage] = useState({
         header: language === '1' ? 'Recuperación de Contraseña' : 'Password Recovery',
@@ -46,7 +45,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const getIsLogged = async () => {
@@ -58,7 +57,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     useEffect(() => {
         getIsLogged()
-    },[cuenta])
+    },[])
 
     useFocusEffect(
         useCallback(() => {

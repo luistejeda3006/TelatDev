@@ -7,6 +7,7 @@ import { Blue } from '../../colors/colorsApp';
 
 export default ({fieldName, handlePress, handleDate, timestamp, initialDate, show, required = true}) => {
     const [field, helpers, meta] = useField(fieldName);
+    console.log('field: ', field)
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const { value, setValue } = meta;
     useEffect(() => {

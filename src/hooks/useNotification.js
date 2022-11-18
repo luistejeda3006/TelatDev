@@ -12,25 +12,26 @@ export default () => {
     let dataNotification = 'dataNotification'
     const [arrived, setArrived] = useState('')
 
+    
     useEffect(() => {
-        const unsubscribe = messaging().onNotificationOpenedApp(e => console.log('data cuando abre la noti: ', e))
-        return unsubscribe
+        const notificationOpened = messaging().onNotificationOpenedApp(e => console.log('data cuando abre la noti: ', e))
+        return notificationOpened
     },[])
 
+    const backgroundMessageHandler = messaging().setBackgroundMessageHandler(async remoteMessage => {
+        console.log('Message handled in the background!', remoteMessage);
+    });
+    
     useEffect(() => {
-        const unsubscribe = messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('Message handled in the background!', remoteMessage);
-        });
-        return unsubscribe
+        return backgroundMessageHandler
     },[])
-
+    
     useEffect(() => {
-        const unsubscribe = messaging().onMessage(async remoteMessage => {
+        const onMessage = messaging().onMessage(async remoteMessage => {
             setArrived(Math.random().toString())
             AsyncStorage.setItem(dataNotification, JSON.stringify(remoteMessage))
         });
-
-        return unsubscribe
+        return onMessage
     },[])
 
     return{

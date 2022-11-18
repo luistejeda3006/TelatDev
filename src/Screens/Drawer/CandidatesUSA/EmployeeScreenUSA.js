@@ -1,39 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, Title} from '../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useOrientation} from '../../../hooks'
 import DeviceInfo from 'react-native-device-info';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../colors/colorsApp';
-import { isIphone } from '../../../access/requestedData';
+import {isIphone} from '../../../access/requestedData';
+import {useSelector} from 'react-redux';
+import {selectUserInfo} from '../../../slices/varSlice';
+import {useFocusEffect} from '@react-navigation/native';
+
+let data = ''
 
 export default ({navigation, route: {params: {language, orientation}}}) => {
+    data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
-
-    navigation.addListener('focus', () => {
-        setContador(contador + 1);
-    });
-
-    useEffect(() => {
-        handlePath('Dashboard')
-    },[contador])
-
-    useEffect(async ()=> {
-        let keyAccessed = 'keyAccess';
-        let datita = await AsyncStorage.getItem(keyAccessed) || '0';
-        
-        if(datita) {
-            await AsyncStorage.removeItem(keyAccessed).then( () => AsyncStorage.setItem(keyAccessed, '1'));
-        }
-        else {
-            await AsyncStorage.setItem(keyAccessed, AsyncStorage.setItem(keyAccessed, '1'));
-        }
-    },[contador])
 
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
@@ -42,11 +24,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'initial': orientation
     });
 
-    useEffect(async () => {
-        let data = null;
-        let keyUserInfo = 'userInfo';
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Dashboard')
+        }, [])
+    );
+
+
+    useEffect(() => {
         let obj = {
             emp_numero: data.data.datos_laborales.emp_numero ? data.data.datos_laborales.emp_numero : 'N/A',
             fecha_ingreso: data.data.datos_laborales.fecha_ingreso ? data.data.datos_laborales.fecha_ingreso : 'N/A',
@@ -72,7 +57,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'flex-end', justifyContent: 'center', paddingBottom: 7, marginLeft: hasBottomLine ? 7 : 0}}>
-                <Text style={{fontSize: 14}}>{title}</Text>
+                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
             </View>
         )
     }

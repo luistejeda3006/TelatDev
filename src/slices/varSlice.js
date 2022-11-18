@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    visibleSliders: false, //cambiar a TRUE para ver los sliders
+    visibleSliders: true, //cambiar a TRUE para ver los sliders
     languageApp: '1',
     tokenInfo: '',
     userInfo: ''

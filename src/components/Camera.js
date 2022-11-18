@@ -49,7 +49,8 @@ export default ({savePicture = undefined, imagen, required = false}) => {
             ImagePicker.openCropper({
                 path: uriG,
                 width: 300,
-                height: 400
+                height: 400,
+                freeStyleCropEnabled: true
               }).then(image => {
                 setUriG(image.path)
                 const nombre = image.path.split('/')

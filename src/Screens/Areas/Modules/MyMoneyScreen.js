@@ -8,10 +8,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
-import tw from 'twrnc'
 import {useDispatch, useSelector} from 'react-redux';
 import {selectAgente, selectOperaciones, selectPeriodos, setAgente, setOperaciones, setPeriodos} from '../../../slices/moneySlice';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc'
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
@@ -126,7 +126,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
@@ -157,6 +157,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 'live': live,
                 'login': login
             }
+
+            console.log('body: ', body)
             
             const request = await fetch(urlMoney, {
                 method: 'POST',
@@ -205,6 +207,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     setTimeout(() => {
                         setCurrentPeriodo(!currentPeriodo ? response.quincenas[0].label : currentPeriodo)
                         dispatch(setPeriodos(response.quincenas))
+                        console.log('response: ', response.my_money)
                         dispatch(setOperaciones(response.my_money))
                         dispatch(setAgente(obj))
                         setInitialState({...initialState, fechas: respuestita.dates, loading: false});
@@ -554,76 +557,72 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             {
                                 sectionActive === 1
                                 ?
-                                    !loading
-                                    ?
-                                        <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 25, marginTop: 15, paddingHorizontal: 10, paddingTop: 5, paddingBottom: 20, backgroundColor: '#fff', shadowColor: '#000', elevation: 5, shadowOffset: {
-                                            width: 0,
-                                            height: 2,
-                                        },
-                                        shadowOpacity: 0.34,
-                                        shadowRadius: 6.27, borderRadius: 15, marginHorizontal: isIphone ? '5%' : '3%'}}>
-                                            {/* <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8, paddingBottom: 8, borderBottomColor: Blue, borderBottomWidth: 1, marginTop: 10}}>
-                                                <View style={{flexDirection: 'row'}}>
-                                                    <View style={{width: 'auto', justifyContent: 'center'}}>
-                                                        <IonIcons name={'currency-usd'} size={24} color={Yellow} />
-                                                    </View>
-                                                    <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                                                        <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>{'My Money Details'}</Text>
-                                                    </View>
+                                    <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 25, marginTop: 15, paddingHorizontal: 10, paddingTop: 5, paddingBottom: 20, backgroundColor: '#fff', shadowColor: '#000', elevation: 5, shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.34,
+                                    shadowRadius: 6.27, borderRadius: 15, marginHorizontal: isIphone ? '5%' : '3%'}}>
+                                        {/* <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8, paddingBottom: 8, borderBottomColor: Blue, borderBottomWidth: 1, marginTop: 10}}>
+                                            <View style={{flexDirection: 'row'}}>
+                                                <View style={{width: 'auto', justifyContent: 'center'}}>
+                                                    <IonIcons name={'currency-usd'} size={24} color={Yellow} />
                                                 </View>
-                                            </View> */}
-                                            <Title icon={'user'} tipo={1} hasBottom={false} title={'My Money Details'}/>
-                                            <Header title={'Operations'} id={1} hide={header_uno} first={true}/>
-                                            {
-                                                header_uno
-                                                &&
-                                                    <>
-                                                        <Elemento title={'Work Days'} subtitle={operaciones.mym_work_days ? operaciones.mym_work_days : '0'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Decimal Hours'} subtitle={operaciones.mym_decimal_hours ? operaciones.mym_decimal_hours : '0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Productivity Bonus'} subtitle={operaciones.mym_productivity_2 ? `$${operaciones.mym_productivity_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Excelence Bonus'} subtitle={operaciones.mym_excelence_2 ? `$${operaciones.mym_excelence_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Attendance Bonus'} subtitle={operaciones.mym_attendance_2 ? `$${operaciones.mym_attendance_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Tenure Bonus'} subtitle={operaciones.mym_tenure_2 ? `$${operaciones.mym_tenure_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Certification Bonus'} subtitle={operaciones.mym_certification_2 ? `$${operaciones.mym_certification_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Transportation Bonus'} subtitle={operaciones.mym_transportation ? `$${operaciones.mym_transportation}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Uncertified Hours'} subtitle={operaciones.mym_uncertified_hours_2 ? `$${operaciones.mym_uncertified_hours_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Holiday'} subtitle={operaciones.mym_holiday ? `$${operaciones.mym_holiday}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Special OT'} subtitle={operaciones.my_especial_ot ? `$${operaciones.my_especial_ot}` : '$0.00'} titleBackground={'#E2EFDA'}/>
-                                                        <Elemento title={'Payment per Hour'} subtitle={operaciones.mym_payment_per_hour ? `$${operaciones.mym_payment_per_hour}` : '$0.00'} titleBackground={'#E2EFDA'} last={true}/>
-                                                    </>  
-                                            }
-                            
-                                            <Header title={'Additionals'} id={2} icon={'plus'} hide={header_dos}/>
-                                            {
-                                                header_dos
-                                                && 
-                                                    <>
-                                                        <Elemento title={'Retroactive Adjustments'} subtitle={operaciones.mym_retroactive_adjustments ? `$${operaciones.mym_retroactive_adjustments}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Welcome Bonus'} subtitle={operaciones.bono_bienvenida ? `$${operaciones.bono_bienvenida}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Referral Bonus'} subtitle={operaciones.bono_referidos ? `$${operaciones.bono_referidos}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Equipment Transportation Bonus'} subtitle={operaciones.bono_transporte ? `$${operaciones.bono_transporte}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Compliment Calls'} subtitle={operaciones.bono_cc ? `$${operaciones.bono_cc}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Salary Permits'} subtitle={operaciones.mym_salary_permits ? `$${operaciones.mym_salary_permits}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Vacations'} subtitle={operaciones.mym_vacations ? `$${operaciones.mym_vacations}` : '$0.00'} titleBackground={'#FFE699'}/>
-                                                        <Elemento title={'Work Accesories'} subtitle={operaciones.mym_work_accessories ? `$${operaciones.mym_work_accessories}` : '$0.00'} titleBackground={'#FFE699'} last={true}/>
-                                                    </>
-                                            }
+                                                <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
+                                                    <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>{'My Money Details'}</Text>
+                                                </View>
+                                            </View>
+                                        </View> */}
+                                        <Title icon={'user'} tipo={1} hasBottom={false} title={'My Money Details'}/>
+                                        <Header title={'Operations'} id={1} hide={header_uno} first={true}/>
+                                        {
+                                            header_uno
+                                            &&
+                                                <>
+                                                    <Elemento title={'Work Days'} subtitle={operaciones.mym_work_days ? operaciones.mym_work_days : '0'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Decimal Hours'} subtitle={operaciones.mym_decimal_hours ? operaciones.mym_decimal_hours : '0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Productivity Bonus'} subtitle={operaciones.mym_productivity_2 ? `$${operaciones.mym_productivity_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Excelence Bonus'} subtitle={operaciones.mym_excelence_2 ? `$${operaciones.mym_excelence_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Attendance Bonus'} subtitle={operaciones.mym_attendance_2 ? `$${operaciones.mym_attendance_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Tenure Bonus'} subtitle={operaciones.mym_tenure_2 ? `$${operaciones.mym_tenure_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Certification Bonus'} subtitle={operaciones.mym_certification_2 ? `$${operaciones.mym_certification_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Transportation Bonus'} subtitle={operaciones.mym_transportation ? `$${operaciones.mym_transportation}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Uncertified Hours'} subtitle={operaciones.mym_uncertified_hours_2 ? `$${operaciones.mym_uncertified_hours_2}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Holiday'} subtitle={operaciones.mym_holiday ? `$${operaciones.mym_holiday}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Special OT'} subtitle={operaciones.my_especial_ot ? `$${operaciones.my_especial_ot}` : '$0.00'} titleBackground={'#E2EFDA'}/>
+                                                    <Elemento title={'Payment per Hour'} subtitle={operaciones.mym_payment_per_hour ? `$${operaciones.mym_payment_per_hour}` : '$0.00'} titleBackground={'#E2EFDA'} last={true}/>
+                                                </>  
+                                        }
+                        
+                                        <Header title={'Additionals'} id={2} icon={'plus'} hide={header_dos}/>
+                                        {
+                                            header_dos
+                                            && 
+                                                <>
+                                                    <Elemento title={'Retroactive Adjustments'} subtitle={operaciones.mym_retroactive_adjustments ? `$${operaciones.mym_retroactive_adjustments}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Welcome Bonus'} subtitle={operaciones.bono_bienvenida ? `$${operaciones.bono_bienvenida}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Referral Bonus'} subtitle={operaciones.bono_referidos ? `$${operaciones.bono_referidos}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Equipment Transportation Bonus'} subtitle={operaciones.bono_transporte ? `$${operaciones.bono_transporte}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Compliment Calls'} subtitle={operaciones.bono_cc ? `$${operaciones.bono_cc}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Salary Permits'} subtitle={operaciones.mym_salary_permits ? `$${operaciones.mym_salary_permits}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Vacations'} subtitle={operaciones.mym_vacations ? `$${operaciones.mym_vacations}` : '$0.00'} titleBackground={'#FFE699'}/>
+                                                    <Elemento title={'Work Accesories'} subtitle={operaciones.mym_work_accessories ? `$${operaciones.mym_work_accessories}` : '$0.00'} titleBackground={'#FFE699'} last={true}/>
+                                                </>
+                                        }
 
-                                            <Header title={'Totals'} icon={'currency-usd'} tipo={2} id={3} hide={header_tres}/>
-                                            {
-                                                header_tres
-                                                &&
-                                                    <>
-                                                        <Elemento title={'Subtotal'} subtitle={operaciones.mym_subtotal ? `$${operaciones.mym_subtotal}` : '$0.00'} titleBackground={'#00B0F0'}/>
-                                                        <Elemento title={'Aditionals'} subtitle={operaciones.adicional ? `$${operaciones.adicional}` : '$0.00'} titleBackground={'#00B0F0'}/>
-                                                        <Elemento title={'Discounts for Incidents'} subtitle={operaciones.mym_discounts_incidents ? `${operaciones.mym_discounts_incidents}` : '0'} titleBackground={'#00B0F0'}/>
-                                                        <Elemento title={'Total Discount Incidents'} subtitle={operaciones.discount_daily ? `$${operaciones.discount_daily}` : '$0.00'} titleBackground={'#00B0F0'}/>
-                                                        <Elemento title={'Total'} subtitle={operaciones.total ? `$${operaciones.total}` : '$0.00'} titleBackground={'#00B0F0'} last={true}/>
-                                                    </>
-                                            }
-                                        </View>
-                                    :
-                                        <></>
+                                        <Header title={'Totals'} icon={'currency-usd'} tipo={2} id={3} hide={header_tres}/>
+                                        {
+                                            header_tres
+                                            &&
+                                                <>
+                                                    <Elemento title={'Subtotal'} subtitle={operaciones.mym_subtotal ? `$${operaciones.mym_subtotal}` : '$0.00'} titleBackground={'#00B0F0'}/>
+                                                    <Elemento title={'Aditionals'} subtitle={operaciones.adicional ? `$${operaciones.adicional}` : '$0.00'} titleBackground={'#00B0F0'}/>
+                                                    <Elemento title={'Discounts for Incidents'} subtitle={operaciones.mym_discounts_incidents ? `${operaciones.mym_discounts_incidents}` : '0'} titleBackground={'#00B0F0'}/>
+                                                    <Elemento title={'Total Discount Incidents'} subtitle={operaciones.discount_daily ? `$${operaciones.discount_daily}` : '$0.00'} titleBackground={'#00B0F0'}/>
+                                                    <Elemento title={'Total'} subtitle={operaciones.total ? `$${operaciones.total}` : '$0.00'} titleBackground={'#00B0F0'} last={true}/>
+                                                </>
+                                        }
+                                    </View>
                                 :
                                     <View style={{flex: 1, alignSelf: 'stretch', paddingHorizontal: 10, paddingVertical: 5, marginVertical: 15, backgroundColor: '#fff', shadowColor: '#000', elevation: 5, shadowOffset: {
                                         width: 0,

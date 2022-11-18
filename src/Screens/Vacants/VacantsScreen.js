@@ -25,7 +25,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     useFocusEffect(

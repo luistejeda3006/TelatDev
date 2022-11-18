@@ -7,10 +7,10 @@ import {isIphone, live, login, urlNomina} from '../../../access/requestedData';
 import {getCurrentDate} from '../../../js/dates';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import tw from 'twrnc';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
@@ -28,7 +28,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     useFocusEffect(

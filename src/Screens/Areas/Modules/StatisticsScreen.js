@@ -11,19 +11,22 @@ import {LineChart, BarChart, PieChart} from 'react-native-chart-kit';
 import {isIphone, live, login, urlReportes} from '../../../access/requestedData';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAltasBajasIRP, selectAltasBajasQuincenas, selectAltasGrafico, selectBajasGrafico, selectBodyDos, selectBodyMasterDos, selectBodyMasterUno, selectBodyUno, selectDetalleAltas, selectDetalleBajas, selectEdificios, selectEmpleadosAreas, selectEmpleadosRazonSocial, selectEmpleadosUbicacion, selectLegendsMotivoBaja, selectMotivoBajasValue, selectTiempoReal, selectTraining, selectTrainingCategorias, selectTrainingGrafico } from '../../../slices/statisticsSlice';
-import { selectPeriodos } from '../../../slices/moneySlice';
+import {useSelector} from 'react-redux';
+import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 let token = null;
+let user = null;
 let temporal = null;
 let id_usuario = null;
 let cuenta = 0;
-let data = {}
+let longitud = 0;
 
 export default ({navigation, route: {params: {orientation}}}) => {
+    token = useSelector(selectTokenInfo)
+    user = useSelector(selectUserInfo)
+
     const {isTablet} = DeviceInfo;
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     
@@ -44,15 +47,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     
-    const getUserInfo = async () => {
-        data = await AsyncStorage.getItem(keyUserInfo) || '[]';
-        data = JSON.parse(data);
-        id_usuario = data.data.datos_personales.id_usuario
+    const getUserInfo = () => {
+        id_usuario = user.data.datos_personales.id_usuario
     }
 
     useEffect(() => {
@@ -447,8 +448,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
             cuenta = cuenta + 1;
         }
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'get_estadisticos',
                 'data': {
@@ -544,7 +543,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                 add_color_2 = {...res.data2[res.data2.length - 1], color: () => res.data2[res.data2.length - 1].color}
                 fin = [...add_color, ...odi]
-                
+
+                longitud = (res.legends_index.length) + 1
                 setInitialState({...initialState, 
                     loading: false,
                     tiempo_real: response.inf_tiempo_real,
@@ -625,8 +625,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const getYears = async () => {
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'get_years',
                 'data': {
@@ -669,9 +667,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const getEmpleadoSubarea = async () => {
         try{
-            setInitialState({...initialState, loading: true})
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'empleados_subarea',
                 'data': {
@@ -731,8 +726,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const getDetalleEmpleadoSubarea = async () => {
         setInitialState({...initialState, loading: true})
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'detalle_empleados_subarea',
                 'data': {
@@ -788,8 +781,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const getComparativasUno = async () => {
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
             const body = {
                 'action': 'graficas_comparativas1',
                 'data': {
@@ -856,9 +847,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const getComparativasDos = async () => {
         try{
-            token = await AsyncStorage.getItem(keyTokenInfo) || '{}';
-            token = JSON.parse(token);
-    
             const body = {
                 'action': 'graficas_comparativas2',
                 'data': {
@@ -969,7 +957,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
             const search = nuevos.find(x => String(x.year) === String(year))
             if(legend){
                 legends = legendsGraphicIRP.filter(x => String(x) !== String(year))
-                nuevaData = dataIRP.filter(x => String(x.id) !== String(search.id) && String(x.id) !== '4')
+                nuevaData = dataIRP.filter(x => String(x.id) !== String(search.id) && String(x.id) !== String(longitud))
             } else {
                 nuevaData = generalIRP.find(x => x.id === search.id)
                 nuevaData = [...dataIRP, nuevaData]

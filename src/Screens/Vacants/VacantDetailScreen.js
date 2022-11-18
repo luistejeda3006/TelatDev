@@ -16,7 +16,7 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
-        'initial': orientation
+        'initial': 'PORTRAIT'
     });
 
     const [initialState, setInitialState] = useState({
@@ -75,18 +75,21 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
                                         value={description}
+                                        stylesheet={styles}
                                     />
                                 </View>
                                 <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Ofrecemos\n' : 'We Offer\n'}</Text>
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
                                         value={benefits}
+                                        stylesheet={styles}
                                     />
                                 </View>
                                 <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Requisitos\n' : 'Requirements\n'}</Text>
                                 <View style={tw`flex-1 mb-4`}>
                                     <HTMLView
                                         value={requeriments}
+                                        stylesheet={styles}
                                     />
                                 </View>
                                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {language: language, orientation: orientationInfo.initial})}>
@@ -103,3 +106,16 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    p: {
+        color: '#000'
+    },
+    li: {
+        color: '#000'
+    },
+    font: {
+        color: '#000'
+    },
+
+})

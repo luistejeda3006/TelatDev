@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, FlatList, View, StatusBar, SafeAreaView, BackHandler, Alert, RefreshControl, ImageBackground, Image, Text, TouchableOpacity} from 'react-native';
+import {FlatList, View, StatusBar, SafeAreaView, BackHandler, Alert, RefreshControl, ImageBackground, Image, Text, TouchableOpacity} from 'react-native';
 import {Card, FailedNetwork, BottomNavBar} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
@@ -11,17 +11,15 @@ import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '..
 import {useDispatch, useSelector} from 'react-redux';
 import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlice';
 import {selectOrientation} from '../../slices/orientationSlice';
-import {selectLanguageApp, selectTokenInfo, selectUserInfo, setTokenInfo, setUserInfo, setVisibleSliders} from '../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo, setVisibleSliders} from '../../slices/varSlice';
 import UpdateAvailable from '../../components/UpdateAvailable';
 import tw from 'twrnc';
 
-let currentLanguage = null;
 let gender = null;
 let picture = null;
 let token = null;
 let user = null;
 
-let data = null;
 let keyUserInfo = 'userInfo';
 let lastNotify = 'lastNotify';
 let keyTokenInfo = 'tokenInfo';
@@ -57,22 +55,15 @@ export default ({navigation}) => {
     const dispatch = useDispatch()
 
     const {isTablet} = DeviceInfo;
-    const keyLanguage = 'Language';
     const [enabled, setEnabled] = useState(false)
-    const [contador, setContador] = useState(0)
     const [modules, setModules] = useState([])
     const [notification, setNotificacion] = useState(false)
     const [loading, setLoading] = useState(true)
     const {hasConnection, askForConnection} = useConnection();
     const {arrived} = useNotification()
     const {translateY, paddingTop, handleScroll} = useScroll()
-    const [refreshing, setRefreshing] = useState(false)
 
     const {sound: openSound} = useSound('pop.mp3')
-
-    useEffect(async () => {
-        askForConnection()
-    },[])
 
     const getToken = async() => {
         valueNotificationToken = await AsyncStorage.getItem(notificationToken);
@@ -153,7 +144,7 @@ export default ({navigation}) => {
                                 onPress: () => null,
                                 style: 'cancel'
                             },
-                            { text: gender ? language === '1' ? 'Sí' : 'Yes' : 'Yes', onPress: access === '1' ? () => navigation.navigate('Dashboard') : () => BackHandler.exitApp() }
+                            { text: gender ? language === '1' ? 'Sí' : 'Yes' : 'Yes', onPress: access === '1' ? () => navigation.navigate('Dashboard', {language: language}) : () => BackHandler.exitApp() }
                         ]);
                     }
                 }
@@ -217,7 +208,6 @@ export default ({navigation}) => {
     },[])
 
     const getInformation = async () => {
-        setRefreshing(true)
         try{
             id_usuario = user.data.datos_personales.id_usuario
             const body = {
@@ -286,7 +276,6 @@ export default ({navigation}) => {
                 
                 await AsyncStorage.removeItem(keyUserInfo).then(() => AsyncStorage.setItem(keyUserInfo, JSON.stringify(obj)));
                 setLoading(false)
-                setRefreshing(false)
                 cuenta = cuenta + 1
             }
             else {
@@ -306,7 +295,6 @@ export default ({navigation}) => {
             console.log(e)
             askForConnection()
             setLoading(false)
-            setRefreshing(false)
         }
     }
 
@@ -411,7 +399,7 @@ export default ({navigation}) => {
                                         />
                                     </View>
                                     <View style={tw`flex-1 justify-center items-center`}>
-                                        <Text style={tw`text-lg text-white font-bold`}>{currentLanguage === '1' ? 'Menú Principal' : 'Main Menu'}</Text>
+                                        <Text style={tw`text-lg text-white font-bold`}>{language === '1' ? 'Menú Principal' : 'Main Menu'}</Text>
                                     </View>
                                     <View style={tw`w-${orientation === 'PORTRAIT' ? '20%' : '10%'} h-[100%] justify-center items-center`}>
                                         
@@ -550,13 +538,13 @@ export default ({navigation}) => {
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground}} />
-                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={currentLanguage} orientation={orientation}/>
+                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
                     </>
             }
             {
                 show && cuenta !== 0
                 &&
-                    <UpdateAvailable language={currentLanguage} visibility={true} id_ios={info_version.id_ios} id_android={info_version.id_android}/>
+                    <UpdateAvailable language={language} visibility={true} id_ios={info_version.id_ios} id_android={info_version.id_android}/>
             } 
         </>
     );
