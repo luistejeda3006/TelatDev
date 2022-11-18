@@ -77,7 +77,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         visibility: false,
         show: false,
         politics: false,
-        error: true,
+        error: false,
     });
     const {recruitment, politics, visibility, error} = filters;
     

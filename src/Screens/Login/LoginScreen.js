@@ -8,7 +8,7 @@ import {live, login, urlApp} from '../../access/requestedData';
 import encript from '../../access/encript';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Modal} from '../../components';
+import {Modal, ModalLoading} from '../../components';
 import {Button} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
@@ -22,6 +22,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const input_user = useRef()
     const input_pass = useRef()
     const [isLoading, setIsLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const {isTablet} = DeviceInfo;
     const [visible, setVisible] = useState(false);
     const [show, setShow] = useState(false);
@@ -274,8 +275,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     },[bodyMessage.header])
 
     const handleSendEmail = async () => {
-        try{
-            if(recoveryEmail !== ''){
+        if(recoveryEmail !== ''){
                 setLoading(true)
                 const body = {
                     'login': login,
@@ -285,7 +285,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         'email': recoveryEmail
                     }
                 }
-        
+
                 const request = await fetch(urlApp, {
                     method: 'POST',
                     headers: {
@@ -296,13 +296,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 
                 const {response} = await request.json();
                 if(response.status === 200){
+                    setLoading(false)
                     setBodyMessage({
                         header: language === '1' ? 'Correo Enviado Correctamente' : 'Email Sent Successfully',
                         icon: true,
                         body: language === '1' ? 'Se ha enviado un correo con las indicaciones para restablecer su contraseña' : 'An email has been sent with the instructions to reset your password',
                     })
                     handleSubmitForm();
-                    setLoading(false)
+                    setIsLoading(false)
                 }
                 else {
                     setBodyMessage({
@@ -310,7 +311,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         icon: true,
                         body: language === '1' ? 'No se encontró el correo proporcionado' : 'The email provided was not found',
                     })
-                    setLoading(false)
+                    setIsLoading(false)
                 }
             }
             else {
@@ -322,15 +323,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ]
                 )
             }
-        }catch(e){
-            Alert.alert(
-                language === '1' ? 'Error de Conexión' : 'Connection Failed',
-                language === '1' ? 'Por favor, verifique su conexión de internet' : 'Please, verify internet connection',
-                [
-                    { text: 'OK'}
-                ]
-            )
-        }
     }
 
     useEffect(() => {
@@ -651,6 +643,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             </>
                     }
             </Modal>
+
+            <ModalLoading visibility={loading}/>
         </>
     )
 }

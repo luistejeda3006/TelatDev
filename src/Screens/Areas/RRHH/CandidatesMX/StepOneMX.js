@@ -1,20 +1,18 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, Alert, Linking, BackHandler} from 'react-native';
-import {InputForm, Politics, Picker, Calendar, TitleForms, CheckBox} from '../../../../components';
+import {InputForm, Politics, Picker, TitleForms, CheckBox, DatePicker} from '../../../../components';
 import generateCurp from '../../../../js/generateCurp'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import {ProgressStep} from 'react-native-progress-steps';
 import DeviceInfo from 'react-native-device-info';
-import {baseUrl, contactPhoneNumber, live, login, siteKey, urlJobs} from '../../../../access/requestedData';
+import {baseUrl, live, login, siteKey, urlJobs} from '../../../../access/requestedData';
 import {useOrientation, useConnection} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
 import tw from 'twrnc'
 
-let currentOrientation = null;
-let keyOrientation = 'Orientation';
 let age = null;
 
 export default ({navigation, language, orientation, ...rest}) => {
@@ -24,7 +22,6 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     const first = {label: language === '1' ? 'Seleccionar' : 'Select', value: 'SEL'}; 
     const NE = {label: language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD', value: 'NE'};
-    const [initialState, setInitialState] = useState(0)
     const {isTablet} = DeviceInfo;
     const [verified, setVerified] = useState('')
     const [statesData, setStatesData] = useState([])
@@ -103,35 +100,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         current: new Date(),
         savedDate: '',
     });
-    const {initialDate, initialDateShow, show, politics, visibility, error, timestamp, savedDate, current} = filters;
-    
-    const handleDate = ({nativeEvent: {timestamp}}) => {
-        if(timestamp !== undefined){
-            let date = new Date(timestamp)
-            let current = new Date()
-            let currentForMonth = new Date()
-            let currentMonth = currentForMonth.toLocaleDateString().substring(0,2);
-            current = current.getFullYear();
-
-            let dia = date.toLocaleDateString().substring(3,5)
-            let mes = date.toLocaleDateString().substring(0,2)
-            let año = date.getFullYear()
-
-            let diaIOS = parseInt(date.getDate())
-            let mesIOS = parseInt(date.getMonth() + 1)
-
-            diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-            mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-            
-            let isIOS = DeviceInfo.getDeviceId().includes('iPhone')
-            if(currentMonth >= mes) age = current - date.getFullYear();
-            else age = (current - date.getFullYear()) - 1;
-            setFilters({...filters, show: !show, timestamp: date, initialDate: !isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año, initialDateShow: !isIOS ? dia + '-' + mes + '-' + año : diaIOS + '-' + mesIOS + '-' + año, savedDate: !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS})
-        }
-        else{
-            setFilters({...filters, show: !show});
-        }
-    };
+    const {initialDate, show, politics, visibility, error} = filters;
     
     const {submitForm, values} = useFormikContext();
     const {nombres_1, apellidoPaterno_1, apellidoMaterno_1, genero_1, lugarNacimiento_1, fechaNacimiento_1} = values;
@@ -149,13 +118,8 @@ export default ({navigation, language, orientation, ...rest}) => {
         )
     }
 
-    const handleWhatsApp = async () => {
-        await Linking.openURL(`https://wa.me/+52${contactPhoneNumber}?text=Agendar una cita`)
-        navigation.navigate('Vacants')
-    }
-
     const handleValues = async () => {
-        if(nombres_1 === undefined || nombres_1 === '' || initialDate === 'No seleccionada' || initialDate === 'Not selected' || apellidoPaterno_1 === undefined || apellidoPaterno_1 === '' || apellidoMaterno_1 === undefined || apellidoMaterno_1 === '' || genero_1 === undefined || genero_1 === 'SEL' || lugarNacimiento_1 === undefined || lugarNacimiento_1 === 'SEL'){
+        if(nombres_1 === undefined || nombres_1 === '' || fechaNacimiento_1 === undefined || fechaNacimiento_1 === '' || apellidoPaterno_1 === undefined || apellidoPaterno_1 === '' || apellidoMaterno_1 === undefined || apellidoMaterno_1 === '' || genero_1 === undefined || genero_1 === 'SEL' || lugarNacimiento_1 === undefined || lugarNacimiento_1 === 'SEL'){
             Alert.alert(
                 language === '1' ? 'Campos Vacíos' : 'Empty Fields',
                 language === '1' ? 'Revise y llene los campos faltantes' : 'Review and fill in the missing fields',
@@ -167,26 +131,20 @@ export default ({navigation, language, orientation, ...rest}) => {
 
         else {
             if(verified) {
-                let obj = {
-                    nombres: nombres_1,
-                    apellido_P: apellidoPaterno_1,
-                    apellido_M: apellidoMaterno_1,
-                    initialDate: initialDate,
-                    genero: genero_1,
-                    nacimiento: lugarNacimiento_1
-                }
-                let curp = generateCurp(nombres_1, apellidoPaterno_1, apellidoMaterno_1, initialDate, genero_1, lugarNacimiento_1)
+                let curp = generateCurp(nombres_1, apellidoPaterno_1, apellidoMaterno_1, fechaNacimiento_1, genero_1, lugarNacimiento_1)
                 const obj_1 = {
                     info_nombre: nombres_1.toUpperCase(),
                     info_apellido_p: apellidoPaterno_1.toUpperCase(),
                     info_apellido_m: apellidoMaterno_1.toUpperCase(),
-                    info_fecha_nacimiento: savedDate,
+                    info_fecha_nacimiento: fechaNacimiento_1,
                     info_sexo: genero_1,
                     info_lugar_nacimiento: lugarNacimiento_1,
                     info_curp: curp,
                     info_rfc: curp.substring(0,10),
                     info_edad: age,
                 }
+
+                console.log('obj: ', obj_1)
                 
                 let data = null;
                 let key = 'stepOne'
@@ -249,10 +207,6 @@ export default ({navigation, language, orientation, ...rest}) => {
         }
     }
 
-    const handlePress = () => {
-        setFilters({...filters, show: !show});
-    }
-
     useEffect(() => {
         const backAction = () => {
             Alert.alert(
@@ -288,11 +242,6 @@ export default ({navigation, language, orientation, ...rest}) => {
                 captchaForm.hide()
             }
         }
-    }
-
-    const handleAgree = () => {
-        setFilters({...filters, politics: !politics})
-        if(!politics && !verified) captchaForm.show()
     }
 
     return (
@@ -341,15 +290,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         ref={input_mat}
                                     />
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                    <Calendar
-                                        show={show}
-                                        initialDate={initialDateShow}
-                                        timestamp={timestamp}
-                                        fieldName={'fechaNacimiento_1'}
-                                        handleDate={handleDate}
-                                        handlePress={handlePress}
-                                        language={language}
-                                    />
+                                    <DatePicker fieldName={'fechaNacimiento_1'} language={language} />
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
                                     <Picker
                                         fieldName={'genero_1'}
@@ -401,15 +342,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <View style={tw`flex-row self-stretch items-center`}>
                                             <View style={tw`flex-1 mr-[3%]`}>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                                <Calendar
-                                                    show={show}
-                                                    initialDate={initialDateShow}
-                                                    timestamp={timestamp}
-                                                    fieldName={'fechaNacimiento_1'}
-                                                    handleDate={handleDate}
-                                                    handlePress={handlePress}
-                                                    language={language}
-                                                />
+                                                <DatePicker fieldName={'fechaNacimiento_1'} language={language} />
                                             </View>
                                             <View style={tw`flex-1 mr-[3%]`}>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
@@ -465,15 +398,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             </View>
                                             <View style={tw`flex-1 mr-[3%]`}>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                                <Calendar
-                                                    show={show}
-                                                    initialDate={initialDateShow}
-                                                    timestamp={timestamp}
-                                                    fieldName={'fechaNacimiento_1'}
-                                                    handleDate={handleDate}
-                                                    handlePress={handlePress}
-                                                    language={language}
-                                                />
+                                                <DatePicker fieldName={'fechaNacimiento_1'} language={language} />
                                             </View>
                                         </View>
                                         <View style={tw`flex-row self-stretch items-center`}>

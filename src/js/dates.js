@@ -124,6 +124,15 @@ const formatDate = (date, language) => {
 	return formatedDate
 }
 
+const getFullDate = (date) => {
+	const dia = date.substring(0,2)
+	const mes = date.substring(3,5)
+	const año = date.substring(6,10)
+	
+	const formatedDate = `${año}-${mes}-${dia}`
+	return formatedDate
+}
+
 export {
     makeType,
     mac,
@@ -131,5 +140,6 @@ export {
     getCurrentDate,
     getLastDayMonth,
     diffBetweenDates,
-	formatDate
+	formatDate,
+	getFullDate
 }

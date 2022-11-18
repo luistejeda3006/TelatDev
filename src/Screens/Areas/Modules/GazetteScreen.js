@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, FlatList, Alert, Platform, Image, TouchableWithoutFeedback} from 'react-native';
-import {BottomNavBar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components';
+import {BottomNavBar, DatePicker, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {formatDate, getCurrentDate, getLastDayMonth} from '../../../js/dates';
 import {isIphone, live, login, urlGaceta} from '../../../access/requestedData';
@@ -316,14 +316,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         !hide
                                         &&
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', height: 'auto', paddingHorizontal: '3%', backgroundColor: '#fff', paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#000'}}>
-                                                <View style={{flex: 1}}>
+                                                {/* <View style={{flex: 1}}>
                                                     <TouchableOpacity
                                                         style={styles.box}
                                                         onPress={() => setInitialState({...initialState, show_start: !show_start, show_end: false})}
                                                     >
                                                         <Text style={{marginLeft: 8, color: '#383838', fontWeight: 'bold', fontSize: 12}}>{initialDate_start}</Text>
                                                     </TouchableOpacity>
-                                                </View>
+                                                </View> */}
+                                                <DatePicker fieldName='test' isModule={true} shortFormat={false} getValue={(e) => console.log(e)} language={language} />
                                                 <View style={{width: 6}}></View>
                                                 <View style={{flex: 1}}>
                                                     <TouchableOpacity

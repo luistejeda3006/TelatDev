@@ -11,11 +11,26 @@ import {DrawerEmployees, NotificationsScreen, OptionsMenuScreen} from './Screens
 import {BettingScreen, ChecksScreen, GazetteScreen, MyMoneyScreen, MyPrenomineScreen, PrenomineScreen, StatisticsScreen} from './Screens/Areas/Modules';
 import {TicketsScreen, TicketsDetailScreen} from './Screens/Areas/Modules/Tickets'
 import {VacationDetailScreen, VacationScreen} from './Screens/Areas/Modules/Vacations';
+import {Screen_1, Screen_2, Screen_3, Screen_4} from './Screens/Development';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const StackCandidate = ({route: {params}, navigation, style}) => {
+const DevelopmentRoute = ({route: {params}}) => {
+    return (
+		<Stack.Navigator
+			initialRouteName={'test_1'}
+			screenOptions={{headerShown: false}}
+		>
+			<Stack.Screen name='test_1' component={Screen_1} />
+            <Stack.Screen name='test_2' component={Screen_2} />
+            <Stack.Screen name='test_3' component={Screen_3} />
+            <Stack.Screen name='test_4' component={Screen_4} />
+		</Stack.Navigator>
+    );
+}
+
+const StackCandidate = ({route: {params}}) => {
     return (
 		<Stack.Navigator
 			initialRouteName={'Choose'}
@@ -31,7 +46,7 @@ const StackCandidate = ({route: {params}, navigation, style}) => {
     );
 }
 
-const StackEmployee = ({route: {params}, navigation, style}) => {
+const StackEmployee = ({route: {params}}) => {
     return (
 		<Stack.Navigator
 			initialRouteName={'Welcome'}
@@ -96,6 +111,7 @@ export default () => {
 			<Drawer.Screen name={'Logged'} component={DrawerEmployeeRoute} />
 			<Stack.Screen name={'Dashboard'} component={OptionsMenuScreen} />
 			<Stack.Screen name={'Notifications'} component={NotificationsScreen} />
+			<Stack.Screen name={'Development'} component={DevelopmentRoute} />
 		</Stack.Navigator>
 	</NavigationContainer>
   );

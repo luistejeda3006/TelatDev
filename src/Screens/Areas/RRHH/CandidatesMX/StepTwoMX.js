@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Alert, Text, BackHandler} from 'react-native';
-import {InputForm, Picker, Calendar, TitleForms} from '../../../../components';
+import {InputForm, Picker, DatePicker, TitleForms} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {useFormikContext} from "formik";
@@ -133,16 +133,10 @@ export default ({navigation, language, orientation, ...rest}) => {
         foreigh: false,
         index: 0,
         error: true,
-        show_emision: false,
-        timestamp_emision: new Date(),
-        initialDate_emision: language === '1' ? 'No seleccionada' : 'Not selected',
-        show_expire: false,
-        timestamp_expire: new Date(),
-        initialDate_expire: language === '1' ? 'No seleccionada' : 'Not selected',
     });
     
-    const {editable,recruitment, error, worked, foreigh, index, show_emision, timestamp_emision, initialDate_emision, show_expire, timestamp_expire, initialDate_expire} = filters;
-    const {lugarNacimiento_1, nombres_1, apellidoPaterno_1, apellidoMaterno_1, genero_1, puestoSolicitado_2, salario_2, experiencia_2, disponibilidadTurno_2, actualmenteTrabaja_2, horarioLaboral_2, trabajoTelat_2, vivisteExtranjero_2, tipoDocumento_2, estadocv_2, medioReclutamiento_2, numeroHijos_2, dependientesEconomicos_2, tipoTransporte_2, calle_2, numeroExterior_2, codigoPostal_2, colonia_2, ciudad_2, estado_2, email_2, numeroPersonal_2, numeroFijo_2, lugarNacimientoExtranjero_2, nacionalidadExtranjero_2, tiempoMexicoExtranjero_2, numeroInterior_2, calle_uno_2, calle_dos_2} = values;
+    const {recruitment, error, worked, foreigh, index} = filters;
+    const {emision_2, expiracion_2, lugarNacimiento_1, nombres_1, apellidoPaterno_1, apellidoMaterno_1, genero_1, puestoSolicitado_2, salario_2, experiencia_2, disponibilidadTurno_2, actualmenteTrabaja_2, horarioLaboral_2, trabajoTelat_2, vivisteExtranjero_2, tipoDocumento_2, estadocv_2, medioReclutamiento_2, numeroHijos_2, dependientesEconomicos_2, tipoTransporte_2, calle_2, numeroExterior_2, codigoPostal_2, colonia_2, ciudad_2, estado_2, email_2, numeroPersonal_2, numeroFijo_2, lugarNacimientoExtranjero_2, nacionalidadExtranjero_2, tiempoMexicoExtranjero_2, numeroInterior_2, calle_uno_2, calle_dos_2} = values;
     const {medioReclutamientoDesc_2, cuandoTrabajo_2, motivosSalida_2, numeroDocumento_2, lugarExtranjero_2, tiempoExtranjero_2, motivoRegresoExtranjero_2} = values;
 
     const getPlace = async () => {
@@ -184,47 +178,6 @@ export default ({navigation, language, orientation, ...rest}) => {
         }
         else {
             setFilters({...filters, foreigh: false, index: index})
-        }
-    }
-
-    const handleDate = ({nativeEvent: {timestamp}}, type) => {
-
-        if(timestamp !== undefined){
-            let date = new Date(timestamp)
-            let dia = date.toLocaleDateString().substring(3,5)
-            let mes = date.toLocaleDateString().substring(0,2)
-            let año = date.getFullYear()
-
-            let diaIOS = parseInt(date.getDate())
-            let mesIOS = parseInt(date.getMonth() + 1)
-
-            diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-            mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-            
-            let isIOS = DeviceInfo.getDeviceId().includes('iPhone')
-
-            switch (type) {
-                case 'emision':
-                    setFilters({...filters, show_emision: !show_emision, timestamp_emision: date, initialDate_emision: !isIOS ? año + "-" + mes + "-" + dia : año + "-" + mesIOS + "-" + diaIOS})
-                    break;
-                case 'expiracion':
-                    setFilters({...filters, show_expire: !show_expire, timestamp_expire: date, initialDate_expire: !isIOS ? año + "-" + mes + "-" + dia : año + "-" + mesIOS + "-" + diaIOS})
-                    break;
-                default:
-                    break;
-            }
-        }
-        else{
-            switch (type) {
-                case 'emision':
-                    setFilters({...filters, show_emision: !show_emision});
-                    break;
-                case 'expiracion':
-                    setFilters({...filters, show_expire: !show_expire});
-                    break;
-                default:
-                    break;
-            }
         }
     }
 
@@ -303,11 +256,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                     info_tiempo_residencia: tiempoMexicoExtranjero_2 ? tiempoMexicoExtranjero_2.toUpperCase() : '',
                     info_permiso_laboral: tipo ? tipo : '',
                     info_documento_inm: tipo === '0' ? '' : numeroDocumento_2 ? numeroDocumento_2 : '',
-                    info_doc_emision: tipo === '0' ? null : initialDate_emision === 'No seleccionada' || initialDate_emision === 'Not selected' ? null : initialDate_emision,
-                    info_doc_expiracion: tipo === '0' ? null : initialDate_expire === 'No seleccionada' || initialDate_expire === 'Not selected' ? null : initialDate_expire,
+                    info_doc_emision: tipo === '0' ? null : emision_2 === 'No seleccionada' || emision_2 === 'Not selected' ? null : emision_2,
+                    info_doc_expiracion: tipo === '0' ? null : expiracion_2 === 'No seleccionada' || expiracion_2 === 'Not selected' ? null : expiracion_2,
                 }
-                console.log('cand_puesto: ', obj_2)
-
+                
                 let data = null;
                 let key = 'stepTwo'
                 
@@ -350,7 +302,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                 }
 
                 else {
-                    if(numeroDocumento_2 !== undefined && numeroDocumento_2 !== '' && initialDate_emision !== 'No seleccionada' && initialDate_emision !== 'Not selected' && initialDate_expire !== 'No seleccionada' && initialDate_expire !== 'Not selected'){
+                    if(numeroDocumento_2 !== undefined && numeroDocumento_2 !== '' && emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && expiracion_2 !== 'No seleccionada' && expiracion_2 !== 'Not selected'){
                         handleLastPart();
                         setFilters({...filters, error: false});
                     }
@@ -360,7 +312,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                 }
             }
             else {
-                if(initialDate_emision !== 'No seleccionada' && initialDate_emision !== 'Not selected' && numeroDocumento_2 !== undefined && numeroDocumento_2 !== ''){
+                if(emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && numeroDocumento_2 !== undefined && numeroDocumento_2 !== ''){
                     handleLastPart();
                     setFilters({...filters, error: false});
                 }
@@ -686,37 +638,16 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
                                                                 <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
                                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                <Calendar
-                                                                    show={show_emision}
-                                                                    initialDate={initialDate_emision}
-                                                                    timestamp={timestamp_emision}
-                                                                    fieldName={'emision_2'}
-                                                                    handleDate={e => handleDate(e, 'emision')}
-                                                                    handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                />
+                                                                <DatePicker fieldName={'emision_2'} language={language} />
                                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                <Calendar
-                                                                    show={show_expire}
-                                                                    initialDate={initialDate_expire}
-                                                                    timestamp={timestamp_expire}
-                                                                    fieldName={'expiracion_2'}
-                                                                    handleDate={e => handleDate(e, 'expiracion')}
-                                                                    handlePress={() => setFilters({...filters, show_expire: !show_expire})}
-                                                                />
+                                                                <DatePicker fieldName={'expiracion_2'} language={language} />
                                                             </>
                                                         :
                                                             <>
                                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
                                                                 <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
                                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                <Calendar
-                                                                    show={show_emision}
-                                                                    initialDate={initialDate_emision}
-                                                                    timestamp={timestamp_emision}
-                                                                    fieldName={'emision_2'}
-                                                                    handleDate={e => handleDate(e, 'emision')}
-                                                                    handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                />
+                                                                <DatePicker fieldName={'emision_2'} language={language} />
                                                             </>
                                                     :
                                                         <></>
@@ -1032,27 +963,13 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                         </View>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                            <Calendar
-                                                                                show={show_emision}
-                                                                                initialDate={initialDate_emision}
-                                                                                timestamp={timestamp_emision}
-                                                                                fieldName={'emision_2'}
-                                                                                handleDate={e => handleDate(e, 'emision')}
-                                                                                handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                            />
+                                                                            <DatePicker fieldName={'emision_2'} language={language} />
                                                                         </View>
                                                                     </View>
                                                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                            <Calendar
-                                                                                show={show_expire}
-                                                                                initialDate={initialDate_expire}
-                                                                                timestamp={timestamp_expire}
-                                                                                fieldName={'expiracion_2'}
-                                                                                handleDate={e => handleDate(e, 'expiracion')}
-                                                                                handlePress={() => setFilters({...filters, show_expire: !show_expire})}
-                                                                            />
+                                                                            <DatePicker fieldName={'expiracion_2'} language={language} />
                                                                         </View>
                                                                     </View>
                                                                 </>
@@ -1065,14 +982,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                         </View>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                            <Calendar
-                                                                                show={show_emision}
-                                                                                initialDate={initialDate_emision}
-                                                                                timestamp={timestamp_emision}
-                                                                                fieldName={'emision_2'}
-                                                                                handleDate={e => handleDate(e, 'emision')}
-                                                                                handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                            />
+                                                                            <DatePicker fieldName={'emision_2'} language={language} />
                                                                         </View>
                                                                     </View>
                                                                 </>
@@ -1419,25 +1329,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                         </View>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                            <Calendar
-                                                                                show={show_emision}
-                                                                                initialDate={initialDate_emision}
-                                                                                timestamp={timestamp_emision}
-                                                                                fieldName={'emision_2'}
-                                                                                handleDate={e => handleDate(e, 'emision')}
-                                                                                handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                            />
+                                                                            <DatePicker fieldName={'emision_2'} language={language} />
                                                                         </View>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                            <Calendar
-                                                                                show={show_expire}
-                                                                                initialDate={initialDate_expire}
-                                                                                timestamp={timestamp_expire}
-                                                                                fieldName={'expiracion_2'}
-                                                                                handleDate={e => handleDate(e, 'expiracion')}
-                                                                                handlePress={() => setFilters({...filters, show_expire: !show_expire})}
-                                                                            />
+                                                                            <DatePicker fieldName={'expiracion_2'} language={language} />
                                                                         </View>
                                                                     </View>
                                                                 </>
@@ -1450,14 +1346,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                         </View>
                                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                            <Calendar
-                                                                                show={show_emision}
-                                                                                initialDate={initialDate_emision}
-                                                                                timestamp={timestamp_emision}
-                                                                                fieldName={'emision_2'}
-                                                                                handleDate={e => handleDate(e, 'emision')}
-                                                                                handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                            />
+                                                                            <DatePicker fieldName={'emision_2'} language={language} />
                                                                         </View>
                                                                     </View>
                                                                 </>
@@ -1821,25 +1710,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                        <Calendar
-                                                                            show={show_emision}
-                                                                            initialDate={initialDate_emision}
-                                                                            timestamp={timestamp_emision}
-                                                                            fieldName={'emision_2'}
-                                                                            handleDate={e => handleDate(e, 'emision')}
-                                                                            handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                        />
+                                                                        <DatePicker fieldName={'emision_2'} language={language} />
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                        <Calendar
-                                                                            show={show_expire}
-                                                                            initialDate={initialDate_expire}
-                                                                            timestamp={timestamp_expire}
-                                                                            fieldName={'expiracion_2'}
-                                                                            handleDate={e => handleDate(e, 'expiracion')}
-                                                                            handlePress={() => setFilters({...filters, show_expire: !show_expire})}
-                                                                        />
+                                                                        <DatePicker fieldName={'expiracion_2'} language={language} />
                                                                     </View>
                                                                 </View>
                                                             </>
@@ -1852,14 +1727,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                        <Calendar
-                                                                            show={show_emision}
-                                                                            initialDate={initialDate_emision}
-                                                                            timestamp={timestamp_emision}
-                                                                            fieldName={'emision_2'}
-                                                                            handleDate={e => handleDate(e, 'emision')}
-                                                                            handlePress={() => setFilters({...filters, show_emision: !show_emision})}
-                                                                        />
+                                                                        <DatePicker fieldName={'emision_2'} language={language} />
                                                                     </View>
                                                                 </View>
                                                             </>

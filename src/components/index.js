@@ -2,6 +2,7 @@ export {default as TitleForms} from './Form/Text';
 export {default as InputForm} from './Form/Input';
 export {default as Picker} from './Form/Picker';
 export {default as Calendar} from './Form/Calendar';
+export {default as DatePicker} from './Form/DatePicker';
 export {default as Card} from './Card';
 export {default as BottomNavBar} from './BottomNavBar';
 export {default as DrawerItem} from './DrawerItem';

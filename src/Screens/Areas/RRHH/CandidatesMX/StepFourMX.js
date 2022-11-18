@@ -95,16 +95,17 @@ export default ({navigation, language, orientation, ...rest}) => {
                 }
 
                 all = {...all, ...obj_4};
-                
+                const body = {
+                    'action': 'insert_precandidato',
+                    'data': all,
+                    'login': login,
+                    'live': live,
+                    'country': 'MX'
+                }
+
+                console.log('body: ', body)
+                console.log('all: ', all)
                 try{
-                    const body = {
-                        'action': 'insert_precandidato',
-                        'data': all,
-                        'login': login,
-                        'live': live,
-                        'country': 'MX'
-                    }
-        
                     const request = await fetch(urlJobs, {
                         method: 'POST',
                         headers: {

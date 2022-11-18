@@ -1,14 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Platform} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Picker from 'react-native-picker-select';
 import {useField} from 'formik';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { isIphone } from '../../access/requestedData';
+import {isIphone} from '../../access/requestedData';
 
 export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tres, handleAction_cuatro, handleAction_cinco, contador = 0, items, required = true}) => {
     const [field, helpers, meta] = useField(fieldName);
     const { value, setValue } = meta
-
     const handleIndex = (itemValue,itemIndex) => {
         switch (contador) {
             case 1:

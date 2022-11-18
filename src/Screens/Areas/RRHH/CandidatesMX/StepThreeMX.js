@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Alert, BackHandler} from 'react-native';
-import {InputForm, Picker, Calendar, TitleForms} from '../../../../components';
+import {InputForm, Picker, TitleForms, DatePicker} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
@@ -89,29 +89,13 @@ export default ({navigation, language, orientation, ...rest}) => {
         error: true,
         currentlyStudy: false,
         pEmpleo: false,
-
-        show_ingreso: false,
-        timestamp_ingreso: new Date(),
-        initialDate_ingreso: language === '1' ? 'No seleccionada' : 'Not selected',
-
-        show_salida: false,
-        timestamp_salida: new Date(),
-        initialDate_salida: language === '1' ? 'No seleccionada' : 'Not selected',
-
-        show_ingreso_opcional: false,
-        timestamp_ingreso_opcional: new Date(),
-        initialDate_ingreso_opcional: language === '1' ? 'No seleccionada' : 'Not selected',
-
-        show_salida_opcional: false,
-        timestamp_salida_opcional: new Date(),
-        initialDate_salida_opcional: language === '1' ? 'No seleccionada' : 'Not selected',
-
         contact: false,
         contactOptional: false,
         studyGrade: 0
     });
-    const {nivelEscolar_3, institucion_3, añoGraduacion_3, horarioTurno_3, otrosEstudios_3, paquetesComputacionales_3, nivelEscritura_3, nivelLectura_3, nivelComprension_3, nivelConversacional_3, dondeAprendio_3, nombreEmpresa_3, giroEmpresa_3, puestoDesempeñado_3, jefeDirectoTelefono_3, estudiasActualmente_3, esCertificado_3, gradoAvance_3, primerEmpleo_3, contactarOpcional_3, contactar_3, salarioInicial_3, salarioFinal_3, motivoSalida_3, jefeDirecto_3, porque_3, nombreEmpresaOpcional_3, giroEmpresaOpcional_3, puestoDesempeñadoOpcional_3, salarioInicialOpcional_3, salarioFinalOpcional_3, motivoSalidaOpcional_3, jefeDirectoOpcional_3, jefeDirectoTelefonoOpcional_3, contactarOpcional, porqueOpcional_3, tituloAcademico_3} = values;
-    const {error, currentlyStudy, pEmpleo, show_ingreso, timestamp_ingreso, initialDate_ingreso, show_salida, timestamp_salida ,initialDate_salida, show_ingreso_opcional, timestamp_ingreso_opcional, initialDate_ingreso_opcional, show_salida_opcional, timestamp_salida_opcional, initialDate_salida_opcional, contact, contactOptional, studyGrade} = filters;
+    
+    const {fechaIngreso_3, fechaSalida_3, fechaIngresoOpcional_3, fechaSalidaOpcional_3, nivelEscolar_3, institucion_3, añoGraduacion_3, horarioTurno_3, otrosEstudios_3, paquetesComputacionales_3, nivelEscritura_3, nivelLectura_3, nivelComprension_3, nivelConversacional_3, dondeAprendio_3, nombreEmpresa_3, giroEmpresa_3, puestoDesempeñado_3, jefeDirectoTelefono_3, estudiasActualmente_3, esCertificado_3, gradoAvance_3, primerEmpleo_3, contactarOpcional_3, contactar_3, salarioInicial_3, salarioFinal_3, motivoSalida_3, jefeDirecto_3, porque_3, nombreEmpresaOpcional_3, giroEmpresaOpcional_3, puestoDesempeñadoOpcional_3, salarioInicialOpcional_3, salarioFinalOpcional_3, motivoSalidaOpcional_3, jefeDirectoOpcional_3, jefeDirectoTelefonoOpcional_3, contactarOpcional, porqueOpcional_3, tituloAcademico_3} = values;
+    const {error, currentlyStudy, pEmpleo, contact, contactOptional, studyGrade} = filters;
 
     const Alerta = () => {
         return (
@@ -193,8 +177,8 @@ export default ({navigation, language, orientation, ...rest}) => {
             refl_actividad1: puestoDesempeñado_3 ? puestoDesempeñado_3.toUpperCase() : '',
             refl_sueldo_inicial1: salarioInicial_3 ? salarioInicial_3 : '',
             refl_sueldo_final1: salarioFinal_3 ? salarioFinal_3 : '',
-            refl_fecha_ingreso1: initialDate_ingreso === 'No seleccionada' || initialDate_ingreso === 'Not selected' ? null : initialDate_ingreso,
-            refl_fecha_salida1: initialDate_salida === 'No seleccionada' || initialDate_salida === 'Not selected' ? null : initialDate_salida,
+            refl_fecha_ingreso1: fechaIngreso_3 === '' || fechaIngreso_3 === undefined ? null : fechaIngreso_3,
+            refl_fecha_salida1: fechaSalida_3 === '' || fechaSalida_3 === undefined ? null : fechaSalida_3,
             refl_motivo_salida1: motivoSalida_3 ? motivoSalida_3.toUpperCase() : '',
             refl_jefe_directo1: jefeDirecto_3 ? jefeDirecto_3.toUpperCase() : '',
             refl_telefono1: jefeDirectoTelefono_3 ? jefeDirectoTelefono_3 : '',
@@ -208,8 +192,8 @@ export default ({navigation, language, orientation, ...rest}) => {
             refl_actividad2: puestoDesempeñadoOpcional_3 ? puestoDesempeñadoOpcional_3.toUpperCase() : '',
             refl_sueldo_inicial2: salarioInicialOpcional_3 ? salarioInicialOpcional_3 : '',
             refl_sueldo_final2: salarioFinalOpcional_3 ? salarioFinalOpcional_3 : '',
-            refl_fecha_ingreso2: initialDate_ingreso_opcional === 'No seleccionada' || initialDate_ingreso_opcional === 'Not selected' ? null : initialDate_ingreso_opcional,
-            refl_fecha_salida2: initialDate_salida_opcional === 'No seleccionada' || initialDate_salida_opcional === 'Not selected' ? null : initialDate_salida_opcional,
+            refl_fecha_ingreso2: fechaIngresoOpcional_3 === '' || fechaIngresoOpcional_3 === undefined ? null : fechaIngresoOpcional_3,
+            refl_fecha_salida2: fechaSalidaOpcional_3 === '' || fechaSalidaOpcional_3 === undefined ? null : fechaSalidaOpcional_3,
             refl_motivo_salida2: motivoSalidaOpcional_3 ? motivoSalidaOpcional_3.toUpperCase() : '',
             refl_jefe_directo2: jefeDirectoOpcional_3 ? jefeDirectoOpcional_3.toUpperCase() : '',
             refl_telefono2: jefeDirectoTelefonoOpcional_3 ? jefeDirectoTelefonoOpcional_3 : '',
@@ -258,7 +242,7 @@ export default ({navigation, language, orientation, ...rest}) => {
     const handleValues = () => {
         if(primerEmpleo_3 !== undefined && primerEmpleo_3 !== 'SEL' && dondeAprendio_3 !== undefined && dondeAprendio_3 !== 'SEL' && nivelEscolar_3 !== undefined && nivelEscolar_3 !== 'SEL' && nivelEscritura_3 !== undefined && nivelEscritura_3 !== 'SEL' && nivelLectura_3 !== undefined && nivelLectura_3 !== 'SEL' && nivelComprension_3 !== undefined && nivelComprension_3 !== 'SEL' && nivelConversacional_3 !== undefined && nivelConversacional_3 !== 'SEL'){
             if(primerEmpleo_3 === '0'){
-                if(nombreEmpresa_3 === undefined || nombreEmpresa_3 === '' || giroEmpresa_3 === undefined || giroEmpresa_3 === '' || puestoDesempeñado_3 === undefined || puestoDesempeñado_3 === '' || salarioInicial_3 === undefined || salarioInicial_3 === '' || salarioFinal_3 === undefined || salarioFinal_3 === '' || initialDate_ingreso === 'No seleccionada' || initialDate_ingreso === 'Not selected' || initialDate_salida === 'No seleccionada' || initialDate_salida === 'Not selected' || motivoSalida_3 === undefined || motivoSalida_3 === '' || jefeDirecto_3 === undefined || jefeDirecto_3 === '' || contactar_3 === undefined || contactar_3 === ''){
+                if(nombreEmpresa_3 === undefined || nombreEmpresa_3 === '' || giroEmpresa_3 === undefined || giroEmpresa_3 === '' || puestoDesempeñado_3 === undefined || puestoDesempeñado_3 === '' || salarioInicial_3 === undefined || salarioInicial_3 === '' || salarioFinal_3 === undefined || salarioFinal_3 === '' || fechaIngreso_3 === '' || fechaIngreso_3 === undefined || fechaSalida_3 === '' || fechaSalida_3 === undefined || motivoSalida_3 === undefined || motivoSalida_3 === '' || jefeDirecto_3 === undefined || jefeDirecto_3 === '' || contactar_3 === undefined || contactar_3 === ''){
                     Alerta();
                 }
                 else {
@@ -325,80 +309,6 @@ export default ({navigation, language, orientation, ...rest}) => {
         else if(index === 4) setFilters({...filters, studyGrade: 4})
         else if(index === 5) setFilters({...filters, studyGrade: 5})
         else setFilters({...filters, studyGrade: 0})
-    }
-
-    const handleDateOptional_3 = ({nativeEvent: {timestamp}}) => {
-        if(timestamp !== undefined){
-            let temporal = new Date(timestamp)
-            let date = new Date(timestamp)
-            let dia = date.toLocaleDateString().substring(3,5)
-            let mes = date.toLocaleDateString().substring(0,2)
-            let año = date.getFullYear()
-
-            let diaIOS = parseInt(date.getDate())
-            let mesIOS = parseInt(date.getMonth() + 1)
-
-            diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-            mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-            
-            let isIOS = DeviceInfo.getDeviceId().includes('iPhone')
-
-            inicialOpcional = temporal;
-            setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional, timestamp_ingreso_opcional: date, initialDate_ingreso_opcional: !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS})
-        }
-        else {
-            setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional});
-        }
-    }
-
-    const handleDate = ({nativeEvent: {timestamp}}, type) => {
-        if(timestamp !== undefined){
-            let temporal = new Date(timestamp)
-            let date = new Date(timestamp)
-            let dia = date.toLocaleDateString().substring(3,5)
-            let mes = date.toLocaleDateString().substring(0,2)
-            let año = date.getFullYear()
-
-            let diaIOS = parseInt(date.getDate())
-            let mesIOS = parseInt(date.getMonth() + 1)
-
-            diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-            mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-            
-            let isIOS = DeviceInfo.getDeviceId().includes('iPhone')
-
-            switch (type) {
-                case 'ingreso':
-                    inicial = temporal;
-                    setFilters({...filters, show_ingreso: !show_ingreso, timestamp_ingreso: date, initialDate_ingreso: !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS})
-                    break;
-                case 'salida':
-                    terminal = temporal;
-                    setFilters({...filters, show_salida: !show_salida, timestamp_salida: date, initialDate_salida: !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS})
-                    break;
-                case 'salida_opcional':
-                    terminalOpcional = temporal;
-                    setFilters({...filters, show_salida_opcional: !show_salida_opcional, timestamp_salida_opcional: date, initialDate_salida_opcional: !isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS})
-                    break;
-                default:
-                    break;
-            }
-        }
-        else{
-            switch (type) {
-                case 'ingreso':
-                    setFilters({...filters, show_ingreso: !show_ingreso});
-                    break;
-                case 'salida':
-                    setFilters({...filters, show_salida: !show_salida});
-                    break;
-                case 'salida_opcional':
-                    setFilters({...filters, show_salida_opcional: !show_salida_opcional});
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     useEffect(() => {
@@ -587,24 +497,12 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
                                                 <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                <Calendar
-                                                    show={show_ingreso}
-                                                    initialDate={initialDate_ingreso}
-                                                    timestamp={timestamp_ingreso}
-                                                    fieldName={'fechaIngreso_3'}
-                                                    handleDate={e => handleDate(e, 'ingreso')}
-                                                    handlePress={() => setFilters({...filters, show_ingreso: !show_ingreso})}
-                                                />
+                                                <DatePicker fieldName={'fechaIngreso_3'} language={language} />
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                <Calendar
-                                                    show={show_salida}
-                                                    initialDate={initialDate_salida}
-                                                    timestamp={timestamp_salida}
-                                                    fieldName={'fechaSalida_3'}
-                                                    handleDate={e => handleDate(e, 'salida')}
-                                                    handlePress={() => setFilters({...filters, show_salida: !show_salida})}
-                                                />
+                                                <DatePicker fieldName={'fechaSalida_3'} language={language} />
+
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
                                                 <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
@@ -641,25 +539,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
                                                 <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                <Calendar
-                                                    required={false}
-                                                    show={show_ingreso_opcional}
-                                                    initialDate={initialDate_ingreso_opcional}
-                                                    timestamp={timestamp_ingreso_opcional}
-                                                    fieldName={'fechaIngresoOpcional_3'}
-                                                    handleDate={e => handleDateOptional_3(e)}
-                                                    handlePress={() => setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional})}
-                                                />
+                                                <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                <Calendar
-                                                    required={false}
-                                                    show={show_salida_opcional}
-                                                    initialDate={initialDate_salida_opcional}
-                                                    timestamp={timestamp_salida_opcional}
-                                                    fieldName={'fechaSalidaOpcional_3'}
-                                                    handleDate={e => handleDate(e, 'salida_opcional')}
-                                                    handlePress={() => setFilters({...filters, show_salida_opcional: !show_salida_opcional})}
-                                                />
+                                                <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
                                                 <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
@@ -919,25 +801,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            show={show_ingreso}
-                                                            initialDate={initialDate_ingreso}
-                                                            timestamp={timestamp_ingreso}
-                                                            fieldName={'fechaIngreso_3'}
-                                                            handleDate={e => handleDate(e, 'ingreso')}
-                                                            handlePress={() => setFilters({...filters, show_ingreso: !show_ingreso})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            show={show_salida}
-                                                            initialDate={initialDate_salida}
-                                                            timestamp={timestamp_salida}
-                                                            fieldName={'fechaSalida_3'}
-                                                            handleDate={e => handleDate(e, 'salida')}
-                                                            handlePress={() => setFilters({...filters, show_salida: !show_salida})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
                                                     </View>
                                                 </View>
 
@@ -1019,27 +887,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_ingreso_opcional}
-                                                            initialDate={initialDate_ingreso_opcional}
-                                                            timestamp={timestamp_ingreso_opcional}
-                                                            fieldName={'fechaIngresoOpcional_3'}
-                                                            handleDate={e => handleDateOptional_3(e)}
-                                                            handlePress={() => setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_salida_opcional}
-                                                            initialDate={initialDate_salida_opcional}
-                                                            timestamp={timestamp_salida_opcional}
-                                                            fieldName={'fechaSalidaOpcional_3'}
-                                                            handleDate={e => handleDate(e, 'salida_opcional')}
-                                                            handlePress={() => setFilters({...filters, show_salida_opcional: !show_salida_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
                                                     </View>
                                                 </View>
                                                 
@@ -1309,25 +1161,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            show={show_ingreso}
-                                                            initialDate={initialDate_ingreso}
-                                                            timestamp={timestamp_ingreso}
-                                                            fieldName={'fechaIngreso_3'}
-                                                            handleDate={e => handleDate(e, 'ingreso')}
-                                                            handlePress={() => setFilters({...filters, show_ingreso: !show_ingreso})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            show={show_salida}
-                                                            initialDate={initialDate_salida}
-                                                            timestamp={timestamp_salida}
-                                                            fieldName={'fechaSalida_3'}
-                                                            handleDate={e => handleDate(e, 'salida')}
-                                                            handlePress={() => setFilters({...filters, show_salida: !show_salida})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
                                                     </View>
                                                 </View>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
@@ -1397,27 +1235,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_ingreso_opcional}
-                                                            initialDate={initialDate_ingreso_opcional}
-                                                            timestamp={timestamp_ingreso_opcional}
-                                                            fieldName={'fechaIngresoOpcional_3'}
-                                                            handleDate={e => handleDateOptional_3(e)}
-                                                            handlePress={() => setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_salida_opcional}
-                                                            initialDate={initialDate_salida_opcional}
-                                                            timestamp={timestamp_salida_opcional}
-                                                            fieldName={'fechaSalidaOpcional_3'}
-                                                            handleDate={e => handleDate(e, 'salida_opcional')}
-                                                            handlePress={() => setFilters({...filters, show_salida_opcional: !show_salida_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
                                                     </View>
                                                 </View>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
@@ -1697,25 +1519,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            show={show_ingreso}
-                                                            initialDate={initialDate_ingreso}
-                                                            timestamp={timestamp_ingreso}
-                                                            fieldName={'fechaIngreso_3'}
-                                                            handleDate={e => handleDate(e, 'ingreso')}
-                                                            handlePress={() => setFilters({...filters, show_ingreso: !show_ingreso})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            show={show_salida}
-                                                            initialDate={initialDate_salida}
-                                                            timestamp={timestamp_salida}
-                                                            fieldName={'fechaSalida_3'}
-                                                            handleDate={e => handleDate(e, 'salida')}
-                                                            handlePress={() => setFilters({...filters, show_salida: !show_salida})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
                                                     </View>
                                                 </View>
 
@@ -1797,27 +1605,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_ingreso_opcional}
-                                                            initialDate={initialDate_ingreso_opcional}
-                                                            timestamp={timestamp_ingreso_opcional}
-                                                            fieldName={'fechaIngresoOpcional_3'}
-                                                            handleDate={e => handleDateOptional_3(e)}
-                                                            handlePress={() => setFilters({...filters, show_ingreso_opcional: !show_ingreso_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <Calendar
-                                                            required={false}
-                                                            show={show_salida_opcional}
-                                                            initialDate={initialDate_salida_opcional}
-                                                            timestamp={timestamp_salida_opcional}
-                                                            fieldName={'fechaSalidaOpcional_3'}
-                                                            handleDate={e => handleDate(e, 'salida_opcional')}
-                                                            handlePress={() => setFilters({...filters, show_salida_opcional: !show_salida_opcional})}
-                                                        />
+                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
                                                     </View>
                                                 </View>
                                                 

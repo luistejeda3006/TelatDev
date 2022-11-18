@@ -10,9 +10,7 @@ import {Formik} from 'formik';
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 
-let routes = 'currentRoute'
 export default ({navigation, route: {params: {language, orientation, country}}}) => {
-    const [contador, setContador] = useState(0)
     const required = '*';
     const invalidEmail = country === 'US' ? 'Invalid Email' : language === '1' ? 'Correo Inválido' : 'Invalid Email';
     const invalidNumber = country === 'US' ? 'Invalid Number' : language === '1' ? 'Número Inválido' : 'Invalid Number';
@@ -394,7 +392,6 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                                             <StepTwoMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Inf. Personal' : 'Información Personal' : orientationInfo.initial === 'PORTRAIT' ? 'Personal Info.' : 'Personal Information'} language={language} orientation={orientationInfo.initial}/>
                                             <StepThreeMX navigation={navigation} label={language === '1' ? 'Currículum' : 'Resume'} language={language} orientation={orientationInfo.initial}/>
                                             <StepFourMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Ref. Personales' : 'Referencias Personales' : orientationInfo.initial === 'PORTRAIT' ? 'Personal Ref.' : 'Personal References'} language={language} orientation={orientationInfo.initial}/>
-                                            {/* <StepFiveMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Inf. Médica' : 'Información Médica' : orientationInfo.initial === 'PORTRAIT' ? 'Medical Info.' : 'Medical Information'} language={language} orientation={orientationInfo.initial}/> */}
                                     </ProgressSteps>
                                 </View>
                             :
