@@ -74,21 +74,21 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                                 <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Descripción\n' : 'Description\n'}</Text>
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
-                                        value={description}
+                                        value={'<div style="color: black">' + description + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
                                 <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Ofrecemos\n' : 'We Offer\n'}</Text>
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
-                                        value={benefits}
+                                        value={'<div style="color: black">' + benefits + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
                                 <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Requisitos\n' : 'Requirements\n'}</Text>
                                 <View style={tw`flex-1 mb-4`}>
                                     <HTMLView
-                                        value={requeriments}
+                                        value={'<div style="color: black">' + requeriments + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
@@ -108,14 +108,7 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
 }
 
 const styles = StyleSheet.create({
-    p: {
+    div: {
         color: '#000'
     },
-    li: {
-        color: '#000'
-    },
-    font: {
-        color: '#000'
-    },
-
 })

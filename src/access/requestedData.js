@@ -17,7 +17,7 @@ export const contactEmail = 'talento@telat-group.com';
 export const login = 'App-Telat';
 export const psw = 'h*39/SW1#2ap7@J6e!Ta&';
 export const key = 'H4%Sp8#i&25a<079~';
-export const live = true;
+export const live = false;
 export const keyLocation = 'cnd7vnHGYstE4WG5VP3XblCarrpNHGw';
 export const origen = 'APP'
 export const isIphone = Platform.OS === 'ios' ? true : false

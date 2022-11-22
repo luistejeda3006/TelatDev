@@ -1,88 +1,62 @@
-import React, {useEffect, useState} from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useEffect, useState } from 'react'
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
+import DatePicker from 'react-native-date-picker'
+import {formatDate} from '../../js/dates'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useField} from 'formik';
-import { Blue } from '../../colors/colorsApp';
 
-export default ({fieldName, handlePress, handleDate, timestamp, initialDate, show, required = true}) => {
-    const [field, helpers, meta] = useField(fieldName);
-    console.log('field: ', field)
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
-    const { value, setValue } = meta;
-    useEffect(() => {
-        setValue(new Date(timestamp), true);
-    },[show])
+let initialDate = new Date()
+export default ({dateLabel = '', language = '1', getValue = () => {}, shortFormat = true, isModule = false, marginBottom = true,}) => {
+    const [date, setDate] = useState(initialDate)
+    const [open, setOpen] = useState(false)
+
+    const handleDate = (date) => {
+        let shorter = date.toLocaleDateString()
+        shorter = shorter.split('/')
+        let dia = shorter[0]
+        let mes = shorter[1]
+        let año = shorter[2]
+        dia = dia.length === 1 ? `0${dia}` : dia
+        mes = mes.length === 1 ? `0${mes}` : mes
+        const ordered = isModule ? `${año}-${mes}-${dia}` : `${dia}-${mes}-${año}`
+        const formated = shortFormat ? isModule ? `${año}-${mes}-${dia}` : `${dia}-${mes}-${año}` : formatDate(`${dia}-${mes}-${año}`, language)
+        setOpen(false)
+        getValue(ordered, formated)
+        setDate(date)
+    }
     
     return (
-        <>
-            {
-                required
-                ?
-                    <TouchableOpacity
-                        style={styles.box}
-                        onPress={() => handlePress()}
-                    > 
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                            {
-                                initialDate !== 'No seleccionada'
-                                ?
-                                    <Text style={{color: '#000'}}> {initialDate.toString()} </Text>
-                                :
-                                    <Text style={{color: '#000'}}> No seleccionada </Text>
-                            }
-                        </View>
-                        {
-                            (initialDate === 'No seleccionada' || initialDate === 'Not selected') &&
-                            <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                <Ionicons name='asterisk' color={'red'} size={12}/>
-                            </View>
-                        }
-                    </TouchableOpacity>
-                :
-                    <TouchableOpacity
-                        style={styles.box}
-                        onPress={() => handlePress()}
-                    > 
-                        {
-                            initialDate !== 'No seleccionada'
-                            ?
-                                <Text style={{color: '#000'}}> {initialDate.toString()} </Text>
-                            :
-                                <Text style={{color: '#000'}}> No seleccionada </Text>
-                        }
-                    </TouchableOpacity>
-            }
-            { 
-                show 
-                &&
-                    <DateTimePicker
-                        testID='dateTimePicker'
-                        value={field.value}
-                        mode={'date'}
-                        is24Hour={true}
-                        display='spinner'
-                        onChange={(e) => handleDate(e)}
-                        style={{backgroundColor: '#fff'}}
-                    />
-            }
-        </>
-    
-    );
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 20, height: 'auto', alignSelf: 'stretch'}}>
+            <TouchableOpacity style={[styles.picker, {justifyContent: shortFormat ? 'flex-start' : 'center', borderColor: '#dadada', marginBottom: marginBottom ? 10 : 0}]} onPress={() => setOpen(true)}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{color: '#adadad', fontSize: isModule ? 12 : 15, fontWeight: isModule ? 'bold' : 'normal'}}>{dateLabel ? dateLabel : 'Seleccionar fecha'}</Text>
+                </View>
+            </TouchableOpacity>
+            <DatePicker
+                modal
+                mode='date'
+                title={null}
+                open={open}
+                date={date}
+                onConfirm={handleDate}
+                onCancel={() => {
+                setOpen(false)
+                }}
+            />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
-    box: {
-        justifyContent: 'flex-start',
+    picker: {
         alignItems: 'center',
-        height: 50,
-        alignSelf: 'stretch',
-        flexDirection: 'row',
         borderColor: '#CBCBCB',
         borderWidth: 1,
         marginBottom: 10,
         borderRadius: 20,
-        alignItems: 'center',
-        paddingHorizontal: 10
+        height: 48,
+        alignSelf: 'stretch',
+        flex: 1,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
     },
 })

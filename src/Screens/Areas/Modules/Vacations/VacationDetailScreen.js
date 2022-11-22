@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, TextInput, Image, Alert, SafeAreaView, StatusBar, Platform, RefreshControl, TouchableWithoutFeedback} from 'react-native'
-import {HeaderLandscape, HeaderPortrait, Modal, Select, MultiText, ModalLoading, FailedNetwork, Title, BottomNavBar} from '../../../../components'
+import {HeaderLandscape, HeaderPortrait, Modal, Select, MultiText, ModalLoading, FailedNetwork, Title, BottomNavBar, Calendar} from '../../../../components'
 import {useConnection, useNavigation, useOrientation, useScroll} from '../../../../hooks'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -50,28 +50,23 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         solicitudes:  [],
         details: {},
         requestVacation: {
-            initialDate_start: `${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)}`,
-            initialDate_end: `--/--/----`,
-            range: `${language === '1' ? 'Del' : 'From'} ${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)} ${language === '1' ? 'hasta el' : 'to'} --/--/----`,
-            sentDate: `${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)}`,
-            inicio: '',
+            initial,
+            ending,
+            labelInitial,
             fin: '',
+            labelEnding,
+            range: `${language === '1' ? 'Del' : 'From'} --/--/---- ${language === '1' ? 'hasta el' : 'to'} --/--/----`,
             motivo: '',
-            show_start: false,
-            timestamp_start: new Date(),
-            timestamp_end: new Date(), 
-            show_end: false,
         },
+
         initialized: {
-            initialDate_start: `${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)}`,
-            initialDate_end: `--/--/----`,
-            range: `${language === '1' ? 'Del' : 'From'} ${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)} ${language === '1' ? 'hasta el' : 'to'} --/--/----`,
-            sentDate: `${getCurrentDate().substring(8,10)}/${getCurrentDate().substring(5,7)}/${getCurrentDate().substring(0,4)}`,
+            initial,
+            ending,
+            labelInitial,
+            labelEnding,
+            fin: '',
+            range: `${language === '1' ? 'Del' : 'From'} --/--/---- ${language === '1' ? 'hasta el' : 'to'} --/--/----`,
             motivo: '',
-            show_start: false,
-            timestamp_start: new Date(),
-            timestamp_end: new Date(),
-            show_end: false
         },
         currentPeriodo: '',
         id: null,
@@ -91,7 +86,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     const [visiblePeriodo, setVisiblePeriodo] = useState(false)
 
     const {id, info, prima_vacacional, id_periodo, currentPeriodo, periodos, solicitudes, requestVacation, details, dias, tipo, initialized, antiguedad} = initialState
-    
+    const {initial, ending, labelInitial, labelEnding, motivo, fin, range} = requestVacation;
+    useEffect(() => {
+        if(labelInitial || labelEnding) setInitialState({...initialState, requestVacation: {...requestVacation, range: `${language === '1' ? 'Del' : 'From'} ${initial ? initial.substring(8,10) : '--'}/${initial ? initial.substring(5,7) : '--'}/${initial ? initial.substring(0,4) : '----'} ${language === '1' ? 'hasta el' : 'to'} ${ending ? ending.substring(8,10) : '--'}/${ending ? ending.substring(5,7) : '--'}/${ending ? ending.substring(0,4) : '----'}`} })
+    }, [initial, ending])
+
     useFocusEffect(
         useCallback(() => {
             handlePath('Vacation')
@@ -103,7 +102,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }, [visible, deleteVisibility, detailsVisibility, editVisibility])
 
     const getInformation = async () => {
-        askForConnection()
         try{
             setLoading(true)
             const body = {
@@ -117,8 +115,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 'live': live,
                 'login': login
             }
-
-            console.log('body: ', body)
 
             const request = await fetch(urlVacaciones, {
                 method: 'POST',
@@ -166,70 +162,56 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleSave = async () => {
-        askForConnection()
-        if(requestVacation.initialDate_end !== '--/--/----'){
+        if(ending !== '--/--/----'){
             try{
                 setLoading(true)
-                const inicio = (requestVacation.initialDate_start).substring(6,10) + '-' + (requestVacation.initialDate_start).substring(3,5) + '-' + (requestVacation.initialDate_start).substring(0,2)
-                const fin = requestVacation.fin;
+                console.log('inicio: ', initial)
+                console.log('ending: ', ending)
+                const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
+                const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
+                const body = {
+                    'action': 'add_solicitud_vac',
+                    'data': {
+                        'id_usuario': id_usuario,
+                        'id_empleado':id_empleado,
+                        'language': language,
+                        'motivo': motivo,
+                        'fechas': `${inicio} - ${fin}`
+                    },
+                    'live': live,
+                    'login': login
+                }
 
-                let f1 = new Date(parseInt((requestVacation.initialDate_start).substring(6,10)), parseInt((requestVacation.initialDate_start).substring(3,5)), parseInt((requestVacation.initialDate_start).substring(0,2)))
-                let f2 = new Date(parseInt((fin).substring(0,4)), parseInt((fin).substring(5,7)), parseInt((fin).substring(8,10)))
-
-                if(f1 <= f2){
-                    const body = {
-                        'action': 'add_solicitud_vac',
-                        'data': {
-                            'id_usuario': id_usuario,
-                            'id_empleado':id_empleado,
-                            'language': language,
-                            'motivo': requestVacation.motivo,
-                            'fechas': `${inicio} - ${requestVacation.fin}`
-                        },
-                        'live': live,
-                        'login': login
-                    }
+                console.log('body:', body )
+        
+                const request = await fetch(urlVacaciones, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: token,
+                    },
+                    body: JSON.stringify(body),
+                });
             
-                    const request = await fetch(urlVacaciones, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            token: token,
-                        },
-                        body: JSON.stringify(body),
-                    });
-                
-                    const {response} = await request.json();
-                    if(response.status === 200){
-                        setInitialState({...initialState, requestVacation: initialized, tipo: '1'})
-                        setVisible(!visible)
-                        setRefresh(!refresh)
-                        setActionsVisibility(true)
-                        /* dispatch(actionSolicitud({id: id_empleado, tipo: '1'}))
-                        dispatch(actionSolicitudTemporal({id: id_empleado, tipo: '1'})) */
-                        setTimeout(() => {
-                            setActionsVisibility(false)
-                        }, 3500)
-                    }
-                    else {
-                        Alert.alert(
-                            'Error',
-                            response.response,
-                            [
-                                { text: 'OK'}
-                            ]
-                        )
-                        setLoading(false)
-                    }
+                const {response} = await request.json();
+                if(response.status === 200){
+                    setInitialState({...initialState, requestVacation: initialized, tipo: '1'})
+                    setVisible(!visible)
+                    setRefresh(!refresh)
+                    setActionsVisibility(true)
+                    setTimeout(() => {
+                        setActionsVisibility(false)
+                    }, 3500)
                 }
                 else {
                     Alert.alert(
-                        language === '1' ? 'Fecha Inválida' : 'Invalid Date',
-                        language === '1' ? 'La fecha de inicio, no puede ser superior a la fecha final.' : 'The start date cannot be exceed than the end date.',
+                        'Error',
+                        response.response,
                         [
                             { text: 'OK'}
                         ]
                     )
+                    setLoading(false)
                 }
             }catch(e){
                 console.log('algo pasó con el internet')
@@ -249,7 +231,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleDelete = async () => {
-        askForConnection()
         try{
             setLoading(true)
             const body = {
@@ -275,8 +256,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
             if(response.status === 200){
                 setInitialState({...initialState, tipo: '3'})
                 setDeleteVisibility(!deleteVisibility)
-                /* dispatch(actionSolicitud({id: id_empleado, tipo: '2'}))
-                dispatch(actionSolicitudTemporal({id: id_empleado, tipo: '2'})) */
                 setActionsVisibility(true)
                 setTimeout(() => {
                     setActionsVisibility(false)
@@ -301,12 +280,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleEdit = async () => {
-        if(requestVacation.initialDate_end !== '--/--/----'){
-            askForConnection()
+        if(ending !== '--/--/----'){
             try{
                 setLoading(true)
-                const inicio = (requestVacation.initialDate_start).substring(6,10) + '-' + (requestVacation.initialDate_start).substring(3,5) + '-' + (requestVacation.initialDate_start).substring(0,2)
-                const fin = (requestVacation.initialDate_end).substring(6,10) + '-' + (requestVacation.initialDate_end).substring(3,5) + '-' + (requestVacation.initialDate_end).substring(0,2)
+                const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
+                const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
                 
                 const body = {
                     'action': 'edit_solicitud_vac',
@@ -365,75 +343,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         }
     }
 
-    const handleDate = ({nativeEvent: {timestamp}}, type) => {
-        let valida = new Date(timestamp)
-        let añoSeleccionado = parseInt(valida.getFullYear());
-        let añoPermitido = (parseInt(getCurrentDate().substring(0,4)) + 1);
-
-        if(timestamp !== undefined){
-            if(añoSeleccionado <= añoPermitido){
-                let date = new Date(timestamp)
-                let dia = date.toLocaleDateString().substring(3,5)
-                let mes = date.toLocaleDateString().substring(0,2)
-                let año = date.getFullYear()
-    
-                let isIOS = DeviceInfo.getDeviceId().includes('iPhone')
-    
-                let diaIOS = parseInt(date.getDate())
-                let mesIOS = parseInt(date.getMonth() + 1)
-    
-                diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-                mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-                
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start, timestamp_start: date, initialDate_start: !isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año, range: `${language === '1' ? 'Del' : 'From'} ${(!isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año)}` + `${language === '1' ? ' hasta el' : ' to'} ` + (requestVacation.initialDate_end).substring(0,2) + '/' + (requestVacation.initialDate_end).substring(3,5) + '/' + (requestVacation.initialDate_end).substring(6,10), sentDate: `${(!isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS)}` + ' - ' + `${requestVacation.initialDate_end.substring(6,10)}-${requestVacation.initialDate_end.substring(3,5)}-${requestVacation.initialDate_end.substring(0,2)}`, inicio: `${(!isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS)}`})})
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end, timestamp_end: date, initialDate_end: !isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año, range: language === '1' ? 'Del ' + (requestVacation.initialDate_start).substring(0,2) + '/' + (requestVacation.initialDate_start).substring(3,5) + '/' + (requestVacation.initialDate_start).substring(6,10) + ' hasta el ' + (!isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año) : 'From ' + (requestVacation.initialDate_start).substring(0,2) + '/' + (requestVacation.initialDate_start).substring(3,5) + '/' + (requestVacation.initialDate_start).substring(6,10) + ' to ' + (!isIOS ? dia + '/' + mes + '/' + año : diaIOS + '/' + mesIOS + '/' + año), sentDate: `${requestVacation.initialDate_start.substring(6,10)}-${requestVacation.initialDate_start.substring(3,5)}-${requestVacation.initialDate_start.substring(0,2)}` + ' - ' + `${(!isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS)}`, fin: `${(!isIOS ? año + '-' + mes + '-' + dia : año + '-' + mesIOS + '-' + diaIOS)}`})})
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            else {
-                Alert.alert(
-                    language === '1' ? 'Fecha Inválida' : 'Invalid Date',
-                    language === '1' ? 'No puede seleccionar años posteriores al actual' : 'You cannot select years later than the current year',
-                    [
-                        { text: 'OK'}
-                    ]
-                )
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start})});
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end})});
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        else{
-            switch (type) {
-                case 'start':
-                    setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start})});
-                    break;
-                case 'end':
-                    setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end})});
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-
     const handleDetails = async (status) => {
-        askForConnection()
         setLoading(true)
         try{
             const body = {
@@ -480,7 +390,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleAprove = async (status) => {
-        askForConnection()
         try{
             setLoading(true)
             const body = {
@@ -489,7 +398,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     'id_usuario':id_usuario,
                     'id_vacsol':id,
                     'status': status,
-                    'motivo': requestVacation.motivo,
+                    'motivo': motivo,
                     'language': language,
                 },
                 'live': live,
@@ -894,58 +803,22 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                             setVisible(!visible)
                             setInitialState({...initialState, requestVacation: initialized})   
                         }} vertical={false}/>
-                        <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', paddingTop: 8}}>
-                            <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start, show_end: false})})}>
-                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text style={{color: '#000'}}>{requestVacation.initialDate_start}</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <View style={{width: 4}}></View>
-                            <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end, show_start: false})})}>
-                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text style={{color: '#000'}}>{requestVacation.initialDate_end}</Text>
-                                </View>
-                            </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', paddingTop: 8}}>
+                            <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, initial: value, labelInitial: label}})} language={language} marginBottom={false} />
+                            <View style={{ width: 6 }}></View>
+                            <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, ending: value, labelEnding: label}})} language={language} marginBottom={false}/>
                         </View>
-                        <View style={{marginTop: isIphone ? requestVacation.show_start || requestVacation.show_end ? 5 : 0 : 0, marginBottom: isIphone ? requestVacation.show_start || requestVacation.show_end ? 20 : 0 : 0}}>
-                            {
-                                requestVacation.show_start
-                                &&
-                                    <DateTimePicker
-                                        style={{backgroundColor: '#fff'}}
-                                        testID='dateTimePicker'
-                                        value={requestVacation.timestamp_start}
-                                        mode={'date'}
-                                        is24Hour={true}
-                                        display={'spinner'}
-                                        onChange={(e) => handleDate(e,'start')}
-                                    />
-                            }
-                            {
-                                requestVacation.show_end
-                                &&
-                                    <DateTimePicker
-                                        style={{backgroundColor: '#fff'}}
-                                        testID='dateTimePicker'
-                                        value={requestVacation.timestamp_end}
-                                        mode={'date'}
-                                        is24Hour={true}
-                                        display={'spinner'}
-                                        onChange={(e) => handleDate(e,'end')}
-                                    />
-                            }
-                        </View>
-                        <View style={{paddingHorizontal: 1}}>
+                        <View style={{paddingHorizontal: 1, marginTop: 10}}>
                             <View style={{height: 'auto', alignSelf: 'stretch'}}>
                                 <TextInput 
                                     editable={false}
-                                    value={requestVacation.range}
-                                    style={[styles.picker, {textAlign: 'center', fontSize: 16, color: '#adadad'}]}
+                                    value={range}
+                                    style={[styles.picker, {textAlign: 'center', fontSize: 12, color: '#adadad', fontWeight: 'bold', backgroundColor: '#f7f7f7'}]}
                                 />
                             </View>
                             <MultiText 
                                 placeholder={language === '1' ? 'Especifique el motivo de su solicitud de vacaciones en caso que lo crea necesario' : 'Specify the reason for your vacation request if you think it is necessary.'}
-                                value={requestVacation.motivo}
+                                value={motivo}
                                 onChangeText={(e) => handleInputChange(e)}
                                 multiline={true}
                                 numberOfLines={5}
@@ -991,8 +864,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         </View>
                     </ScrollView>
                 </Modal>
-
-                {/* //modal para ver */}
+                
                 <Modal orientation={orientationInfo.initial} visibility={detailsVisibility} handleDismiss={() => setDetailsVisibility(!detailsVisibility)}>
                     <ScrollView
                         style={{alignSelf: 'stretch'}}
@@ -1072,7 +944,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                     </View>
                                     <MultiText 
                                         placeholder={language === '1' ? 'Especifique el motivo de su solicitud de vacaciones en caso que lo crea necesario' : 'Specify the reason for your vacation request if you think it is necessary.'}
-                                        value={requestVacation.motivo}
+                                        value={motivo}
                                         onChangeText={(e) => handleInputChange(e)}
                                         multiline={true}
                                         numberOfLines={5}
@@ -1108,8 +980,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         />
                     </View>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 24}}>¿Esta seguro de continuar?</Text>
-                        <Text style={{fontSize: 16}}>Este cambio no se puede revertir</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 24, color: '#000'}}>¿Esta seguro de continuar?</Text>
+                        <Text style={{fontSize: 16, color: '#000'}}>Este cambio no se puede revertir</Text>
                     </View>
                     <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10}}>
                         <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} style={{flex: 1, height: 40, backgroundColor: '#f7f7f7', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
@@ -1139,58 +1011,16 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
                 <Modal orientation={orientationInfo.initial} visibility={editVisibility} handleDismiss={() => setEditVisibility(!editVisibility)}>
                     <Title title={language === '1' ? 'EDITAR VACACIONES' : 'EDIT VACATION'} icon={'calendar'} tipo={1} vertical={false} itCloses={() => setEditVisibility(!editVisibility)}/>
-                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', paddingTop: 8}}>
-                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_start: !requestVacation.show_start, show_end: false})})}>
-                            <View style={{flex: 1}}>
-                                <Text>{requestVacation.initialDate_start}</Text>
-                            </View>
-                            <View style={{width: 'auto'}}>
-                                <Icon name='calendar' size={20} color={'#4F4F4F'} />
-                            </View>
-                        </TouchableOpacity>
-                        <View style={{width: 4}}></View>
-                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, requestVacation: ({...requestVacation, show_end: !requestVacation.show_end, show_start: false})})}>
-                            <View style={{flex: 1}}>
-                                <Text>{requestVacation.initialDate_end}</Text>
-                            </View>
-                            <View style={{width: 'auto'}}>
-                                <Icon name='calendar' size={20} color={'#4F4F4F'} />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{marginTop: isIphone ? requestVacation.show_start || requestVacation.show_end ? 5 : 0 : 0, marginBottom: isIphone ? requestVacation.show_start || requestVacation.show_end ? 20 : 0 : 0}}>
-                        {
-                            requestVacation.show_start
-                            &&
-                                <DateTimePicker
-                                    style={{backgroundColor: '#fff'}}
-                                    testID='dateTimePicker'
-                                    value={requestVacation.timestamp_start}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display={isIphone ? 'spinner' : 'spinner'}
-                                    onChange={(e) => handleDate(e,'start')}
-                                />
-                        }
-                        {
-                            requestVacation.show_end
-                            &&
-                                <DateTimePicker
-                                    style={{backgroundColor: '#fff'}}
-                                    testID='dateTimePicker'
-                                    value={requestVacation.timestamp_end}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display={isIphone ? 'spinner' : 'spinner'}
-                                    onChange={(e) => handleDate(e,'end')}
-                                />
-                        }
+                    <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 65, paddingTop: 8}}>
+                        <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, initial: value, labelInitial: label}})} language={language} />
+                        <View style={{ width: 6 }}></View>
+                        <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, ending: value, labelEnding: label}})} language={language} />
                     </View>
                     <View style={{height: 'auto', alignSelf: 'stretch'}}>
                         <TextInput
                             editable={false}
-                            value={requestVacation.range}
-                            style={[styles.picker, {textAlign: 'center', fontSize: 16, color: '#adadad'}]}
+                            value={range}
+                            style={[styles.picker, {textAlign: 'center', fontSize: 12, color: '#adadad', fontWeight: 'bold', backgroundColor: '#f7f7f7'}]}
                         />
                     </View>
                     <View style={{flexDirection: 'row'}}>
@@ -1240,7 +1070,7 @@ const styles = StyleSheet.create({
     picker: {
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#adadad',
+        borderColor: '#dadada',
         borderWidth: 1,
         borderRadius: 16,
         marginBottom: 10,

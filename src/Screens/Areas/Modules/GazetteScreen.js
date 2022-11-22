@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, FlatList, Alert, Platform, Image, TouchableWithoutFeedback} from 'react-native';
-import {BottomNavBar, DatePicker, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components';
+import {BottomNavBar, Calendar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {formatDate, getCurrentDate, getLastDayMonth} from '../../../js/dates';
 import {isIphone, live, login, urlGaceta} from '../../../access/requestedData';
@@ -57,20 +57,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         urlModal: '',
         initialDate: '',
         active: 1,
-        initialDate_start: formatDate(`01-${getCurrentDate().substring(5,7)}-${getCurrentDate().substring(0,4)}`, language),
-        timestamp_start: new Date(),
         initial: false,
-        show_start: false,
-        
-        initialDate_end: formatDate(`${getLastDayMonth()}-${getCurrentDate().substring(5,7)}-${getCurrentDate().substring(0,4)}`, language),
-        timestamp_end: new Date(),
+        labelInitial: '',
         ending: false,
-        show_end: false,
+        labelEnding: '',
         visible: false,
         hide: false
     })
 
-    const {active, initialDate_start, timestamp_start, show_start, initialDate_end, timestamp_end, show_end, initial, ending, data, visible, hide} = initialState;
+    const {active, initial, ending, data, hide, labelInitial, labelEnding} = initialState;
     
     const getGaceta = async () => {
         try{
@@ -148,80 +143,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         setInitialState({...initialState, active: id})
     }
 
-    const handleDate = ({nativeEvent: {timestamp}}, type) => {
-        let valida = new Date(timestamp)
-        let añoSeleccionado = parseInt(valida.getFullYear());
-        let añoPermitido = (parseInt(getCurrentDate().substring(0,4)) + 1);
-
-        if(timestamp !== undefined){
-            if(añoSeleccionado <= añoPermitido){
-                let date = new Date(timestamp)
-                let mes = date.toLocaleDateString().substring(3,5)
-                let dia = date.toLocaleDateString().substring(0,2)
-
-                let mesAndroid = null;
-                if(mes.includes('/')){
-                    mesAndroid = mes.substring(0,1)
-                } else {
-                    mesAndroid = mes
-                }
-                mesAndroid = mesAndroid < 10 ? `0${mesAndroid}` : mesAndroid
-
-                let año = date.getFullYear()
-
-                let diaIOS = parseInt(date.getDate())
-                let mesIOS = parseInt(date.getMonth() + 1)
-
-                diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-                mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-
-                let isIOS = isIphone ? true : false
-                let forSent = !isIOS ? año + '-' + mesAndroid + '-' + dia : año + '-' + mesIOS + '-' + diaIOS
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent})
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent})
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else {
-                Alert.alert(
-                    language === '1' ? 'Fecha Inválida' : 'Invalid Date',
-                    language === '1' ? 'No puede seleccionar fechas anteriores a la actúal' : 'You cannot select dates prior to the current date.',
-                    [
-                        { text: 'OK'}
-                    ]
-                )
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, show_start: !show_start});
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, show_end: !show_end});
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        else{
-            switch (type) {
-                case 'start':
-                    setInitialState({...initialState, show_start: !show_start});
-                    break;
-                case 'end':
-                    setInitialState({...initialState, show_end: !show_end});
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     useEffect(() => {
         setTimeout(() => {
             setReload(false)
@@ -292,8 +213,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         orientationInfo.initial === 'PORTRAIT'
                         ?
                             <>
-                                <TouchableOpacity style={{alignSelf: 'stretch'}} onPress={() => setInitialState({...initialState, hide: !hide, show_end: false, show_start: false})}>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', paddingTop: '3%', paddingHorizontal: '3%', borderBottomColor: '#000', borderBottomWidth: 1, paddingBottom: '3%', backgroundColor: '#fff'}}>
+                                <TouchableOpacity style={{alignSelf: 'stretch'}} onPress={() => setInitialState({...initialState, hide: !hide, show_end: false})}>
+                                    <View style={{height: 'auto', alignSelf: 'stretch', paddingTop: '3%', paddingHorizontal: '3%', borderBottomColor: '#adadad', borderBottomWidth: 1, paddingBottom: '3%', backgroundColor: '#fff'}}>
                                         <View style={{flexDirection: 'row'}}>
                                             <View style={{width: 50, justifyContent: 'center', alignItems: 'center'}}>
                                                 <IonIcons name={'newspaper'} size={28} color='transparent' />
@@ -315,25 +236,10 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     {
                                         !hide
                                         &&
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', height: 'auto', paddingHorizontal: '3%', backgroundColor: '#fff', paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#000'}}>
-                                                {/* <View style={{flex: 1}}>
-                                                    <TouchableOpacity
-                                                        style={styles.box}
-                                                        onPress={() => setInitialState({...initialState, show_start: !show_start, show_end: false})}
-                                                    >
-                                                        <Text style={{marginLeft: 8, color: '#383838', fontWeight: 'bold', fontSize: 12}}>{initialDate_start}</Text>
-                                                    </TouchableOpacity>
-                                                </View> */}
-                                                <DatePicker fieldName='test' isModule={true} shortFormat={false} getValue={(e) => console.log(e)} language={language} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', height: 65, paddingHorizontal: '3%', backgroundColor: '#fff', paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#adadad'}}>
+                                                <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, initial: value, labelInitial: label})} language={language} />
                                                 <View style={{width: 6}}></View>
-                                                <View style={{flex: 1}}>
-                                                    <TouchableOpacity
-                                                        style={styles.box}
-                                                        onPress={() => setInitialState({...initialState, show_end: !show_end, show_start: false})}
-                                                    >
-                                                        <Text style={{marginLeft: 8, color: '#383838', fontWeight: 'bold', fontSize: 12}}>{initialDate_end}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
+                                                <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, ending: value, labelEnding: label})} language={language} />
                                             </View>
                                     }
                                 </TouchableOpacity>
@@ -365,7 +271,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             }
                             <View style={[styles.container, {padding: 0}]}>
                                 {
-                                    !show_start && !show_end && !loading
+                                    !loading
                                     &&
                                         <FlatList
                                             ref={refGaceta}
@@ -394,7 +300,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
                             <View style={[styles.container, {padding: 0}]}>
                                 {
-                                    !show_start && !show_end && !loading
+                                    !loading
                                     &&
                                         <FlatList
                                             ref={refGaceta}
@@ -416,35 +322,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 			                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />¡
                             <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                         </>
-                }
-                {
-                    show_start
-                    &&
-                        <DateTimePicker
-                            style={{backgroundColor: '#fff'}}
-                            textColor={'black'}
-                            testID='dateTimePicker'
-                            value={timestamp_start}
-                            mode={'date'}
-                            is24Hour={true}
-                            display={'spinner'}
-                            onChange={(e) => handleDate(e,'start')}
-                        />
-                }
-
-                {
-                    show_end
-                    &&
-                        <DateTimePicker
-                            style={{backgroundColor: '#fff'}}
-                            textColor={'black'}
-                            testID='dateTimePicker'
-                            value={timestamp_end}
-                            mode={'date'}
-                            is24Hour={true}
-                            display={'spinner'}
-                            onChange={(e) => handleDate(e,'end')}
-                        />
                 }
                 </View>
                 <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={2}/>

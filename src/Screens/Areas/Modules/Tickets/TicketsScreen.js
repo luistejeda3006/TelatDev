@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react'
 import {View, Text, StyleSheet, Platform, ScrollView, TouchableWithoutFeedback, TouchableOpacity, StatusBar, SafeAreaView, PermissionsAndroid, Alert, RefreshControl} from 'react-native'
-import {HeaderPortrait, HeaderLandscape, FailedNetwork, Pagination, Modal, Select, Message, Camera, ModalLoading, MultiTextEditable, BottomNavBar} from '../../../../components'
+import {HeaderPortrait, HeaderLandscape, FailedNetwork, Pagination, Modal, Select, Message, Camera, ModalLoading, MultiTextEditable, BottomNavBar, Calendar} from '../../../../components'
 import {useConnection, useOrientation, useNavigation, useScroll} from '../../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -77,15 +77,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         encryptedImage: '',
         nombre_imagen: '',
 
-        show_start: false,
-        initialDate_start: formatDate(`01-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`, language),
-        timestamp_start: new Date(),
         initial: false,
-
-        show_end: false,
-        initialDate_end: formatDate(`${getLastDayMonth()}-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`, language),
-        timestamp_end: new Date(),
+        labelInitial: '',
+        
         ending: false,
+        labelEnding: '',
         currentFilter: 1,
         reload: 1,
         contador: 1,
@@ -102,7 +98,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         usuarioTicket: 'Seleccione una opción',
     })
 
-    const {visibleTipo, btn_users, visibleConcepto, visibleUbicacion, visibleUsuarios, visibleMensaje, showMensaje, ConceptosTicket,conceptoDesc, backgroundDesc, colorDesc, idTipo, idConcepto, idUbicacion, idUsuario, mensaje, nombre_imagen, imagen, encryptedImage, show_start, initialDate_start, timestamp_start, initial, show_end, initialDate_end, timestamp_end, ending, reload, contador, reloadTickets, reloadArchivados, reloadExpedientes, reloadAddTicket, currentFilter} = initialState
+    const {visibleTipo, visibleConcepto, visibleUbicacion, visibleUsuarios, visibleMensaje, showMensaje, ConceptosTicket,conceptoDesc, backgroundDesc, colorDesc, idTipo, idConcepto, idUbicacion, idUsuario, mensaje, nombre_imagen, imagen, encryptedImage, initial, labelInitial, labelEnding, ending, reloadTickets, reloadArchivados, reloadExpedientes, currentFilter} = initialState
     const {tipoTicket, conceptoTicket, ubicacionTicket, usuarioTicket} = labels
 
     useFocusEffect(
@@ -526,82 +522,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         }
     }
 
-    const handleDate = ({nativeEvent: {timestamp}}, type) => {
-        let valida = new Date(timestamp)
-        let añoSeleccionado = parseInt(valida.getFullYear());
-        let añoPermitido = (parseInt(getCurrentDate().substring(0,4)) + 1);
-
-        if(timestamp !== undefined){
-            if(añoSeleccionado <= añoPermitido){
-                let date = new Date(timestamp)
-                let mes = date.toLocaleDateString().substring(3,5)
-                let dia = date.toLocaleDateString().substring(0,2)
-
-                let mesAndroid = null;
-                if(mes.includes('/')){
-                    mesAndroid = mes.substring(0,1)
-                } else {
-                    mesAndroid = mes
-                }
-                mesAndroid = mesAndroid < 10 ? `0${mesAndroid}` : mesAndroid
-
-                let año = date.getFullYear()
-
-                let diaIOS = parseInt(date.getDate())
-                let mesIOS = parseInt(date.getMonth() + 1)
-
-                diaIOS = diaIOS < 10 ? `0${diaIOS}` : diaIOS
-                mesIOS = mesIOS < 10 ? `0${mesIOS}` : mesIOS
-
-                let isIOS = isIphone ? true : false
-                let forSent = !isIOS ? año + '-' + mesAndroid + '-' + dia : año + '-' + mesIOS + '-' + diaIOS
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, show_start: !show_start, timestamp_start: date, initialDate_start: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), initial: forSent})
-                        getArchivados(forSent, ending, 1)
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, show_end: !show_end, timestamp_end: date, initialDate_end: !isIOS ? formatDate(dia + '-' + mesAndroid + '-' + año, language) : formatDate(diaIOS + '-' + mesIOS + '-' + año, language), ending: forSent})
-                        getArchivados(initial, forSent, 1)
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else {
-                Alert.alert(
-                    language === '1' ? 'Fecha Inválida' : 'Invalid Date',
-                    language === '1' ? 'No puede seleccionar fechas anteriores a la actúal' : 'You cannot select dates prior to the current date.',
-                    [
-                        { text: 'OK'}
-                    ]
-                )
-                switch (type) {
-                    case 'start':
-                        setInitialState({...initialState, show_start: !show_start});
-                        break;
-                    case 'end':
-                        setInitialState({...initialState, show_end: !show_end});
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        else{
-            switch (type) {
-                case 'start':
-                    setInitialState({...initialState, show_start: !show_start});
-                    break;
-                case 'end':
-                    setInitialState({...initialState, show_end: !show_end});
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     const reloading = () => {
         setLoading(true)
     }
@@ -724,24 +644,16 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     active === 2
                                     ?
                                         <>
-                                            <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', borderColor: '#CBCBCB', marginTop: 10 }}>
-                                                <View style={{ flex: 1}}>
-                                                    <TouchableOpacity
-                                                        style={styles.box}
-                                                        onPress={() => setInitialState({ ...initialState, show_start: !show_start, show_end: false })}
-                                                    >
-                                                        <Text style={{marginLeft: 8, color: '#4F4F4F', fontSize: 12, fontWeight: 'bold'}}>{initialDate_start}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
+                                            <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', borderColor: '#dadada', marginTop: 10 }}>
+                                                <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => {
+                                                    getArchivados(value, ending, true)
+                                                    setInitialState({...initialState, initial: value, labelInitial: label})
+                                                }} language={language} marginBottom={false} />
                                                 <View style={{ width: 6 }}></View>
-                                                <View style={{ flex: 1 }}>
-                                                    <TouchableOpacity
-                                                        style={styles.box}
-                                                        onPress={() => setInitialState({ ...initialState, show_end: !show_end, show_start: false })}
-                                                    >
-                                                        <Text style={{marginLeft: 8, color: '#4F4F4F', fontSize: 12, fontWeight: 'bold'}}>{initialDate_end}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
+                                                <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => {
+                                                    getArchivados(initial, value, true)
+                                                    setInitialState({...initialState, ending: value, labelEnding: label})
+                                                }} language={language} marginBottom={false}/>
                                             </View>
                                             <Pagination data={archivados} Item={Ticket} SearchInput={true} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : currentFilter === 3 ? 4 : 1})} placeholder={currentFilter === 1 ? 'Fecha de archivado...' : currentFilter === 2 ? 'No.Ticket...' : currentFilter === 3 ? 'Quién solicitó...' : 'Ubicación...'} property={currentFilter === 1 ? 'fecha_archivado' : currentFilter ===  2 ? 'no_ticket' : currentFilter === 3 ? 'nombre' : 'ubicacion'} handlePage={handlePage} current={currentPage} handleTop={() => refTickets.current?.scrollToPosition(0, 0)} />
                                         </>
@@ -848,36 +760,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             }
                             </View>
                         </KeyboardAwareScrollView>
-                        {
-                            show_start
-                            &&
-                                <DateTimePicker
-                                    style={{backgroundColor: '#fff'}}
-                                    textColor={'black'}
-                                    testID='dateTimePicker'
-                                    value={timestamp_start}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display={'spinner'}
-                                    onChange={(e) => handleDate(e, 'start')}
-                                />
-                        }
-            
-                        {
-                            show_end
-                            &&
-                                <DateTimePicker
-                                    style={{backgroundColor: '#fff'}}
-                                    textColor={'black'}
-                                    testID='dateTimePicker'
-                                    value={timestamp_end}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display={'spinner'}
-                                    onChange={(e) => handleDate(e, 'end')}
-                                />
-                        }
-            
                         
                         <ModalLoading visibility={loading}/>
                         

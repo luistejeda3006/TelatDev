@@ -5,11 +5,16 @@ export default () => {
     const [hasConnection, setHasConnection] = useState(true)
 
     useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener(state => {
-            setHasConnection(state.isConnected)
-          });
-          
-          return unsubscribe;
+        try{
+            const unsubscribe = NetInfo.addEventListener(state => {
+                setHasConnection(state.isConnected)
+              });
+              
+              return unsubscribe;
+        }catch(e){
+            console.log('e: ', e)
+            setHasConnection(false)
+        }
     },[])
 
     const askForConnection = () => {

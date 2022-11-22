@@ -300,7 +300,7 @@ export default ({navigation}) => {
 
     useEffect(() => {
         getInformation()
-    },[hasConnection, arrived])
+    },[arrived])
 
     useEffect(async () =>  {
         try{
@@ -330,7 +330,7 @@ export default ({navigation}) => {
             console.log('hay un error con el internet')
             cuenta = 0;
         }
-    },[hasConnection])
+    },[])
     
     useEffect(() => {
         createChannels()

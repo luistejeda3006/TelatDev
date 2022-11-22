@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         alignSelf: 'stretch',
-        borderColor: '#CBCBCB',
+        borderColor: '#dadada',
         flexDirection: 'row',
         borderWidth: 1,
         marginBottom: 15,

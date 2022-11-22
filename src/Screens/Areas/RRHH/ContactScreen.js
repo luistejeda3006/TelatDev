@@ -355,7 +355,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 if(minutos === 1 || segundos >= 40){
                     setInitialState({...initialState, loading: true})
                         const body = {
-                            'action': 'send_mail_info_test',
+                            'action': 'send_mail_info',
                             'data': {
                                 'info_ciudad': values.currentCity,
                                 'info_contacto': values.currentOption,

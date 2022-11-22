@@ -708,6 +708,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         horizontal={true}
                                         renderItem={({item}) => <Grupo id={item.id} name={item.name} selected={item.selected} completed={item.completed} partidos={item.partidos}/>}
                                         keyExtractor={item => String(item.id)}
+                                        key={'_2'}
                                     />
                                 </View>
                                 <FlatList
@@ -719,6 +720,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     numColumns={1}
                                     renderItem={({item}) => <Quiniela {...item}/>}
                                     keyExtractor={item => String(item.id)}
+                                    key={'_3'}
                                 />
                             </>
                         :
@@ -748,6 +750,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 data={global}
                                                 renderItem={({item}) => <GlobalPodium id={item.id} position={item.position} name={item.name} color={item.color} record={item.record}/>}
                                                 keyExtractor={item => String(item.id)}
+                                                key={'_4'}
                                             />
                                         </>
                                     :
@@ -843,6 +846,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     numColumns={1}
                                     renderItem={({item}) => <Instructions id={item.id} total={instructions.length} {...item}/>}
                                     keyExtractor={item => String(item.id)}
+                                    key={'_5'}
                                 />
                             </>
                     }
@@ -869,6 +873,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     numColumns={1}
                                     renderItem={({item}) => <Points {...item}/>}
                                     keyExtractor={item => String(item.id)}
+                                    key={'_1'}
                                 />
                             </>
                     }

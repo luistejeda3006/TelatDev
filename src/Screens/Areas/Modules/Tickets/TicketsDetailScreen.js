@@ -130,6 +130,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
             const {response} = await request.json();
             if(response.status === 200){
                 cuenta = cuenta + 1;
+                console.log('body html: ', response.html)
                 setInitialState({...initialState, detail: response.data, chat: response.chat, isTable: response.is_table, bodyHtml: response.html, Responsables: response.data.responsables, Evidencias: response.data.evidencias, calificacion: response.data.calificacion, permisos: response.permisos, motivos: response.opciones})
             }
         }catch(e){
@@ -197,6 +198,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     }
 
     const Chat = ({fecha, mensajes}) => {
+        console.log('mensajes: ', mensajes[0])
         return(
             <>
                 <View style={{flexDirection: 'row', height: 'auto', alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 6, marginTop: 8}}>
@@ -284,7 +286,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                             <HTML source={{ html }} {...htmlProps} contentWidth={Dimensions.get('screen').width}/>
                                         :
                                             <HTMLView
-                                                value={item.body}
+                                                value={'<div style="color: black">' + item.body + '</div>'}
                                                 stylesheet={styles}
                                             />
                                     }
@@ -1214,15 +1216,6 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flexGrow:1,
-    },
-    p: {
-        color: '#000'
-    },
-    li: {
-        color: '#000'
-    },
-    font: {
-        color: '#000'
     },
     div: {
         color: '#000'
