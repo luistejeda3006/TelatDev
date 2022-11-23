@@ -6,8 +6,8 @@ import HTMLView from 'react-native-htmlview'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../colors/colorsApp';
 import {isIphone} from '../../access/requestedData';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
-import { useFocusEffect } from '@react-navigation/native';
 
 export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer}}}) => {
     const [contador, setContador] = useState(0)
@@ -40,7 +40,7 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
     );
     
     return (
-        <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <View style={tw`flex-1 bg-[#fff]`}>
             {
                 <>
                     <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />

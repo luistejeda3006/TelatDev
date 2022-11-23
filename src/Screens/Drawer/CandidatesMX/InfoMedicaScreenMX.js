@@ -74,7 +74,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={{alignSelf: 'stretch'}}
+                            style={tw`self-stretch`}
                             onScroll={handleScroll}
                             contentContainerStyle={{paddingTop: paddingTop}}
                         >
@@ -101,7 +101,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={{alignSelf: 'stretch'}}
+                            style={tw`self-stretch`}
                             onScroll={handleScroll}
                             contentContainerStyle={{paddingTop: paddingTop}}
                         >
@@ -112,7 +112,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     <Text style={[titleStyle]}>{language === '1' ? 'Contacto de Emergencia' : 'Emergency Contact'}</Text>
                                     <Contenedor title={info.contacto} hasBottomLine={false}/>
                                 </View>
-                                <View style={{flex: 1, marginLeft: 6}}>
+                                <View style={tw`flex-1 ml-1.5`}>
                                     <Text style={[titleStyle]}>{language === '1' ? 'Teléfono de Emergencia' : 'Emergency Contact'}</Text>
                                     <Contenedor title={info.telefono} hasBottomLine={false}/>
                                 </View>
@@ -123,7 +123,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     <Text style={[titleStyle]}>{language === '1' ? 'Tipo de Sangre' : 'Blood Type'}</Text>
                                     <Contenedor title={info.tipo_sangre} hasBottomLine={false}/>
                                 </View>
-                                <View style={{flex: 1, marginLeft: 6}}>
+                                <View style={tw`flex-1 ml-1.5`}>
                                     <Text style={[titleStyle]}>{language === '1' ? 'Alergías' : 'Allergies'}</Text>
                                     <Contenedor title={info.alegias} hasBottomLine={false}/>
                                 </View>

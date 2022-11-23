@@ -6,7 +6,7 @@ import {formatDate} from '../../js/dates'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 let initialDate = new Date()
-export default ({fieldName, language = '1', getValue = () => {}, shortFormat = true, isModule = false, required = false}) => {
+export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false}) => {
     const [field, helpers, meta] = useField(fieldName);
     const { value, setValue } = meta
     const [dateLabel, setDateLabel] = useState('')
@@ -21,10 +21,9 @@ export default ({fieldName, language = '1', getValue = () => {}, shortFormat = t
         let año = shorter[2]
         dia = dia.length === 1 ? `0${dia}` : dia
         mes = mes.length === 1 ? `0${mes}` : mes
-        const ordered = isModule ? `${año}-${mes}-${dia}` : `${dia}-${mes}-${año}`
-        const formated = shortFormat ? isModule ? `${año}-${mes}-${dia}` : `${dia}-${mes}-${año}` : formatDate(`${dia}-${mes}-${año}`, language)
+        const ordered = `${año}-${mes}-${dia}`
+        const formated = `${dia}-${mes}-${año}`
         setOpen(false)
-        getValue(ordered)
         setValue(ordered)
         setDateLabel(formated)
         setDate(date)
@@ -37,7 +36,7 @@ export default ({fieldName, language = '1', getValue = () => {}, shortFormat = t
                     <Text style={{color: '#000', fontSize: 15}}>{dateLabel ? dateLabel : 'No seleccionada'}</Text>
                 </View>
                 {
-                    ((field.value === '' || field.value === undefined) || (dateLabel === '' && required))
+                    ((field.value === '' || field.value === undefined && required) || (dateLabel === '' && required))
                     &&
                         <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center'}}>
                             <Ionicons name='asterisk' color={'#DC3644'} size={12}/>

@@ -508,7 +508,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
                     </>
                 :
-                    <View style={{flex: 1}}>
+                    <View style={tw`flex-1`}>
                         <ImageBackground source={require('../../../assets/background/fondo.jpg')} style={tw`w-[100%] h-[100%]`}>
                             <View style={tw`px-[${isIphone ? '5%' : '3%'}] flex-1`}>
                                 <View style={tw`h-25 self-stretch flex-row justify-center items-end p-7.5`}>

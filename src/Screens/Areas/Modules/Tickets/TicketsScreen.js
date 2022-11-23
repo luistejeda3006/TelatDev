@@ -591,206 +591,204 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     return(
-        <View style={{backgroundColor: '#fff', flex: 1}}>
-            {
-                orientationInfo.initial === 'PORTRAIT'
-                ?
-                    <>
-                        <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-                        <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
-                        <HeaderPortrait title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
-                    </>
-                :
-                    <HeaderLandscape title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
-            }
-            {
-                hasConnection
-                ?
-                    <>
-                        {
-                            isIphone
-                            &&
-                                <SubHeader />
-                        }
-                        <KeyboardAwareScrollView
-                            ref={refTickets}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            style={{backgroundColor: '#fff'}}
-                            refreshControl={
-                                <RefreshControl
-                                    progressBackgroundColor={'#EC5C25'}
-                                    colors={['#fff']}
-                                    refreshing={false}
-                                    onRefresh={() => {
-                                        cuenta = 0;
-                                        if(active === 1) setInitialState({...initialState, reloadTickets: reloadTickets + 1, show_start: false, show_end: false})
-                                        if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false, initialDate_start: formatDate(`01-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`),timestamp_start: new Date(),initial: false, show_end: false, initialDate_end: formatDate(`${getLastDayMonth()}-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`, language), timestamp_end: new Date(),})
-                                        if(active === 4) setInitialState({...initialState, reloadExpedientes: reloadExpedientes + 1, show_start: false, show_end: false})
-                                    }}
-                                />
-                            }
-                            contentContainerStyle={{paddingTop: !isIphone ? paddingTop + 50 : paddingTop}}
-                            onScroll={handleScroll}
-                        >
-                            <View style={styles.container}>
+        <>
+        
+            <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
+            <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
+            <View style={{backgroundColor: '#fff', flex: 1}}>
+                {
+                    hasConnection
+                    ?
+                        <>
                             {
-                                active === 1
+                                orientationInfo.initial === 'PORTRAIT'
                                 ?
-                                    tickets
-                                    &&
-                                        <Pagination data={tickets} Item={Ticket} SearchInput={true} currentFilter={currentFilter} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : currentFilter === 3 ? 4 : 1})} placeholder={currentFilter === 1 ? 'Asignado a...' : currentFilter === 2 ? 'No.Ticket...' : currentFilter === 3 ? 'Quién solicitó...' : 'Ubicación...'} property={currentFilter === 1 ? 'asignado' : currentFilter ===  2 ? 'no_ticket' : currentFilter === 3 ? 'nombre' : 'ubicacion'} handlePage={handlePage} current={currentPage} handleTop={() => refTickets.current?.scrollToPosition(0, 0)} />
+                                    <>
+                                        <HeaderPortrait title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
+                                    </>
                                 :
-                                    active === 2
+                                    <HeaderLandscape title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
+                            }
+                            {
+                                isIphone
+                                &&
+                                    <SubHeader />
+                            }
+                            <KeyboardAwareScrollView
+                                ref={refTickets}
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}
+                                style={{backgroundColor: '#fff'}}
+                                refreshControl={
+                                    <RefreshControl
+                                        progressBackgroundColor={'#EC5C25'}
+                                        colors={['#fff']}
+                                        refreshing={false}
+                                        onRefresh={() => {
+                                            cuenta = 0;
+                                            if(active === 1) setInitialState({...initialState, reloadTickets: reloadTickets + 1, show_start: false, show_end: false})
+                                            if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false, initialDate_start: formatDate(`01-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`),timestamp_start: new Date(),initial: false, show_end: false, initialDate_end: formatDate(`${getLastDayMonth()}-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`, language), timestamp_end: new Date(),})
+                                            if(active === 4) setInitialState({...initialState, reloadExpedientes: reloadExpedientes + 1, show_start: false, show_end: false})
+                                        }}
+                                    />
+                                }
+                                contentContainerStyle={{paddingTop: !isIphone ? paddingTop + 50 : paddingTop}}
+                                onScroll={handleScroll}
+                            >
+                                <View style={styles.container}>
+                                {
+                                    active === 1
                                     ?
-                                        <>
-                                            <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', borderColor: '#dadada', marginTop: 10 }}>
-                                                <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => {
-                                                    getArchivados(value, ending, true)
-                                                    setInitialState({...initialState, initial: value, labelInitial: label})
-                                                }} language={language} marginBottom={false} />
-                                                <View style={{ width: 6 }}></View>
-                                                <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => {
-                                                    getArchivados(initial, value, true)
-                                                    setInitialState({...initialState, ending: value, labelEnding: label})
-                                                }} language={language} marginBottom={false}/>
-                                            </View>
-                                            <Pagination data={archivados} Item={Ticket} SearchInput={true} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : currentFilter === 3 ? 4 : 1})} placeholder={currentFilter === 1 ? 'Fecha de archivado...' : currentFilter === 2 ? 'No.Ticket...' : currentFilter === 3 ? 'Quién solicitó...' : 'Ubicación...'} property={currentFilter === 1 ? 'fecha_archivado' : currentFilter ===  2 ? 'no_ticket' : currentFilter === 3 ? 'nombre' : 'ubicacion'} handlePage={handlePage} current={currentPage} handleTop={() => refTickets.current?.scrollToPosition(0, 0)} />
-                                        </>
+                                        tickets
+                                        &&
+                                            <Pagination data={tickets} Item={Ticket} SearchInput={true} currentFilter={currentFilter} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : currentFilter === 3 ? 4 : 1})} placeholder={currentFilter === 1 ? 'Asignado a...' : currentFilter === 2 ? 'No.Ticket...' : currentFilter === 3 ? 'Quién solicitó...' : 'Ubicación...'} property={currentFilter === 1 ? 'asignado' : currentFilter ===  2 ? 'no_ticket' : currentFilter === 3 ? 'nombre' : 'ubicacion'} handlePage={handlePage} current={currentPage} handleTop={() => refTickets.current?.scrollToPosition(0, 0)} />
                                     :
-                                        active === 3
+                                        active === 2
                                         ?
-                                            <View style={[styles.container, {paddingHorizontal: 0, flex: 1, alignSelf: 'stretch'}]}>
-                                                <ScrollView
-                                                    showsVerticalScrollIndicator={false}
-                                                    showsHorizontalScrollIndicator={false}
-                                                    style={{alignSelf: 'stretch'}}
-                                                >
-                                                    <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 10}}>
-                                                    </View>
-                                                    <Text style={styles.title}>{'Tipo de ticket'}</Text>
-                                                    <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idTipo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
-                                                        <View style={{flex: 1}}>
-                                                            <Text style={{color: '#000'}}>{tipoTicket}</Text>
+                                            <>
+                                                <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', borderColor: '#dadada', marginTop: 10 }}>
+                                                    <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => {
+                                                        getArchivados(value, ending, true)
+                                                        setInitialState({...initialState, initial: value, labelInitial: label})
+                                                    }} language={language} marginBottom={false} />
+                                                    <View style={{ width: 6 }}></View>
+                                                    <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => {
+                                                        getArchivados(initial, value, true)
+                                                        setInitialState({...initialState, ending: value, labelEnding: label})
+                                                    }} language={language} marginBottom={false}/>
+                                                </View>
+                                                <Pagination data={archivados} Item={Ticket} SearchInput={true} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : currentFilter === 3 ? 4 : 1})} placeholder={currentFilter === 1 ? 'Fecha de archivado...' : currentFilter === 2 ? 'No.Ticket...' : currentFilter === 3 ? 'Quién solicitó...' : 'Ubicación...'} property={currentFilter === 1 ? 'fecha_archivado' : currentFilter ===  2 ? 'no_ticket' : currentFilter === 3 ? 'nombre' : 'ubicacion'} handlePage={handlePage} current={currentPage} handleTop={() => refTickets.current?.scrollToPosition(0, 0)} />
+                                            </>
+                                        :
+                                            active === 3
+                                            ?
+                                                <View style={[styles.container, {paddingHorizontal: 0, flex: 1, alignSelf: 'stretch'}]}>
+                                                    <ScrollView
+                                                        showsVerticalScrollIndicator={false}
+                                                        showsHorizontalScrollIndicator={false}
+                                                        style={{alignSelf: 'stretch'}}
+                                                    >
+                                                        <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 10}}>
                                                         </View>
-                                                        <View style={{width: 'auto'}}>
-                                                            <Icon name='caret-down' size={15} color={'#000'} />
-                                                        </View>
-                                                    </TouchableOpacity>
-                        
-                                                    <Text style={styles.title}>{'Concepto de ticket'}</Text>
-                                                    {
-                                                        tipoTicket !== 'Seleccione una opción'
-                                                        ?
-                                                            <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idConcepto !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
-                                                                <View style={{flex: 1}}>
-                                                                    <Text style={{color: '#000'}}>{conceptoTicket}</Text>
-                                                                </View>
-                                                                <View style={{width: 'auto'}}>
-                                                                    <Icon name='caret-down' size={15} color={'#000'} />
-                                                                </View>
-                                                            </TouchableOpacity>
-                                                        :
-                                                            <View style={[styles.picker, {flexDirection: 'row', flex: 1, backgroundColor: '#f7f7f7'}]}>
-                                                                <View style={{flex: 1}}>
-                                                                    <Text style={{color: '#000'}}>{'Seleccione una opción'}</Text>
-                                                                </View>
-                                                                <View style={{width: 'auto'}}>
-                                                                    <Icon name='caret-down' size={15} color={'#000'} />
-                                                                </View>
+                                                        <Text style={styles.title}>{'Tipo de ticket'}</Text>
+                                                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idTipo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
+                                                            <View style={{flex: 1}}>
+                                                                <Text style={{color: '#000'}}>{tipoTicket}</Text>
                                                             </View>
-                                                    }
-                                                    {
-                                                        conceptoTicket !== 'Seleccione una opción'
-                                                        ?
-                                                            <View style={{flexDirection: 'row', height: 'auto', alignItems: 'center', marginBottom: 10}}>
-                                                                <Text style={[styles.title, {marginBottom: 0}]}>{'Prioridad:'}</Text>
-                                                                <View style={{width: 'auto', height: 'auto', backgroundColor: backgroundDesc, alignItems: 'center', justifyContent: 'center', marginLeft: 5, paddingHorizontal: 5, borderRadius: 6, paddingVertical: 4}}>
-                                                                    <Text style={{fontWeight: 'bold', color: colorDesc}}>{conceptoDesc}</Text>
-                                                                </View>
+                                                            <View style={{width: 'auto'}}>
+                                                                <Icon name='caret-down' size={15} color={'#000'} />
                                                             </View>
-                                                        :
-                                                            <></>
-                                                    }
-                                                    <Text style={styles.title}>{'Ubicación de requerimiento'}</Text>
-                                                    <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idUbicacion !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
-                                                        <View style={{flex: 1}}>
-                                                            <Text style={{color: '#000'}}>{ubicacionTicket}</Text>
-                                                        </View>
-                                                        <View style={{width: 'auto'}}>
-                                                            <Icon name='caret-down' size={15} color={'#000'} />
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                    {
-                                                        form.btn_users
-                                                        &&
-                                                            <>
-                                                                <Text style={[styles.title, {fontSize: 12}]}>{'Usuario que solicita [En caso de levantar un ticket por un tercero]'}</Text>
-                                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
+                                                        </TouchableOpacity>
+                            
+                                                        <Text style={styles.title}>{'Concepto de ticket'}</Text>
+                                                        {
+                                                            tipoTicket !== 'Seleccione una opción'
+                                                            ?
+                                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idConcepto !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
                                                                     <View style={{flex: 1}}>
-                                                                        <Text style={{color: '#000'}}>{usuarioTicket}</Text>
+                                                                        <Text style={{color: '#000'}}>{conceptoTicket}</Text>
                                                                     </View>
                                                                     <View style={{width: 'auto'}}>
                                                                         <Icon name='caret-down' size={15} color={'#000'} />
                                                                     </View>
                                                                 </TouchableOpacity>
-                                                            </>
-                                                    }
-                                                    <Text style={styles.title}>{'Mensaje'}</Text>
-                                                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
-                                                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} imagen={imagen}/>
-                                                    <TouchableOpacity
-                                                        style={{flexDirection: 'row', height: 40, backgroundColor: Blue, borderRadius: 8, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', paddingVertical: 5}}
-                                                        onPress={() => handleValues()}
-                                                    >
-                                                        <IonIcons name={'content-save'} size={24} color={'#fff'} />
-                                                        <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 15, marginLeft: 6}}>Guardar</Text>
-                                                    </TouchableOpacity>
-                        
-                                                    <View style={{marginBottom: '3%'}}></View>
-                                                </ScrollView>
-                                            </View>
-                                        :
-                                            <Pagination data={expedientes} SearchInput={true} Item={Ticket} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : 1})} placeholder={currentFilter === 1 ? 'Quién solicitó...' : currentFilter === 2 ? 'Ubicación...' : 'No.Ticket...'} property={currentFilter === 1 ? 'nombre' : currentFilter ===  2 ? 'ubicacion' : 'no_ticket'}/>
-                            }
-                            {
-                                isIphone
-                                &&
-                                    <View style={{marginBottom: orientationInfo.initial === 'PORTRAIT' ? '3%' : '1.5%'}}></View>
-                            }
-                            </View>
-                        </KeyboardAwareScrollView>
-                        
-                        <ModalLoading visibility={loading}/>
-                        
-            
-                        <Modal orientation={orientationInfo.initial} visibility={visibleTipo} handleDismiss={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
-                            <Select data={form.TiposTicket} handleActionUno={handleActionUno} />
-                        </Modal>
-                        
-                        <Modal orientation={orientationInfo.initial} visibility={visibleConcepto} handleDismiss={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
-                            <Select data={ConceptosTicket} handleActionUno={handleActionDos} />
-                        </Modal>
-            
-                        <Modal orientation={orientationInfo.initial} visibility={visibleUbicacion} handleDismiss={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
-                            <Select data={form.UbicacionesTicket} handleActionUno={handleActionTres} />
-                        </Modal>
-            
-                        <Modal orientation={orientationInfo.initial} visibility={visibleUsuarios} handleDismiss={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
-                            <Select data={form.UsuariosTicket} handleActionUno={handleActionCuatro} search={true}/>
-                        </Modal>
-            
-                        <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
-                    </>
-                :
-                    <>
-                        <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-                        <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
+                                                            :
+                                                                <View style={[styles.picker, {flexDirection: 'row', flex: 1, backgroundColor: '#f7f7f7'}]}>
+                                                                    <View style={{flex: 1}}>
+                                                                        <Text style={{color: '#000'}}>{'Seleccione una opción'}</Text>
+                                                                    </View>
+                                                                    <View style={{width: 'auto'}}>
+                                                                        <Icon name='caret-down' size={15} color={'#000'} />
+                                                                    </View>
+                                                                </View>
+                                                        }
+                                                        {
+                                                            conceptoTicket !== 'Seleccione una opción'
+                                                            ?
+                                                                <View style={{flexDirection: 'row', height: 'auto', alignItems: 'center', marginBottom: 10}}>
+                                                                    <Text style={[styles.title, {marginBottom: 0}]}>{'Prioridad:'}</Text>
+                                                                    <View style={{width: 'auto', height: 'auto', backgroundColor: backgroundDesc, alignItems: 'center', justifyContent: 'center', marginLeft: 5, paddingHorizontal: 5, borderRadius: 6, paddingVertical: 4}}>
+                                                                        <Text style={{fontWeight: 'bold', color: colorDesc}}>{conceptoDesc}</Text>
+                                                                    </View>
+                                                                </View>
+                                                            :
+                                                                <></>
+                                                        }
+                                                        <Text style={styles.title}>{'Ubicación de requerimiento'}</Text>
+                                                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idUbicacion !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
+                                                            <View style={{flex: 1}}>
+                                                                <Text style={{color: '#000'}}>{ubicacionTicket}</Text>
+                                                            </View>
+                                                            <View style={{width: 'auto'}}>
+                                                                <Icon name='caret-down' size={15} color={'#000'} />
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        {
+                                                            form.btn_users
+                                                            &&
+                                                                <>
+                                                                    <Text style={[styles.title, {fontSize: 12}]}>{'Usuario que solicita [En caso de levantar un ticket por un tercero]'}</Text>
+                                                                    <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
+                                                                        <View style={{flex: 1}}>
+                                                                            <Text style={{color: '#000'}}>{usuarioTicket}</Text>
+                                                                        </View>
+                                                                        <View style={{width: 'auto'}}>
+                                                                            <Icon name='caret-down' size={15} color={'#000'} />
+                                                                        </View>
+                                                                    </TouchableOpacity>
+                                                                </>
+                                                        }
+                                                        <Text style={styles.title}>{'Mensaje'}</Text>
+                                                        <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
+                                                        <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} imagen={imagen}/>
+                                                        <TouchableOpacity
+                                                            style={{flexDirection: 'row', height: 40, backgroundColor: Blue, borderRadius: 8, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', paddingVertical: 5}}
+                                                            onPress={() => handleValues()}
+                                                        >
+                                                            <IonIcons name={'content-save'} size={24} color={'#fff'} />
+                                                            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 15, marginLeft: 6}}>Guardar</Text>
+                                                        </TouchableOpacity>
+                            
+                                                        <View style={{marginBottom: '3%'}}></View>
+                                                    </ScrollView>
+                                                </View>
+                                            :
+                                                <Pagination data={expedientes} SearchInput={true} Item={Ticket} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : 1})} placeholder={currentFilter === 1 ? 'Quién solicitó...' : currentFilter === 2 ? 'Ubicación...' : 'No.Ticket...'} property={currentFilter === 1 ? 'nombre' : currentFilter ===  2 ? 'ubicacion' : 'no_ticket'}/>
+                                }
+                                {
+                                    isIphone
+                                    &&
+                                        <View style={{marginBottom: orientationInfo.initial === 'PORTRAIT' ? '3%' : '1.5%'}}></View>
+                                }
+                                </View>
+                            </KeyboardAwareScrollView>
+                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                
+                            <ModalLoading visibility={loading}/>
+                                
+                            <Modal orientation={orientationInfo.initial} visibility={visibleTipo} handleDismiss={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
+                                <Select data={form.TiposTicket} handleActionUno={handleActionUno} />
+                            </Modal>
+                            
+                            <Modal orientation={orientationInfo.initial} visibility={visibleConcepto} handleDismiss={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
+                                <Select data={ConceptosTicket} handleActionUno={handleActionDos} />
+                            </Modal>
+                
+                            <Modal orientation={orientationInfo.initial} visibility={visibleUbicacion} handleDismiss={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
+                                <Select data={form.UbicacionesTicket} handleActionUno={handleActionTres} />
+                            </Modal>
+                
+                            <Modal orientation={orientationInfo.initial} visibility={visibleUsuarios} handleDismiss={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
+                                <Select data={form.UsuariosTicket} handleActionUno={handleActionCuatro} search={true}/>
+                            </Modal>
+                
+                            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
+                        </>
+                    :
                         <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
-                    </>
-            }
-            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
-        </View>
+                }
+            </View>
+        </>
     )
 }
 

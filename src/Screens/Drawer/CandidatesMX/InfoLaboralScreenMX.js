@@ -95,7 +95,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 <ScrollView 
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    style={{alignSelf: 'stretch'}}
+                    style={tw`self-stretch`}
                     onScroll={handleScroll}
                     contentContainerStyle={{paddingTop: paddingTop}}
                 >
@@ -208,7 +208,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         </View>
                                     </View>
 
-                                    <View style={{flexDirection: 'row', marginBottom: 10, marginTop: 10}}>
+                                    <View style={tw`flex-row my-2.5`}>
                                         <View style={tw`justify-start items-start w-[100%]`}>
                                             <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Número de Crédito' : 'Credit Number'}</Text>
                                             <Contenedor title={info.numero_infonavit}/>
@@ -236,7 +236,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         </View>
                                     </View>
 
-                                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                    <View style={tw`flex-row mb-4`}>
                                         <View style={tw`justify-start items-start w-[100%]`}>
                                             <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                                 <View style={tw`flex-1`}>
@@ -266,7 +266,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             </View>
                                         </View>
 
-                                        <View style={{flexDirection: 'row', marginTop: 10, marginBottom: 10}}>
+                                        <View style={tw`flex-row my-2.5`}>
                                             <View style={tw`justify-start items-start w-[100%]`}>
                                                 <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Número de Crédito' : 'Credit Number'}</Text>
                                                 <Contenedor title={info.numero_infonavit}/>
@@ -298,7 +298,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 </View>
                                             </View>
 
-                                            <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                            <View style={tw`flex-row mb-4`}>
                                                 <View style={tw`justify-start items-start w-[100%]`}>
                                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                                         <View style={tw`flex-1`}>
@@ -325,14 +325,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         <Title type={'title'} title={language === '1' ? 'CRÉDITO VIVIENDA' : 'HOME CREDIT'} color={'#1177E9'} fontSize={isTablet() ? 24 : 20}/>
                                     </View>
                                 </View>
-                                <View style={{paddingHorizontal: 7, marginBottom: 15}}>
+                                <View style={tw`px-2 mb-4`}>
                                     <Contenedor title={'Cuenta con crédito para la vivienda'} hasBottomLine={false}/>
                                 </View>
                             </>
                     }
                     
                     <Title title={language === '1' ? 'DATOS DE LA PÓLIZA' : 'POLICY INFORMATION'} icon={'heart-pulse'} tipo={2}/>
-                    <View style={{flexDirection: 'row', marginBottom: 10}}>
+                    <View style={tw`flex-row mb-2.5`}>
                         <View style={tw`justify-start items-start w-[100%]`}>
                             <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                 <View style={tw`flex-1`}>
@@ -405,13 +405,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false} 
-                                style={{alignSelf: 'stretch'}}
+                                style={tw`self-stretch`}
                                 onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}}
                             >
-                                <View style={{marginTop: '3%'}}></View>
+                                <View style={tw`mt-[3%]`} />
                                 <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>
-                                <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                <View style={tw`flex-row mb-4`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
                                         <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                             <View style={tw`flex-1`}>
@@ -449,11 +449,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             </View>
                                         </View>
                                         
-                                        <View style={{paddingVertical: 7}}>
+                                        <View style={tw`py-2`}>
                                             <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Razón Social' : 'Corporate Name'}</Text>
                                             <Contenedor title={info.razon_social}/>
                                         </View>
-                                        <View style={{paddingVertical: 7}}>
+                                        <View style={tw`py-2`}>
                                             <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Clasificación' : 'Classification'}</Text>
                                             <Contenedor title={info.clasificacion}/>
                                         </View>
@@ -480,7 +480,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             </View>
                                         </View>
 
-                                        <View style={{paddingVertical: 7}}>
+                                        <View style={tw`py-2`}>
                                             <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Herramientas Asignadas' : 'Assigned Tools'}</Text>
                                             <Contenedor title={info.hta_asignadas}/>
                                         </View>
@@ -488,7 +488,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 </View>
 
                                 <Title title={language === '1' ? 'PRESTACIONES LABORALES' : 'EMPLOYMENT BENEFITS'} icon={'list-ul'} tipo={1}/>
-                                <View style={{flexDirection: 'row', marginBottom: 15, padding: 7}}>
+                                <View style={tw`flex-row mb-4 p-2`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
                                         <Contenedor title={info.prestaciones} hasBottomLine={false}/>
                                     </View>
@@ -511,14 +511,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     </View>
                                                 </View>
 
-                                                <View style={{flexDirection: 'row', paddingVertical: 7}}>
+                                                <View style={tw`flex-row py-2`}>
                                                     <View style={tw`justify-start items-start w-[100%]`}>
-                                                        <View style={{paddingVertical: 7}}>
+                                                        <View style={tw`py-2`}>
                                                             <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Número de Crédito' : 'Credit Number'}</Text>
                                                             <Contenedor title={info.numero_infonavit}/>
                                                         </View>
 
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 7, paddingHorizontal: 7}}>
+                                                        <View style={tw`flex-row self-stretch justify-start items-start pt-2 px-2`}>
                                                             <View style={tw`flex-1`}>
                                                                 <Text style={titleStyle}>{language === '1' ? 'Tipo de Descuento' : 'Type Discount'}</Text>
                                                                 <Contenedor title={info.tipo_descuento} hasBottomLine={false}/>
@@ -542,7 +542,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     </View>
                                                 </View>
 
-                                                <View style={{flexDirection: 'row', marginBottom: 15, paddingTop: 7}}>
+                                                <View style={tw`flex-row mb-4 pt-2`}>
                                                     <View style={tw`justify-start items-start w-[100%]`}>
                                                         <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                                             <View style={tw`flex-1`}>
@@ -572,14 +572,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                         </View>
                                                     </View>
 
-                                                    <View style={{flexDirection: 'row', paddingVertical: 7}}>
+                                                    <View style={tw`flex-row py-2`}>
                                                         <View style={tw`justify-start items-start w-[100%]`}>
-                                                            <View style={{paddingVertical: 7}}>
+                                                            <View style={tw`py-2`}>
                                                                 <Text style={[titleStyle, {paddingLeft: 7}]}>{language === '1' ? 'Número de Crédito' : 'Credit Number'}</Text>
                                                                 <Contenedor title={info.numero_infonavit}/>
                                                             </View>
 
-                                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 7, paddingHorizontal: 7}}>
+                                                            <View style={tw`flex-row self-stretch justify-start items-start pt-2 px-2`}>
                                                                 <View style={tw`flex-1`}>
                                                                     <Text style={titleStyle}>{language === '1' ? 'Tipo de Descuento' : 'Type Discount'}</Text>
                                                                     <Contenedor title={info.tipo_descuento} hasBottomLine={false}/>
@@ -607,7 +607,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                             </View>
                                                         </View>
 
-                                                        <View style={{flexDirection: 'row', marginBottom: 15, paddingTop: 7}}>
+                                                        <View style={tw`flex-row mb-4 pt-2`}>
                                                             <View style={tw`justify-start items-start w-[100%]`}>
                                                                 <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                                                     <View style={tw`flex-1`}>
@@ -634,7 +634,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     <Title type={'title'} title={language === '1' ? 'CRÉDITO VIVIENDA' : 'HOME CREDIT'} color={'#1177E9'} fontSize={isTablet() ? 24 : 20}/>
                                                 </View>
                                             </View>
-                                            <View style={{paddingHorizontal: 7, marginBottom: 15}}>
+                                            <View style={tw`px-2 mb-4`}>
                                                 <Contenedor title={'Cuenta con crédito para la vivienda'} hasBottomLine={false}/>
                                             </View>
                                         </>
@@ -642,7 +642,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 
 
                                 <Title title={language === '1' ? 'DATOS DE LA PÓLIZA' : 'POLICY INFORMATION'} icon={'heart-pulse'} tipo={2}/>
-                                <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                <View style={tw`flex-row mb-4`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
                                         <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                             <View style={tw`flex-1`}>
@@ -698,13 +698,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             <ScrollView 
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={{alignSelf: 'stretch'}}
+                                style={tw`self-stretch`}
                                 onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}}
                             >
-                                <View style={{marginTop: '3%'}}></View>
+                                <View style={tw`mt-[3%]`} />
                                 <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>
-                                <View style={{flexDirection: 'row', marginBottom: 15, padding: 7}}>
+                                <View style={tw`flex-row mb-4 p-2`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
                                         <View style={tw`flex-row self-stretch justify-start items-start pb-2`}>
                                             <View style={tw`flex-1`}>
@@ -919,7 +919,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     <Title type={'title'} title={language === '1' ? 'CRÉDITO VIVIENDA' : 'HOME CREDIT'} color={'#1177E9'} fontSize={isTablet() ? 24 : 20}/>
                                                 </View>
                                             </View>
-                                            <View style={{paddingHorizontal: 7, marginBottom: 15}}>
+                                            <View style={tw`px-2 mb-4`}>
                                                 <Contenedor title={'Cuenta con crédito para la vivienda'} hasBottomLine={false}/>
                                             </View>
                                         </>
@@ -953,7 +953,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 </View>
                                 
                                 <Title title={language === '1' ? 'DATOS BANCARIOS' : 'BANK DATA'} icon={'bank'} tipo={2}/>
-                                <View style={{flexDirection: 'row', paddingBottom: 7, paddingHorizontal: 7, marginBottom: '3%'}}>
+                                <View style={tw`flex-row pb-2 px-2 mb-[3%]`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
                                         <View style={tw`pb-2`}>
                                             <Text style={[titleStyle]}>{language === '1' ? 'Banco Emisor' : 'Insurance Carrier'}</Text>

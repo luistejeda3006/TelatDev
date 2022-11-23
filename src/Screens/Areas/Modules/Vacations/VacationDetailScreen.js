@@ -5,9 +5,6 @@ import {useConnection, useNavigation, useOrientation, useScroll} from '../../../
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp';
-import DeviceInfo from 'react-native-device-info';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {getCurrentDate} from '../../../../js/dates';
 import {urlVacaciones, live, login, isIphone} from '../../../../access/requestedData';
 import {useDispatch, useSelector} from 'react-redux';
 import {actionTemporalVacation, actionVacation} from '../../../../slices/vacationSlice';

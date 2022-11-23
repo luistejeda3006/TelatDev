@@ -145,18 +145,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
-                ?
-                    <HeaderPortrait title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
-                :
-                    <HeaderLandscape title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
-            }
-            {
                 hasConnection
                 ? 
                     orientationInfo.initial === 'PORTRAIT'
                     ?
                         <>
+                            <HeaderPortrait title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                             <View style={tw`w-[100%] h-auto bg-[#383838]`}>
                                 <View style={tw`h-14 self-stretch flex-row`}>
                                     <View style={tw`flex-1 flex-row justify-start items-center`}>
@@ -268,6 +262,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         </>
                     :
                         <>
+                            <HeaderLandscape title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                             <View style={{flexDirection: 'row', backgroundColor: '#fff', flex: 1}}>
                                 <View style={{flex: 1.7, backgroundColor: '#fff', paddingLeft: isIphone ? '5%' : 0}}>
                                     <View style={tw`w-[100%] h-auto bg-[#383838]`}>

@@ -102,7 +102,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
 
     useEffect(() => {
         getVacantes()
-    },[])
+    },[hasConnection])
 
     const handleReload = () => {
         const justMX = data.filter(x => x.region === 'MX' && x)

@@ -155,61 +155,68 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-            {
-                orientationInfo.initial === 'PORTRAIT'
-                ?
-                    <HeaderPortrait title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
-                :
-                    <HeaderLandscape title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
-            }
-            <View style={tw`flex-1 justify-start items-center bg-[#f1f1f1] px-[${isIphone ? '5%' : '3%'}] bg-[${hasConnection ? '#f1f1f1' : '#fff'}]`}>
-                {
-                    hasConnection
-                    ?
-                        loading
+            <View style={tw`flex-1 justify-start items-center bg-[#f1f1f1] bg-[${hasConnection ? '#f1f1f1' : '#fff'}]`}>
+                <>
+                    {
+                        hasConnection
                         ?
-                            <View style={tw`flex-1 justify-center items-center`}>
-                                <BallIndicator color={Orange} size={35} />
-                            </View>
+                            <>
+                                {
+                                    orientationInfo.initial === 'PORTRAIT'
+                                    ?
+                                        <HeaderPortrait title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
+                                    :
+                                        <HeaderLandscape title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
+                                }
+                                {
+                                    loading
+                                    ?
+                                        <View style={tw`flex-1 justify-center items-center`}>
+                                            <BallIndicator color={Orange} size={35} />
+                                        </View>
+                                    :
+                                        notifications.length > 0
+                                        ?
+                                            <>
+                                                <FlatList
+                                                    showsVerticalScrollIndicator={false}
+                                                    showsHorizontalScrollIndicator={false}
+                                                    style={tw`h-auto self-stretch px-[${isIphone ? '5%' : '3%'}]`}
+                                                    data={notifications}
+                                                    numColumns={1}
+                                                    renderItem={({item}) => <Notification id={item.id} title={item.title} body={item.body} created={item.created} sent={item.sent} dia={item.dia} numero={item.numero} oculta={item.oculta}/>}
+                                                    keyExtractor={item => String(item.id)}
+                                                    onScroll={handleScroll}
+                                                    contentContainerStyle={{paddingTop: paddingTop}}
+                                                />
+                                                {
+                                                    isIphone
+                                                    &&
+                                                        <View style={tw`mb-[3%]`}/>
+                                                }
+                                            </>
+                                        :
+                                            <View style={tw`flex-1 justify-center items-center`}>
+                                                <Image
+                                                    style={tw`w-31 h-31`}
+                                                    resizeMode={'contain'}
+                                                    source={require('../../../assets/silent.png')}
+                                                />
+                                                <Text style={tw`mt-4 text-lg text-[#adadad]`}>{language === '1' ? 'No hay notificaciones por mostrar' : 'No notifications to display'}</Text>
+                                            </View>
+                                }
+                                {
+                                    origin === 1
+                                    &&
+                                        <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={4}/>
+                                }
+                            </>
                         :
-                            notifications.length > 0
-                            ?
-                                <>
-                                    <FlatList
-                                        showsVerticalScrollIndicator={false}
-                                        showsHorizontalScrollIndicator={false}
-                                        style={tw`h-auto self-stretch`}
-                                        data={notifications}
-                                        numColumns={1}
-                                        renderItem={({item}) => <Notification id={item.id} title={item.title} body={item.body} created={item.created} sent={item.sent} dia={item.dia} numero={item.numero} oculta={item.oculta}/>}
-                                        keyExtractor={item => String(item.id)}
-                                        onScroll={handleScroll}
-                                        contentContainerStyle={{paddingTop: paddingTop}}
-                                    />
-                                    {
-                                        isIphone
-                                        &&
-                                            <View style={tw`mb-[3%]`}/>
-                                    }
-                                </>
-                            :
-                                <View style={tw`flex-1 justify-center items-center`}>
-                                    <Image
-                                        style={tw`w-31 h-31`}
-                                        resizeMode={'contain'}
-                                        source={require('../../../assets/silent.png')}
-                                    />
-                                    <Text style={tw`mt-4 text-lg text-[#adadad]`}>{language === '1' ? 'No hay notificaciones por mostrar' : 'No notifications to display'}</Text>
-                                </View>
-                    :
-                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
-                }
+                            <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                    }
+                </>
+                
             </View>
-            {
-                origin === 1
-                &&
-                    <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={4}/>
-            }
         </>
     );
 }

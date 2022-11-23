@@ -117,7 +117,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     useEffect(() => {
         getInformation()
-    }, [])
+    }, [hasConnection])
 
     useEffect(() => {
         if((section === 1 || section === 2) && data.length > 0){
@@ -139,6 +139,22 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const handleOculta = (id, id_game) => {
         game = id_game;
         const nuevos = quinielas.map(x => x.id === id ? ({...x, oculta: false}) : ({...x, oculta: true}))
+        const edited = data.find(x => x.id === temporalId)
+
+        const obj = {
+            id: edited.id,
+            name: edited.name,
+            selected: true,
+            partidos: nuevos
+        }
+        
+        dispatch(setQuinielas(nuevos))
+        dispatch(actionItem({id: temporalId, item: obj}))
+    }
+
+    const handleResult = (id, id_game) => {
+        game = id_game;
+        const nuevos = quinielas.map(x => x.id === id ? ({...x, oculta_fin: !x.oculta_fin}) : ({...x, oculta_fin: true}))
         const edited = data.find(x => x.id === temporalId)
 
         const obj = {
@@ -303,7 +319,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const handleGrupo = (id, partidos) => {
         setTemporalId(id)
-        dispatch(setQuinielas(partidos.map(x => ({...x, oculta: true, total_1: !x.completed ? 0 : x.total_1, total_2: !x.completed ? 0 : x.total_2, lock: !x.completed && false}))))
+        dispatch(setQuinielas(partidos.map(x => ({...x, oculta: true, oculta_fin: true, total_1: !x.completed ? 0 : x.total_1, total_2: !x.completed ? 0 : x.total_2, lock: !x.completed && false}))))
         dispatch(setDataSelected(id))
         dispatch(setFilteredSelected(id))
         refQuiniela.current?.scrollToOffset({ animated: true, offset: 0 })
@@ -361,7 +377,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         )
     }
     
-    const Quiniela = ({id, id_game, fill, equipo_1, equipo_2, total_1, total_2, img_1, img_2, oculta, completed, lock, backgroundColor, total_color, text_color, fecha, instruction = false}) => {
+    const Quiniela = ({id, id_game, fill, equipo_1, equipo_2, total_1, total_2, img_1, img_2, oculta, completed, lock, backgroundColor, total_color, text_color, fecha, instruction = false, played, total_fin_1, total_fin_2, oculta_fin}) => {
         return(
             equipo_1.includes('Jornada') || equipo_1.includes('Day')
             ?
@@ -478,12 +494,21 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ?
                         <>
                             <View style={tw`justify-center items-center h-auto self-stretch mt-${id === 1 ? '2.5' : 'px'} flex-row mx-2.5`}>
-                                <View style={tw`w-auto h-auto bg-[#f7f7f7] justify-center items-center px-1.5 py-1 border-l border-l-[#dadada] border-r border-r-[#dadada] border-t border-t-[#dadada] flex-row rounded-t-xl`}>
-                                    <IonIcons name={'calendar-clock'} size={16} color={Blue} />
-                                    <Text style={tw`text-xs text-black ml-1.5`}>{fecha}</Text>
-                                </View>
+                                {
+                                    played
+                                    ?
+                                        <TouchableOpacity onPress={() => handleResult(id, id_game)} style={tw`w-auto h-auto bg-[#f7f7f7] justify-center items-center px-1.5 py-1 border-l border-l-[#dadada] border-r border-r-[#dadada] border-t border-t-[#dadada] flex-row rounded-t-xl`}>
+                                            <IonIcons name={oculta_fin ? 'eye' : 'eye-off'} size={16} color={Blue} />
+                                            <Text style={tw`text-xs text-black ml-1.5`}>{language === '1' ? 'Ver resultado' : 'See result'}</Text>
+                                        </TouchableOpacity>
+                                    :
+                                        <View style={tw`w-auto h-auto bg-[#f7f7f7] justify-center items-center px-1.5 py-1 border-l border-l-[#dadada] border-r border-r-[#dadada] border-t border-t-[#dadada] flex-row rounded-t-xl`}>
+                                            <IonIcons name={'calendar-clock'} size={16} color={Blue} />
+                                            <Text style={tw`text-xs text-black ml-1.5`}>{fecha}</Text>
+                                        </View>
+                                }
                             </View>
-                            <View style={tw`h-auto self-stretch bg-[${completed ? backgroundColor : '#f7f7f7'}] flex-row justify-center items-center px-1.5 border border-[#dadada] mb-2.5 rounded-3xl mx-2.5`}>
+                            <View style={tw`h-auto self-stretch bg-[${oculta_fin ? completed ? backgroundColor : '#f7f7f7' : '#f7f7f7'}] flex-row justify-center items-center px-1.5 border border-[#dadada] mb-2.5 rounded-3xl mx-2.5`}>
                                 <View style={tw`flex-1 h-12.5 justify-center items-center flex-row`}>
                                     <View style={tw`h-[100%] self-stretch flex-row justify-center items-center`}>
                                         <View style={tw`flex-row rounded-3xl h-9.5 w-[100%] justify-center items-center`}>
@@ -503,16 +528,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             <View style={tw`flex-1 justify-center items-center`} >
                                                 <Text style={tw`text-sm text-center font-bold text-[#000]`}>{equipo_1 ? equipo_1 : '--------'}</Text>
                                             </View>
-                                            <View
-                                                style={tw`h-8 w-8 justify-center items-center bg-[${completed ? total_color : '#f7f7f7'}] rounded-3xl ios:pl-px border border-[#dadada]`}>
+                                            <View style={tw`h-8 w-8 justify-center items-center bg-[${oculta_fin ? completed ? total_color : '#f7f7f7' : Orange}] rounded-3xl ios:pl-px border border-[#dadada]`}>
                                                 {
                                                     completed
                                                     ?
-                                                        fill
+                                                        fill && oculta_fin
                                                         ?
                                                             <Icon name={'minus'} size={10} color={'#000'} />
                                                         :
-                                                            <Text style={tw`font-bold text-[${instruction ? '#fff' : completed ? text_color : '#000'}] text-xs`}>{total_1}</Text>
+                                                            <Text style={tw`font-bold text-[${oculta_fin ? instruction ? '#fff' : completed ? text_color : '#000': '#fff'}] text-xs`}>{oculta_fin ? total_1 : total_fin_1}</Text>
                                                     :
                                                         <></>
                                                 }
@@ -528,15 +552,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <View style={tw`w-2.5`} />
                                 <View style={tw`flex-1 h-12.5 justify-center items-center flex-row`}>
                                     <View style={tw`flex-row rounded-3xl h-10 w-[100%] justify-center items-center`}>
-                                        <View style={tw`h-8 w-8 justify-center items-center bg-[${completed ? total_color : '#f7f7f7'}] rounded-3xl ios:pl-px border border-[#dadada]`}>
+                                        <View style={tw`h-8 w-8 justify-center items-center bg-[${oculta_fin ? completed ? total_color : '#f7f7f7' : Orange}] rounded-3xl ios:pl-px border border-[#dadada]`}>
                                             {
                                                 completed
                                                 ?
-                                                    fill
+                                                    fill && oculta_fin
                                                     ?
                                                         <Icon name={'minus'} size={10} color={'#000'} />
                                                     :
-                                                        <Text style={tw`font-bold text-[${instruction ? '#fff' : completed ? text_color : '#000'}] text-xs`}>{total_2}</Text>
+                                                        <Text style={tw`font-bold text-[${oculta_fin ? instruction ? '#fff' : completed ? text_color : '#000' : '#fff'}] text-xs`}>{oculta_fin ? total_2 : total_fin_2}</Text>
                                                 :
                                                     <></>
                                             }
@@ -657,14 +681,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         hasConnection
         ?
             <>
+                <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
+                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }}/>
                 {
                     orientationInfo.initial === 'PORTRAIT'
                     ?
-                        <>
-                            <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-                            <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }}/>
-                            <HeaderPortrait title={'Quiniela Mundialista'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
-                        </>
+                        <HeaderPortrait title={'Quiniela Mundialista'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                     :
                         <HeaderLandscape title={'Quiniela Mundialista'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                 }
@@ -831,6 +853,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <View style={tw`flex-1 py-1.5`}>
                                     <Text style={tw`text-xs text-[${Blue}]`}>{sectionOpened === 1 ? instructions.title : points.title}</Text>
                                 </View>
+                                <View style={tw`w-5 h-10 justify-center items-center pl-1`}>
+                                    <Icon name={'info'} size={20} color={'transparent'} />
+                                </View>
                             </View>
                         </>
                     }
@@ -883,7 +908,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         :
             <>
                 <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
+                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }}/>
                 <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
             </>
     )

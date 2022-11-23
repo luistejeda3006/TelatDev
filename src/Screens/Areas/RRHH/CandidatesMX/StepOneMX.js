@@ -13,7 +13,7 @@ import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
 import tw from 'twrnc'
 
-let age = null;
+let age = 28;
 
 export default ({navigation, language, orientation, ...rest}) => {
     const input_nom = useRef()
@@ -141,7 +141,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                     info_lugar_nacimiento: lugarNacimiento_1,
                     info_curp: curp,
                     info_rfc: curp.substring(0,10),
-                    info_edad: age,
+                    /* info_edad: age, este se tiene que descomentar para que funcione*/
                 }
 
                 console.log('obj: ', obj_1)
@@ -290,7 +290,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         ref={input_mat}
                                     />
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                    <DatePicker fieldName={'fechaNacimiento_1'} language={language} />
+                                    <DatePicker fieldName={'fechaNacimiento_1'} language={language} required={true}/>
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
                                     <Picker
                                         fieldName={'genero_1'}

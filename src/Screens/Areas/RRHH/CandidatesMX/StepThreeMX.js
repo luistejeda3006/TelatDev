@@ -499,9 +499,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
 
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                <DatePicker fieldName={'fechaIngreso_3'} language={language} />
+                                                <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                <DatePicker fieldName={'fechaSalida_3'} language={language} />
+                                                <DatePicker fieldName={'fechaSalida_3'} language={language} required={true} />
 
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
                                                 <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
@@ -801,11 +801,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true}/>
                                                     </View>
                                                 </View>
 
@@ -1161,11 +1161,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
                                                     </View>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true}/>
                                                     </View>
                                                 </View>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
@@ -1519,11 +1519,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
                                                     </View>
                                                     <View style={{flex: 1}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} />
+                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true} />
                                                     </View>
                                                 </View>
 

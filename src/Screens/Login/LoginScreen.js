@@ -413,7 +413,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             ?
                                                 <Button loading={true}
                                                     style={tw`shadow-xl bg-[${Blue}] rounded-3xl self-stretch h-12.5 justify-center items-center`} 
-                                                    uppercase={false} labelStyle={{fontSize: 15, fontWeight: 'bold'}} color={'#fff'}>
+                                                    uppercase={false} labelStyle={tw`text-base font-bold`} color={'#fff'}>
                                                     {language === '1' ? 'Cargando' : 'Loading'}
                                                 </Button>
                                             :
@@ -536,7 +536,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             ?
                                                 <Button loading={true}
                                                     style={tw`shadow-xl bg-[${Blue}] rounded-3xl self-stretch h-12.5 justify-center items-center`} 
-                                                    uppercase={false} labelStyle={{fontSize: 15, fontWeight: 'bold'}} color={'#fff'}>
+                                                    uppercase={false} labelStyle={tw`text-base font-bold`} color={'#fff'}>
                                                     {language === '1' ? 'Cargando' : 'Loading'}
                                                 </Button>
                                             :

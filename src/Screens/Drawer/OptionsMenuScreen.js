@@ -61,8 +61,6 @@ export default ({navigation}) => {
     const [loading, setLoading] = useState(true)
     const {hasConnection, askForConnection} = useConnection();
     const {arrived} = useNotification()
-    const {translateY, paddingTop, handleScroll} = useScroll()
-
     const {sound: openSound} = useSound('pop.mp3')
 
     const getToken = async() => {
@@ -293,16 +291,15 @@ export default ({navigation}) => {
             }
         }catch(e){
             console.log(e)
-            askForConnection()
             setLoading(false)
         }
     }
 
     useEffect(() => {
         getInformation()
-    },[arrived])
+    },[hasConnection, arrived])
 
-    useEffect(async () =>  {
+    const getVersion = async () => {
         try{
             const body = {
                 'action': 'get_version',
@@ -330,6 +327,10 @@ export default ({navigation}) => {
             console.log('hay un error con el internet')
             cuenta = 0;
         }
+    }
+
+    useEffect(() =>  {
+        getVersion()
     },[])
     
     useEffect(() => {

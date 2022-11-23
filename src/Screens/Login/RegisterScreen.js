@@ -5,10 +5,11 @@ import {ProgressSteps} from 'react-native-progress-steps';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
 import {useOrientation, useConnection, useNavigation} from '../../hooks';
-import * as Yup from 'yup';
 import {Formik} from 'formik';
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
+import * as Yup from 'yup';
+import tw from 'twrnc';
 
 export default ({navigation, route: {params: {language, orientation, country}}}) => {
     const required = '*';
@@ -39,7 +40,7 @@ export default ({navigation, route: {params: {language, orientation, country}}})
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-            <View style={{flex: 1, backgroundColor: '#fff'}}>
+            <View style={tw`flex-1 bg-[#fff]`}>
             {
                 orientationInfo.initial === 'PORTRAIT'
                 ?
@@ -153,7 +154,7 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         {
                             hasConnection
                             ?
-                                <View style={{flex: 1, paddingHorizontal: 8}}>
+                                <View style={tw`flex-1 px-2`}>
                                     <ProgressSteps
                                         labelFontSize={11}
                                         activeStepIconBorderColor={'#3283C5'}
@@ -376,7 +377,7 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         {
                             hasConnection
                             ?
-                                <View style={{flex: 1, paddingHorizontal: 8}}>
+                                <View style={tw`flex-1 px-2`}>
                                     <ProgressSteps
                                         labelFontSize={11}
                                         activeStepIconBorderColor={'#3283C5'}

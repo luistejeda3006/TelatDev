@@ -253,80 +253,72 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     }
 
     return(
-        <View style={{backgroundColor: '#fff', flex: 1}}>
+        <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 0}}>
-            {
-                orientationInfo.initial === 'PORTRAIT'
-                ?
-                    hasConnection
+                {
+                    orientationInfo.initial === 'PORTRAIT'
                     ?
-                        <>
-                            <HeaderPortrait title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
-                            {
-                                isIphone
-                                &&
-                                    <Header />
-                            }
-                            <View style={[styles.container, {padding: 0}]}>
+                        hasConnection
+                        ?
+                            <>
+                                <HeaderPortrait title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
                                 {
-                                    !loading
+                                    isIphone
                                     &&
-                                        <FlatList
-                                            ref={refGaceta}
-                                            onScroll={handleScroll}
-                                            contentContainerStyle={{paddingTop: !isIphone ? !hide ? paddingTop + 175 : paddingTop + 103 : 0}}
-                                            showsVerticalScrollIndicator={false}
-                                            showsHorizontalScrollIndicator={false}
-                                            style={styles.list}
-                                            data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
-                                            renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
-                                            keyExtractor={item => String(item.id_gaceta)}
-                                        />
+                                        <Header />
                                 }
-                            </View>
-                        </>
-                    :
-                        <>
-                            <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-			                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
+                                <View style={[styles.container, {padding: 0}]}>
+                                    {
+                                        !loading
+                                        &&
+                                            <FlatList
+                                                ref={refGaceta}
+                                                onScroll={handleScroll}
+                                                contentContainerStyle={{paddingTop: !isIphone ? !hide ? paddingTop + 175 : paddingTop + 103 : 0}}
+                                                showsVerticalScrollIndicator={false}
+                                                showsHorizontalScrollIndicator={false}
+                                                style={styles.list}
+                                                data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
+                                                renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
+                                                keyExtractor={item => String(item.id_gaceta)}
+                                            />
+                                    }
+                                </View>
+                                <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={2}/>
+                            </>
+                        :
                             <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
-                        </>
-                :
-                    hasConnection
-                    ?
-                        <>
-                            <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
-                            <View style={[styles.container, {padding: 0}]}>
-                                {
-                                    !loading
-                                    &&
-                                        <FlatList
-                                            ref={refGaceta}
-                                            showsVerticalScrollIndicator={false}
-                                            showsHorizontalScrollIndicator={false}
-                                            style={styles.list}
-                                            data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
-                                            renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
-                                            keyExtractor={item => String(item.id_gaceta)}
-                                            onScroll={handleScroll}
-                                            contentContainerStyle={{paddingTop: paddingTop + 50}}
-                                        />
-                                }
-                            </View>
-                        </>
                     :
-                        <>
-                            <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-			                <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />¡
+                        hasConnection
+                        ?
+                            <>
+                                <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
+                                <View style={[styles.container, {padding: 0}]}>
+                                    {
+                                        !loading
+                                        &&
+                                            <FlatList
+                                                ref={refGaceta}
+                                                showsVerticalScrollIndicator={false}
+                                                showsHorizontalScrollIndicator={false}
+                                                style={styles.list}
+                                                data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
+                                                renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
+                                                keyExtractor={item => String(item.id_gaceta)}
+                                                onScroll={handleScroll}
+                                                contentContainerStyle={{paddingTop: paddingTop + 50}}
+                                            />
+                                    }
+                                </View>
+                            </>
+                        :
                             <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
-                        </>
                 }
-                </View>
-                <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={2}/>
-                <ModalLoading visibility={loading}/>
-        </View>
+            </View>
+            <ModalLoading visibility={loading}/>
+        </>
     )
 }
 

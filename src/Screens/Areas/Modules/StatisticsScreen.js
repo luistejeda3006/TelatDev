@@ -1907,24 +1907,24 @@ export default ({navigation, route: {params: {orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
 
-                {
-                    orientationInfo.initial === 'PORTRAIT'
-                    ?
-                        <HeaderPortrait title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
-                    :
-                        <HeaderLandscape title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
-                }
                 
-                <View style={[styles.container, {paddingHorizontal: orientationInfo.initial === 'PORTRAIT' ? '3%' : isIphone ? '5%' : '1.5%'}]}>
-                    {
-                        hasConnection
-                        ?
+            <View style={[styles.container]}>
+                {
+                    hasConnection
+                    ?
+                        <>
+                            {orientationInfo.initial === 'PORTRAIT'
+                            ?
+                                <HeaderPortrait title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                            :
+                                <HeaderLandscape title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>}
+                            
                             <ScrollView
                                 onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={{alignSelf: 'stretch'}}
+                                style={{alignSelf: 'stretch', paddingHorizontal: orientationInfo.initial === 'PORTRAIT' ? '3%' : isIphone ? '5%' : '1.5%'}}
                             >
                                 {
                                     !isTablet()
@@ -2457,96 +2457,92 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 }
                                 <View style={{marginBottom: 25}}></View>
                             </ScrollView>
-                        :
-                            <>
-                                <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-			                    <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                                <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
-                            </>
-                    }
-                </View>
-                <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
-
-                <Modal visibility={altas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, altas: !altas})}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <Title title={language === '1' ? 'Detalle de Altas' : 'Resume'} icon={'chart-bar-stacked'} tipo={2} vertical={false} itCloses={() => setInitialState({...initialState, altas: !altas})}/>
-                        <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
-                                <IonIcons name={'menu'} size={28} color={Blue} />
-                                <View style={{width: 4}}></View>
-                                <Text style={{color: Blue, fontSize: 16}}>Altas por Subárea</Text>
-                            </View>
-                        </View>
-                        <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                        {
-                            detalle_altas.length > 0
-                            &&
-                                detalle_altas.map(x => 
-                                    <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
-                                        <View style={{flex: 1, paddingHorizontal: 8}}>
-                                            <Text style={{color: Blue}}>{x.name}</Text>
-                                        </View>
-                                        <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 2, paddingHorizontal: 4}}>
-                                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
-                                        </View>
-                                    </View>
-                                )
-                        }
-                            
-                        </View>
-                        <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                            <View style={{flex: 1, paddingHorizontal: 8}}>
-                                <Text style={{color: Blue, fontWeight: 'bold'}}>{language === '1' ? 'Total General' : ''}</Text>
-                            </View>
-                            <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{altas_bajas_quincenas.altas && altas_bajas_quincenas.altas}</Text>
-                            </View>
-                        </View>
-                    </ScrollView>
-                </Modal>
-
-                <Modal visibility={bajas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, bajas: !bajas})}>
-                    <FlatList
-                        key={'$__'}
-                        ListHeaderComponent={<Header />}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.list}
-                        data={legends_motivo_baja}
-                        numColumns={2}
-                        renderItem={({item}) => <Motivo legend={item.text} color={item.color}/>}
-                        keyExtractor={item => String(item.id)}
-                    />
-                </Modal>
-
-                <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos} >
-                    <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
-                </Modal>
-
-                <Modal orientation={orientationInfo.initial} visibility={visibleArea} handleDismiss={handleVisibleArea}> 
-                    <Select dataArea={areas} handleVisibleArea={handleVisibleArea} handleActionDos={handleActionDos} />
-                </Modal>
-
-                <Modal orientation={orientationInfo.initial} visibility={visibleSubarea} handleDismiss={handleVisibleSubarea}>
-                    <Select dataArea={subareas} handleVisibleArea={handleVisibleSubarea} handleActionDos={handleActionTres} />
-                </Modal>
-
-                {
-                    !loadingContent && !isIphone
-                    ?
-                        <ModalLoading visibility={loading}/>
+                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                        </>
                     :
-                        <ModalLoading visibility={loadingContent}/>
-                }
+                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>}
+            </View>
 
-                {
-                    isIphone
-                    &&
-                        <ModalLoading visibility={loadingContent}/>
-                }
+            <Modal visibility={altas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, altas: !altas})}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <Title title={language === '1' ? 'Detalle de Altas' : 'Resume'} icon={'chart-bar-stacked'} tipo={2} vertical={false} itCloses={() => setInitialState({...initialState, altas: !altas})}/>
+                    <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
+                            <IonIcons name={'menu'} size={28} color={Blue} />
+                            <View style={{width: 4}}></View>
+                            <Text style={{color: Blue, fontSize: 16}}>Altas por Subárea</Text>
+                        </View>
+                    </View>
+                    <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                    {
+                        detalle_altas.length > 0
+                        &&
+                            detalle_altas.map(x => 
+                                <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
+                                    <View style={{flex: 1, paddingHorizontal: 8}}>
+                                        <Text style={{color: Blue}}>{x.name}</Text>
+                                    </View>
+                                    <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 2, paddingHorizontal: 4}}>
+                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
+                                    </View>
+                                </View>
+                            )
+                    }
+                        
+                    </View>
+                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
+                        <View style={{flex: 1, paddingHorizontal: 8}}>
+                            <Text style={{color: Blue, fontWeight: 'bold'}}>{language === '1' ? 'Total General' : ''}</Text>
+                        </View>
+                        <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
+                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{altas_bajas_quincenas.altas && altas_bajas_quincenas.altas}</Text>
+                        </View>
+                    </View>
+                </ScrollView>
+            </Modal>
+
+            <Modal visibility={bajas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, bajas: !bajas})}>
+                <FlatList
+                    key={'$__'}
+                    ListHeaderComponent={<Header />}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.list}
+                    data={legends_motivo_baja}
+                    numColumns={2}
+                    renderItem={({item}) => <Motivo legend={item.text} color={item.color}/>}
+                    keyExtractor={item => String(item.id)}
+                />
+            </Modal>
+
+            <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos} >
+                <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
+            </Modal>
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleArea} handleDismiss={handleVisibleArea}> 
+                <Select dataArea={areas} handleVisibleArea={handleVisibleArea} handleActionDos={handleActionDos} />
+            </Modal>
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleSubarea} handleDismiss={handleVisibleSubarea}>
+                <Select dataArea={subareas} handleVisibleArea={handleVisibleSubarea} handleActionDos={handleActionTres} />
+            </Modal>
+
+            {
+                !loadingContent && !isIphone
+                ?
+                    <ModalLoading visibility={loading}/>
+                :
+                    <ModalLoading visibility={loadingContent}/>
+            }
+
+            {
+                isIphone
+                &&
+                    <ModalLoading visibility={loadingContent}/>
+            }
         </>
     )
 }
@@ -2556,7 +2552,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: isIphone ? '5%' : '3%',
         backgroundColor: '#fff'
     },
     picker: {
