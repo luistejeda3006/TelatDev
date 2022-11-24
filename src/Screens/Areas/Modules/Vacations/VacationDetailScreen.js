@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {actionTemporalVacation, actionVacation} from '../../../../slices/vacationSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import tw from 'twrnc';
 
 let token = null;
 let user = null;
@@ -160,58 +161,71 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
     const handleSave = async () => {
         if(ending !== '--/--/----'){
-            try{
-                setLoading(true)
-                console.log('inicio: ', initial)
-                console.log('ending: ', ending)
-                const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
-                const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
-                const body = {
-                    'action': 'add_solicitud_vac',
-                    'data': {
-                        'id_usuario': id_usuario,
-                        'id_empleado':id_empleado,
-                        'language': language,
-                        'motivo': motivo,
-                        'fechas': `${inicio} - ${fin}`
-                    },
-                    'live': live,
-                    'login': login
-                }
-
-                console.log('body:', body )
-        
-                const request = await fetch(urlVacaciones, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        token: token,
-                    },
-                    body: JSON.stringify(body),
-                });
+            const fecha_uno = new Date((initial).substring(0,4), (initial).substring(5,7), (initial).substring(8,10))
+            const fecha_dos = new Date((ending).substring(0,4), (ending).substring(5,7), (ending).substring(8,10))
+            if(fecha_uno < fecha_dos){
+                try{
+                    setLoading(true)
+                    console.log('inicio: ', initial)
+                    console.log('ending: ', ending)
+                    const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
+                    const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
+                    const body = {
+                        'action': 'add_solicitud_vac',
+                        'data': {
+                            'id_usuario': id_usuario,
+                            'id_empleado':id_empleado,
+                            'language': language,
+                            'motivo': motivo,
+                            'fechas': `${inicio} - ${fin}`
+                        },
+                        'live': live,
+                        'login': login
+                    }
+    
+                    console.log('body:', body )
             
-                const {response} = await request.json();
-                if(response.status === 200){
-                    setInitialState({...initialState, requestVacation: initialized, tipo: '1'})
-                    setVisible(!visible)
-                    setRefresh(!refresh)
-                    setActionsVisibility(true)
-                    setTimeout(() => {
-                        setActionsVisibility(false)
-                    }, 3500)
-                }
-                else {
-                    Alert.alert(
-                        'Error',
-                        response.response,
-                        [
-                            { text: 'OK'}
-                        ]
-                    )
+                    const request = await fetch(urlVacaciones, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            token: token,
+                        },
+                        body: JSON.stringify(body),
+                    });
+                
+                    const {response} = await request.json();
+                    if(response.status === 200){
+                        setInitialState({...initialState, requestVacation: initialized, tipo: '1'})
+                        setVisible(!visible)
+                        setRefresh(!refresh)
+                        setActionsVisibility(true)
+                        setTimeout(() => {
+                            setActionsVisibility(false)
+                        }, 3500)
+                    }
+                    else {
+                        Alert.alert(
+                            'Error',
+                            response.response,
+                            [
+                                { text: 'OK'}
+                            ]
+                        )
+                        setLoading(false)
+                    }
+                }catch(e){
+                    console.log('algo pasó con el internet')
                     setLoading(false)
                 }
-            }catch(e){
-                console.log('algo pasó con el internet')
+            } else {
+                Alert.alert(
+                    'Error de selección',
+                    'La fecha final no puede ser menor a la de inicio',
+                    [
+                        { text: 'OK'}
+                    ]
+                )
                 setLoading(false)
             }
         }
@@ -278,53 +292,66 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
     const handleEdit = async () => {
         if(ending !== '--/--/----'){
-            try{
-                setLoading(true)
-                const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
-                const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
+            const fecha_uno = new Date((initial).substring(0,4), (initial).substring(5,7), (initial).substring(8,10))
+            const fecha_dos = new Date((ending).substring(0,4), (ending).substring(5,7), (ending).substring(8,10))
+            if(fecha_uno < fecha_dos){
+                try{
+                    setLoading(true)
+                    const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
+                    const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
+                    console.log('inicio: ', inicio, 'ending', ending)
+                    const body = {
+                        'action': 'edit_solicitud_vac',
+                        'data': {
+                            'id_usuario': id_usuario,
+                            'id_vacsol':id,
+                            'language': language,
+                            'fechas': `${inicio} - ${fin}`
+                        },
+                        'live': live,
+                        'login': login
+                    }
+    
+                    const request = await fetch(urlVacaciones, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            token: token,
+                        },
+                        body: JSON.stringify(body),
+                    });
                 
-                const body = {
-                    'action': 'edit_solicitud_vac',
-                    'data': {
-                        'id_usuario': id_usuario,
-                        'id_vacsol':id,
-                        'language': language,
-                        'fechas': `${inicio} - ${fin}`
-                    },
-                    'live': live,
-                    'login': login
+                    const {response} = await request.json();
+                    if(response.status === 200){
+                        setInitialState({...initialState, requestVacation: initialized, tipo: '2'})
+                        setEditVisibility(!editVisibility)
+                        setActionsVisibility(true)
+                        setTimeout(() => {
+                            setActionsVisibility(false)
+                        }, 3500)
+                        setRefresh(!refresh)
+                    }
+                    else {
+                        Alert.alert(
+                            'Error',
+                            response.response,
+                            [
+                                { text: 'OK'}
+                            ]
+                        )
+                    }
+                }catch(e){
+                    console.log('algo pasó con el internet')
+                    setLoading(false)
                 }
-
-                const request = await fetch(urlVacaciones, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        token: token,
-                    },
-                    body: JSON.stringify(body),
-                });
-            
-                const {response} = await request.json();
-                if(response.status === 200){
-                    setInitialState({...initialState, requestVacation: initialized, tipo: '2'})
-                    setEditVisibility(!editVisibility)
-                    setActionsVisibility(true)
-                    setTimeout(() => {
-                        setActionsVisibility(false)
-                    }, 3500)
-                    setRefresh(!refresh)
-                }
-                else {
-                    Alert.alert(
-                        'Error',
-                        response.response,
-                        [
-                            { text: 'OK'}
-                        ]
-                    )
-                }
-            }catch(e){
-                console.log('algo pasó con el internet')
+            } else {
+                Alert.alert(
+                    'Error de selección',
+                    'La fecha final no puede ser menor a la de inicio',
+                    [
+                        { text: 'OK'}
+                    ]
+                )
                 setLoading(false)
             }
         }
@@ -445,26 +472,19 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true, down = true}) => {
         return (
-            <View style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'center', justifyContent: 'center', paddingBottom: 0, marginLeft: hasBottomLine ? 7 : 0}}>
-                <Text style={{fontSize: 14, color: '#000'}}>{title}</Text>
+            <View style={tw`self-stretch ${leftPosition ? 'items-start' : 'items-center'} justify-center pb-0 ml-[${hasBottomLine ? 2 : 0}]`}>
+                <Text style={tw`text-sm text-[#000]`}>{title}</Text>
             </View>
         )
     }
 
     const Solicitudes = ({id, inicio, fin, status, dias, oculta, btn_editar, btn_delete, fIndex}) => {
         return(
-            <View style={{backgroundColor: '#f7f7f7', shadowColor: '#000',
-            elevation: 5,
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.34,
-            shadowRadius: 6.27, marginHorizontal: 5, marginVertical: 10, borderRadius: 10}}>
+            <View style={tw`bg-[#f7f7f7] shadow-md mx-1.5 my-2.5 rounded-xl`}>
                 <TouchableWithoutFeedback onPress={() => handleHideActions(id, fIndex)}>
-                    <View style={{flex: 1, height: oculta ? 65 : 110, marginHorizontal: orientationInfo.initial === 'PORTRAIT' ? 0 : 2.5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flexDirection: 'row', height: 50, alignItems: 'center', justifyContent: 'center'}}>
-                            <View style={{width: 'auto', marginLeft: 15, marginRight: 5}}>
+                    <View style={tw`flex-1 h-[${oculta ? 16.5 : 27.5}] mx-[${orientation === 'PORTRAIT' ? 0 : 1}] mb-1.5 justify-center items-center`}>
+                        <View style={tw`flex-row h-12.5 items-center justify-center`}>
+                            <View style={tw`w-auto ml-4 mr-1.5`}>
                                 {
                                     status === '0'
                                     ?
@@ -473,23 +493,23 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                         <Icon name={status === '2' || status === '3' ? 'times' : 'check'} size={status === '3' ? 28 : 24} color={status === '2' || status === '3' ? '#DC3232' : '#5FA75D'} />
                                 }
                             </View>
-                            <View style={{flex: 1, marginLeft: 10, paddingVertical: 8}}>
-                                <Text style={styles.title}>{language === '1' ? 'Fecha seleccionada' : 'Selected Date'}</Text>
+                            <View style={tw`flex-1 ml-2.5 py-2`}>
+                                <Text style={title}>{language === '1' ? 'Fecha seleccionada' : 'Selected Date'}</Text>
                                 <Contenedor title={`${inicio} - ${fin}`} hasBottomLine={false} down={false}/>
                             </View>
-                            <View style={{width: 'auto', paddingHorizontal: 10}}>
-                                <Text style={styles.title}>{language === '1' ? 'Días' : 'Days'}</Text>
+                            <View style={tw`w-auto px-2.5`}>
+                                <Text style={title}>{language === '1' ? 'Días' : 'Days'}</Text>
                                 <Contenedor title={dias} hasBottomLine={false} down={false} leftPosition={false}/>
                             </View>
                         </View>
                         {
                             !oculta
                             &&
-                                <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
-                                    <View style={{flex: 1}}>
-                                        <TouchableOpacity onPress={() => handleDetails(status)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#74A9C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                <View style={tw`flex-row px-2.5`}>
+                                    <View style={tw`flex-1`}>
+                                        <TouchableOpacity onPress={() => handleDetails(status)} style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#74A9C4] py-1.5 px-5 rounded-xl`}>
                                             <Icon name={'folder-open'} size={18} color={'#fff'} />
-                                            <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{status === '0' ? btn_editar && btn_delete ? language === '1' ? 'Ver' : 'View' : language === '1' ? 'Ver Detalles' : 'View Details' : language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
+                                            <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{status === '0' ? btn_editar && btn_delete ? language === '1' ? 'Ver' : 'View' : language === '1' ? 'Ver Detalles' : 'View Details' : language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     {
@@ -498,19 +518,19 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                             btn_editar
                                             &&
                                                 <>
-                                                    <View style={{width: 6}}></View>
-                                                    <View style={{flex: 1}}>
-                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#C3E5C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                                    <View style={tw`w-1.5`}></View>
+                                                    <View style={tw`flex-1`}>
+                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#C3E5C4] py-1.5 px-5 rounded-xl`}>
                                                             <Icon name={'pencil'} size={22} color={'#000'} />
-                                                            <Text style={{fontSize: 14, color: '#000', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Editar' : 'Edit'}</Text>
+                                                            <Text style={tw`text-sm text-[#000] ml-3 font-bold`}>{language === '1' ? 'Editar' : 'Edit'}</Text>
                                                         </TouchableOpacity>
                                                     </View>
-                                                    <View style={{width: 6}}></View>
-                                                    <View style={{flex: 1}}>
-                                                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} 
-                                                        style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#DC4D4D', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                                    <View style={tw`w-1.5`}></View>
+                                                    <View style={tw`flex-1`}>
+                                                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)}
+                                                        style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#DC4D4D] py-1.5 px-5 rounded-xl`}>
                                                             <Icon name={'trash'} size={22} color={'#fff'} />
-                                                            <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Borrar' : 'Delete'}</Text>
+                                                            <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Borrar' : 'Delete'}</Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </>
@@ -526,12 +546,12 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
     const Dias = ({id, dia}) => {
         return(
-            <View style={{flexDirection: 'row', borderTopWidth: 1, borderBottomWidth: .5, borderColor: '#dadada', flex: 1}}>
-                <View style={{width: '20%', height: 'auto', padding: 15, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 14, color: '#000'}}>{id}</Text>
+            <View style={tw`flex-row border-t border-t-[#dadada] flex-1`}>
+                <View style={tw`w-[20%] h-auto p-4 justify-center items-center`}>
+                    <Text style={tw`font-bold text-sm text-[#000]`}>{id}</Text>
                 </View>
-                <View style={{flex: 1, height: 'auto', justifyContent: 'center'}}>
-                    <Text style={{fontSize: 14, color: '#000'}}>{dia}</Text>
+                <View style={tw`flex-1 h-auto justify-center`}>
+                    <Text style={tw`text-sm text-[#000]`}>{dia}</Text>
                 </View>
             </View>
         )
@@ -544,7 +564,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     return(
         hasConnection
         ?
-            <View style={{backgroundColor: '#fff', flex: 1}}>
+            <View style={tw`bg-[#fff] flex-1`}>
                 <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                 <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
                 {
@@ -557,7 +577,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     <ScrollView 
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
-                        style={{alignSelf: 'stretch', backgroundColor: '#fff'}}
+                        style={tw`self-stretch bg-white`}
                         refreshControl={
                             <RefreshControl
                                 progressBackgroundColor={'#EC5C25'}
@@ -569,77 +589,71 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         onScroll={handleScroll}
                         contentContainerStyle={{paddingTop: paddingTop}}
                     >
-                        <View style={[styles.container,  {paddingBottom: isIphone ? 25 : 0}]}>
-                            <View style={{height: 'auto', alignSelf: 'stretch', paddingVertical: 5}}>
+                        <View style={[container, tw`pb-[${isIphone ? 6 : 0}]`]}>
+                            <View style={tw`h-auto self-stretch py-1.5`}>
                                 <Title title={language === '1' ? 'INFORMACIÓN DEL EMPLEADO' : 'EMPLOYEE INFORMATION'} icon={'info'} tipo={1} hasBottom={false}/>
                             </View>
-                            <View style={{height: 'auto', alignSelf: 'stretch', padding: 10, backgroundColor: '#fff', shadowColor: '#000', elevation: 5, shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.34,
-                                shadowRadius: 6.27, borderRadius: 15}}
-                            >
-                                <View style={{flexDirection: 'row', alignItems: 'center', height: 23, justifyContent: 'center', alignItems: 'center'}}>
-                                    <View style={{height: 'auto', flex: 1, flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{width: 'auto', height: 23, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
-                                            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{info.num_empleado}</Text>
+                            <View style={tw`h-auto self-stretch p-2.5 bg-[#fff] shadow-md rounded-2xl mx-1.5`}>
+                                <View style={tw`flex-row items-center h-6 justify-center items-center`}>
+                                    <View style={tw`h-auto flex-1 flex-row bg-[#fff] justify-center items-center`}>
+                                        <View style={tw`w-auto h-6 justify-center items-center bg-[${Blue}] px-1.5 rounded-md`}>
+                                            <Text style={tw`text-xs font-bold text-[#fff]`}>{info.num_empleado}</Text>
                                         </View>
-                                        <View style={{flex: 1, height: 23, marginLeft: 4, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', borderRadius: 5}}>
-                                            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{info.nombre}</Text>
+                                        <View style={tw`flex-1 h-6 ml-1 px-2 justify-center items-center bg-[#000] rounded-md`}>
+                                            <Text style={tw`text-xs font-bold text-[#fff]`}>{info.nombre}</Text>
                                         </View>
                                     </View>
                                 </View>
-                                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 5}}>
-                                    <Text style={{fontSize: 14.5, fontWeight: 'bold', color: Blue}}>{info.puesto}</Text>
+                                <View style={tw`h-auto self-stretch justify-center items-center mt-1.5`}>
+                                    <Text style={tw`text-base font-bold text-[${Blue}]`}>{info.puesto}</Text>
                                 </View>
                                 
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start', paddingBottom: 5}}>
-                                            <View style={{flex: 1, marginLeft: 6}}>
-                                                <Text style={styles.title}>{language === '1' ? 'Área' : 'Area'}</Text>
+                                <View style={tw`flex-row`}>
+                                    <View style={tw`justify-start items-start w-[100%]`}>
+                                        <View style={tw`flex-row self-stretch justify-start items-start pb-1.5`}>
+                                            <View style={tw`flex-1 ml-1.5`}>
+                                                <Text style={title}>{language === '1' ? 'Área' : 'Area'}</Text>
                                                 <Contenedor title={info.area} hasBottomLine={false}/>
                                             </View>
                                         </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-                                            <View style={{flex: 1, marginLeft: 6}}>
-                                                <Text style={styles.title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
+                                        <View style={tw`flex-row self-stretch justify-start items-start`}>
+                                            <View style={tw`flex-1 ml-1.5`}>
+                                                <Text style={title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
                                                 <Contenedor title={info.fecha_ingreso} hasBottomLine={false} down={false}/>
                                             </View>
-                                            <View style={{width: 6}}></View>
-                                            <View style={{flex: 1}}>
-                                                <Text style={styles.title}>{language === '1' ? 'Antiguedad' : 'Antiquity'}</Text>
+                                            <View style={tw`w-1.5`}></View>
+                                            <View style={tw`flex-1.5`}>
+                                                <Text style={title}>{language === '1' ? 'Antiguedad' : 'Antiquity'}</Text>
                                                 <Contenedor title={`${antiguedad.years} ${antiguedad.years === '1' ? 'Año,' : 'Años,'} ${antiguedad.months} ${antiguedad.months === '1' ? 'Mes,' : 'Meses,'} ${antiguedad.days} ${antiguedad.days === '1' ? 'Día' : 'Días'}`} hasBottomLine={false} down={false}/>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
                             </View>
-                            <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 25}}>
-                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => handleVisiblePeriodos()}>
-                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                        <Text style={{color: '#000'}}>{currentPeriodo}</Text>
+                            <View style={tw`h-auto self-stretch mt-6`}>
+                                <TouchableOpacity style={[picker, tw`flex-row flex-1 mx-1.5 shadow-md`]} onPress={() => handleVisiblePeriodos()}>
+                                    <View style={tw`flex-1 justify-center items-center`}>
+                                        <Text style={tw`text-[#000]`}>{currentPeriodo}</Text>
                                     </View>
-                                    <View style={{width: 'auto'}}>
+                                    <View style={tw`w-auto`}>
                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                                     </View>
                                 </TouchableOpacity>
-                                <View style={{height: 'auto', marginBottom: 10}}>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', padding: 4}}>
-                                            <Text style={[styles.title]}>{language === '1' ? 'PV Nómina' : 'Date of Entry'}</Text>
+                                <View style={tw`h-auto mb-2.5`}>
+                                    <View style={tw`flex-row self-stretch justify-center items-center`}>
+                                        <View style={tw`flex-2 justify-center items-center p-1`}>
+                                            <Text style={[title]}>{language === '1' ? 'PV Nómina' : 'Date of Entry'}</Text>
                                             <Contenedor title={prima_vacacional.fecha_pago} hasBottomLine={false} leftPosition={false} down={false}/>
                                         </View>
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 4}}>
-                                            <Text style={styles.title}>{language === '1' ? 'Años' : 'Years'}</Text>
+                                        <View style={tw`flex-1 justify-center items-center p-1`}>
+                                            <Text style={title}>{language === '1' ? 'Años' : 'Years'}</Text>
                                             <Contenedor title={prima_vacacional.years} hasBottomLine={false} leftPosition={false} down={false}/>
                                         </View>
-                                        <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', padding: 4}}>
-                                            <Text style={styles.title}>{language === '1' ? 'Estado' : 'State'}</Text>
-                                            <View style={{flexDirection: 'row'}}>
+                                        <View style={tw`flex-2 justify-center items-center p-1`}>
+                                            <Text style={title}>{language === '1' ? 'Estado' : 'State'}</Text>
+                                            <View style={tw`flex-row`}>
                                                 <Icon name={prima_vacacional.pay === 1 ? 'check' : 'times'} size={20} color={prima_vacacional.pay === 1 ? '#5FA75D' : '#DF4740'} />
-                                                <View style={{width: 4}}></View>
+                                                <View style={tw`w-1`} />
                                                 <Contenedor title={prima_vacacional.estatus} hasBottomLine={false} leftPosition={false} down={false}/>
                                             </View>
                                             
@@ -648,99 +662,99 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                     {
                                         orientationInfo.initial === 'PORTRAIT'
                                         ?
-                                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', marginTop: 5}}>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <View style={styles.legends}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
+                                            <View style={tw`h-auto self-stretch flex-row mt-1.5`}>
+                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                    <View style={legends}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DC</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_correspondientes}</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <View style={styles.legends}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
-                                                        </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_disfrutados}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_correspondientes}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <View style={[styles.legends, {backgroundColor: '#BFCCE7'}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
+                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                    <View style={legends}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DD</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_pendientes}</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <View style={[styles.legends, {backgroundColor: '#E5E2D2'}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
-                                                        </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_disfrutados}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <View style={[styles.legends, {backgroundColor: '#C3E5C4'}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
+                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                    <View style={[legends, {backgroundColor: '#BFCCE7'}]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DP</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.total_dias}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_pendientes}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                    <View style={[legends, {backgroundColor: '#E5E2D2'}]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>PA</Text>
+                                                        </View>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                    <View style={[legends, {backgroundColor: '#C3E5C4'}]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>TD</Text>
+                                                        </View>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.total_dias}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
                                             </View>
                                         :
-                                            <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 5}}>
-                                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                                    <View style={[styles.legends, {marginRight: 10}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
+                                            <View style={tw`h-auto self-stretch justify-center items-center mt-1.5`}>
+                                                <View style={tw`flex-1 justify-center items-center flex-row`}>
+                                                    <View style={[legends, tw`mr-2.5`]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DC</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_correspondientes}</Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={[styles.legends, {marginRight: 10}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
-                                                        </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_disfrutados}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_correspondientes}</Text>
                                                         </View>
                                                     </View>
-                                                    <View style={[styles.legends, {backgroundColor: '#BFCCE7', marginRight: 10}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
+                                                    <View style={[legends, tw`mr-2.5`]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DD</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_pendientes}</Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={[styles.legends, {backgroundColor: '#E5E2D2', marginRight: 10}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
-                                                        </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_disfrutados}</Text>
                                                         </View>
                                                     </View>
-                                                    <View style={[styles.legends, {backgroundColor: '#C3E5C4', marginRight: 10}]}>
-                                                        <View style={styles.headerLegend}>
-                                                            <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
+                                                    <View style={[legends, tw`bg-[#BFCCE7] mr-2.5`]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>DP</Text>
                                                         </View>
-                                                        <View style={styles.subHeaderLegend}>
-                                                            <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{prima_vacacional.total_dias}</Text>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_pendientes}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={[legends, tw`bg-[#E5E2D2] mr-2.5`]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>PA</Text>
+                                                        </View>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.dias_periodos_anterior}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={[legends, tw`bg-[#C3E5C4] mr-2.5`]}>
+                                                        <View style={headerLegend}>
+                                                            <Text style={tw`text-xs text-[#000]`}>TD</Text>
+                                                        </View>
+                                                        <View style={subHeaderLegend}>
+                                                            <Text style={tw`text-2xl font-bold text-[#000]`}>{prima_vacacional.total_dias}</Text>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -752,9 +766,9 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                             {
                                 info.btn_solicitud
                                 &&
-                                    <TouchableOpacity style={{flexDirection: 'row', height: 'auto', justifyContent: 'center', alignItems: 'center', marginBottom: 10, backgroundColor: Blue, paddingVertical: 8, borderRadius: 8, alignSelf: 'stretch'}} onPress={() => setVisible(!visible)}>
+                                    <TouchableOpacity style={tw`flex-row h-auto justify-center items-center mb-2.5 bg-[${Blue}] py-2 mx-1.5 rounded-lg self-stretch shadow-md`} onPress={() => setVisible(!visible)}>
                                         <IonIcons name={'calendar-plus'} size={26} color={'#fff'} />
-                                        <Text style={{fontSize: 17, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Solicitar Vacaciones' : 'Request Vacation'}</Text>
+                                        <Text style={tw`text-lg text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Solicitar Vacaciones' : 'Request Vacation'}</Text>
                                     </TouchableOpacity>
                             }
                             {
@@ -765,7 +779,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                         initialScrollIndex={index}
                                         showsVerticalScrollIndicator={false}
                                         showsHorizontalScrollIndicator={false}
-                                        style={styles.list}
+                                        style={list}
                                         data={solicitudes}
                                         numColumns={1}
                                         renderItem={({item, index: fIndex}) => <Solicitudes id={item.id} status={item.status} inicio={item.inicio} fin={item.fin} dias={item.dias} oculta={item.oculta} btn_editar={item.btn_editar} btn_delete={item.btn_delete} fIndex={fIndex}/>}
@@ -775,14 +789,15 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 :
                                     !loading
                                     &&
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: info.btn_solicitud ? 25: 50}}>
+                                        <View style={tw`flex-1 justify-center items-center mt-[${info.btn_solicitud ? 6.5 : 12.5}]`}>
                                             <Image
-                                                style={{width: 120, height: 120, resizeMode:'stretch'}}
+                                                style={tw`w-30 h-30`}
+                                                resizeMode={'stretch'}
                                                 source={require('../../../../../assets/calendary.gif')}
                                             />
                                         </View>
                             }
-                            <View style={{marginBottom: '3%'}}></View>
+                            <View style={tw`mb-[3%]`} />
                         </View>
                 </ScrollView>
 
@@ -792,7 +807,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
                 <Modal orientation={orientationInfo.initial} visibility={visible} handleDismiss={() => setVisible(!visible)}>
                     <ScrollView
-                        style={{alignSelf: 'stretch'}}
+                        style={tw`self-stretch`}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
                     >
@@ -800,17 +815,17 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                             setVisible(!visible)
                             setInitialState({...initialState, requestVacation: initialized})   
                         }} vertical={false}/>
-                        <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', paddingTop: 8}}>
+                        <View style={tw`flex-row self-stretch h-auto pt-2`}>
                             <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, initial: value, labelInitial: label}})} language={language} marginBottom={false} />
-                            <View style={{ width: 6 }}></View>
+                            <View style={tw`w-1.5`}></View>
                             <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, ending: value, labelEnding: label}})} language={language} marginBottom={false}/>
                         </View>
-                        <View style={{paddingHorizontal: 1, marginTop: 10}}>
-                            <View style={{height: 'auto', alignSelf: 'stretch'}}>
+                        <View style={tw`px-px mt-2.5`}>
+                            <View style={tw`h-auto self-stretch`}>
                                 <TextInput 
                                     editable={false}
                                     value={range}
-                                    style={[styles.picker, {textAlign: 'center', fontSize: 12, color: '#adadad', fontWeight: 'bold', backgroundColor: '#f7f7f7'}]}
+                                    style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7]`]}
                                 />
                             </View>
                             <MultiText 
@@ -822,40 +837,42 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 fontSize={16}
                             />
                         </View>
-                        <View style={{height: 'auto', marginBottom: 8, padding: 15, alignSelf: 'stretch', backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 8, marginTop: 15}}>
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={tw`h-auto mb-2 p-4 self-stretch bg-[rgba(50,131,197,.1)] rounded-lg mt-4`}>
+                            <View style={tw`flex-row justify-center items-center`}>
                                 <Icon name={'info'} size={24} color={Blue} />
-                                <View style={{flex: 1}}>
-                                    <Text style={{marginLeft: 15, fontSize: 16, color: Blue}}>{language === '1' ? 'Podrá hacer su solicitud de vacaciones siempre y cuando:' : 'You will be able to make your vacation request as long as:'}</Text>
+                                <View style={tw`flex-1`}>
+                                    <Text style={tw`ml-4 text-base text-[${Blue}]`}>{language === '1' ? 'Podrá hacer su solicitud de vacaciones siempre y cuando:' : 'You will be able to make your vacation request as long as:'}</Text>
                                 </View>
                             </View>
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 6}}>
-                                <View style={{flex: 1}}>
-                                    <Text style={{fontSize: 16, color: Blue}}>{language === '1' ? '1- Tenga días disponibles (Se tomaran primero los días que tenga pendientes de otro periodo).' : '1- Have available days (Days pending from another period will be taken first).'}</Text>
+                            <View style={tw`flex-row justify-center items-center mt-1.5`}>
+                                <View style={tw`flex-1`}>
+                                    <Text style={tw`text-base text-[${Blue}]`}>{language === '1' ? '1- Tenga días disponibles (Se tomaran primero los días que tenga pendientes de otro periodo).' : '1- Have available days (Days pending from another period will be taken first).'}</Text>
                                 </View>
                             </View>
                             
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 6}}>
-                                <View style={{flex: 1}}>
-                                    <Text style={{fontSize: 16, color: Blue}}>{language === '1' ? '2- En caso de no tener días disponibles solo se podrá adelantar un 50% de los días del siguiente período y no antes de 6 meses.' : '2- If there are no days available, only 50% of the days of the following period may be advanced and not earlier than 6 months.'}</Text>
+                            <View style={tw`flex-row justify-center items-center mt-1.5`}>
+                                <View style={tw`flex-1`}>
+                                    <Text style={tw`text-base text-[${Blue}]`}>{language === '1' ? '2- En caso de no tener días disponibles solo se podrá adelantar un 50% de los días del siguiente período y no antes de 6 meses.' : '2- If there are no days available, only 50% of the days of the following period may be advanced and not earlier than 6 months.'}</Text>
                                 </View>
                             </View>
                         </View>
-                        <View style={{flexDirection: 'row', height: 'auto', alignSelf: 'stretch'}}>
-                            <View style={{flex: 1}}>
+                        <View style={tw`flex-row h-auto self-stretch`}>
+                            <View style={tw`flex-1`}>
                                 <TouchableOpacity onPress={() => {
                                     setVisible(!visible)
                                     setInitialState({...initialState, requestVacation: initialized})
-                                }} style={{flexDirection: 'row', height: 'auto', justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#f7f7f7', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                }} 
+                                    style={tw`flex-row h-auto justify-center items-center mt-2.5 bg-[#f7f7f7] py-1.5 px-5 rounded-lg`}>
                                     <Icon name={'times'} size={22} color={'#000'} />
-                                    <Text style={{fontSize: 14, color: '#000', marginLeft: 6, fontWeight: 'bold'}}>{language === '1' ? 'Cerrar' : 'Close'}</Text>
+                                    <Text style={tw`text-sm text-[#000] ml-1.5 font-bold`}>{language === '1' ? 'Cerrar' : 'Close'}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{width: 6}}></View>
-                            <View style={{flex: 1}}>
-                                <TouchableOpacity onPress={() => handleSave()} style={{flexDirection: 'row', height: 'auto', justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: Blue, paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                            <View style={tw`w-1.5`}></View>
+                            <View style={tw`flex-1`}>
+                                <TouchableOpacity onPress={() => handleSave()} 
+                                    style={tw`flex-row h-auto justify-center items-center mt-2.5 bg-[${Blue}] py-1.5 px-5 rounded-lg`}>
                                     <IonIcons name={'content-save'} size={22} color={'#fff'} />
-                                    <Text style={{fontSize: 14, color: '#fff', marginLeft: 6, fontWeight: 'bold'}}>{language === '1' ? 'Guardar' : 'Save'}</Text>
+                                    <Text style={tw`text-sm text-[#fff] ml-1.5 font-bold`}>{language === '1' ? 'Guardar' : 'Save'}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -864,34 +881,34 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 
                 <Modal orientation={orientationInfo.initial} visibility={detailsVisibility} handleDismiss={() => setDetailsVisibility(!detailsVisibility)}>
                     <ScrollView
-                        style={{alignSelf: 'stretch'}}
+                        style={tw`self-stretch`}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
                     >
                         <Title title={language === '1' ? 'DÍAS SOLICITADOS' : 'REQUESTED DAYS'} icon={'calendar'} tipo={1} itCloses={() => setDetailsVisibility(!detailsVisibility)} hasBottom={false} vertical={false}/>
-                        <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8, paddingBottom: 8, alignSelf: 'stretch'}}>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>{language === '1' ? 'Días de Vacaciones Solicitados' : 'Vacation Days Requested'}</Text>
-                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                    <Text style={{color: '#000'}}>{language === '1' ? 'Fecha: ' : 'Date: '} </Text>
-                                    <View style={{backgroundColor: '#C3E5C4', borderRadius: 3, padding: 3, paddingHorizontal: 6}}>
-                                        <Text style={{color: '#000', fontSize: 13, fontWeight: 'bold'}}>{details.fechas}</Text>
+                        <View style={tw`h-auto self-stretch justify-center items-center`}>
+                            <View style={tw`justify-center items-start px-2 pb-2 self-stretch`}>
+                                <Text style={tw`text-base font-bold text-[#000]`}>{language === '1' ? 'Días de Vacaciones Solicitados' : 'Vacation Days Requested'}</Text>
+                                <View style={tw`flex-row items-center`}>
+                                    <Text style={tw`text-[#000]`}>{language === '1' ? 'Fecha: ' : 'Date: '} </Text>
+                                    <View style={tw`bg-[#C3E5C4] rounded p-1 px-1.5`}>
+                                        <Text style={tw`text-[#000] text-sm font-bold`}>{details.fechas}</Text>
                                     </View>
                                 </View>
                             </View>
                         </View>
-                        <View style={{flexDirection: 'row', backgroundColor: '#F7F7F7'}} onPress={() => setInitialState({...initialState, areLegendsHiden: !areLegendsHiden})}>
-                            <View style={{width: '20%', height: 'auto', padding: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000'}}>No.</Text>
+                        <View style={tw`flex-row bg-[#f7f7f7]`} onPress={() => setInitialState({...initialState, areLegendsHiden: !areLegendsHiden})}>
+                            <View style={tw`w-[20%] h-auto p-4 justify-center items-center`}>
+                                <Text style={tw`font-bold text-base text-[#000]`}>No.</Text>
                             </View>
-                            <View style={{flex: 1, height: 'auto', justifyContent: 'center'}}>
-                                <Text style={{fontWeight: 'bold', fontSize: 16, color: '#000'}}>{language === '1' ? 'Días Solicitados' : 'Requested Days'}</Text>
+                            <View style={tw`flex-1 h-auto justify-center`}>
+                                <Text style={tw`font-bold text-base text-[#000]`}>{language === '1' ? 'Días Solicitados' : 'Requested Days'}</Text>
                             </View>
                         </View>
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={details.dias}
                             numColumns={1}
                             renderItem={({item}) => <Dias id={item.id} dia={item.dia}/>}
@@ -900,9 +917,9 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         {
                             details.motivo_solicitud
                             ?
-                                <View style={{height: 'auto', marginTop: 8, marginBottom: 4, padding: 8, alignSelf: 'stretch', backgroundColor: (details.estatus === '0' || details.estatus === '1') ? 'rgba(50,131,197,.1)' : 'rgba(220,50,50,.1)', borderRadius: 8}}>
-                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                        <Text style={{color: (details.estatus === '0' || details.estatus === '1') ? Blue : '#DC3232', fontWeight: 'bold', fontSize: 15}}>{`${language === '1' ? 'Motivo: ' : 'Reason: '}`}<Text style={{fontWeight:'normal'}}>{(details.estatus === '0' || details.estatus === '1') ? details.motivo_solicitud : details.motivo_rechazo}</Text></Text>
+                                <View style={tw`h-auto mt-2 mb-1 p-2 self-stretch bg-[${(details.estatus === '0' || details.estatus === '1') ? 'rgba(50,131,197,.1)' : 'rgba(220,50,50,.1)'}] rounded-lg`}>
+                                    <View style={tw`flex-row items-center`}>
+                                        <Text style={tw`text-[${(details.estatus === '0' || details.estatus === '1') ? Blue : '#DC3232'}] font-bold text-base`}>{`${language === '1' ? 'Motivo: ' : 'Reason: '}`}<Text style={tw`font-normal`}>{(details.estatus === '0' || details.estatus === '1') ? details.motivo_solicitud : details.motivo_rechazo}</Text></Text>
                                     </View>
                                 </View>
                             :
@@ -913,22 +930,23 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                             
                             !hideReason && details.btn_aprobar && solicitud_pendiente
                             &&
-                                <View style={{flexDirection: 'row', marginBottom: hideReason ? 16 : 0, marginTop: 8}}>
+                                <View style={tw`flex-row mb-[${hideReason ? 4 : 0}] mt-2`}>
                                     <TouchableOpacity
-                                        style={{height: 40, backgroundColor: '#DC4D4D', borderRadius: 8, flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}
+                                        style={tw`h-10 bg-[#DC4D4D] rounded-lg flex-1 items-center justify-center flex-row`}
                                         onPress={() => setHideReason(!hideReason)}
                                     >
                                         <Icon name={'times'} size={22} color={'#fff'} />
-                                        <Text style={{fontSize: 16, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'NO aprobar' : 'No approve'}</Text>
+
+                                        <Text style={tw`text-base text-[#fff] ml-3 font-bold`}>{language === '1' ? 'NO aprobar' : 'No approve'}</Text>
                                     </TouchableOpacity>
                                     
-                                    <View style={{width: 6}}></View>
+                                    <View style={tw`w-1.5`}></View>
                                     <TouchableOpacity
-                                        style={{height: 40, backgroundColor: Blue, borderRadius: 8, flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}
+                                        style={tw`h-10 bg-[${Blue}] rounded-lg flex-1 items-center justify-center flex-row`}
                                         onPress={() => handleAprove(1)}
                                     >
                                         <Icon name={'check'} size={22} color={'#fff'} />
-                                        <Text style={{fontSize: 16, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Aprobar' : 'Approve'}</Text>
+                                        <Text style={tw`text-base text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Aprobar' : 'Approve'}</Text>
                                     </TouchableOpacity>
                                 </View>
                         }
@@ -936,8 +954,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                             hideReason && solicitud_pendiente
                             &&   
                                 <>
-                                    <View style={{padding: 4, marginTop: 10}}>
-                                        <Text style={[styles.title, {fontSize: 15}]}>Motivo del rechazo de la solicitud</Text>
+                                    <View style={tw`p-1 mt-2.5`}>
+                                        <Text style={[title, tw`text-base`]}>Motivo del rechazo de la solicitud</Text>
                                     </View>
                                     <MultiText 
                                         placeholder={language === '1' ? 'Especifique el motivo de su solicitud de vacaciones en caso que lo crea necesario' : 'Specify the reason for your vacation request if you think it is necessary.'}
@@ -946,21 +964,21 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                         multiline={true}
                                         numberOfLines={5}
                                     />
-                                    <View style={{flexDirection: 'row', marginTop: 16}}>
+                                    <View style={tw`flex-row mt-4`}>
                                         <TouchableOpacity
-                                            style={{height: 40, backgroundColor: '#f7f7f7', borderRadius: 8, flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}
+                                            style={tw`h-10 bg-[#f7f7f7] rounded-lg flex-1 items-center justify-center flex-row`}
                                             onPress={() => setHideReason(!hideReason)}
                                         >
                                             <Icon name={'times'} size={22} color={'#000'} />
-                                            <Text style={{fontSize: 16, color: '#000', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Cancelar' : 'Cancel'}</Text>
+                                            <Text style={tw`text-base text-[#000] ml-3 font-bold`}>{language === '1' ? 'Cancelar' : 'Cancel'}</Text>
                                         </TouchableOpacity>
-                                        <View style={{width: 6}}></View>
+                                        <View style={tw`w-1.5`}></View>
                                         <TouchableOpacity
-                                            style={{height: 40, backgroundColor: Blue, borderRadius: 8, flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}
+                                            style={tw`h-10 bg-[${Blue}] rounded-lg flex-1 items-center justify-center flex-row`}
                                             onPress={() => handleAprove(0)}
                                         >
                                             <Icon name={'paper-plane'} size={20} color={'#fff'} />
-                                            <Text style={{fontSize: 16, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Enviar' : 'Send'}</Text>
+                                            <Text style={tw`text-base text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Enviar' : 'Send'}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </>
@@ -969,69 +987,70 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 </Modal>
                 
                 <Modal orientation={orientationInfo.initial} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>
-                    <View style={{justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', height: 180}}>
+                    <View style={tw`justify-center items-center self-stretch h-50`}>
                         <Image
-                            style={{width: 150, height: 150}}
+                            style={tw`w-35 h-35`}
                             resizeMode='stretch'
                             source={require('../../../../../assets/error.gif')}
                         />
                     </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 24, color: '#000'}}>¿Esta seguro de continuar?</Text>
-                        <Text style={{fontSize: 16, color: '#000'}}>Este cambio no se puede revertir</Text>
+                    <View style={tw`justify-center items-center`}>
+                        <Text style={tw`font-bold text-2xl text-[#000]`}>¿Esta seguro de continuar?</Text>
+                        <Text style={tw`text-base text-[#000]`}>Este cambio no se puede revertir</Text>
                     </View>
-                    <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10}}>
-                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} style={{flex: 1, height: 40, backgroundColor: '#f7f7f7', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                    <View style={tw`flex-row mt-5 mb-2.5`}>
+                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
                             <Icon name={'times'} size={22} color={'#000'} />
-                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000', marginLeft: 12}}>Cancelar</Text>
+                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
                         </TouchableOpacity>
-                        <View style={{width: 6}}></View>
-                        <TouchableOpacity onPress={() => handleDelete()} style={{flex: 1, height: 40, backgroundColor: '#DF4740', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <View style={tw`w-1.5`}></View>
+                        <TouchableOpacity onPress={() => handleDelete()} style={tw`flex-1 h-10 bg-[#DF4740] rounded-lg justify-center items-center flex-row`}>
                             <Icon name={'trash'} size={22} color={'#fff'} />
-                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff', marginLeft: 12}}>Sí</Text>
+                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Sí</Text>
                         </TouchableOpacity>
                     </View>
                 </Modal>
 
                 <Modal orientation={orientationInfo.initial} visibility={actionsVisibility} handleDismiss={() => setActionsVisibility(!actionsVisibility)}>
-                    <View style={{justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', height: 180}}>
+                    <View style={tw`justify-center items-center self-stretch h-50`}>
                         <Image
-                            style={{width: 150, height: 150}}
+                            style={tw`w-35 h-35`}
                             resizeMode='stretch'
                             source={require('../../../../../assets/correct.gif')}
                         />
                     </View>
-                    <View style={{height: 'auto', justifyContent: 'center', alignItems: 'center', padding: 16}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 24, textAlign: 'center'}}>{tipo === '1' ? '¡Se registró la solicitud correctamente!' : tipo === '2' ? '¡Se modificó la solicitud correctamente!' : tipo === '4' ? '!Se ha aprobado correctamente la solicitud!' : tipo === '5' ? '¡La solicitud fue rechazada correctamente!' : '¡Se eliminó la solicitud correctamente!'}</Text>
+                    <View style={tw`h-auto justify-center items-center p-4`}>
+                        <Text style={tw`font-bold text-2xl text-center`}>{tipo === '1' ? '¡Se registró la solicitud correctamente!' : tipo === '2' ? '¡Se modificó la solicitud correctamente!' : tipo === '4' ? '!Se ha aprobado correctamente la solicitud!' : tipo === '5' ? '¡La solicitud fue rechazada correctamente!' : '¡Se eliminó la solicitud correctamente!'}</Text>
                     </View>
                 </Modal>
 
                 <Modal orientation={orientationInfo.initial} visibility={editVisibility} handleDismiss={() => setEditVisibility(!editVisibility)}>
                     <Title title={language === '1' ? 'EDITAR VACACIONES' : 'EDIT VACATION'} icon={'calendar'} tipo={1} vertical={false} itCloses={() => setEditVisibility(!editVisibility)}/>
-                    <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 65, paddingTop: 8}}>
+                    <View style={tw`flex-row self-stretch h-16.5 pt-2`}>
                         <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, initial: value, labelInitial: label}})} language={language} />
-                        <View style={{ width: 6 }}></View>
+                        <View style={tw`w-1.5`}></View>
                         <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, ending: value, labelEnding: label}})} language={language} />
                     </View>
-                    <View style={{height: 'auto', alignSelf: 'stretch'}}>
+                    <View style={tw`h-auto self-stretch`}>
                         <TextInput
                             editable={false}
                             value={range}
-                            style={[styles.picker, {textAlign: 'center', fontSize: 12, color: '#adadad', fontWeight: 'bold', backgroundColor: '#f7f7f7'}]}
+                            style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7]`]}
                         />
                     </View>
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={tw`flex-row`}>
                         <TouchableOpacity onPress={() => {
                             setEditVisibility(!editVisibility)
                             setInitialState({...initialState, requestVacation: initialized})
-                        }} style={{flex: 1, height: 40, backgroundColor: '#f7f7f7', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        }}
+                            style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
                             <Icon name={'times'} size={22} color={'#000'} />
-                            <Text style={{fontSize: 16, color: '#000', marginLeft: 12, fontWeight: 'bold'}}>Cancelar</Text>
+                            <Text style={tw`text-base text-[#000] ml-3 font-bold`}>Cancelar</Text>
                         </TouchableOpacity>
-                        <View style={{width: 6}}></View>
-                        <TouchableOpacity onPress={() => handleEdit()} style={{flex: 1, height: 40, backgroundColor: Blue, borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <View style={tw`w-1.5`}></View>
+                        <TouchableOpacity onPress={() => handleEdit()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
                             <Icon name={'pencil'} size={22} color={'#fff'} />
-                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff', marginLeft: 12}}>Editar</Text>
+                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Editar</Text>
                         </TouchableOpacity>
                     </View>
                 </Modal>
@@ -1048,70 +1067,10 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        paddingHorizontal: isIphone ? '5%' : '3%',
-    },
-    list:{
-        height: 'auto',
-        alignSelf: 'stretch',
-    },
-    title: {
-        fontSize: 13,
-        color: Blue,
-    },
-    picker: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderColor: '#dadada',
-        borderWidth: 1,
-        borderRadius: 16,
-        marginBottom: 10,
-        height: 45,
-        paddingHorizontal: 16
-    },
-    multiline: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        borderColor: '#CBCBCB',
-        borderWidth: 1,
-        marginBottom: 15,
-        height: 90,
-        textAlignVertical: 'top',
-        paddingHorizontal: 16,
-        fontSize: 16
-    },
-    legends: {
-        height: 65,
-        width: 55,
-        backgroundColor: '#f7f7f7',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#000',
-        elevation: 5,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
-    },
-    headerLegend: {
-        height: 20,
-        alignSelf: 'stretch',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
-    subHeaderLegend: {
-        flex: 1,
-        alignSelf: 'stretch',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 5
-    }
-})
+const title = tw`text-sm text-[${Blue}]`
+const container = tw`flex-1 justify-center items-center bg-[#fff] px-[${isIphone ? '5%' : '3%'}]`
+const headerLegend = tw`h-5 self-stretch justify-end items-center`
+const subHeaderLegend = tw`flex-1 self-stretch justify-center items-center pb-1.5`
+const legends = tw`h-16.5 w-13.5 bg-[#f7f7f7] rounded-xl justify-center items-center shadow-md `
+const picker = tw`justify-center items-center rounded-2xl mb-2.5 h-11.5 px-4 bg-white`
+const list = tw`h-auto self-stretch`

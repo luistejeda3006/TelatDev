@@ -13,6 +13,7 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../c
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc';
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
@@ -1349,7 +1350,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 </View>
 
                 <Title title={'Altas y Bajas por Quincena'} icon={'chart-line'} tipo={2} vertical={false}/>
-                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
+                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={{color: '#000'}}>{currentQuincena}</Text>
                     </View>
@@ -1944,7 +1945,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <Title title={'Altas y Bajas por Quincena'} icon={'chart-line'} tipo={2} vertical={false}/>
 
-                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
+                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                         <Text style={{color: '#000'}}>{currentQuincena}</Text>
                                                     </View>
@@ -2557,13 +2558,12 @@ const styles = StyleSheet.create({
     picker: {
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#CBCBCB',
-        borderWidth: 1,
         marginBottom: 15,
         height: 50,
         paddingHorizontal: 16,
         alignSelf: 'stretch',
-        borderRadius: 16
+        borderRadius: 16,
+        marginHorizontal: 5
     },
     list:{
         height: 'auto',

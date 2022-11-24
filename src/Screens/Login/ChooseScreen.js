@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Image, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, Alert, BackHandler, TouchableWithoutFeedback} from 'react-native';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../colors/colorsApp'
-import {useNavigation, useNotification} from '../../hooks';
+import {useNavigation, useNotification, useOrientation} from '../../hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isIphone, live, login, urlApp, urlJobs, version} from '../../access/requestedData';
 import messaging from '@react-native-firebase/messaging'
@@ -12,7 +12,7 @@ import {Modal, Title, UpdateAvailable, Sliders} from '../../components';
 import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import {selectVisibleSliders, setLanguageApp, setVisibleSliders} from '../../slices/varSlice';
+import {selectDataNotification, selectNotification, selectVisibleSliders, setLanguageApp, setNotification, setVisibleSliders} from '../../slices/varSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
 
@@ -22,11 +22,10 @@ let cuenta = 0;
 let Option = 'Option'
 let data = '';
 
+let notification = false;
+let lastNotify = 'lastNotify';
 let notificationToken = 'notificationToken';
 let valueNotificationToken = ''
-let lastNotifyCand = 'lastNotifyCand';
-
-let dataNotification = 'dataNotification'
 let dataNotificationValue = ''
 let optionExists = '';
 
@@ -39,7 +38,8 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     const dispatch = useDispatch()
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
-
+    notification = useSelector(selectNotification)
+    dataNotificationValue = useSelector(selectDataNotification)
     visibleSliders = useSelector(selectVisibleSliders)
 
     //let now = useIsDrawerOpen()
@@ -239,17 +239,17 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     }
 
     const handleNotification = async () => {
-        dataNotificationValue = await AsyncStorage.getItem(dataNotification);
-        dataNotificationValue = JSON.parse(dataNotificationValue)
         if(dataNotificationValue){
+            dataNotificationValue = JSON.parse(dataNotificationValue)
             const title = dataNotificationValue.notification.title
             const body = dataNotificationValue.notification.body
             PushNotification.localNotification({
                 channelId: 'telat-channel',
                 title: title,
                 message: body,
-                largeIcon: ""
+                largeIcon: ''
             })
+            dispatch(setNotification(true))
         }
     }
 
@@ -271,19 +271,13 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
         else data = await AsyncStorage.setItem(key, language === '1' ? '2' : '1');
     }
     
-    const orientationInfo = {
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    };
 
-    /* const {orientationInfo} = useOrientation({
+    const {orientationInfo} = useOrientation({
         'isLandscape': false,
         'name': 'portrait-primary',
         'rotationDegrees': 0,
         'initial': 'PORTRAIT'
-    }); */
+    });
     
     const getVersion = async () => {
         try{
@@ -335,13 +329,13 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
             const {response} = await request.json();
             if(response.status === 200){
                 setVacantsUsa(response.vacantes_usa)
-                let notify = await AsyncStorage.getItem(lastNotifyCand) || undefined;
-                if(String(notify) === String(response.info.id)) setNotificacion(false)
+                let notify = await AsyncStorage.getItem(lastNotify) || undefined;
+                if(String(notify) === String(response.info.id)) dispatch(setNotificacion(false))
                 else {
                     if(response.info.lenght > 0){
-                        setNotificacion(false)
+                        dispatch(setNotification(false))
                     } else {
-                        setNotificacion(true)
+                        dispatch(setNotification(true))
                     }
                 }
             }
@@ -356,7 +350,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
     useEffect(() =>  {
         return getNotification
-    },[contador, arrived, valueNotificationToken])
+    },[contador, valueNotificationToken])
 
     const handleSliders = () => dispatch(setVisibleSliders(false))
     
@@ -382,7 +376,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                                                 onPress={() => navigation.navigate('Notifications', {language, orientation: orientationInfo.initial, origin: 2})}>
                                                 <IonIcons name={'bell'} size={35} color='#000' />
                                                 {
-                                                    notificacion
+                                                    notification
                                                     &&
                                                         <View style={tw`w-4 h-4 rounded-3xl bg-[#FF3333] absolute top-9 right-0 border border-[#fff] justify-center items-center`} />
                                                 }

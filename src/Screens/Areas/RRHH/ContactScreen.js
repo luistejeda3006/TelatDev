@@ -84,36 +84,53 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const [initialState, setInitialState] = useState({
         loading: false,
         cityOptions: [
-            {value: 'CDMX', label: 'CDMX'},
+            {value: 'Seleccionar Opción', label: 'Seleccionar Opción'},
+            {value: 'Mexico City', label: 'Mexico City'},
             {value: 'Juárez', label: 'Juárez'},
+            {value: 'El Paso, TX.', label: 'El Paso, TX.'},
         ],
-        optionsCDMX_1: [
-            {value: 'OCC Mundial', label: 'OCC Mundial'},
-            {value: 'Indeed', label: 'Indeed'},
-            {value: 'Facebook', label: 'Facebook'},
-            {value: language === '1' ? 'Referido' : 'Referral', label: language === '1' ? 'Referido' : 'Referral'},
-            {value: language === '1' ? 'Trabajé antes en Telat' : 'I previously worked in Telat', label: language === '1' ? 'Trabajé antes en Telat' : 'I previously worked in Telat'},
-        ],
-        optionsJuarez_1: [
-            {value: 'Facebook', label: 'Facebook'},
-            {value: 'Indeed', label: 'Indeed'},
-            {value: 'Empleos Maquila', label: 'Empleos Maquila'},
-            {value: 'Computrabajo', label: 'Computrabajo'},
-            {value: 'OCC Mundial', label: 'OCC Mundial'},
-            {value: language === '1' ? 'Bolsa de Empleo UACJ' : 'UACJ Job Board', label: language === '1' ? 'Bolsa de Empleo UACJ' : 'UACJ Job Board'},
-            {value: language === '1' ? 'Referido' : 'Referral', label: language === '1' ? 'Referido' : 'Referral'},
-            {value: language === '1' ? 'Trabajé antes en Telat' : 'I previously worked in Telat', label: language === '1' ? 'Trabajé antes en Telat' : 'I previously worked in Telat'},
-        ],
+        
         closeOptions: [
-            {value: language === '1' ? 'Sí' : 'Yes', label: language === '1' ? 'Sí' : 'Yes'},
-            {value: 'No', label: 'No'},
+            {value: 'Seleccionar Opción', label: 'Seleccionar Opción'},
+            {value: 'YES', label: 'YES'},
+            {value: 'NO', label: 'NO'},
+        ],
+
+        //OPCIONES DE CDMX Y JUAREZ
+        optionsCDMX_1: [
+            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: 'Facebook/Instagram', label: 'Facebook/Instagram'},
+            {value: 'Indeed', label: 'Indeed'},
+            {value: 'OCC Mundial', label: 'OCC Mundial'},
+            {value: language === '1' ? 'Referido' : 'Referral', label: language === '1' ? 'Referido' : 'Referral'},
+            {value: language === '1' ? 'Trabajé antes en Telat' :'I previously worked in Telat', label: language === '1' ? 'Trabajé antes en Telat' :'I previously worked in Telat'},
+            {value: language === '1' ? 'Otro' : 'Other', label: language === '1' ? 'Otro' : 'Other'},
+        ],
+        
+        //OPCIONES PARA EL PASO
+        optionsCDMX_1: [
+            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: 'Facebook/Instagram', label: 'Facebook/Instagram'},
+            {value: 'Indeed', label: 'Indeed'},
+            {value: language === '1' ? 'Referido' : 'Referral', label: language === '1' ? 'Referido' : 'Referral'},
+            {value: language === '1' ? 'Trabajé antes en Telat/Dataxport' : 'I previously worked in Telat/Dataxport', label: language === '1' ? 'Trabajé antes en Telat/Dataxport' : 'I previously worked in Telat/Dataxport'},
+            {value: language === '1' ? 'Otro' : 'Other', label: language === '1' ? 'Otro' : 'Other'},
+        ],
+        
+        levels: [
+            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: language === '1' ? 'Básico' : 'Basic', label: language === '1' ? 'Básico' : 'Basic'},
+            {value: language === '1' ? 'Intermedio' :'Intermediate', label: language === '1' ? 'Intermedio' :'Intermediate'},
+            {value: language === '1' ? 'Avanzado' : 'Advanced', label: language === '1' ? 'Avanzado' : 'Advanced'},
         ],
 
         contactOptions: [
-            {value: language === '1' ? 'Llamada' : 'Phone call', label: language === '1' ? 'Llamada' : 'Phone call'},
+            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Llamada' : 'Phone call'},
+            {value: language === '1' ? 'Llamada' : 'Call', label: language === '1' ? 'Llamada' : 'Call'},
             {value: 'WhatsApp', label: 'WhatsApp'},
             {value: language === '1' ? 'Email' : 'E-mail', label: language === '1' ? 'Email' : 'E-mail'},
         ],
+
         scheduleOptions: [
             {value: '8:00a.m. -11:00a.m.', label: '8:00a.m. - 11:00a.m.'},
             {value: '11:00a.m. -1:00p.m.', label: '11:00a.m. - 1:00p.m.'},
@@ -213,6 +230,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const {cityOptions, optionsCDMX_1, optionsJuarez_1, closeOptions, contactOptions, scheduleOptions, isRecording, isPlaying, loading} = initialState
     
     const handleActionUno = (value, label) => {
+        console.log('value: ', value, 'label: ', label)
         handleSetState({...values, currentCity: value, currentOption: value === 'CDMX' ? 'OCC Mundial' : 'Facebook'})
     }
 
@@ -475,9 +493,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                     onScroll={handleScroll}
                                     contentContainerStyle={{paddingTop: paddingTop}}
                                 >
-                                    <View style={tw`h-auto self-stretch mt-[3%]`}>
+                                    <View style={tw`h-auto self-stretch mt-[1.5%]`}>
                                         <Title title={language === '1' ? 'Información Básica' : 'Basic Information'} tipo={1} icon={'child'} hasBottom={false}/>
-                                        <Text style={titleStyle}>{language === '1' ? 'Ciudad' : 'City'}</Text>
+                                        {
+                                            
+                                        }
+                                        <Text style={titleStyle}>{language === '1' ? '¿Cómo te enteraste de nosotros?' : 'How did you find out about the job?'}</Text>
+                                        <View style={[pickerStyle]} >
+                                            <Picker
+                                                value={values.currentOption}
+                                                onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
+                                                items={values.currentCity === 'CDMX' ? optionsCDMX_1 : optionsJuarez_1}
+                                                placeholder={{}}
+                                            />
+                                        </View>
+                                        {/* <Text style={titleStyle}>{language === '1' ? 'Ciudad' : 'City'}</Text>
                                         <View style={[pickerStyle]}>
                                             <Picker
                                                 value={values.currentCity}
@@ -652,7 +682,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 <Icon name={'paper-plane'} size={18} color={'#fff'} />
                                                 <Text style={tw`text-base text-white ml-2.5 font-bold`}>{language === '1' ? 'Envíar' : 'Send'}</Text>
                                             </View>
-                                        </TouchableWithoutFeedback>
+                                        </TouchableWithoutFeedback> */}
                                         <View style={tw`mb-[${isIphone ? '6%' : '1.5%'}]`} />
                                     </View>
                                 </ScrollView>

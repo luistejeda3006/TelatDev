@@ -782,12 +782,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             {
                                                 !error
                                                 ?
-                                                    <TouchableOpacity onPress={() => handleResumen()} style={tw`flex-row h-11 flex-1 px-1.5 rounded-2xl bg-[#BFCCE7] justify-center items-center`}>
+                                                    <TouchableOpacity onPress={() => handleResumen()} style={tw`flex-row h-11 flex-1 px-1.5 rounded-2xl bg-[#BFCCE7] justify-center items-center shadow-md`}>
                                                         <IonIcons name={'file-check'} size={21} color={'#000'} />
                                                         <Text style={tw`font-bold text-[#000] text-lg ml-1.5`}>{language === '1' ? 'Resumen' : 'Resume'}</Text>
                                                     </TouchableOpacity>
                                                 :
-                                                    <View style={tw`flex-row h-11 flex-1 px-1.5 roundex-2xl bg-[#f7f7f7] justify-center items-center border border-[#dadada]`}>
+                                                    <View style={tw`flex-row h-11 flex-1 px-1.5 roundex-2xl bg-[#f7f7f7] justify-center items-center border border-[#dadada] shadow-md`}>
                                                         <IonIcons name={'file-check'} size={21} color={'#000'} />
                                                         <Text style={tw`font-bold text-[#000] text-lg ml-1.5`}>{language === '1' ? 'Resumen' : 'Resume'}</Text>
                                                     </View>
@@ -1680,6 +1680,6 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
 
 const container = tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '3%'}] bg-white`
 const title = tw`text-sm text-[${Blue}]`
-const picker = tw`justify-center items-center border border-[#adadad] rounded-2xl mb-2.5 h-11 px-4`
+const picker = tw`justify-center items-center rounded-2xl mb-2.5 h-11 px-4 bg-white shadow-md`
 const box = tw`justify-start items-center h-11 flex-row border border-[#CBCBCB] mb-2.5 rounded-2xl bg-[#f7f7f7] px-2 py-2.5 self-stretch`
 const list = tw`h-auto self-stretch`

@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {View, Image, TouchableOpacity} from 'react-native'
-import { isIphone } from '../access/requestedData'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Animatable from 'react-native-animatable';
+import {isIphone} from '../access/requestedData'
+import {useSelector} from 'react-redux';
+import {selectNotification} from '../slices/varSlice';
 
-const thereAre = 'thereAre';
+let notification = false;
 
 export default ({navigation, language, orientation, notify = undefined, screen = undefined}) => {
-    const [notificacion, setNotificacion] = useState(notify)
-
-    useEffect(async () => {
-        if(!notify){
-            let exists = await AsyncStorage.getItem(thereAre) || undefined;
-            if(exists === '1') setNotificacion(true)
-            else setNotificacion(false)
-        } else {
-            setNotificacion(notify ? true : false)
-        }
-    }, [notify])
+    notification = useSelector(selectNotification)
 
     return(
         <View style={{height: isIphone ? 70 : 50, alignSelf: 'stretch', backgroundColor: '#383838', flexDirection: 'row'}}>
@@ -43,7 +33,7 @@ export default ({navigation, language, orientation, notify = undefined, screen =
                         source={screen === 4 ? require( '../../assets/designing/bottomMenu/bell.png') : require('../../assets/designing/bottomMenu/bell_light.png')}
                     />
                     {
-                        notificacion
+                        notification
                         &&
                             <View style={{width: 10, height: 10, backgroundColor: 'red', borderWidth: 1, borderColor: '#383838', borderRadius: 20, position: 'absolute', top: 0, right: 0, justifyContent: 'center', alignItems: 'center'}} />
                     }

@@ -531,7 +531,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         </View>
                                     </View>
                                 </View>
-                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row', marginTop: 25}]} onPress={() => handleVisiblePeriodos()}>
+                                <TouchableOpacity style={[styles.picker, tw`shadow-md`, {flexDirection: 'row', marginTop: 25}]} onPress={() => handleVisiblePeriodos()}>
                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <Text style={{fontSize: 17, color: '#000'}}>{currentPeriodo}</Text>
                                     </View>
@@ -807,13 +807,12 @@ const styles = StyleSheet.create({
     picker: {
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#CBCBCB',
-        borderWidth: 1,
         marginBottom: 15,
         height: 50,
         paddingHorizontal: 16,
         alignSelf: 'stretch',
         borderRadius: 16,
-        marginHorizontal: isIphone ? '5%' : '3%'
+        marginHorizontal: isIphone ? '5%' : '3%',
+        backgroundColor: '#fff'
     },
 })

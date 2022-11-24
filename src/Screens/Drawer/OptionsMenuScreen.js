@@ -11,7 +11,7 @@ import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '..
 import {useDispatch, useSelector} from 'react-redux';
 import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlice';
 import {selectOrientation} from '../../slices/orientationSlice';
-import {selectLanguageApp, selectTokenInfo, selectUserInfo, setVisibleSliders} from '../../slices/varSlice';
+import {selectDataNotification, selectLanguageApp, selectNotification, selectTokenInfo, selectUserInfo, setNotification, setVisibleSliders} from '../../slices/varSlice';
 import UpdateAvailable from '../../components/UpdateAvailable';
 import tw from 'twrnc';
 
@@ -19,6 +19,7 @@ let gender = null;
 let picture = null;
 let token = null;
 let user = null;
+let notification = false;
 
 let keyUserInfo = 'userInfo';
 let lastNotify = 'lastNotify';
@@ -45,6 +46,10 @@ let info_version = null;
 let language = null;
 
 export default ({navigation}) => {
+    const dispatch = useDispatch()
+
+    notification = useSelector(selectNotification)
+    dataNotificationValue = useSelector(selectDataNotification)
     orientation = useSelector(selectOrientation)
     language = useSelector(selectLanguageApp)
     user = useSelector(selectUserInfo)
@@ -52,12 +57,11 @@ export default ({navigation}) => {
     
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
-    const dispatch = useDispatch()
 
     const {isTablet} = DeviceInfo;
     const [enabled, setEnabled] = useState(false)
     const [modules, setModules] = useState([])
-    const [notification, setNotificacion] = useState(false)
+    /* const [notification, setNotificacion] = useState(false) */
     const [loading, setLoading] = useState(true)
     const {hasConnection, askForConnection} = useConnection();
     const {arrived} = useNotification()
@@ -218,6 +222,8 @@ export default ({navigation}) => {
                     'token': valueNotificationToken
                 }
             }
+
+            console.log('value: ', body)
             
             const request = await fetch(urlApp, {
                 method: 'POST',
@@ -231,40 +237,16 @@ export default ({navigation}) => {
             
             const {response} = await request.json();
             if(response.status === 200){
-                let actual = {}
-                /* const temporales = [
-                    ...response.permisos,
-                    {
-                        "iconName":"",
-                        "id":"8000",
-                        "name":"Quiniela" || "Betting Game",
-                        "screen":"Bettings"
-                    }
-                ] */
                 setModules(response.permisos)
                 let notify = await AsyncStorage.getItem(lastNotify) || undefined;
                 
                 if(response.notificacion){
-                    if(!notify) {
-                        await AsyncStorage.setItem(thereAre, '1')
-                        setNotificacion(true)
-                    }
+                    if(!notify) dispatch(setNotification(true))
                     else {
-                        if(String(notify) === String(response.notificacion.id)) {
-                            await AsyncStorage.setItem(thereAre, '0')
-                            setNotificacion(false)
-                        }
-                        
-                        else {
-                            await AsyncStorage.setItem(thereAre, '1')
-                            setNotificacion(true)
-                        }
+                        if(String(notify) === String(response.notificacion.id)) dispatch(setNotification(false))
+                        else dispatch(setNotification(true))
                     }
-                    await AsyncStorage.setItem(pendingNotify, response.notificacion.id)
-                } else {
-                    await AsyncStorage.setItem(thereAre, '0')
-                    setNotificacion(false)
-                }
+                } else dispatch(setNotification(false))
 
                 let obj = {
                     token: user.token,
@@ -297,7 +279,7 @@ export default ({navigation}) => {
 
     useEffect(() => {
         getInformation()
-    },[hasConnection, arrived])
+    },[hasConnection, arrived, valueNotificationToken])
 
     const getVersion = async () => {
         try{
@@ -345,9 +327,8 @@ export default ({navigation}) => {
     }
     
     const handleNotification = async () => {
-        dataNotificationValue = await AsyncStorage.getItem(dataNotification);
-        dataNotificationValue = JSON.parse(dataNotificationValue)
         if(dataNotificationValue && valueSendNotification === '0'){
+            dataNotificationValue = JSON.parse(dataNotificationValue)
             const title = dataNotificationValue.notification.title
             const body = dataNotificationValue.notification.body
             PushNotification.localNotification({
@@ -356,6 +337,7 @@ export default ({navigation}) => {
                 message: body,
                 largeIcon: ''
             })
+            dispatch(setNotification(true))
         }
     }
 
