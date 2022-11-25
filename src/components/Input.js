@@ -1,14 +1,15 @@
 import React, {forwardRef} from 'react'
 import {StyleSheet, TextInput, View} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import tw from 'twrnc'
 
 export default forwardRef(({value, optional = false, edit = true, ...rest}, ref) => {
     return(
         !optional
         ?
-            <View style={styles.box}>
+            <View style={box}>
                 <TextInput
-                    style={{color: '#000', backgroundColor: edit ? '#fff' : '#f7f7f7', height: 48, flex: 1, borderRadius: 20}}
+                    style={tw`text-[#000] bg-[${edit ? '#fff' : '#f7f7f7'}] h-12 flex-1 rounded-3xl`}
                     ref={ref}
                     value={value}
                     placeholderTextColor={'#CBCBCB'}
@@ -24,7 +25,7 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
             </View>
         :
             <TextInput
-                style={[styles.box, {color: '#000', backgroundColor: edit ? '#fff' : '#f7f7f7'}]}
+                style={[box, tw`text-black bg-[${edit ? '#fff' : '#f7f7f7'}]`]}
                 ref={ref}
                 value={value}
                 placeholderTextColor={'#CBCBCB'}
@@ -34,19 +35,4 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
     )
 })
 
-const styles = StyleSheet.create({
-    box:{
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        height: 50,
-        flexDirection: 'row',
-        borderColor: '#CBCBCB',
-        borderWidth: 1,
-        marginBottom: 10,
-        backgroundColor: '#fff',
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        width: '99%',
-        borderRadius: 20
-    },
-})
+const box = tw`justify-start items-center h-12.5 flex-row border border-[#CBCBCB] mb-2.5 bg-white px-3 py-2.5 w-[99%] rounded-3xl`

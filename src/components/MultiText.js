@@ -1,13 +1,14 @@
 import React, {forwardRef} from 'react'
 import {StyleSheet, View, TextInput} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { isIphone } from '../access/requestedData';
+import {isIphone} from '../access/requestedData';
+import tw from 'twrnc'
 
 export default forwardRef(({required = false, edit = true, value ,...rest}, ref) => {
     return(
         !required
         ?
-            <View style={[styles.multiline, {justifyContent: 'flex-start', marginBottom: 0, backgroundColor: edit ? '#fff' : '#f7f7f7'}]}>
+            <View style={[multiline, tw`justify-start mb-0 bg-[${edit ? '#fff' : '#f7f7f7'}]`]}>
                 <TextInput
                     style={{color: '#000', textAlignVertical: 'top', height: '100%', flex: 1}}
                     placeholderTextColor={'#CBCBCB'}
@@ -16,7 +17,7 @@ export default forwardRef(({required = false, edit = true, value ,...rest}, ref)
                 />
             </View>
         :
-            <View style={[styles.multiline, {justifyContent: 'flex-start', marginBottom: 0, backgroundColor: edit ? '#fff' : '#f7f7f7'}]}>
+            <View style={[multiline, tw`justify-start mb-0 bg-[${edit ? '#fff' : '#f7f7f7'}]`]}>
                 <TextInput
                     style={{color: '#000', textAlignVertical: 'top', height: '100%', flex: 1}}
                     placeholderTextColor={'#CBCBCB'}
@@ -36,19 +37,4 @@ export default forwardRef(({required = false, edit = true, value ,...rest}, ref)
     )
 })
 
-const styles = StyleSheet.create({
-    multiline: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        alignSelf: 'stretch',
-        borderColor: '#dadada',
-        flexDirection: 'row',
-        borderWidth: 1,
-        marginBottom: 15,
-        height: 110,
-        marginHorizontal: .1,
-        paddingHorizontal: 12,
-        paddingVertical: isIphone ? 12 : 0,
-        borderRadius: 20
-    }
-})
+const multiline = tw`justify-start items-start self-stretch border border-[#CBCBCB] flex-row mb-4 h-27.5 w-[99%] px-3 py-[${isIphone ? 3 : 0}] rounded-3xl`

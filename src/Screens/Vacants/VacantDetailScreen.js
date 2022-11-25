@@ -9,7 +9,7 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
 
-export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer}}}) => {
+export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer, country}}}) => {
     const [contador, setContador] = useState(0)
     const {handlePath} = useNavigation()
     const {orientationInfo} = useOrientation({
@@ -65,7 +65,7 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                                     <Text style={tw`text-2xl font-bold text-black`}>{name}</Text>
                                     <Text style={tw`text-lg text-[#adadad] mb-2.5`}>Telat</Text>
                                     <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Ubicación' : 'Location'}</Text>
-                                    <Text style={tw`text-lg text-black mb-2.5`}>{location}</Text>
+                                    <Text style={tw`text-black mb-2.5`}>{location}</Text>
                                     <Text style={tw`text-lg text-black font-bold`}>{lg === 1 ? 'Salario' : 'Salary'}</Text>
                                     <View style={tw`h-auto justify-center items-start mt-1.5 self-stretch`}>
                                         <Text style={tw`text-lg text-black mb-1.5 bg-[#d1d1d1]`}>{salary}</Text>
@@ -92,8 +92,8 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {language: language, orientation: orientationInfo.initial})}>
-                                    <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-xl my-2.5 self-stretch mb-${isIphone ? 6 : 4} flex-row`}>
+                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {language: language, orientation: orientationInfo.initial, country: country})}>
+                                    <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl my-2.5 self-stretch mb-${isIphone ? 6 : 4} flex-row shadow-md`}>
                                         <IonIcons name={'account-check'} size={24} color={'#fff'}/>
                                         <Text style={tw`text-white font-bold text-lg ml-2.5`}>{lg === 1 ? 'Postularme' : 'Apply'}</Text>
                                     </View>

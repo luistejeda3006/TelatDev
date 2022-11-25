@@ -242,7 +242,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                 <Text style={tw`text-[#000] bg-[#dadada] text-sm`}>{sueldo}</Text>
                             </View>
                             <View style={tw`h-auto self-stretch mt-1.5 self-stretch`}>
-                                <Text style={tw`text-[#000] text-sm`}>{ubicacion}</Text>
+                                <Text style={tw`text-[#000]`}>{ubicacion}</Text>
                             </View>
                             <View style={tw`h-auto self-stretch mt-2.5 justify-start items-end`}>
                                 <View style={tw`flex-1`}></View>

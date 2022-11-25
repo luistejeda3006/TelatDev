@@ -197,8 +197,10 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
         if (enabled) {
             data = null;
             data = await AsyncStorage.getItem(notificationToken) || '';
+            console.log('data; ', data)
             if(!data){
                 valueNotificationToken = await messaging().getToken();
+                console.log('value: ', valueNotificationToken)
                 await AsyncStorage.setItem(notificationToken, valueNotificationToken);
             } else {
                 valueNotificationToken = await AsyncStorage.getItem(notificationToken);
@@ -310,6 +312,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     }
 
     const getNotification = async () => {
+        console.log('entraaa')
         try{
             const body = {
                 "login": login,
@@ -317,6 +320,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                 "live": live,
                 "data": valueNotificationToken
             }
+            console.log('value: ', valueNotificationToken)
     
             const request = await fetch(urlApp, {
                 method: 'POST',
@@ -345,11 +349,11 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     }
 
     useEffect(() =>  {
-        return getVersion
+        getVersion()
     },[])
 
     useEffect(() =>  {
-        return getNotification
+        getNotification()
     },[contador, valueNotificationToken])
 
     const handleSliders = () => dispatch(setVisibleSliders(false))
