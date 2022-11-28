@@ -357,9 +357,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         return(
             <>
                 <TouchableOpacity onPress={() => handleGrupo(id, partidos)}
-                    style={tw`h-auto w-auto p-2 justify-center items-center bg-[${selected ? Orange : 'rgba(225,89,37,.5)'}] border border-[${Orange}] ml-${id === 1 ? 2.5 : 1.5} mr-2.5 z-0 rounded-xl`}
+                    style={tw`h-auto w-auto px-2 py-1.5 justify-center items-center bg-[${selected ? Blue : 'rgba(50,131,197,.1)'}] border border-[${Blue}] ml-${id === 1 ? 2.5 : 1.5} mr-2.5 z-0 rounded-xl`}
                 >
-                    <Text style={tw`font-bold text-[${selected ? '#fff' : '#dadada'}] text-base`}>{name}</Text>
+                    <Text style={tw`font-bold text-[${selected ? '#fff' : Blue}] text-base`}>{name}</Text>
                 </TouchableOpacity>
                 {
                     !completed
@@ -697,8 +697,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <IonIcons name={'book'} size={20} color={'transparent'} />
                             </TouchableOpacity>
                         </View>
-                        <IonIcons name={section === 1 ? 'order-bool-ascending-variant' : section === 2 ? 'trophy-outline' : 'account-details-outline'} size={isIphone ? 25 : 23} color={'#000'} />
-                        <Text style={tw`font-bold text-black text-lg ml-1.5`}>{section === 1 ? language === '1' ? 'Fase de Grupos' : 'Group Stage' : section === 2 ? language === '1' ? 'Fase Final' : 'Final Stage' : language === '1' ? 'Tabla de Posiciones' : 'Position Table'}</Text>
+                        <IonIcons name={section === 1 ? 'order-bool-ascending-variant' : section === 2 ? 'trophy-outline' : 'account-group-outline'} size={isIphone ? 25 : 23} color={'#000'} />
+                        <Text style={tw`font-bold text-black text-base ml-1.5`}>{section === 1 ? language === '1' ? 'Fase de Grupos' : 'Group Stage' : section === 2 ? language === '1' ? 'Fase Final' : 'Final Stage' : language === '1' ? 'Tabla de Posiciones' : 'Position Table'}</Text>
                         <View style={tw`flex-1 h-[100%] justify-center items-end pr-2`}>
                             {
                                 (section === 1 || section === 2) 
@@ -719,7 +719,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         (section === 1 || section === 2)
                         ?
                             <>
-                                <View style={tw`h-16 justify-center items-center bg-white border-b-[#dadada] border-b`}>
+                                <View style={tw`h-13 justify-center items-center bg-white border-b-[#dadada] border-b`}>
                                     <FlatList
                                         ref={refGroup}
                                         pagingEnabled={true}
@@ -822,7 +822,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     setSection(3)
                                 }
                             }}>
-                            <IonIcons name={section !== 3 ? 'account-details-outline' : 'account-details'} size={isIphone ? 25 : 23} color={section === 3 ? '#000' : '#c1c1c1'} />
+                            <IonIcons name={section !== 3 ? 'account-group-outline' : 'account-group'} size={isIphone ? 25 : 23} color={section === 3 ? '#000' : '#c1c1c1'} />
                             <Text style={tw`font-bold text-base text-[${section === 3 ? '#000' : '#c1c1c1'}] ml-1.5 text-sm`}>{language === '1' ? 'Posiciones' : 'Positions'}</Text>
                         </TouchableOpacity>
                     </View>

@@ -13,7 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 let data = null;
 
 export default ({navigation, route: {params: {language, orientation, valueNotificationToken}}}) => {
-    const [contador, setContador] = useState(0)
+    const [langua, setLanguage] = useState(language)
     const [random, setRandom] = useState(1)
     const [filterUno, setFilterUno] = useState(true)
     const [filterDos, setFilterDos] = useState(false)
@@ -37,7 +37,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
     const {isTablet} = DeviceInfo;
     const [filter, setFilter] = useState('');
     const [currentFilter, setCurrentFilter] = useState({
-        position: language === '1' ? 'Puesto...' : 'Position...',
+        position: langua === '1' ? 'Puesto...' : 'Position...',
         iconName: 'badge-account-outline'
     });
 
@@ -203,7 +203,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
     const handleChangeIcon = () => {
         if(currentFilter.iconName === 'badge-account-outline') {
             setCurrentFilter({
-                position: language === '1' ? 'Edificio...' : 'Edifice...',
+                position: langua === '1' ? 'Edificio...' : 'Edifice...',
                 iconName: 'map-marker'
             })
             setFilter('')
@@ -212,7 +212,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         }
         else if(currentFilter.iconName === 'map-marker'){
             setCurrentFilter({
-                position: language === '1' ? 'Salario...' : 'Salary...',
+                position: langua === '1' ? 'Salario...' : 'Salary...',
                 iconName: 'cash'
             })
             setFilter('')
@@ -221,7 +221,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         }
         else {
             setCurrentFilter({
-                position: language === '1' ? 'Puesto...' : 'Position...',
+                position: langua === '1' ? 'Puesto...' : 'Position...',
                 iconName: 'badge-account-outline'
             })
             setFilter('')
@@ -230,12 +230,12 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         }
     }
 
-    const Vacant = ({nombre, sueldo, ubicacion, region, descripcion, requisitos, beneficios, telefono, language}) => {
+    const Vacant = ({nombre, sueldo, ubicacion, region, descripcion, requisitos, beneficios, telefono, id_sede}) => {
         return (
             orientationInfo.initial === 'PORTRAIT'
             ?
                 <View style={tw`flex-1 my-[${orientationInfo.initial === 'PORTRAIT' ? '2%': '0%'}] h-auto justify-center items-center bg-white mx-[2%]`}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: language, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region})} >
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
                         <View style={tw`h-auto self-stretch justify-center items-start p-2.5 rounded-md shadow-md bg-white`}>
                             <Text style={tw`text-[#000] text-base font-bold`}>{nombre}</Text>
                             <View style={tw`h-auto justify-center items-center mt-1.5`}>
@@ -251,7 +251,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                         <IonIcons name={'clock-outline'} size={20} color='black'/>
                                     </View>
                                     <View style={tw`flex-1 self-stretch justify-center items-start ml-1.5`}>
-                                        <Text style={tw`text-[#c1c1c1] text-sm`}>{language === '1' ? 'Se uno de los primeros en postularse' : 'Be one of the first to apply'}</Text>
+                                        <Text style={tw`text-[#c1c1c1] text-sm`}>{langua === '1' ? 'Se uno de los primeros en postularse' : 'Be one of the first to apply'}</Text>
                                     </View>
                                     <View style={tw`justify-center items-center p-1`}>
                                         {
@@ -277,9 +277,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 </View>
             :
                 <View style={tw`w-[100%] h-auto my-[0.7%]`}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: language, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region})} >
-                        <View
-                            style={tw`flex-1 justify-start items-start p-2.5 border border-[#dadada] rounded-md`}>
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
+                        <View style={tw`flex-1 justify-start items-start p-2.5 border border-[#dadada] rounded-md`}>
                             <Text style={tw`text-[#000] text-base font-bold`}>{nombre}</Text>
                             <View style={tw`h-auto justify-center items-center mt-1.5`}>
                                 <Text style={tw`text-[#000] bg-[#d1d1d1]`}>{sueldo}</Text>
@@ -292,7 +291,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                     </View>
                                     <View
                                         style={tw`flex-1 self-stretch justify-center items-start ml-2`}>
-                                        <Text style={tw`text-[#c1c1c1] text-sm`}>{language === '1' ? 'Se uno de los primeros en postularse' : 'Be one of the first to apply'}</Text>
+                                        <Text style={tw`text-[#c1c1c1] text-sm`}>{langua === '1' ? 'Se uno de los primeros en postularse' : 'Be one of the first to apply'}</Text>
                                     </View>
                                     <View style={tw`justify-center items-center`}>
                                         {
@@ -329,7 +328,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <HeaderPortrait title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
+                        <HeaderPortrait title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
                         <View style={tw`flex-1 self-stretch justify-start items-center bg-[#fff]`}>
                             {
                                 loading
@@ -348,7 +347,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                         <>
                                             <View style={tw`h-10 self-stretch flex-row my-1 items-center justify-center`}>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'Todas' : 'All'}
+                                                    legend={langua === '1' ? 'Todas' : 'All'}
                                                     checked={filterUno}
                                                     width={0}
                                                     handleCheck={() => {
@@ -358,7 +357,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         Keyboard.dismiss()
                                                     }}/>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'México' : 'México'}
+                                                    legend={langua === '1' ? 'México' : 'México'}
                                                     checked={filterDos}
                                                     width={0}
                                                     handleCheck={() => {
@@ -368,7 +367,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         Keyboard.dismiss()
                                                     }}/>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'Estados Unidos' : 'United States'}
+                                                    legend={langua === '1' ? 'Estados Unidos' : 'United States'}
                                                     checked={filterTres}
                                                     width={1}
                                                     handleCheck={() => {
@@ -388,13 +387,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -405,13 +404,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -421,13 +420,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -437,13 +436,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -452,8 +451,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterUno || filterDos) && filteredDataMX.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-[30%]`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -467,8 +466,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterTres) && filteredDataUSA.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-[30%]`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -484,8 +483,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                     :
                                         <>
                                             <View style={tw`flex-1 justify-center items-center self-stretch`}>
-                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                <Text style={{fontSize: 16, color: '#adadad', marginTop: 10, textAlign: 'center'}}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                <Text style={{fontSize: 16, color: '#adadad', marginTop: 10, textAlign: 'center'}}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                 <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                                     <Image
                                                         style={tw`flex-1`}
@@ -506,14 +505,14 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <HeaderPortrait title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
+                        <HeaderPortrait title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
                         <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                     </>
             :
                 hasConnection
                 ?
                     <>
-                        <HeaderPortrait title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
+                        <HeaderPortrait title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
                         <View style={tw`flex-1 self-stretch justify-start items-center bg-white`}>
                             <>
                                 {
@@ -534,7 +533,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                         <>
                                             <View style={tw`h-10 self-stretch flex-row my-1 items-center justify-center`}>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'Todas' : 'All'}
+                                                    legend={langua === '1' ? 'Todas' : 'All'}
                                                     checked={filterUno}
                                                     width={0}
                                                     handleCheck={() => {
@@ -544,7 +543,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         Keyboard.dismiss()
                                                     }}/>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'México' : 'México'}
+                                                    legend={langua === '1' ? 'México' : 'México'}
                                                     checked={filterDos}
                                                     width={0}
                                                     handleCheck={() => {
@@ -554,7 +553,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         Keyboard.dismiss()
                                                     }}/>
                                                 <RadioButton 
-                                                    legend={language === '1' ? 'Estados Unidos' : 'United States'}
+                                                    legend={langua === '1' ? 'Estados Unidos' : 'United States'}
                                                     checked={filterTres}
                                                     width={1}
                                                     handleCheck={() => {
@@ -574,13 +573,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-start items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -591,13 +590,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mt-1 mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -607,13 +606,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -623,13 +622,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         &&
                                                             <>
                                                                 <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center mx-[2%]`}>
-                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                                 </View>
                                                                 <FlatList
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante}/>}
+                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -638,8 +637,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterUno || filterDos) && filteredDataMX.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-[30%]`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-12.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -653,8 +652,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterTres) && filteredDataUSA.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-[30%]`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-12.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -669,8 +668,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                         </>
                                     :
                                         <View style={tw`flex-1 justify-center items-center self-stretch mt-[30%]`}>
-                                            <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                            <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                            <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                            <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                             <View style={tw`w-37.5 h-37.5 mt-12.5 justify-center items-center px-[4%]`}>
                                                 <Image
                                                     style={tw`flex-1`}
@@ -688,14 +687,14 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                     </>
                 :
                     <>
-                        <HeaderPortrait title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
+                        <HeaderPortrait title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
                         <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                     </>
         :
             hasConnection
             ?
                 <View style={{flex: 1, backgroundColor: '#fff'}}>
-                    <HeaderLandscape title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
+                    <HeaderLandscape title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={visible} normal={true}/>
                     <View style={tw`flex-1 self-stretch justify-start items-center mb-[2%] mx-[${isIphone ? '5%' : '3%'}]`}>
                         <>
                             {
@@ -716,7 +715,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                     <>
                                         <View style={tw`h-10 self-stretch flex-row my-1 items-center justify-center`}>
                                             <RadioButton 
-                                                legend={language === '1' ? 'Todas' : 'All'}
+                                                legend={langua === '1' ? 'Todas' : 'All'}
                                                 checked={filterUno}
                                                 width={0}
                                                 handleCheck={() => {
@@ -726,7 +725,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     Keyboard.dismiss()
                                                 }}/>
                                             <RadioButton 
-                                                legend={language === '1' ? 'México' : 'México'}
+                                                legend={langua === '1' ? 'México' : 'México'}
                                                 checked={filterDos}
                                                 width={0}
                                                 handleCheck={() => {
@@ -736,7 +735,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     Keyboard.dismiss()
                                                 }}/>
                                             <RadioButton 
-                                                legend={language === '1' ? 'Estados Unidos' : 'United States'}
+                                                legend={langua === '1' ? 'Estados Unidos' : 'United States'}
                                                 checked={filterTres}
                                                 width={1}
                                                 handleCheck={() => {
@@ -756,7 +755,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     &&
                                                         <>
                                                             <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center`}>
-                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                             </View>
                                                             <FlatList
                                                                 style={tw`h-auto self-stretch`}
@@ -773,7 +772,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     &&
                                                         <>
                                                             <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center`}>
-                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                             </View>
                                                             <FlatList
                                                                 style={tw`h-auto self-stretch`}
@@ -789,7 +788,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     &&
                                                         <>
                                                             <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center`}>
-                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'México' : 'México'}</Text>
+                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'México' : 'México'}</Text>
                                                             </View>
                                                             <FlatList
                                                                 style={tw`h-auto self-stretch`}
@@ -805,7 +804,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                     &&
                                                         <>
                                                             <View style={tw`h-auto mx-[${orientationInfo.initial === 'PORTRAIT' ? isTablet() ? '0.5%' : 0 : '.3%'}] bg-[#f7f7f7] border border-[#dadada] p-1 flex-row justify-center items-center`}>
-                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{language === '1' ? 'Estados Unidos' : 'United States'}</Text>
+                                                                <Text style={tw`text-[#000] text-sm font-bold`}>{langua === '1' ? 'Estados Unidos' : 'United States'}</Text>
                                                             </View>
                                                             <FlatList
                                                                 style={tw`h-auto self-stretch`}
@@ -820,8 +819,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterUno || filterDos) && filteredDataMX.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-${isTablet() ? 6 : 2.5}`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -835,8 +834,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                         (filterTres) && filteredDataUSA.length === 0
                                                         &&
                                                             <View style={tw`flex-1 justify-center items-center self-stretch mt-${isTablet() ? 6 : 2.5}`}>
-                                                                <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                                                <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                                                <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                                                 <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                                                     <Image
                                                                         style={tw`flex-1`}
@@ -851,8 +850,8 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                     </>
                                 :
                                     <View style={tw`flex-1 justify-center items-center self-stretch mt-${isTablet() ? 6 : 2.5}`}>
-                                        <Text style={tw`text-black font-bold text-2xl`}>{language === '1' ? 'Sin resultados' : 'No results'}</Text>
-                                        <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{language === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
+                                        <Text style={tw`text-black font-bold text-2xl`}>{langua === '1' ? 'Sin resultados' : 'No results'}</Text>
+                                        <Text style={tw`text-base text-[#adadad] mt-2.5 text-center`}>{langua === '1' ? 'Por el momento no hay vacantes disponibles' : 'There are no vacancies available at this time'}</Text>
                                         <View style={tw`w-37.5 h-37.5 mt-2.5 justify-center items-center px-[4%]`}>
                                             <Image
                                                 style={tw`flex-1`}
@@ -870,7 +869,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 </View>
             :
                 <>
-                    <HeaderLandscape title={language === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
+                    <HeaderLandscape title={langua === '1' ? 'Vacantes' : 'Jobs Opening'} screenToGoBack={'Choose'} navigation={navigation} visible={!visible} normal={true}/>
                     <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                 </>
                 

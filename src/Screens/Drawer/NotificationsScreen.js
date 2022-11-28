@@ -108,7 +108,7 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                         </View>
                         <View style={tw`flex-1 self-stretch py-4 pr-4`}>
                             <View style={tw`flex-1 justify-center items-start`}>
-                                <Text style={[{fontSize: 19}, tw`font-bold text-black text-left mb-2`]}>{title}</Text>
+                                <Text style={[{fontSize: 16}, tw`font-bold text-black text-left mb-2`]}>{title}</Text>
                                 {
                                     oculta
                                     ?
@@ -139,7 +139,7 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                         </View>
                         <View style={tw`flex-1 self-stretch py-4 pr-4`}>
                             <View style={tw`flex-1 justify-center items-start`}>
-                                <Text style={[{fontSize: 19}, tw`font-bold text-black text-left mb-2`]}>{title}</Text>
+                                <Text style={[{fontSize: 16}, tw`font-bold text-black text-left mb-2`]}>{title}</Text>
                                 <Text style={tw`text-[#adadad] font-bold text-left`}>{body.trim()}</Text>
                             </View>
                         </View>

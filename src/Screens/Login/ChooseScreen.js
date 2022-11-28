@@ -25,7 +25,6 @@ let data = '';
 let notification = false;
 let lastNotify = 'lastNotify';
 let notificationToken = 'notificationToken';
-let valueNotificationToken = ''
 let dataNotificationValue = ''
 let optionExists = '';
 
@@ -44,6 +43,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
 
     //let now = useIsDrawerOpen()
     let now = false
+    const [valueNotificationToken, setValueNotificationToken] = useState(false)
     const [language, setLanguage] = useState()
     const [isHide, setIsHide] = useState(true)
     const [vacantsUsa, setVacantsUsa] = useState(false)
@@ -197,13 +197,12 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
         if (enabled) {
             data = null;
             data = await AsyncStorage.getItem(notificationToken) || '';
-            console.log('data; ', data)
             if(!data){
                 valueNotificationToken = await messaging().getToken();
-                console.log('value: ', valueNotificationToken)
                 await AsyncStorage.setItem(notificationToken, valueNotificationToken);
+                setValueNotificationToken(valueNotificationToken)
             } else {
-                valueNotificationToken = await AsyncStorage.getItem(notificationToken);
+                setValueNotificationToken(data)
             }
         }
     }
@@ -312,7 +311,6 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     }
 
     const getNotification = async () => {
-        console.log('entraaa')
         try{
             const body = {
                 "login": login,
@@ -320,7 +318,6 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                 "live": live,
                 "data": valueNotificationToken
             }
-            console.log('value: ', valueNotificationToken)
     
             const request = await fetch(urlApp, {
                 method: 'POST',
@@ -334,12 +331,14 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
             if(response.status === 200){
                 setVacantsUsa(response.vacantes_usa)
                 let notify = await AsyncStorage.getItem(lastNotify) || undefined;
-                if(String(notify) === String(response.info.id)) dispatch(setNotificacion(false))
-                else {
-                    if(response.info.lenght > 0){
-                        dispatch(setNotification(false))
-                    } else {
-                        dispatch(setNotification(true))
+                if(response.info.id){
+                    if(String(notify) === String(response.info.id)) dispatch(setNotification(false))
+                    else {
+                        if(response.info.lenght > 0){
+                            dispatch(setNotification(false))
+                        } else {
+                            dispatch(setNotification(true))
+                        }
                     }
                 }
             }

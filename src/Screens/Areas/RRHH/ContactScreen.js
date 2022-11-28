@@ -9,7 +9,7 @@ import Picker from 'react-native-picker-select';
 import {isIphone, live, login, urlJobs} from '../../../access/requestedData';
 import tw from 'twrnc'
 
-export default ({navigation, route: {params: {orientation, country}}}) => {
+export default ({navigation, route: {params: {language, country, id_sede}}}) => {
     const speaking_level = useRef()
     const writing_level  = useRef()
     const handle_programs  = useRef()
@@ -18,7 +18,6 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
     const phone_1  = useRef()
     const phone_2  = useRef()
 
-    const language = '2';
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
@@ -32,9 +31,8 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     const [successVisibility, setSuccessVisibility] = useState(false)
     const {handleInputChange, values, handleSetState, handleSubmitForm} = useForm({
-        currentCity: '',
-        currentCityOption: 0,
-
+        currentCity: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 'Mexico City' : id_sede === '4' ? 'Juárez' : 'El Paso, TX.',
+        currentCityOption: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 0 : id_sede === '4' ? 1 : 2,
         currentAboutUs: '',
         currentAboutUsOption: 0,
         speakingLevel: '',
@@ -72,13 +70,13 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
         ],
         
         closeOptions: [
-            {value: 'Seleccionar Opción', label: 'Seleccionar Opción'},
-            {value: 'YES', label: 'YES'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
+            {value: language === '1' ? 'SI' : 'YES', label: language === '1' ? 'SI' : 'YES'},
             {value: 'NO', label: 'NO'},
         ],
 
         optionsAboutMX: [
-            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
             {value: 'Facebook/Instagram', label: 'Facebook/Instagram'},
             {value: 'Indeed', label: 'Indeed'},
             {value: 'OCC Mundial', label: 'OCC Mundial'},
@@ -88,7 +86,7 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
         ],
 
         optionsAboutUS: [
-            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
             {value: 'Facebook/Instagram', label: 'Facebook/Instagram'},
             {value: 'Indeed', label: 'Indeed'},
             {value: language === '1' ? 'Referido' : 'Referral', label: language === '1' ? 'Referido' : 'Referral'},
@@ -97,24 +95,24 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
         ],
         
         levels: [
-            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
             {value: language === '1' ? 'Básico' : 'Basic', label: language === '1' ? 'Básico' : 'Basic'},
             {value: language === '1' ? 'Intermedio' :'Intermediate', label: language === '1' ? 'Intermedio' :'Intermediate'},
             {value: language === '1' ? 'Avanzado' : 'Advanced', label: language === '1' ? 'Avanzado' : 'Advanced'},
         ],
 
         contactOptions: [
-            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
             {value: language === '1' ? 'Llamada' : 'Call', label: language === '1' ? 'Llamada' : 'Call'},
             {value: 'WhatsApp', label: 'WhatsApp'},
             {value: language === '1' ? 'Email' : 'E-mail', label: language === '1' ? 'Email' : 'E-mail'},
         ],
         
         scheduleOptions: [
-            {value: language === '1' ? 'Seleccionar Opción' : 'Select Option', label: language === '1' ? 'Seleccionar Opción' : 'Select Option'},
-            {value: '8:00a.m. -11:00a.m.', label: '8:00a.m. - 11:00a.m.'},
-            {value: '11:00a.m. -1:00p.m.', label: '11:00a.m. - 1:00p.m.'},
-            {value: '1:00p.m. -4:00p.m.', label: '1:00p.m. - 4:00p.m.'},
+            {value: language === '1' ? 'Seleccionar opción' : 'Select option', label: language === '1' ? 'Seleccionar opción' : 'Select option'},
+            {value: '8:00a.m. - 11:00a.m.', label: '8:00a.m. - 11:00a.m.'},
+            {value: '11:00a.m. - 1:00p.m.', label: '11:00a.m. - 1:00p.m.'},
+            {value: '1:00p.m. - 4:00p.m.', label: '1:00p.m. - 4:00p.m.'},
         ],
         isRecording: '1',
         isPlaying: '1',
@@ -175,28 +173,58 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
         handleSetState({...values, currentLevelSpanish: value, currentLevelOptionSpanish: label})
     }
 
-    const handleValidate = async () => {
-        if(values.email.includes('@') && values.email.includes('.')){
+    const handleSave = async (tipo) => {
+        if(email.includes('@') && email.includes('.')){
             setInitialState({...initialState, loading: true})
-            const body = {
-                'action': 'send_mail_info',
-                'data': {
-                    'info_ciudad': values.currentCity,
-                    'info_contacto': values.currentOption,
-                    'nivel_conversacional': values.speakingLevel,
-                    'nivel_escritura': values.writingLevel,
-                    'experiencia_job_bool': values.currentCloseOption,
-                    'experiencia_job': values.companies_time,
-                    'info_nombre': values.fullName,
-                    'info_email': values.email,
-                    'info_telefono1': values.telefono_1,
-                    'info_telefono2': values.telefono_2,
-                    'opcion_contacto': values.currentContactOption,
-                    'horario_contacto': values.currentScheduleOption,
-                },
-                'login': login,
-                'live': live,
-                'language': language
+            let body = null;
+            if(tipo === 1){
+                body = {
+                    'action': 'send_formulario_contacto',
+                    'data': {
+                        "info_ciudad":currentCity,
+                        "info_contacto":currentAboutUs,
+                        "nivel_conversacional":speakingLevel,
+                        "nivel_escritura":writingLevel,
+                        "programas_computadora": programs,
+                        "experiencia_job_bool": currentClose,
+                        "info_contacto_otro": other,
+                        "experiencia_job":companies_time,
+                        "info_nombre":fullName,
+                        "info_email":email,
+                        "info_telefono1": telefono_1,
+                        "info_telefono2":telefono_2,
+                        "opcion_contacto": currentContact,
+                        "horario_contacto":currentSchedule
+                    },
+                    'login': login,
+                    'live': live,
+                    'language': language,
+                    'pais': country
+                }
+            } else {
+                body = {
+                    'action': 'send_formulario_contacto',
+                    'data': {
+                        "info_ciudad": currentCity,
+                        "info_contacto": currentAboutUs,
+                        "experiencia_job_bool": currentClose,
+                        "experiencia_job": companies_time,
+                        "info_contacto_otro": other,
+                        "nivel_ingles": currentLevelEnglish,
+                        "nivel_espanol": currentLevelSpanish,
+                        "programas_computadora": programs,
+                        "info_nombre": fullName,
+                        "info_email": email,
+                        "info_telefono1": telefono_1,
+                        "info_telefono2": telefono_2,
+                        "opcion_contacto": currentContact,
+                        "horario_contacto": currentSchedule
+                    },
+                    'login': login,
+                    'live': live,
+                    'language': language,
+                    'pais': country
+                }
             }
             
             const request = await fetch(urlJobs, {
@@ -229,68 +257,72 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
     }
 
     const handleValidateContactInfoMx = () => {
-        if(fullName !== '' && email !== '' && phone_1 !== '' && phone_2 !== ''){
-            //hacemos un metodo para validar las ultimas 2 opciones
-        } else {
-            if(currentContactOption !== 0 && currentScheduleOption !== 0){
-                //aquí mandamos a llamar al metodo para guardar 
-            } else {
-                // agregamos una alerta para decirle que llene los campos
-            }
-        }
+        if(fullName !== '' && email !== '' && telefono_1 !== '' && currentContactOption !== 0 && currentScheduleOption !== 0){
+            handleSave(1)
+        } else Alerta()
     }
 
     const handleValidateCompaniesMx = () => {
-        if(companies_time !== ''){
-            handleValidateContactInfoMx()
-        } else {
-            //una alerta para llenar companies time
-        }
-    }
-
-    const handleValidateExperienceMx = () => {
-        if(currentCloseOption !== 0 && currentCloseOption !== 1){
-            handleValidateContactInfoMx()
-        } else {
-            if(currentCloseOption === 1){
-                //funcion para validar las compañias
-                handleValidateCompaniesMx()
-            }
-            //aquí metemos una alerta para validar que seleccionen el campo de experiencia in bilingual jobs
-        }
+        if(companies_time !== '') handleValidateContactInfoMx()
+        else Alerta()
     }
 
     const handleValidateLanguagesMx = () => {
-        if(speakingLevel !== '' && writingLevel !== '' && programs !== ''){
-            handleValidateExperienceMx()
-        } else {
-            //una alerta para llenar languages de MX y programs
+        if(currentCloseOption !== 0 && currentCloseOption !== 1) handleValidateContactInfoMx()
+        else {
+            if(currentCloseOption === 1) handleValidateCompaniesMx()
+            else Alerta()
         }
     }
 
     const handleValidateAboutMx = () => {
-        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6){
-            handleValidateLanguagesMx()
-        } else {
-            if(currentAboutUsOption === 0){
-                //aquí una alerta para llenar el campo de find out about the job 
-            } else {
-                if(other !== ''){
-                    handleValidateLanguagesMx()
-                } else {
-                    //aquí una alerta para validar que se llene el campo other
-                }
-                // aqui validamos el campo de other
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6 && speakingLevel !== '' && writingLevel !== '' && programs !== '') handleValidateLanguagesMx()
+        else {
+            if(currentAboutUsOption === 0) Alerta()
+            else {
+                if(other !== '') handleValidateLanguagesMx()
+                else Alerta()
             }
         }
     }
 
-    const handleSave = () => {
-        if(currentCityOption === 0 || currentCityOption === 1){
-            handleValidateAboutMx()
-        } else {
-            console.log('entra en la segunda opcion')
+    const handleValidateCompaniesUS = () => {
+        if(currentCloseOption !== 0){
+            if(currentCloseOption === 1) {
+                if(companies_time !== ''){
+                    handleSave(2)
+                } else {
+                    Alerta()
+                }
+            }
+            else handleSave(2)
+        } else Alerta()
+    }
+
+    const handleValidateAboutUs = () => {
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 5 && currentLevelOptionEnglish !== 0 && currentLevelOptionSpanish !== 0 && currentContactOption !== 0 && currentScheduleOption !== 0 && programs !== '' && fullName !== '' && email !== '' && telefono_1 !== '') handleValidateCompaniesUS()
+        else {
+            if(currentAboutUsOption === 0 || currentLevelOptionEnglish === 0 || currentLevelOptionSpanish === 0 || currentContactOption === 0 || currentScheduleOption === 0 || programs === '' || fullName === '' || email === '' || telefono_1 === '') Alerta()
+            else {
+                if(other !== '') handleValidateCompaniesUS()
+                else Alerta()
+            }
         }
+    }
+
+    const handleValidate = () => {
+        if(currentCityOption === 0 || currentCityOption === 1) handleValidateAboutMx()
+        else handleValidateAboutUs()
+    }
+
+    const Alerta = () => {
+        Alert.alert(
+            language === '1' ? 'Campos Vacíos' : 'Empty Fields',
+            language === '1' ? 'Revise y llene los campos faltantes' : 'Review and fill in the missing fields',
+            [
+                { text: 'OK'}
+            ]
+        )
     }
 
     return(
@@ -314,14 +346,9 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
                                     <View style={tw`mt-[1.5%]`}/>
                                     <Title title={language === '1' ? 'Información Básica' : 'Basic Information'} tipo={1} icon={'child'} hasBottom={false}/>
                                     <Text style={titleStyle}>{language === '1' ? 'Ciudad' : 'City'}</Text>
-                                    <View style={pickerStyle}>
-                                        <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
-                                            <Picker
-                                                value={currentCity}
-                                                onValueChange={(itemValue, itemIndex) => handleActionUno(itemValue, itemIndex)}
-                                                items={cityOptions}
-                                                placeholder={{}}
-                                                />
+                                    <View style={[pickerStyle, tw`bg-[#f7f7f7]`]}>
+                                        <View style={tw`flex-1 justify-center items-start ios:px-1 android:px-4`}>
+                                            <Text style={tw`text-[#000] text-base`}>{currentCity}</Text>
                                         </View>
                                     </View>
 
@@ -421,10 +448,11 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
                                                         </>
                                                 }
                                                 
-                                                <Title title={language === '1' ? 'Información de Contacto' : 'Contact Information'} tipo={1} icon={'child'} hasBottom={false}/>
+                                                <Title title={language === '1' ? 'Información de Contacto' : 'Contact Information'} tipo={1} icon={'child'} hasBottom={true}/>
                                                 <Text style={titleStyle}>{language === '1' ? 'Nombre completo' : `Full name`}</Text>
                                                 <Input
                                                     value={fullName}
+                                                    autoCapitalize={'words'}
                                                     onChangeText={(e) => handleInputChange(e, 'fullName')}
                                                     placeholder={language === '1' ? 'Especifica tu nombre completo' : 'Specify your full name'}
                                                     ref={full_name}
@@ -499,7 +527,6 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
                                             </>
                                         :
                                             <>
-                                                <View style={tw`mb-[1.5%]`}/>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en Call Center o empleos de Atención a Clientes?' : 'Do you have experience in Call Center or Customer Service jobs?'}</Text>
                                                 <View style={[pickerStyle]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
@@ -575,8 +602,8 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Puedes manejar distintas aplicaciones y programas en la computadora?' : `Are you able to handle different apps and programs on the computer?`}</Text>
                                                 <Input
-                                                    value={handlePrograms}
-                                                    onChangeText={(e) => handleInputChange(e, 'handlePrograms')}
+                                                    value={programs}
+                                                    onChangeText={(e) => handleInputChange(e, 'programs')}
                                                     placeholder={language === '1' ? 'Especifica' : 'Especify'}
                                                     onSubmitEditing={() => full_name.current.focus()}
                                                 />
@@ -585,6 +612,7 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
                                                 <Text style={titleStyle}>{language === '1' ? 'Nombre completo' : `Full name`}</Text>
                                                 <Input
                                                     value={fullName}
+                                                    autoCapitalize={'words'}
                                                     onChangeText={(e) => handleInputChange(e, 'fullName')}
                                                     placeholder={language === '1' ? 'Especifica tu nombre completo' : 'Specify your full name'}
                                                     ref={full_name}
@@ -659,7 +687,7 @@ export default ({navigation, route: {params: {orientation, country}}}) => {
 
                                             </>
                                     }
-                                    <TouchableWithoutFeedback onPress={() => handleSave()}>
+                                    <TouchableWithoutFeedback onPress={() => handleValidate()}>
                                         <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl self-stretch flex-row mb-${isIphone ? 1.5 : 'px'} shadow-md mt-2`}>
                                             <Icon name={'paper-plane'} size={18} color={'#fff'}/>
                                             <Text style={tw`text-white font-bold text-lg ml-2.5`}>{language === '1' ? 'Envíar' : 'Send'}</Text>

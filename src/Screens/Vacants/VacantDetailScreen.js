@@ -9,7 +9,8 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
 
-export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer, country}}}) => {
+export default ({navigation, route: {params: {language, orientation, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer, country, id_sede}}}) => {
+    console.log('language: ', language)
     const [contador, setContador] = useState(0)
     const {handlePath} = useNavigation()
     const {orientationInfo} = useOrientation({
@@ -20,17 +21,18 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
     });
 
     const [initialState, setInitialState] = useState({
-        lg: parseInt(language),
+        lg: language,
         ori: orientation,
         name: nombre,
         location: ubicacion,
         salary: sueldo,
         description: header,
         benefits: body,
-        requeriments: footer
+        requeriments: footer,
+        sede: id_sede
     })
 
-    const {lg, ori, name, location, salary, description, benefits, requeriments} = initialState
+    const {lg, sede, name, location, salary, description, benefits, requeriments} = initialState
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useFocusEffect(
@@ -48,9 +50,9 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                     {
                         orientationInfo.initial === 'PORTRAIT'
                         ?
-                            <HeaderPortrait title={lg === 1 ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderPortrait title={language === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
                         :
-                            <HeaderLandscape title={lg === 1 ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderLandscape title={language === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
                     }
                     <View style={tw`self-stretch flex-1 px-[3%] bg-[#fff]`}>
                         <ScrollView
@@ -64,38 +66,38 @@ export default ({navigation, route: {params: {language, orientation, nombre, ubi
                                 <View style={tw`border-b border-b-[#f7f7f7] mb-2.5 pb-[2%] mt-[3%]`}>
                                     <Text style={tw`text-2xl font-bold text-black`}>{name}</Text>
                                     <Text style={tw`text-lg text-[#adadad] mb-2.5`}>Telat</Text>
-                                    <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Ubicación' : 'Location'}</Text>
+                                    <Text style={tw`text-lg font-bold text-black`}>{language === '1' ? 'Ubicación' : 'Location'}</Text>
                                     <Text style={tw`text-black mb-2.5`}>{location}</Text>
-                                    <Text style={tw`text-lg text-black font-bold`}>{lg === 1 ? 'Salario' : 'Salary'}</Text>
+                                    <Text style={tw`text-lg text-black font-bold`}>{language === '1' ? 'Salario' : 'Salary'}</Text>
                                     <View style={tw`h-auto justify-center items-start mt-1.5 self-stretch`}>
                                         <Text style={tw`text-lg text-black mb-1.5 bg-[#d1d1d1]`}>{salary}</Text>
                                     </View>
                                 </View>
-                                <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Descripción\n' : 'Description\n'}</Text>
+                                <Text style={tw`text-lg font-bold text-black`}>{language === '1' ? 'Descripción\n' : 'Description\n'}</Text>
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
                                         value={'<div style="color: black">' + description + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Ofrecemos\n' : 'We Offer\n'}</Text>
+                                <Text style={tw`text-lg font-bold text-black`}>{language === '1' ? 'Ofrecemos\n' : 'We Offer\n'}</Text>
                                 <View style={tw`flex-1 mb-6`}>
                                     <HTMLView
                                         value={'<div style="color: black">' + benefits + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <Text style={tw`text-lg font-bold text-black`}>{lg === 1 ? 'Requisitos\n' : 'Requirements\n'}</Text>
+                                <Text style={tw`text-lg font-bold text-black`}>{language === '1' ? 'Requisitos\n' : 'Requirements\n'}</Text>
                                 <View style={tw`flex-1 mb-4`}>
                                     <HTMLView
                                         value={'<div style="color: black">' + requeriments + '</div>'}
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {language: language, orientation: orientationInfo.initial, country: country})}>
+                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {language: lg, orientation: orientationInfo.initial, country: country, id_sede: sede})}>
                                     <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl my-2.5 self-stretch mb-${isIphone ? 6 : 4} flex-row shadow-md`}>
                                         <IonIcons name={'account-check'} size={24} color={'#fff'}/>
-                                        <Text style={tw`text-white font-bold text-lg ml-2.5`}>{lg === 1 ? 'Postularme' : 'Apply'}</Text>
+                                        <Text style={tw`text-white font-bold text-lg ml-2.5`}>{language === '1' ? 'Postularme' : 'Apply'}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
                             </>
