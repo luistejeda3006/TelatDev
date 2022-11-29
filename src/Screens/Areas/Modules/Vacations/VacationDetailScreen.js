@@ -163,7 +163,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         if(ending !== '--/--/----'){
             const fecha_uno = new Date((initial).substring(0,4), (initial).substring(5,7), (initial).substring(8,10))
             const fecha_dos = new Date((ending).substring(0,4), (ending).substring(5,7), (ending).substring(8,10))
-            if(fecha_uno < fecha_dos){
+            if(fecha_uno <= fecha_dos){
                 try{
                     setLoading(true)
                     console.log('inicio: ', initial)
@@ -825,7 +825,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 <TextInput 
                                     editable={false}
                                     value={range}
-                                    style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7]`]}
+                                    style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7] ios:pb-1.5`]}
                                 />
                             </View>
                             <MultiText 

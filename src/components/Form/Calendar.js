@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import {useState} from 'react'
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import {formatDate} from '../../js/dates'
-import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 let initialDate = new Date()
 export default ({dateLabel = '', language = '1', getValue = () => {}, shortFormat = true, isModule = false, marginBottom = true,}) => {
@@ -26,7 +25,7 @@ export default ({dateLabel = '', language = '1', getValue = () => {}, shortForma
     
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 20, height: 'auto', alignSelf: 'stretch'}}>
-            <TouchableOpacity style={[styles.picker, {justifyContent: shortFormat ? 'flex-start' : 'center', borderColor: '#dadada', marginBottom: marginBottom ? 10 : 0}]} onPress={() => setOpen(true)}>
+            <TouchableOpacity style={[styles.picker, {justifyContent: shortFormat ? 'flex-start' : 'center', borderColor: '#adadad', marginBottom: marginBottom ? 10 : 0}]} onPress={() => setOpen(true)}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={{color: '#adadad', fontSize: isModule ? 12 : 15, fontWeight: isModule ? 'bold' : 'normal'}}>{dateLabel ? dateLabel : 'Seleccionar fecha'}</Text>
                 </View>

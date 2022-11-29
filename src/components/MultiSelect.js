@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import tw from 'twrnc'
 //este componente se tiene que hacer reutilizable
 export default ({handleAddElement, information, label}) => {
     const [showList, setShowList] = useState(false);
@@ -43,7 +43,7 @@ export default ({handleAddElement, information, label}) => {
     return(
         <>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.box} onPress={() => setShowList(!showList)}>
+                <TouchableOpacity style={[styles.box, tw`shadow-md bg-[#fff]`]} onPress={() => setShowList(!showList)}>
                     <View style={{flex: 1, alignSelf: 'stretch', justifyContent:'center'}}>
                         <Text style={{fontSize: 15, color: '#000'}}>{label}</Text>
                     </View>
@@ -67,7 +67,7 @@ export default ({handleAddElement, information, label}) => {
 
                     }
                 </View>
-                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                <View style={{flex: 1, alignSelf: 'stretch', marginHorizontal: 5}}>
                     {
                         !showList
                         &&
@@ -100,11 +100,10 @@ const styles = StyleSheet.create({
         height: 50,
         alignSelf: 'stretch',
         flexDirection: 'row',
-        borderColor: '#CBCBCB',
-        borderWidth: 1,
         marginBottom: 5,
         alignItems: 'center',
         paddingHorizontal: 12,
+        marginHorizontal: 5,
         borderRadius: 16
     },
     list:{

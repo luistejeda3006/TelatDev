@@ -110,7 +110,9 @@ export default () => {
 			<Stack.Screen name={'Unlogged'} component={StackCandidate} />
 			<Drawer.Screen name={'Logged'} component={DrawerEmployeeRoute} />
 			<Stack.Screen name={'Dashboard'} component={OptionsMenuScreen} />
-			<Stack.Screen name={'Notifications'} component={NotificationsScreen} />
+			<Stack.Group screenOptions={{ presentation: 'modal' }}>
+				<Stack.Screen name={'Notifications'} component={NotificationsScreen} />
+			</Stack.Group>
 			<Stack.Screen name={'Development'} component={DevelopmentRoute} />
 		</Stack.Navigator>
 	</NavigationContainer>

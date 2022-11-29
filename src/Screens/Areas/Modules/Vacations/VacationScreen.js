@@ -135,7 +135,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 {
                     empleados.length > 1
                     ?
-                        <TouchableOpacity style={tw`flex-1 h-7.5 mb-[${oculta ? 2.5 : 0}]`} onPress={() => handleHideEmployee(id_empleado)}>
+                        <TouchableOpacity style={tw`flex-1 h-7.5 mb-2`} onPress={() => handleHideEmployee(id_empleado)}>
                             <View style={tw`h-auto self-stretch mb-5`}>
                                 <View style={tw`flex-row items-center h-7.5 justify-center items-center`}>
                                     <View style={tw`h-auto flex-1 flex-row bg-white justify-center items-center`}>
@@ -162,7 +162,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         </TouchableOpacity>
                     :
-                        <View style={tw`flex-1 h-7.5 mb-[${oculta ? 2.5 : 0}]`}>
+                        <View style={tw`flex-1 h-7.5 mb-2.5`}>
                             <View style={tw`h-auto self-stretch mb-5`}>
                                 <View style={tw`flex-row items-center h-7.5 justify-center items-center`}>
                                     <View style={tw`h-auto flex-1 flex-row bg-white justify-center items-center`}>
@@ -371,7 +371,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             contentContainerStyle={{paddingTop: paddingTop}}
                         >
                             <View style={[container, {marginBottom: isIphone ? 25 : 0}]}>
-                                <View style={tw`h-auto self-stretch pt-1.5`}>
+                                <View style={tw`h-auto self-stretch pt-2.5`}>
                                     <Title title={language === '1' ? 'PRIMAS VACACIONALES' : 'VACATION PREMIUMS'} icon={'child'} tipo={1} hasBottom={false} top={true}/>
                                 </View>
                                 {

@@ -8,7 +8,7 @@ let notification = false;
 
 export default ({navigation, language, orientation, notify = undefined, screen = undefined}) => {
     notification = useSelector(selectNotification)
-
+    
     return(
         <View style={{height: isIphone ? 70 : 50, alignSelf: 'stretch', backgroundColor: '#383838', flexDirection: 'row'}}>
             <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: isIphone ? 13 : 0}} onPress={() => (screen === 3 || screen === 4) ? navigation.navigate('Logged') : navigation.navigate('Dashboard', {language, orientation})}>

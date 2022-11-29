@@ -279,7 +279,7 @@ export default ({navigation}) => {
 
     useEffect(() => {
         getInformation()
-    },[hasConnection, arrived, valueNotificationToken])
+    },[hasConnection, valueNotificationToken])
 
     const getVersion = async () => {
         try{
@@ -327,7 +327,7 @@ export default ({navigation}) => {
     }
     
     const handleNotification = async () => {
-        if(dataNotificationValue && valueSendNotification === '0'){
+        if(dataNotificationValue){
             dataNotificationValue = JSON.parse(dataNotificationValue)
             const title = dataNotificationValue.notification.title
             const body = dataNotificationValue.notification.body

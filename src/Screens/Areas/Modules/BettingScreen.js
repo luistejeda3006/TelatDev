@@ -368,9 +368,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             duration={1500}	
                             animation={'rubberBand'}
                             iterationCount={'infinite'}
-                            style={tw`w-4 h-4 bg-white rounded-3xl absolute right-0 justify-center items-center ios:pl-px border border-[${Orange}]`}
+                            style={tw`w-4 h-4 bg-white rounded-3xl absolute right-0 justify-center items-center ios:pl-px border border-[${Blue}]`}
                         >
-                            <Icon name={'exclamation'} size={9} color={Orange} />
+                            <Icon name={'exclamation'} size={9} color={Blue} />
                         </Animatable.View>
                 }
             </>

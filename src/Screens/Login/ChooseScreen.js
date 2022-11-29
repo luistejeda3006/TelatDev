@@ -197,10 +197,11 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
         if (enabled) {
             data = null;
             data = await AsyncStorage.getItem(notificationToken) || '';
+            console.log('data: ', data)
             if(!data){
-                valueNotificationToken = await messaging().getToken();
-                await AsyncStorage.setItem(notificationToken, valueNotificationToken);
-                setValueNotificationToken(valueNotificationToken)
+                let temporal = await messaging().getToken();
+                await AsyncStorage.setItem(notificationToken, temporal);
+                setValueNotificationToken(temporal)
             } else {
                 setValueNotificationToken(data)
             }

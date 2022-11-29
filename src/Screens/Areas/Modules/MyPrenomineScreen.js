@@ -1228,7 +1228,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                         &&
                             checadas.map(x =>
                                 <View style={tw`h-auto self-stretch mt-1.5 mx-0.5 mb-1.5`} key={x.id}>
-                                    <View style={tw`flex-row p-1.5 bg-['#FEE188'] rounded-lg shadow-md`}>
+                                    <View style={tw`flex-row p-1.5 bg-[#FEE188] rounded-lg shadow-md`}>
                                         <View style={tw`justify-center items-center`}>
                                             <View style={tw`bg-[#00B800] w-3.5 h-3.5 rounded-lg`}/>
                                         </View>

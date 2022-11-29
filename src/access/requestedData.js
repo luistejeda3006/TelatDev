@@ -1,6 +1,6 @@
 import {Platform} from 'react-native'
 
-export const version = Platform.OS === 'ios' ? '1.1.0' : '2.1.0'; //hasta el momento va la 1.3.5
+export const version = Platform.OS === 'ios' ? '1.2.0' : '2.2.0'; //hasta el momento va la 1.3.5
 export const siteKey = '6Lf3qkYUAAAAAOHdvDrADAxIEOHs9dCttWCgHukI';
 export const baseUrl = 'https://telat.mx/intranet/';
 export const urlApp = 'https://telat.mx/webservices/api/acceso';
@@ -17,7 +17,7 @@ export const contactEmail = 'talento@telat-group.com';
 export const login = 'App-Telat';
 export const psw = 'h*39/SW1#2ap7@J6e!Ta&';
 export const key = 'H4%Sp8#i&25a<079~';
-export const live = true;
+export const live = false;
 export const keyLocation = 'cnd7vnHGYstE4WG5VP3XblCarrpNHGw';
 export const origen = 'APP'
 export const isIphone = Platform.OS === 'ios' ? true : false

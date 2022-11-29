@@ -1135,7 +1135,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     <Text style={styles.title}>{'Mensaje'}</Text>
                                     <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
                                     <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
-                                    <View style={{flexDirection: 'row'}}>
+                                    <View style={{flexDirection: 'row', marginBottom: 10}}>
                                         <TouchableOpacity onPress={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={{flex: 1, height: 40, backgroundColor: '#f7f7f7', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
                                             <Icon name={'times'} size={22} color={'#000'} />
                                             <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000', marginLeft: 12}}>Cancelar</Text>
@@ -1174,8 +1174,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                             </Modal>
                             <ModalLoading visibility={loading}/>
                             <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
-                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                         </View>
+                        <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                     </>
                 :
                     <>

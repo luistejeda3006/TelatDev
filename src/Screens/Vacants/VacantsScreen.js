@@ -230,12 +230,12 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
         }
     }
 
-    const Vacant = ({nombre, sueldo, ubicacion, region, descripcion, requisitos, beneficios, telefono, id_sede}) => {
+    const Vacant = ({id, nombre, sueldo, ubicacion, region, descripcion, requisitos, beneficios, telefono, id_sede}) => {
         return (
             orientationInfo.initial === 'PORTRAIT'
             ?
                 <View style={tw`flex-1 my-[${orientationInfo.initial === 'PORTRAIT' ? '2%': '0%'}] h-auto justify-center items-center bg-white mx-[2%]`}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, id: id, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
                         <View style={tw`h-auto self-stretch justify-center items-start p-2.5 rounded-md shadow-md bg-white`}>
                             <Text style={tw`text-[#000] text-base font-bold`}>{nombre}</Text>
                             <View style={tw`h-auto justify-center items-center mt-1.5`}>
@@ -277,7 +277,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 </View>
             :
                 <View style={tw`w-[100%] h-auto my-[0.7%]`}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('VacantDetail', {language: langua, orientation: orientationInfo.initial, id: id, nombre: nombre, ubicacion: ubicacion, descripcion: descripcion, beneficios: beneficios, requisitos: requisitos, sueldo: sueldo, telefono: telefono, country: region, id_sede: id_sede})} >
                         <View style={tw`flex-1 justify-start items-start p-2.5 border border-[#dadada] rounded-md`}>
                             <Text style={tw`text-[#000] text-base font-bold`}>{nombre}</Text>
                             <View style={tw`h-auto justify-center items-center mt-1.5`}>
@@ -393,7 +393,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -410,7 +410,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -426,7 +426,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -442,7 +442,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={item.tipo_vacante} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -579,7 +579,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -596,7 +596,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -612,7 +612,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataMX}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>
@@ -628,7 +628,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                                                     style={tw`h-auto self-stretch`}
                                                                     data={filteredDataUSA}
                                                                     numColumns={1}
-                                                                    renderItem={({item}) => <Vacant nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language}/>}
+                                                                    renderItem={({item}) => <Vacant id={item.id} nombre={item.nombre} sueldo={item.sueldo} ubicacion={item.ubicacion} region={item.region} descripcion={item.descripcion} beneficios={item.beneficios} requisitos={item.requisitos} telefono={item.telefono} language={language} id_sede={item.id_sede}/>}
                                                                     keyExtractor={item => String(item.id)}
                                                                 />
                                                             </>

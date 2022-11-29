@@ -1,15 +1,48 @@
 import React, {useRef, useState, useEffect} from 'react'
-import {View, Text, TouchableWithoutFeedback, ScrollView, Platform, Image, Alert, BackHandler, SafeAreaView, StatusBar} from 'react-native'
+import {View, Text, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, StatusBar} from 'react-native'
 import {useConnection, useOrientation, useNavigation, useForm, useScroll} from '../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp'
-import {HeaderPortrait, HeaderLandscape, Input, Modal, MultiText, ModalLoading, FailedNetwork, Title} from '../../../components'
+import {request, PERMISSIONS} from 'react-native-permissions';
+import {HeaderPortrait, Input, Modal, MultiText, ModalLoading, FailedNetwork, Title} from '../../../components'
 import Picker from 'react-native-picker-select';
 import {isIphone, live, login, urlJobs} from '../../../access/requestedData';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import * as Animatable from 'react-native-animatable';
+import RNFetchBlob from 'rn-fetch-blob'
 import tw from 'twrnc'
 
-export default ({navigation, route: {params: {language, country, id_sede}}}) => {
+let cuenta = 0;
+
+let audioRecorderPlayer = new AudioRecorderPlayer();
+audioRecorderPlayer.setSubscriptionDuration(0.05)
+let initialization = {
+    isLoggingIn: false,
+    recordSecs: 0,
+    recordTime: '00:00:00',
+    currentPositionSec: 0,
+    currentDurationSec: 0,
+    playTime: '00:00:00',
+    duration: '00:00:00',
+    progress: 0
+}
+
+let segundos = null;
+let minutos = null;
+let milisegundos = null;
+let split = null;
+let total = null;
+
+let segundos_play = null;
+let milisegundos_play = null;
+let split_play = null;
+let total_play = null;
+let encrypted = null;
+let filePath = null
+
+export default ({navigation, route: {params: {id, language, country, id_sede}}}) => {
     const speaking_level = useRef()
     const writing_level  = useRef()
     const handle_programs  = useRef()
@@ -17,8 +50,6 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
     const correo  = useRef()
     const phone_1  = useRef()
     const phone_2  = useRef()
-
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
     const {orientationInfo} = useOrientation({
@@ -117,6 +148,10 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
         isRecording: '1',
         isPlaying: '1',
     })
+    const [change, setChange] = useState(false)
+    const [recording, setRecording] = useState(initialization)
+    const [path, setPath] = useState('')
+    const {recordTime, playTime, progress} = recording
 
     useEffect(() => {
         const backAction = () => {
@@ -129,7 +164,10 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                     onPress: () => null,
                     style: 'cancel'
                 },
-                {text: language === '1' ? 'Sí, estoy seguro' : 'Yes, I am sure', onPress: () => navigation.navigate('VacantDetail')}
+                {text: language === '1' ? 'Sí, estoy seguro' : 'Yes, I am sure', onPress: () => {
+                    onLoad()
+                    navigation.navigate('VacantDetail')
+                }}
             ]
         );
         return true;
@@ -143,8 +181,174 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
     return () => backHandler.remove();
     }, [language]);
 
-    const {cityOptions, closeOptions, optionsAboutMX, optionsAboutUS, levels, contactOptions, scheduleOptions, loading} = initialState
+    const {isRecording, isPlaying, closeOptions, optionsAboutMX, optionsAboutUS, levels, contactOptions, scheduleOptions, loading} = initialState
     
+    const requestPermissions = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const grants = await PermissionsAndroid.requestMultiple([
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+                ]);
+            
+                // console.log('write external stroage', grants);
+                
+                if (
+                    grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grants['android.permission.RECORD_AUDIO'] ===
+                    PermissionsAndroid.RESULTS.GRANTED
+                ) {
+                    // console.log('Permissions granted');
+                } else {
+                    // console.log('All required permissions not granted');
+                    return;
+                }
+            } catch (err) {
+                console.warn(err);
+                return;
+            }
+        }
+        else{
+            try{
+                const permiso = await request(PERMISSIONS.IOS.MICROPHONE)
+                if(permiso === 'granted' || permiso === 'unavailable'){
+                }
+                else {
+
+                }
+            }catch(err){
+                console.warn(err)
+                return;
+            }
+        }
+    }
+
+    const onLoad = async () => {
+        handlePath('VacantDetail')
+        setRecording(initialization)
+        setInitialState({...initialState, isRecording: '1', isPlaying: '1'})
+        const result = await audioRecorderPlayer.stopRecorder();
+        setPath(result) 
+        audioRecorderPlayer.removeRecordBackListener();
+    }
+
+    useEffect(() => {
+        onLoad()
+    },[])
+
+    useEffect(() => {
+        requestPermissions()
+    }, [])
+
+    const onStartRecord = async () => {
+        try{
+            const result = await audioRecorderPlayer.startRecorder();
+            audioRecorderPlayer.addRecordBackListener((e) => {
+                setRecording({...recording, 
+                    recordSecs: e.currentPosition, 
+                    recordTime: audioRecorderPlayer.mmssss(
+                    Math.floor(e.currentPosition),
+                ),})
+                split = audioRecorderPlayer.mmssss(
+                Math.floor(e.currentPosition),
+                ).split(':')
+                if(!isIphone){
+                    minutos = parseInt(split[0])
+                    segundos = parseInt(split[1])
+                    milisegundos = parseInt(split[2])
+                    total = ((minutos * 6000) + (segundos * 100) + milisegundos)
+                    if(minutos === 1) {
+                        onStopRecord(2)
+                    }
+                    return;
+                }
+                else{
+                    minutos = parseInt(split[0])
+                    segundos = parseInt(split[1])
+                    milisegundos = parseInt(split[2])
+                    total = ((minutos * 6000) + (segundos * 100) + milisegundos)
+                    if(segundos === 50) {
+                        onStopRecord(2)
+                    }
+                    return;
+                }
+            });
+            setPath(result)
+        }catch(e){
+            console.log('error en start: ', e)
+            setRecording(initialization)
+            setInitialState({...initialState, isRecording: '1', isPlaying: '1'})
+            const result = await audioRecorderPlayer.stopRecorder();
+            audioRecorderPlayer.removeRecordBackListener();
+            Alert.alert(
+                language === '1' ? 'Advertencia' : 'Warning',
+                language === '1' ? 'Intenta grabar nuevamente tu audio.' : 'Try recording your audio again.',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        }
+    }
+
+    const onStopRecord = async (type) => {
+        try{
+            const result = await audioRecorderPlayer.stopRecorder();
+            audioRecorderPlayer.removeRecordBackListener();
+            if(type === 1){
+                setRecording({...recording, recordSecs: 0})
+                setInitialState({...initialState, isRecording: '3'})
+            }
+            else {
+                if(isIphone){
+                    setRecording({...recording, recordSecs: 0, recordTime: '00:50:00'})
+                    setInitialState({...initialState, isRecording: '3'})
+                }
+                else {
+                    setRecording({...recording, recordSecs: 0, recordTime: '01:00:00'})
+                    setInitialState({...initialState, isRecording: '3'})
+                }
+            }
+        }catch(e){
+            setRecording(initialization)
+            setInitialState({...initialState, isRecording: '1', isPlaying: '1'})
+            const result = await audioRecorderPlayer.stopRecorder();
+            audioRecorderPlayer.removeRecordBackListener();
+            Alert.alert(
+                language === '1' ? 'Advertencia' : 'Warning',
+                language === '1' ? 'Solo debes presionar una vez el botón de grabar' : 'You only have to press the record button once.',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        }
+    }
+
+    const handleIsRecording = async () => {
+        if(isRecording === '1'){
+            onStartRecord()
+            setInitialState({...initialState, isRecording: '2'})
+            setChange(false)
+        }
+        else {
+            if(segundos >= 40){
+                onStopRecord(1)
+            }
+            else {
+                Alert.alert(
+                    language === '1' ? 'Audio Inválido' : 'Invalid Audio',
+                    language === '1' ? 'El audio debe ser minimo de 40 segundos' : 'The audio must be at least 40s',
+                    [
+                        { text: 'OK'}
+                    ]
+                )
+            }
+        }
+    }
+
     const handleActionUno = (value, label) => {
         handleSetState({...values, currentCity: value, currentCityOption: label})
     }
@@ -174,85 +378,123 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
     }
 
     const handleSave = async (tipo) => {
-        if(email.includes('@') && email.includes('.')){
-            setInitialState({...initialState, loading: true})
-            let body = null;
-            if(tipo === 1){
-                body = {
-                    'action': 'send_formulario_contacto',
-                    'data': {
-                        "info_ciudad":currentCity,
-                        "info_contacto":currentAboutUs,
-                        "nivel_conversacional":speakingLevel,
-                        "nivel_escritura":writingLevel,
-                        "programas_computadora": programs,
-                        "experiencia_job_bool": currentClose,
-                        "info_contacto_otro": other,
-                        "experiencia_job":companies_time,
-                        "info_nombre":fullName,
-                        "info_email":email,
-                        "info_telefono1": telefono_1,
-                        "info_telefono2":telefono_2,
-                        "opcion_contacto": currentContact,
-                        "horario_contacto":currentSchedule
-                    },
-                    'login': login,
-                    'live': live,
-                    'language': language,
-                    'pais': country
+        if(cuenta === 0){
+            // fileUri is a string like 'file:///var/mobile/Containers/Data/Application/9B754FAA-2588-4FEC-B0F7-6D890B7B4681/Documents/filename'
+            if (Platform.OS === 'ios') {
+                let arr = path.split('/')
+                const dirs = RNFetchBlob.fs.dirs
+                filePath = `/var/mobile/Containers/Data/Application/${arr[8]}/Library/Caches/sound.m4a`
+            } else {
+                filePath = path
+            }
+            encrypted = await RNFetchBlob.fs.readFile(filePath, 'base64')
+            console.log('encrptyed: ', encrypted)
+    
+            if(isRecording === '3'){
+                if(email.includes('@') && email.includes('.')){
+                    if(minutos === 1 || segundos >= 40){
+                        cuenta = cuenta + 1;
+                        setInitialState({...initialState, loading: true})
+                        let body = null;
+                        if(tipo === 1){
+                            body = {
+                                'action': 'send_formulario_contacto',
+                                'data': {
+                                    "info_ciudad":currentCity,
+                                    "info_contacto":currentAboutUs,
+                                    "nivel_conversacional":currentLevelEnglish,
+                                    "nivel_escritura":currentLevelSpanish,
+                                    "programas_computadora": programs,
+                                    "experiencia_job_bool": currentClose,
+                                    "info_contacto_otro": other,
+                                    "experiencia_job":companies_time,
+                                    "info_nombre":fullName,
+                                    "info_email":email,
+                                    "info_telefono1": telefono_1,
+                                    "info_telefono2":telefono_2,
+                                    "opcion_contacto": currentContact,
+                                    "horario_contacto":currentSchedule,
+                                    'id_vacante': id,
+                                    'audio': encrypted
+                                },
+                                'login': login,
+                                'live': live,
+                                'language': language,
+                                'pais': country
+                            }
+                        } else {
+                            body = {
+                                'action': 'send_formulario_contacto',
+                                'data': {
+                                    "info_ciudad": currentCity,
+                                    "info_contacto": currentAboutUs,
+                                    "experiencia_job_bool": currentClose,
+                                    "experiencia_job": companies_time,
+                                    "info_contacto_otro": other,
+                                    "nivel_ingles": currentLevelEnglish,
+                                    "nivel_espanol": currentLevelSpanish,
+                                    "programas_computadora": programs,
+                                    "info_nombre": fullName,
+                                    "info_email": email,
+                                    "info_telefono1": telefono_1,
+                                    "info_telefono2": telefono_2,
+                                    "opcion_contacto": currentContact,
+                                    "horario_contacto": currentSchedule,
+                                    'id_vacante': id,
+                                    'audio': encrypted
+                                },
+                                'login': login,
+                                'live': live,
+                                'language': language,
+                                'pais': country
+                            }
+                        }
+                        
+                        const request = await fetch(urlJobs, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(body)
+                        });
+                    
+                        const {response} = await request.json();
+                        if(response.status === 200){
+                            cuenta = 0;
+                            setSuccessVisibility(true)
+                            setInitialState({...initialState, loading: false})
+                            setTimeout(() => {
+                                setSuccessVisibility(false)
+                                navigation.navigate('VacantDetail')
+                            }, 4500)
+                        }
+                    } else {
+                        Alert.alert(
+                            language === '1' ? 'Audio Inválida' : 'Invalid Audio',
+                            language === '1' ? 'El audio debe ser minimo de 40 segundos' : 'The audio must be 40s minumum',
+                            [
+                                { text: 'OK'}
+                            ]
+                        )
+                    }
+                } else {
+                    Alert.alert(
+                        language === '1' ? 'Correo Inválido' : 'Invalid Email',
+                        language === '1' ? 'El correo ingresado no es válido' : 'The email entered is invalid',
+                        [
+                            { text: 'OK'}
+                        ]
+                    )
                 }
             } else {
-                body = {
-                    'action': 'send_formulario_contacto',
-                    'data': {
-                        "info_ciudad": currentCity,
-                        "info_contacto": currentAboutUs,
-                        "experiencia_job_bool": currentClose,
-                        "experiencia_job": companies_time,
-                        "info_contacto_otro": other,
-                        "nivel_ingles": currentLevelEnglish,
-                        "nivel_espanol": currentLevelSpanish,
-                        "programas_computadora": programs,
-                        "info_nombre": fullName,
-                        "info_email": email,
-                        "info_telefono1": telefono_1,
-                        "info_telefono2": telefono_2,
-                        "opcion_contacto": currentContact,
-                        "horario_contacto": currentSchedule
-                    },
-                    'login': login,
-                    'live': live,
-                    'language': language,
-                    'pais': country
-                }
+                Alert.alert(
+                    language === '1' ? 'Grabando Audio' : 'Recording Audio',
+                    language === '1' ? 'La grabación no ha sido detenida.' : 'The recording has not been stopped',
+                    [
+                        { text: 'OK'}
+                    ]
+                )
             }
-            
-            const request = await fetch(urlJobs, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body)
-            });
-        
-            const {response} = await request.json();
-            if(response.status === 200){
-                setSuccessVisibility(true)
-                setInitialState({...initialState, loading: false})
-                setTimeout(() => {
-                    setSuccessVisibility(false)
-                    navigation.navigate('VacantDetail')
-                }, 4500)
-            }
-        }
-        else {
-            Alert.alert(
-                language === '1' ? 'Correo Inválido' : 'Invalid Email',
-                language === '1' ? 'El correo ingresado no es válido' : 'The email entered is invalid',
-                [
-                    { text: 'OK'}
-                ]
-            )
         }
     }
 
@@ -276,7 +518,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
     }
 
     const handleValidateAboutMx = () => {
-        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6 && speakingLevel !== '' && writingLevel !== '' && programs !== '') handleValidateLanguagesMx()
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6 && currentLevelEnglish !== '' && currentLevelSpanish !== '' && programs !== '') handleValidateLanguagesMx()
         else {
             if(currentAboutUsOption === 0) Alerta()
             else {
@@ -333,15 +575,16 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
+                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} extraAction={() => onLoad()} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
                         <View style={tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '4%'}] bg-white`}>
-                            <ScrollView
+                            <KeyboardAwareScrollView
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
                                 onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}}
                             >
+                                
                                 <View style={tw`h-auto self-stretch mb-2 ios:mb-2.5 pb-[1.8%] mt-[1.5%]`}>
                                     <View style={tw`mt-[1.5%]`}/>
                                     <Title title={language === '1' ? 'Información Básica' : 'Basic Information'} tipo={1} icon={'child'} hasBottom={false}/>
@@ -388,28 +631,48 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                         ?
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés conversacional?' : `What's your speaking English level?`}</Text>
-                                                <Input
-                                                    value={speakingLevel}
-                                                    onChangeText={(e) => handleInputChange(e, 'speakingLevel')}
-                                                    placeholder={language === '1' ? 'Especifica tu nivel de inglés conversacional' : 'Specify your speaking English level'}
-                                                    ref={speaking_level}
-                                                    onSubmitEditing={() => writing_level.current.focus()}
-                                                />
+                                                <View style={[pickerStyle]} >
+                                                    <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
+                                                        <Picker
+                                                            value={currentLevelEnglish}
+                                                            onValueChange={(itemValue, itemIndex) => handleActionSeis(itemValue, itemIndex)}
+                                                            items={levels}
+                                                            placeholder={{}}
+                                                        />
+                                                    </View>
+                                                    {
+                                                        currentLevelOptionEnglish === 0
+                                                        &&
+                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
+                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            </View>
+                                                    }
+                                                </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés en escritura?' : `What's your writing English level?`}</Text>
-                                                <Input 
-                                                    value={writingLevel}
-                                                    onChangeText={(e) => handleInputChange(e, 'writingLevel')}
-                                                    placeholder={language === '1' ? 'Especifica tu nivel de inglés en escritura' : 'Specify writing English level'}
-                                                    ref={writing_level}
-                                                    onSubmitEditing={() => handle_programs.current.focus()}
-                                                />
+                                                <View style={[pickerStyle]} >
+                                                    <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
+                                                        <Picker
+                                                            value={currentLevelSpanish}
+                                                            onValueChange={(itemValue, itemIndex) => handleActionSiete(itemValue, itemIndex)}
+                                                            items={levels}
+                                                            placeholder={{}}
+                                                        />
+                                                    </View>
+                                                    {
+                                                        currentLevelOptionSpanish === 0
+                                                        &&
+                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
+                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            </View>
+                                                    }
+                                                </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Puedes manejar distintas aplicaciones y programas en la computadora?' : `Are you able to handle different apps and programs on the computer?`}</Text>
                                                 <Input 
                                                     value={programs}
                                                     onChangeText={(e) => handleInputChange(e, 'programs')}
-                                                    placeholder={language === '1' ? 'Especifica' : 'Especify'}
+                                                    placeholder={language === '1' ? 'Especifica' : 'Specify'}
                                                     ref={handle_programs}
                                                 />
 
@@ -465,7 +728,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                                     autoCapitalize={'none'}
                                                     value={email}
                                                     onChangeText={(e) => handleInputChange(e, 'email')}
-                                                    placeholder={'example@gmailcom'}
+                                                    placeholder={'example@gmail.com'}
                                                     ref={correo}
                                                     onSubmitEditing={() => phone_1.current.focus()}
                                                 />
@@ -604,7 +867,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                                 <Input
                                                     value={programs}
                                                     onChangeText={(e) => handleInputChange(e, 'programs')}
-                                                    placeholder={language === '1' ? 'Especifica' : 'Especify'}
+                                                    placeholder={language === '1' ? 'Especifica' : 'Specify'}
                                                     onSubmitEditing={() => full_name.current.focus()}
                                                 />
 
@@ -625,7 +888,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                                     autoCapitalize={'none'}
                                                     value={email}
                                                     onChangeText={(e) => handleInputChange(e, 'email')}
-                                                    placeholder={'example@gmailcom'}
+                                                    placeholder={'example@gmail.com'}
                                                     ref={correo}
                                                     onSubmitEditing={() => phone_1.current.focus()}
                                                 />
@@ -646,7 +909,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                                     value={telefono_2}
                                                     onChangeText={(e) => handleInputChange(e, 'telefono_2')}
                                                     placeholder={language === '1' ? 'Especifica tu número de teléfono (opcional)' : 'Specify your phone number (optional)'}
-                                                    ref={phone_2} 
+                                                    ref={phone_2}
                                                 />
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cómo prefieres que te contactemos?' : 'How do you prefer to be contacted?'}</Text>
                                                 <View style={[pickerStyle]} >
@@ -687,6 +950,67 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
 
                                             </>
                                     }
+
+                                    <Text style={titleStyle}>{language === '1' ? '¿Por qué quieres trabajar en Telat?' : 'Why do you want to work in Telat?'}</Text>
+                                    <Text style={[titleStyle, tw`text-black`]}>{language === '1' ? `Registra tu respuesta en inglés entre ${!isIphone ? '40s y 1min' : '40s and 50s'}` : !isIphone ? `Record your answer in English between 40s and 1min` : `Record your answer in English between 40s and 50s`}</Text>
+                                    <View style={boxStyle}>
+                                        <View style={tw`h-auto self-stretch mb-2.5`}>
+                                            <View style={tw`h-auto self-stretch p-1.5 justify-center items-center flex-row`}>
+                                                {
+                                                    isRecording === '2'
+                                                    &&
+                                                        <Animatable.View
+                                                            duration={1500}
+                                                            animation={'flash'}
+                                                            iterationCount={'infinite'}
+                                                            style={tw`w-3 h-3 rounded-3xl bg-[#D80505] mr-3`}
+                                                        />
+                                                }
+                                                <Text style={tw`text-base text-[${Blue}]`}>{language === '1' ? isRecording === '3' ? 'Audio grabado' : isRecording === '2' ? 'Grabando audio...' : 'Grabar audio' : isRecording === '3' ? 'Recorded audio' : isRecording === '2' ? 'Recording audio...' : 'Record audio'}</Text>
+                                            </View>
+                                            <View style={tw`flex-row mt-1.5`}>
+                                                <View style={tw`w-12.5 h-12.5 rounded-full justify-center items-center`}>
+                                                    <IonIcons name={isRecording ? 'stop' : 'microphone'} size={32} color={'transparent'} />
+                                                </View>
+                                                <View style={tw`flex-1 self-stretch justify-center items-center pr-1.5`}>
+                                                    <View style={tw`flex-1 flex-row self-stretch justify-center items-center`}>
+                                                        <Text style={tw`text-xl font-bold text-black`}>{recordTime}</Text>
+                                                    </View>
+                                                </View>
+                                                {
+                                                    isRecording !== '3'
+                                                    ?
+                                                        <TouchableWithoutFeedback
+                                                            onPress={() => handleIsRecording()}
+                                                            onLongPress={() => Alert.alert(
+                                                                language === '1' ? 'Advertencia' : 'Warning',
+                                                                language === '1' ? 'Para grabar solo presione una vez el botón' : 'To record just press the button once',
+                                                                [
+                                                                    { text: 'OK'}
+                                                                ]
+                                                            )}> 
+                                                            {
+                                                                isRecording === '1'
+                                                                ?
+                                                                    <View style={tw`w-15 h-15 bg-[${Blue}] rounded-full justify-center items-center shadow-md`}>
+                                                                        <IonIcons name={'microphone'} size={32} color={'white'} />
+                                                                    </View>
+                                                                :
+                                                                    <View
+                                                                        style={tw`w-15 h-15 bg-[${Blue}] rounded-full justify-center items-center shadow-md`}>
+                                                                        <IonIcons name={'stop'} size={32} color={'white'} />
+                                                                    </View>
+                                                            }
+                                                        </TouchableWithoutFeedback>
+                                                    :
+                                                        <View style={tw`w-15 h-15 bg-[${Blue}] rounded-full justify-center items-center shadow-md`}>
+                                                            <IonIcons name={'check'} size={32} color={'white'} />
+                                                        </View>
+                                                }
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
                                     <TouchableWithoutFeedback onPress={() => handleValidate()}>
                                         <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl self-stretch flex-row mb-${isIphone ? 1.5 : 'px'} shadow-md mt-2`}>
                                             <Icon name={'paper-plane'} size={18} color={'#fff'}/>
@@ -694,7 +1018,7 @@ export default ({navigation, route: {params: {language, country, id_sede}}}) => 
                                         </View>
                                     </TouchableWithoutFeedback>
                                 </View>
-                            </ScrollView>
+                            </KeyboardAwareScrollView>
                         </View>
                     </>
                 :

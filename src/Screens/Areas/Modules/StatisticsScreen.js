@@ -1618,7 +1618,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Área</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
+                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={{color: '#000'}}>{currentArea}</Text>
                     </View>
@@ -1662,7 +1662,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     </View>
                 </View>
 
-                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
+                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
                         <Text style={{color: '#000'}}>{currentSubarea}</Text>
                     </View>
@@ -2199,7 +2199,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                         <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Área</Text>
                                                     </View>
                                                 </View>
-                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
+                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                         <Text style={{color: '#000'}}>{currentArea}</Text>
                                                     </View>
@@ -2244,7 +2244,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     </View>
                                                 </View>
 
-                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
+                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
                                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                                         <Text style={{color: '#000'}}>{currentSubarea}</Text>
                                                     </View>

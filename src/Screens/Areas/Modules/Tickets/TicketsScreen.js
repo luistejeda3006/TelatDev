@@ -627,7 +627,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         onRefresh={() => {
                                             cuenta = 0;
                                             if(active === 1) setInitialState({...initialState, reloadTickets: reloadTickets + 1, show_start: false, show_end: false})
-                                            if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false, initialDate_start: formatDate(`01-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`),timestamp_start: new Date(),initial: false, show_end: false, initialDate_end: formatDate(`${getLastDayMonth()}-${getCurrentDate().substring(5, 7)}-${getCurrentDate().substring(0, 4)}`, language), timestamp_end: new Date(),})
+                                            if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false})
                                             if(active === 4) setInitialState({...initialState, reloadExpedientes: reloadExpedientes + 1, show_start: false, show_end: false})
                                         }}
                                     />
