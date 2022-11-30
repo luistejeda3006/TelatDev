@@ -8,16 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* TelatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TelatTests.m */; };
-		0F0C6CED5A46475CAFBF3E2B /* chivy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8F8579B3F824028B50BDF80 /* chivy.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		158205C1D6B462E4704C0A2A /* Pods_Telat_TelatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20FB9620605BA2611C65E5B2 /* Pods_Telat_TelatTests.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8EC4E3C129381BCA00DC7AF7 /* basillion.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6222A335004A1C94921731 /* basillion.ttf */; };
 		8EC5711A291EB72400DFA4EC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */; };
 		8EC5711B291EB72400DFA4EC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */; };
-		8EC57123291EC43A00DFA4EC /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EC5711F291EBF8300DFA4EC /* FontAwesome.ttf */; };
-		8EC57124291EC43A00DFA4EC /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57120291EBF8300DFA4EC /* MaterialCommunityIcons.ttf */; };
 		8EE352182925701D00F0CFB6 /* QBImagePicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EE352172925701C00F0CFB6 /* QBImagePicker.storyboard */; };
 		8EF4DAB72926A0E400547B38 /* pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4DAB32926A0E400547B38 /* pop.mp3 */; };
 		8EF4DAB82926A0E400547B38 /* pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4DAB32926A0E400547B38 /* pop.mp3 */; };
@@ -27,7 +25,6 @@
 		8EF4DABC2926A0E400547B38 /* bubble.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4DAB52926A0E400547B38 /* bubble.mp3 */; };
 		8EF4DABD2926A0E400547B38 /* notify.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4DAB62926A0E400547B38 /* notify.mp3 */; };
 		8EF4DABE2926A0E400547B38 /* notify.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EF4DAB62926A0E400547B38 /* notify.mp3 */; };
-		C76B45A0278C4F57ADAC0511 /* basillion.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6222A335004A1C94921731 /* basillion.ttf */; };
 		E0A492BB966B188626CB61E5 /* Pods_Telat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E012DE12798C07CFF8C70D3A /* Pods_Telat.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,9 +54,9 @@
 		5B7EB9410499542E8C5724F5 /* Pods-Telat-TelatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telat-TelatTests.debug.xcconfig"; path = "Target Support Files/Pods-Telat-TelatTests/Pods-Telat-TelatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Telat/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Telat-TelatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telat-TelatTests.release.xcconfig"; path = "Target Support Files/Pods-Telat-TelatTests/Pods-Telat-TelatTests.release.xcconfig"; sourceTree = "<group>"; };
+		8EC4E3BD293817D200DC7AF7 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		8EC4E3BE293817D200DC7AF7 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		8EC5711F291EBF8300DFA4EC /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
-		8EC57120291EBF8300DFA4EC /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		8ED570E92926EA740014F68D /* Telat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Telat.entitlements; path = Telat/Telat.entitlements; sourceTree = "<group>"; };
 		8EE352172925701C00F0CFB6 /* QBImagePicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = QBImagePicker.storyboard; path = "../node_modules/react-native-image-crop-picker/ios/QBImagePicker/QBImagePicker/QBImagePicker.storyboard"; sourceTree = "<group>"; };
 		8EF4DAB32926A0E400547B38 /* pop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pop.mp3; sourceTree = "<group>"; };
@@ -112,8 +109,8 @@
 		13B07FAE1A68108700A75B9A /* Telat */ = {
 			isa = PBXGroup;
 			children = (
+				8EC4E3BC293817BD00DC7AF7 /* Fonts */,
 				8ED570E92926EA740014F68D /* Telat.entitlements */,
-				8EC5711E291EBF6600DFA4EC /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -172,11 +169,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8EC5711E291EBF6600DFA4EC /* Fonts */ = {
+		8EC4E3BC293817BD00DC7AF7 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				8EC5711F291EBF8300DFA4EC /* FontAwesome.ttf */,
-				8EC57120291EBF8300DFA4EC /* MaterialCommunityIcons.ttf */,
+				8EC4E3BE293817D200DC7AF7 /* FontAwesome.ttf */,
+				8EC4E3BD293817D200DC7AF7 /* MaterialCommunityIcons.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -301,18 +298,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EC4E3C129381BCA00DC7AF7 /* basillion.ttf in Resources */,
 				8EE352182925701D00F0CFB6 /* QBImagePicker.storyboard in Resources */,
 				8EF4DABD2926A0E400547B38 /* notify.mp3 in Resources */,
 				8EF4DABB2926A0E400547B38 /* bubble.mp3 in Resources */,
-				8EC57123291EC43A00DFA4EC /* FontAwesome.ttf in Resources */,
 				8EF4DAB92926A0E400547B38 /* game_over.mp3 in Resources */,
-				8EC57124291EC43A00DFA4EC /* MaterialCommunityIcons.ttf in Resources */,
 				8EF4DAB72926A0E400547B38 /* pop.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				8EC5711A291EB72400DFA4EC /* GoogleService-Info.plist in Resources */,
-				C76B45A0278C4F57ADAC0511 /* basillion.ttf in Resources */,
-				0F0C6CED5A46475CAFBF3E2B /* chivy.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +458,7 @@
 		};
 		FEE338C0F7B3926062E71E50 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -474,7 +468,7 @@
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Telat/Pods-Telat-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Telat/Pods-Telat-resources.sh\"\n";
 			showEnvVarsInLog = 0;
@@ -584,6 +578,7 @@
 				INFOPLIST_FILE = Telat/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Telat;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -618,6 +613,7 @@
 				INFOPLIST_FILE = Telat/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Telat;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

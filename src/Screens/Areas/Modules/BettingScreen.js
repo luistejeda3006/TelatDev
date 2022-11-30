@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react'
-import {View, Text, StatusBar, SafeAreaView, FlatList, Image, TouchableOpacity, Alert} from 'react-native'
+import {View, Text, StatusBar, SafeAreaView, FlatList, Image, TouchableOpacity, Alert, RefreshControl} from 'react-native'
 import {isIphone, live, login, urlQuiniela } from '../../../access/requestedData'
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../../colors/colorsApp'
 import {HeaderPortrait, HeaderLandscape, FailedNetwork, Modal, ModalLoading} from '../../../components'
@@ -734,6 +734,14 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     />
                                 </View>
                                 <FlatList
+                                    refreshControl={
+                                        <RefreshControl
+                                            progressBackgroundColor={'#EC5C25'}
+                                            colors={['#fff']}
+                                            refreshing={false}
+                                            onRefresh={() => getInformation()}
+                                        />
+                                    }
                                     ref={refQuiniela}
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}

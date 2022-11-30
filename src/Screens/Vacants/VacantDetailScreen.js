@@ -20,6 +20,7 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
 
     const [initialState, setInitialState] = useState({
         ide: id,
+        countri: country,
         lg: language,
         ori: orientation,
         name: nombre,
@@ -31,7 +32,7 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
         sede: id_sede
     })
 
-    const {ide, lg, sede, name, location, salary, description, benefits, requeriments} = initialState
+    const {ide, countri, lg, sede, name, location, salary, description, benefits, requeriments} = initialState
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useFocusEffect(
@@ -93,7 +94,7 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {id: ide, language: lg, orientation: orientationInfo.initial, country: country, id_sede: sede})}>
+                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {id: ide, language: lg, orientation: orientationInfo.initial, country: countri, id_sede: sede})}>
                                     <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl my-2.5 self-stretch mb-${isIphone ? 6 : 4} flex-row shadow-md`}>
                                         <IonIcons name={'account-check'} size={24} color={'#fff'}/>
                                         <Text style={tw`text-white font-bold text-lg ml-2.5`}>{lg === '1' ? 'Postularme' : 'Apply'}</Text>

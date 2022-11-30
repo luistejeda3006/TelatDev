@@ -222,8 +222,6 @@ export default ({navigation}) => {
                     'token': valueNotificationToken
                 }
             }
-
-            console.log('value: ', body)
             
             const request = await fetch(urlApp, {
                 method: 'POST',

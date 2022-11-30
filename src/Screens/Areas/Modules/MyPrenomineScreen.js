@@ -183,35 +183,37 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     
         const {response} = await request.json();
         if(response.status === 200){
-            setLoading(false)
-            setError(false)
-            cuentaAsistencia = cuentaAsistencia + 1
-            const total = response.prenomina_info.pren_nombre.length
-            const quincena = response.prenomina_info.pren_nombre.substring(total - 2, total);
-            
-            let has_bono = parseInt(response.prenomina_info.has_bono);
-            if(has_bono === 1){
-                if(quincena === 'Q1'){
-                    bonus = {
-                        Q1: response.prenomina_info.pren_bono
+            setTimeout(() => {
+                cuentaAsistencia = cuentaAsistencia + 1
+                const total = response.prenomina_info.pren_nombre.length
+                const quincena = response.prenomina_info.pren_nombre.substring(total - 2, total);
+                
+                let has_bono = parseInt(response.prenomina_info.has_bono);
+                if(has_bono === 1){
+                    if(quincena === 'Q1'){
+                        bonus = {
+                            Q1: response.prenomina_info.pren_bono
+                        }
+                    }
+                    else{
+                        bonus = {
+                            bono_permanencia: response.prenomina_info.pren_bono_permanencia,
+                            bono_asistencia: response.prenomina_info.pren_bono_asistencia,
+                        }
                     }
                 }
-                else{
-                    bonus = {
-                        bono_permanencia: response.prenomina_info.pren_bono_permanencia,
-                        bono_asistencia: response.prenomina_info.pren_bono_asistencia,
-                    }
-                }
-            }
-            /* setIdPeriodo(response.periodos[0].value) */
-            setCurrentPeriodo(!currentPeriodo ? response.periodos[0].label : currentPeriodo)
-            dispatch(setFechas(response.fechas))
-            dispatch(setPeriodos(response.periodos))
-            dispatch(setInfo(response.prenomina_info))
-            dispatch(setBonos(bonus))
-            dispatch(setHasBono(has_bono))
-            dispatch(setMensual(response.prenomina_info.mensual))
-            dispatch(setQuincena(quincena))
+                /* setIdPeriodo(response.periodos[0].value) */
+                setCurrentPeriodo(!currentPeriodo ? response.periodos[0].label : currentPeriodo)
+                dispatch(setFechas(response.fechas))
+                dispatch(setPeriodos(response.periodos))
+                dispatch(setInfo(response.prenomina_info))
+                dispatch(setBonos(bonus))
+                dispatch(setHasBono(has_bono))
+                dispatch(setMensual(response.prenomina_info.mensual))
+                dispatch(setQuincena(quincena))
+                setError(false)
+                setLoading(false)
+            }, 500)
         }
     
         else if(response.status === 400){

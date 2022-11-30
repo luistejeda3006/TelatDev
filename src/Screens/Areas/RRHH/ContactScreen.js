@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect, useCallback} from 'react'
 import {View, Text, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, StatusBar} from 'react-native'
 import {useConnection, useOrientation, useNavigation, useForm, useScroll} from '../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +13,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import * as Animatable from 'react-native-animatable';
 import RNFetchBlob from 'rn-fetch-blob'
 import tw from 'twrnc'
+import { useFocusEffect } from '@react-navigation/native';
 
 let cuenta = 0;
 
@@ -39,10 +40,11 @@ let segundos_play = null;
 let milisegundos_play = null;
 let split_play = null;
 let total_play = null;
-let encrypted = null;
-let filePath = null
 
 export default ({navigation, route: {params: {id, language, country, id_sede}}}) => {
+    console.log('id: ', id, 'language: ', language, 'country: ', country, "id_sede: ", id_sede)
+    let filePath = null
+    let encrypted = null;
     const speaking_level = useRef()
     const writing_level  = useRef()
     const handle_programs  = useRef()
@@ -165,7 +167,6 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                     style: 'cancel'
                 },
                 {text: language === '1' ? 'Sí, estoy seguro' : 'Yes, I am sure', onPress: () => {
-                    onLoad()
                     navigation.navigate('VacantDetail')
                 }}
             ]
@@ -232,13 +233,15 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
         setRecording(initialization)
         setInitialState({...initialState, isRecording: '1', isPlaying: '1'})
         const result = await audioRecorderPlayer.stopRecorder();
-        setPath(result) 
+        setPath(result)
         audioRecorderPlayer.removeRecordBackListener();
     }
 
-    useEffect(() => {
-        onLoad()
-    },[])
+    useFocusEffect(
+        useCallback(() => {
+            onLoad()
+        }, [])
+    );
 
     useEffect(() => {
         requestPermissions()
@@ -256,26 +259,15 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                 split = audioRecorderPlayer.mmssss(
                 Math.floor(e.currentPosition),
                 ).split(':')
-                if(!isIphone){
-                    minutos = parseInt(split[0])
-                    segundos = parseInt(split[1])
-                    milisegundos = parseInt(split[2])
-                    total = ((minutos * 6000) + (segundos * 100) + milisegundos)
-                    if(minutos === 1) {
-                        onStopRecord(2)
-                    }
-                    return;
+                minutos = parseInt(split[0])
+                segundos = parseInt(split[1])
+                milisegundos = parseInt(split[2])
+                total = ((minutos * 6000) + (segundos * 100) + milisegundos)
+                if(minutos === 1) {
+                    onStopRecord(2)
                 }
-                else{
-                    minutos = parseInt(split[0])
-                    segundos = parseInt(split[1])
-                    milisegundos = parseInt(split[2])
-                    total = ((minutos * 6000) + (segundos * 100) + milisegundos)
-                    if(segundos === 50) {
-                        onStopRecord(2)
-                    }
-                    return;
-                }
+                return;
+                
             });
             setPath(result)
         }catch(e){
@@ -303,14 +295,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                 setInitialState({...initialState, isRecording: '3'})
             }
             else {
-                if(isIphone){
-                    setRecording({...recording, recordSecs: 0, recordTime: '00:50:00'})
-                    setInitialState({...initialState, isRecording: '3'})
-                }
-                else {
-                    setRecording({...recording, recordSecs: 0, recordTime: '01:00:00'})
-                    setInitialState({...initialState, isRecording: '3'})
-                }
+                setRecording({...recording, recordSecs: 0, recordTime: '01:00:00'})
+                setInitialState({...initialState, isRecording: '3'})
             }
         }catch(e){
             setRecording(initialization)
@@ -388,85 +374,88 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                 filePath = path
             }
             encrypted = await RNFetchBlob.fs.readFile(filePath, 'base64')
-            console.log('encrptyed: ', encrypted)
     
             if(isRecording === '3'){
                 if(email.includes('@') && email.includes('.')){
                     if(minutos === 1 || segundos >= 40){
-                        cuenta = cuenta + 1;
-                        setInitialState({...initialState, loading: true})
-                        let body = null;
-                        if(tipo === 1){
-                            body = {
-                                'action': 'send_formulario_contacto',
-                                'data': {
-                                    "info_ciudad":currentCity,
-                                    "info_contacto":currentAboutUs,
-                                    "nivel_conversacional":currentLevelEnglish,
-                                    "nivel_escritura":currentLevelSpanish,
-                                    "programas_computadora": programs,
-                                    "experiencia_job_bool": currentClose,
-                                    "info_contacto_otro": other,
-                                    "experiencia_job":companies_time,
-                                    "info_nombre":fullName,
-                                    "info_email":email,
-                                    "info_telefono1": telefono_1,
-                                    "info_telefono2":telefono_2,
-                                    "opcion_contacto": currentContact,
-                                    "horario_contacto":currentSchedule,
-                                    'id_vacante': id,
-                                    'audio': encrypted
-                                },
-                                'login': login,
-                                'live': live,
-                                'language': language,
-                                'pais': country
+                        try{
+                            cuenta = cuenta + 1;
+                            setInitialState({...initialState, loading: true})
+                            let body = null;
+                            if(tipo === 1){
+                                body = {
+                                    'action': 'send_formulario_contacto',
+                                    'data': {
+                                        "info_ciudad":currentCity,
+                                        "info_contacto":currentAboutUs,
+                                        "nivel_conversacional":currentLevelEnglish,
+                                        "nivel_escritura":currentLevelSpanish,
+                                        "programas_computadora": programs,
+                                        "experiencia_job_bool": currentClose,
+                                        "info_contacto_otro": other,
+                                        "experiencia_job":companies_time,
+                                        "info_nombre":fullName,
+                                        "info_email":email,
+                                        "info_telefono1": telefono_1,
+                                        "info_telefono2":telefono_2,
+                                        "opcion_contacto": currentContact,
+                                        "horario_contacto":currentSchedule,
+                                        'id_vacante': id,
+                                        'audio': encrypted
+                                    },
+                                    'login': login,
+                                    'live': live,
+                                    'language': language,
+                                    'pais': country
+                                }
+                            } else {
+                                body = {
+                                    'action': 'send_formulario_contacto',
+                                    'data': {
+                                        "info_ciudad": currentCity,
+                                        "info_contacto": currentAboutUs,
+                                        "experiencia_job_bool": currentClose,
+                                        "experiencia_job": companies_time,
+                                        "info_contacto_otro": other,
+                                        "nivel_ingles": currentLevelEnglish,
+                                        "nivel_espanol": currentLevelSpanish,
+                                        "programas_computadora": programs,
+                                        "info_nombre": fullName,
+                                        "info_email": email,
+                                        "info_telefono1": telefono_1,
+                                        "info_telefono2": telefono_2,
+                                        "opcion_contacto": currentContact,
+                                        "horario_contacto": currentSchedule,
+                                        'id_vacante': id,
+                                        'audio': encrypted
+                                    },
+                                    'login': login,
+                                    'live': live,
+                                    'language': language,
+                                    'pais': country
+                                }
                             }
-                        } else {
-                            body = {
-                                'action': 'send_formulario_contacto',
-                                'data': {
-                                    "info_ciudad": currentCity,
-                                    "info_contacto": currentAboutUs,
-                                    "experiencia_job_bool": currentClose,
-                                    "experiencia_job": companies_time,
-                                    "info_contacto_otro": other,
-                                    "nivel_ingles": currentLevelEnglish,
-                                    "nivel_espanol": currentLevelSpanish,
-                                    "programas_computadora": programs,
-                                    "info_nombre": fullName,
-                                    "info_email": email,
-                                    "info_telefono1": telefono_1,
-                                    "info_telefono2": telefono_2,
-                                    "opcion_contacto": currentContact,
-                                    "horario_contacto": currentSchedule,
-                                    'id_vacante': id,
-                                    'audio': encrypted
+                            
+                            const request = await fetch(urlJobs, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
                                 },
-                                'login': login,
-                                'live': live,
-                                'language': language,
-                                'pais': country
-                            }
-                        }
+                                body: JSON.stringify(body)
+                            });
                         
-                        const request = await fetch(urlJobs, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(body)
-                        });
-                    
-                        const {response} = await request.json();
-                        if(response.status === 200){
-                            cuenta = 0;
-                            setSuccessVisibility(true)
-                            setInitialState({...initialState, loading: false})
-                            setTimeout(() => {
-                                setSuccessVisibility(false)
-                                navigation.navigate('VacantDetail')
-                            }, 4500)
+                            const {response} = await request.json();
+                            if(response.status === 200){
+                                cuenta = 0;
+                                setSuccessVisibility(true)
+                                setInitialState({...initialState, loading: false})
+                                setTimeout(() => {
+                                    setSuccessVisibility(false)
+                                    navigation.navigate('VacantDetail')
+                                }, 4500)
+                            }
+                        }catch(e){
+                            console.log('algo pasó con el internet')
                         }
                     } else {
                         Alert.alert(
@@ -575,7 +564,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} extraAction={() => onLoad()} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
+                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
                         <View style={tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '4%'}] bg-white`}>
                             <KeyboardAwareScrollView
                                 showsVerticalScrollIndicator={false}
@@ -821,11 +810,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                                 multiline={true}
                                                                 numberOfLines={5}
                                                                 /* ref={input_empresas} */
-                                                                />
+                                                            />
                                                         </>
                                                 }
-                                                
-                                                <View style={tw`mt-[${currentCloseOption === 1 ? 2.5 : 0}]`} />
+                                                {
+                                                    currentCloseOption === 1
+                                                    &&
+                                                        <View style={tw`h-2.5 self-stretch`} />
+                                                }
                                                 <Text style={titleStyle}>{language === '1' ? 'Nivel de Inglés' : 'English profiency'}</Text>
                                                 <View style={[pickerStyle]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
@@ -952,7 +944,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                     }
 
                                     <Text style={titleStyle}>{language === '1' ? '¿Por qué quieres trabajar en Telat?' : 'Why do you want to work in Telat?'}</Text>
-                                    <Text style={[titleStyle, tw`text-black`]}>{language === '1' ? `Registra tu respuesta en inglés entre ${!isIphone ? '40s y 1min' : '40s and 50s'}` : !isIphone ? `Record your answer in English between 40s and 1min` : `Record your answer in English between 40s and 50s`}</Text>
+                                    <Text style={[titleStyle, tw`text-black`]}>{language === '1' ? `Registra tu respuesta en inglés entre 40s y 1min` : `Record your answer in English between 40s and 1min`}</Text>
                                     <View style={boxStyle}>
                                         <View style={tw`h-auto self-stretch mb-2.5`}>
                                             <View style={tw`h-auto self-stretch p-1.5 justify-center items-center flex-row`}>

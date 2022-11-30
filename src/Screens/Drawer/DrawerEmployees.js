@@ -107,7 +107,7 @@ export default (props) => {
     return (
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-            <ImageBackground source={require('../../../assets/background/fondo.jpg')} resizeMode='cover' style={tw`w-[100%] h-[100%] pb-${isIphone ? 7.5 : 0} pt-${orientation === 'PORTRAIT' ? isIphone ? 7.5 : 1.5 : 1.5}`}>
+            <ImageBackground source={require('../../../assets/background/fondo.jpg')} resizeMode='cover' style={tw`w-[100%] h-[100%] bg-[#f1f1f1] pb-${isIphone ? 7.5 : 0} pt-${orientation === 'PORTRAIT' ? isIphone ? 7.5 : 1.5 : 1.5}`}>
                 <View style={tw`h-auto self-stretch ml-6 mr-4 pt-${orientation === 'PORTRAIT' ? 5 : 1.5} justify-center items-center`} >
                     <View style={tw`w-22.5 h-22.5 rounded-full justify-center items-center border border-8 border-[#dadada]`}>
                         {
