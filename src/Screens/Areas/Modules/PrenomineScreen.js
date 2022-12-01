@@ -91,7 +91,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     period = period.split('-')
                     dispatch(setNominas(response.prenomina))
                     setInitialState({...initialState, info: response.info, loading: false})
-                }, 500)
+                }, 800)
             }
         }catch(e){
             console.log(e)

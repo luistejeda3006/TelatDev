@@ -74,7 +74,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             
             const {response} = await request.json();
             if(response.status === 200){
-                setInitialState({...initialState, dias: response.dias, checadas: response.current})
+                setTimeout(() => {
+                    setInitialState({...initialState, dias: response.dias, checadas: response.current, loading: false})
+                }, 1000)
             }
             else if(response.status === 401){
                 Alert.alert(
@@ -106,7 +108,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             }
         }catch(e){
             setInitialState({...initialState, loading: false})
-            askForConnection()
         }
     }
 

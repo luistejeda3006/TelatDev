@@ -96,7 +96,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     dispatch(setEmpleados(response.empleados))
                     dispatch(setTemporalEmpleado(response.empleados))
                     setLoading(false)
-                }, 500)
+                }, 800)
             }
         }catch(e){
             console.log('algo pasó con el internet')

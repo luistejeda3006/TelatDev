@@ -974,11 +974,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Motivo = ({legend, color, tipo = 1}) => {
         return(
-            <View style={{height: 'auto', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 4}}>
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: tipo === 1 ? 'flex-start' : 'center', alignItems: 'center'}}>
-                    <View style={{width: 15, height: 15, backgroundColor: color, borderRadius: 20}}></View>
-                    <View style={{width: 4}}></View>
-                    <Text style={{fontSize: tipo === 2 ? 14 : 12}}>{legend}</Text>
+            <View style={tw`h-auto flex-1 flex-row justify-center items-center py-1`}>
+                <View style={tw`flex-1 flex-row justify-${tipo === 1 ? 'start' : 'center'} items-center`}>
+                    <View style={tw`w-4 h-4 bg-[${color}] rounded-3xl`} />
+                    <View style={tw`w-1`} />
+                    <Text style={tw`text-${tipo === 2 ? 'sm' : 'xs'}`}>{legend}</Text>
                 </View>
             </View>
         )
@@ -986,53 +986,53 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Detalle_Gerencia = ({id, campanna, altas = null, activos = null, bajas = null, monterrey = null, insurgentes = null, salinillas = null, juarez = null, home = null, total, tipo = 1}) => {
         return(
-            <View style={{flex: 1, height: 'auto', marginBottom: 14, marginHorizontal: 1.5, borderRadius: 16}}>
-                <View style={{height: 'auto', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderWidth: 1, padding: 3, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={tw`flex-1 h-auto mb-3.5 mx-1.5 rounded-2xl shadow-md`}>
+                <View style={tw`h-auto bg-[#f7f7f7] p-px rounded-tl-2xl rounded-tr-2xl`}>
+                    <View style={tw`flex-row items-center justify-center`}>
                         {
                             tipo === 1
                             ?
                                 <>
-                                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginRight: 6}}>
-                                        <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
+                                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5 mr-1.5`}>
+                                        <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                                     </View>
-                                    <Text style={{fontWeight: 'bold', fontSize: 12, color: '#000'}}>{campanna}</Text>
+                                    <Text style={tw`font-bold text-xs text-[#000]`}>{campanna}</Text>
                                 </>
                             :
-                                <Text style={{fontSize: 14, color: '#000'}}>{campanna}</Text>
+                                <Text style={tw`text-xs text-[#000] font-bold`}>{campanna}</Text>
                         }
                     </View>
                 </View>
                 {
                     tipo === 1
                     ?
-                        <View style={{height: 'auto', alignSelf: 'stretch', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, flexDirection: 'row'}}>
-                            <View style={{flex: 1, backgroundColor: '#1f77b4', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}>{monterrey}</Text>
+                        <View style={tw`h-auto self-stretch flex-row`}>
+                            <View style={tw`flex-1 bg-[#1f77b4] h-6 justify-center items-center`}>
+                                <Text style={tw`text-base font-bold text-[#fff]`}>{monterrey}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#2ca02c', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}>{insurgentes}</Text>
+                            <View style={tw`flex-1 bg-[#2ca02c] h-6 justify-center items-center`}>
+                                <Text style={tw`text-base font-bold text-[#fff]`}>{insurgentes}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#ff7f0e', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}>{salinillas}</Text>
+                            <View style={tw`flex-1 bg-[#ff7f0e] h-6 justify-center items-center`}>
+                                <Text style={tw`text-base font-bold text-[#fff]`}>{salinillas}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#808b96', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}>{juarez}</Text>
+                            <View style={tw`flex-1 bg-[#808b96] h-6 justify-center items-center`}>
+                                <Text style={tw`text-base font-bold text-[#fff]`}>{juarez}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#ff0000', height: 35, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 11, fontWeight: 'bold', color: '#fff'}}>{home}</Text>
+                            <View style={tw`flex-1 bg-[#ff0000] h-6 justify-center items-center`}>
+                                <Text style={tw`text-base font-bold text-[#fff]`}>{home}</Text>
                             </View>
                         </View>
                     :
-                        <View style={{height: 'auto', alignSelf: 'stretch', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, flexDirection: 'row', borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                            <View style={{flex: 1, backgroundColor: Blue, height: 30, justifyContent: 'center', alignItems: 'center', borderBottomStartRadius: 16}}>
-                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{altas}</Text>
+                        <View style={tw`h-auto self-stretch rounded-bl-2xl rounded-br-2xl flex-row`}>
+                            <View style={tw`flex-1 bg-[${Blue}] h-6 justify-center items-center rounded-bl-2xl`}>
+                                <Text style={[{fontSize: 10}, tw`font-bold text-[#fff]`]}>{altas}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#2ca02c', height: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{activos}</Text>
+                            <View style={tw`flex-1 bg-[#2ca02c] h-6 justify-center items-center`}>
+                                <Text style={[{fontSize: 10}, tw`font-bold text-[#fff]`]}>{activos}</Text>
                             </View>
-                            <View style={{flex: 1, backgroundColor: '#ff0000', height: 30, justifyContent: 'center', alignItems: 'center', borderBottomEndRadius: 16}}>
-                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#fff'}}>{bajas}</Text>
+                            <View style={tw`flex-1 bg-[#ff0000] h-6 justify-center items-center rounded-br-2xl`}>
+                                <Text style={[{fontSize: 10}, tw`font-bold text-[#fff]`]}>{bajas}</Text>
                             </View>
                         </View>
                 }
@@ -1068,17 +1068,17 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Empleados_Ubicacion = ({name, color, total}) => {
         return(
-            <View style={[styles.box, {margin: 5, marginHorizontal: 7, paddingLeft: 6, paddingRight: 0}]}>
-                <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={[box, tw`m-1.5 mx-2 pl-1.5 pr-0`]}>
+                <View style={tw`w-auto justify-center items-center`}>
                     <Icon name={'building'} size={24} color={color} />
                 </View>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <View style={{justifyContent: 'flex-start', paddingLeft: 5, flexDirection: 'row', height: '100%'}}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 12, color: '#000'}}>{name}</Text>
+                <View style={tw`flex-1 justify-center items-center`}>
+                    <View style={tw`justify-start pl-1.5 flex-row h-[100%]`}>
+                        <View style={tw`flex-1 justify-center items-start`}>
+                            <Text style={tw`text-xs text-[#000]`}>{name}</Text>
                         </View>
-                        <View style={{width: 40, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderTopEndRadius: 16, borderBottomEndRadius: 16, borderLeftColor: '#dadada', borderLeftWidth: 1}}>
-                            <Text style={{fontWeight: 'bold', color: '#000'}}>{total}</Text>
+                        <View style={tw`w-10 justify-center items-center bg-[#f7f7f7] rounded-tr-2xl rounded-br-2xl border-l border-[#dadada]`}>
+                            <Text style={tw`font-bold text-[#000]`}>{total}</Text>
                         </View>
                     </View>
                 </View>
@@ -1088,17 +1088,17 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Empleados_Razon_Social = ({name, total}) => {
         return(
-            <View style={[styles.box, {paddingRight: 0, margin: 7, marginHorizontal: 10}]}>
-                <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center', paddingLeft: 4}}>
+            <View style={[box, tw`pr-0 m-2 mx-2.5`]}>
+                <View style={tw`w-auto justify-center items-center pl-1`}>
                     <IonIcons name={'account-group'} size={34} color={Blue} />
                 </View>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <View style={{justifyContent: 'flex-start', paddingLeft: 8, flexDirection: 'row', height: '100%'}}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 14, color: '#000'}}>{name}</Text>
+                <View style={tw`flex-1 justify-center items-center`}>
+                    <View style={tw`justify-start pl-2 flex-row h-[100%]`}>
+                        <View style={tw`flex-1 justify-center items-start`}>
+                            <Text style={tw`text-sm text-[#000]`}>{name}</Text>
                         </View>
-                        <View style={{width: 40, backgroundColor: '#f7f7f7', justifyContent: 'center', alignItems: 'center', borderLeftColor: '#CBCBCB', borderLeftWidth: 1, borderTopEndRadius: 16, borderBottomEndRadius: 16}}>
-                            <Text style={{fontWeight: 'bold', color: '#000'}}>{total}</Text>
+                        <View style={tw`w-10 bg-[#f7f7f7] justify-center items-center border-l border-l-[#cbcbcb] rounded-tr-2xl rounded-br-2xl`}>
+                            <Text style={tw`font-bold text-[#000]`}>{total}</Text>
                         </View>
                     </View>
                 </View>
@@ -1110,42 +1110,42 @@ export default ({navigation, route: {params: {orientation}}}) => {
         return(
             <>
                 <Title title={language === '1' ? 'Detalle de Bajas' : 'Detail of Retirements'} icon={'chart-bar-stacked'} tipo={2} vertical={false} itCloses={() => setInitialState({...initialState, bajas: !bajas})}/>
-                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
+                <View style={tw`h-auto self-stretch justify-center items-center`}>
+                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-1.5 rounded-tl-2xl rounded-tr-2xl`}>
                         <IonIcons name={'menu'} size={28} color={Blue} />
-                        <View style={{width: 4}}></View>
-                        <Text style={{color: Blue, fontSize: 20}}>{language === '1' ? 'Bajas por Subárea' : ''}</Text>
+                        <View style={tw`w-1`} />
+                        <Text style={tw`text-[${Blue}] text-xl`}>{language === '1' ? 'Bajas por Subárea' : ''}</Text>
                     </View>
                 </View>
-                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`h-auto self-stretch justify-center items-center`}>
                     {
                         detalle_bajas.length > 0
                         &&
                             detalle_bajas.map(x => 
-                                <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
-                                    <View style={{flex: 1, paddingHorizontal: 8}}>
+                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border border-[#cbcbcb] border-t border-b justify-center items-center flex-row p-1`}>
+                                    <View style={tw`flex-1 px-2`}>
                                         <Text style={{color: Blue}}>{x.name}</Text>
                                     </View>
-                                    <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 4}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
+                                    <View style={tw`w-${x.total.toString().length === 2 ? 'auto' : 6.5} bg-[${Blue}] justify-center items-center rounded-lg px-1`}>
+                                        <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
                                     </View>
                                 </View>
                             )
                     
                     }
                 </View>
-                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 20, backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                    <View style={{flex: 1, paddingHorizontal: 8}}>
-                        <Text style={{color: Blue, fontWeight: 'bold'}}>{language === '1' ? 'Total General' : ''}</Text>
+                <View style={tw`h-auto self-stretch mb-5 bg-[#f7f7f7] border border-[#CBCBCB] justify-center items-center flex-row p-1 rounded-bl-2xl rounded-br-2xl`}>
+                    <View style={tw`flex-1 px-2`}>
+                        <Text style={tw`text-[${Blue}] font-bold`}>{language === '1' ? 'Total General' : ''}</Text>
                     </View>
-                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
-                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{altas_bajas_quincenas.bajas && altas_bajas_quincenas.bajas}</Text>
+                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
+                        <Text style={tw`text-base font-bold text-[#fff]`}>{altas_bajas_quincenas.bajas && altas_bajas_quincenas.bajas}</Text>
                     </View>
                 </View>
 
                 <Title title={'Motivos de Baja'} icon={'chart-line'} tipo={2} vertical={false}/>
 
-                <View style={{height:'auto', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`h-auto justify-center items-center`}>
                     <BarChart
                         withVerticalLabels={false}
                         segments={3}
@@ -1182,21 +1182,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             }}
                     />
                 </View>
-            </>
-        )
-    }
-
-    const Footer = () => {
-        return(
-            <>
-                <View style={{height: 1, alignSelf: 'stretch', backgroundColor: Blue}}></View>
-                <TouchableOpacity
-                    style={{flexDirection: 'row', height: 40, backgroundColor: Blue, borderRadius: 8, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', marginTop: 10}}
-                    onPress={() => setInitialState({...initialState, bajas: !bajas})}
-                >
-                    <Icon name={'times'} size={22} color={'#fff'} />
-                    <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 6}}>{language === '1' ? 'Cerrar' : 'Close'}</Text>
-                </TouchableOpacity>
             </>
         )
     }
@@ -1300,11 +1285,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 :
                     first === 'plus'
                     ?
-                        <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
+                        <View style={tw`h-11.5 flex-1 p-1.5 justify-center flex-row border-[${Blue}] border-l border-r border-b`}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
                                 <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
-                            <View style={{width: 'auto', justifyContent: 'center'}}>
+                            <View style={tw`w-auto justify-center`}>
                                 <TouchableOpacity onPress={() => handleChangeVisibility(title)}>
                                     <Icon name={'plus-circle'} size={24} color={Blue} />
                                 </TouchableOpacity>
@@ -1313,11 +1298,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     :
                         first === 'plus_opened'
                         ?
-                            <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
+                            <View style={tw`h-11.5 flex-1 p-1.5 justify-center flex-row border-[${Blue}] border-l border-r border-b`}>
                                 <View style={{flex: 1, justifyContent: 'center'}}>
                                     <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                                 </View>
-                                <View style={{width: 'auto', justifyContent: 'center'}}>
+                                <View style={tw`w-auto justify-center`}>
                                     <TouchableOpacity onPress={() =>  handleChangeVisibility(title)}>
                                         <Icon name={'minus-circle'} size={24} color={Blue} />
                                     </TouchableOpacity>
@@ -1339,10 +1324,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const LandscapeTabletAndPhone = () => {
         return(
             <>
-                <View style={{marginTop: '1.5%'}}></View>
+                <View style={tw`mt-[1.5%]`}></View>
                 <Title icon={'timer-sand'} title={'Información en Tiempo Real'} tipo={2} vertical={false}/>
-                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                <View style={tw`h-auto self-stretch`}>
+                    <View style={tw`flex-row mb-4`}>
                         <Box color={Blue} title={language === '1' ? 'Empleados' : 'Empleados'} countTitle={tiempo_real.empleados && tiempo_real.empleados} iconLeft={'account'} lateral={tiempo_real.empleados_periodo_ant && tiempo_real.empleados_periodo_ant}/>
                         <Box color={'#2CA02C'} title={language === '1' ? 'Altas' : 'Altas'} countTitle={tiempo_real.altas_real && tiempo_real.altas_real} iconLeft={'account-plus'} lateral={tiempo_real.altas_real_porcentaje && `${tiempo_real.altas_real_porcentaje}%`} iconLateral={'menu-up'}/>
                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : ''} countTitle={tiempo_real.bajas_real && tiempo_real.bajas_real} iconLeft={'account-minus'} lateral={tiempo_real.bajas_real_porcentaje && `${tiempo_real.bajas_real_porcentaje}%`} iconLateral={'menu-down'}/>
@@ -1350,17 +1335,17 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 </View>
 
                 <Title title={'Altas y Bajas por Quincena'} icon={'chart-line'} tipo={2} vertical={false}/>
-                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{color: '#000'}}>{currentQuincena}</Text>
+                <TouchableOpacity style={[picker, tw`shadow-md bg-white flex-row`]} onPress={() => handleVisiblePeriodos()}>
+                    <View style={tw`flex-1 justify-center items-center`}>
+                        <Text style={tw`text-[#000]`}>{currentQuincena}</Text>
                     </View>
-                    <View style={{width: 'auto'}}>
+                    <View style={tw`w-auto`}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                     </View>
                 </TouchableOpacity>
 
-                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                <View style={tw`h-auto self-stretch`}>
+                    <View style={tw`flex-row mb-4`}>
                         <Box color={Blue} title={language === '1' ? 'Empleados' : 'Empleados'} countTitle={altas_bajas_quincenas.empleados_periodo && altas_bajas_quincenas.empleados_periodo} iconLeft={'account'} lateral={altas_bajas_quincenas.activos_semana_ant && altas_bajas_quincenas.activos_semana_ant}/>
                         <Box color={'#2CA02C'} title={language === '1' ? 'Altas' : 'Altas'} countTitle={altas_bajas_quincenas.altas && altas_bajas_quincenas.altas} iconLeft={'account-plus'} lateral={altas_bajas_quincenas.altas_porcentaje && `${altas_bajas_quincenas.altas_porcentaje}%`} iconLateral={'menu-up'}/>
                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : 'Bajas'} countTitle={altas_bajas_quincenas.bajas && altas_bajas_quincenas.bajas} iconLeft={'account-minus'} lateral={altas_bajas_quincenas.bajas_porcentaje && `${altas_bajas_quincenas.bajas_porcentaje}%`} iconLateral={'menu-down'}/>
@@ -1401,21 +1386,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     verticalLabelRotation={0}
                 />
                 
-                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Altas</Text>
+                <View style={tw`h-auto self-stretch px-2`}>
+                    <View style={tw`flex-row justify-center items-center`}>
+                        <View style={tw`flex-1 justify-center items-start px-2`}>
+                            <Text style={tw`font-bold text-[#000] text-lg`}>Altas</Text>
                         </View>
-                        <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={tw`h-12.5 w-auto justify-center items-center`}>
+                            <View style={tw`h-auto w-auto rounded-lg p-1.5 bg-[${Blue}] justify-center items-center flex-row`}>
                                 <IonIcons name={'file-document-outline'} size={20} color='#fff' />
-                                <Text style={{fontWeight: 'bold', color: '#fff'}}>{language === '1' ? 'Ver detalle de altas' : 'Resume'}</Text>
+                                <Text style={tw`font-bold text-[#fff]`}>{language === '1' ? 'Ver detalle de altas' : 'Resume'}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                 </View>
                 
-                <View style={{height:'auto', justifyContent: 'flex-start', alignItems: 'flex-start', marginBottom: 15, flex: 1}}>
+                <View style={tw`h-auto justify-start items-start mb-4 flex-1`}>
                     <PieChart
                         paddingLeft={'0'}
                         data={altas_grafico}
@@ -1428,31 +1413,27 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             color: () => 'yellow',
                             labelColor: () => 'black',
                         }}
-                        style={{
-                            alignSelf: 'stretch',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                        }}
+                        style={tw`self-stretch justify-start items-start`}
                         accessor={'product'}
                         backgroundColor={'transparent'}
                     />
                 </View>
 
-                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Bajas</Text>
+                <View style={tw`h-auto self-stretch px-2`}>
+                    <View style={tw`flex-row justify-center items-center`}>
+                        <View style={tw`flex-1 justify-center items-start px-2`}>
+                            <Text style={tw`font-bold text-[#000] text-lg`}>Bajas</Text>
                         </View>
-                        <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={tw`h-12.5 w-auto justify-center items-center`}>
+                            <View style={tw`h-auto w-auto rounded-lg p-1.5 bg-[${Blue}] justify-center items-center flex-row`}>
                                 <IonIcons name={'file-document-outline'} size={20} color='#fff' />
-                                <Text style={{fontWeight: 'bold', color: '#fff'}}>{language === '1' ? 'Ver detalle de bajas' : 'Resume'}</Text>
+                                <Text style={tw`font-bold text-[#fff]`}>{language === '1' ? 'Ver detalle de bajas' : 'Resume'}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <View style={{height:'auto', justifyContent: 'flex-start', alignItems: 'flex-start', alignSelf: 'stretch', marginBottom: 15, flex: 1}}>
+                <View style={tw`h-auto justify-start items-start self-stretch mb-4 flex-1`}>
                     <PieChart
                         absolute={true}
                         paddingLeft={'0'}
@@ -1471,33 +1452,28 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             color: () => 'yellow',
                             labelColor: () => 'black',
                         }}
-                        style={{
-                            flex: 1,
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            backgroundColor: '#fff',
-                        }}
+                        style={tw`flex-1 justify-start items-start bg-[#fff]`}
                         backgroundColor={'transparent'}
                         accessor={'product'}
                     />
                 </View>
 
                 <Title title={'Training'} icon={'chart-bar-stacked'} tipo={2} vertical={false}/>
-                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                <View style={tw`h-auto self-stretch`}>
+                    <View style={tw`flex-row mb-4`}>
                         <Box color={Blue} title={language === '1' ? 'Altas' : 'Altas'} countTitle={training.altas && training.altas} iconLeft={'account'} lateral={altas_bajas_quincenas.activos_semana_ant && altas_bajas_quincenas.activos_semana_ant}/>
                         <Box color={'#2CA02C'} title={language === '1' ? 'Activos' : 'Activos'} countTitle={training.activos && training.activos} iconLeft={'account-plus'} lateral={training.activos_porcentaje && `${training.activos_porcentaje}%`} iconLateral={'menu-up'}/>
                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : 'Bajas'} countTitle={training.activos && training.activos} iconLeft={'account-minus'} lateral={training.bajas_porcentaje && `${training.bajas_porcentaje}%`} iconLateral={'menu-down'}/>
                     </View>
                 </View>
 
-                <View style={{height: 35, alignSelf: 'stretch', paddingHorizontal: 8, backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: 0.5, justifyContent: 'center', alignItems: 'center', marginHorizontal: 1.5, marginBottom: 8}}>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{width: 'auto', justifyContent: 'center'}}>
+                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mx-0.5 mb-2`}>
+                    <View style={tw`flex-row`}>
+                        <View style={tw`w-auto justify-center`}>
                             <Icon name={'info'} size={24} color={Blue} />
                         </View>
-                        <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalles</Text>
+                        <View style={tw`flex-1 justify-center px-2`}>
+                            <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalles</Text>
                         </View>
                     </View>
                 </View>
@@ -1513,7 +1489,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 />
                 
                 <View style={{height: 'auto', marginBottom: 15}}>
-                    <View style={{height: 'auto', alignSelf: 'stretch'}}>
+                    <View style={tw`h-auto self-stretch`}>
                         <FlatList
                             key={'__1'}
                             showsVerticalScrollIndicator={false}
@@ -1525,7 +1501,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             keyExtractor={item => String(item.id)}
                         />
                     </View>
-                    <View style={{height: 'auto', alignSelf: 'stretch'}}>
+                    <View style={tw`h-auto self-stretch`}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
@@ -1610,24 +1586,24 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                 <View style={{marginBottom: 15}}></View>
                 <Title title={title} icon={'finance'} tipo={2} vertical={false}/>
-                <View style={{height: 'auto',  backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: .5, padding: 3, marginBottom: 8}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginRight: 6}}>
-                            <Text style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
+                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2`}>
+                    <View style={tw`flex-row items-center`}>
+                        <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5 mr-1.5`}>
+                            <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                         </View>
-                        <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Área</Text>
+                        <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalle de Área</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
+                    <View style={tw`flex-1 justify-center items-center`}>
                         <Text style={{color: '#000'}}>{currentArea}</Text>
                     </View>
-                    <View style={{width: 'auto'}}>
+                    <View style={tw`w-auto`}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                     </View>
                 </TouchableOpacity>
 
-                <View style={{flex: 1, height: 'auto', marginHorizontal: 1.5}}>
+                <View style={tw`flex-1 h-auto mx-0.5`}>
                     <PieChart
                         absolute={true}
                         paddingLeft={'0'}
@@ -1641,32 +1617,28 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             color: () => 'yellow',
                             labelColor: () => 'black',
                         }}
-                        style={{
-                            alignSelf: 'stretch',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                        }}
+                        style={tw`self-stretch justify-start items-start`}
                         accessor={'product'}
                         backgroundColor={'transparent'}
                     />
                 </View>
 
-                <View style={{height: 35, alignSelf: 'stretch', paddingHorizontal: 8, backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: 0.5, justifyContent: 'center', alignItems: 'center', marginBottom: 8, marginTop: 20}}>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{width: 'auto', justifyContent: 'center'}}>
+                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mb-2 mt-5`}>
+                    <View style={tw`flex-row`}>
+                        <View style={tw`w-auto justify-center`}>
                             <Icon name={'info'} size={24} color={Blue} />
                         </View>
-                        <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                            <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Subárea</Text>
+                        <View style={tw`flex-1 justify-center px-2`}>
+                            <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalle de Subárea</Text>
                         </View>
                     </View>
                 </View>
 
-                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-                        <Text style={{color: '#000'}}>{currentSubarea}</Text>
+                <TouchableOpacity style={[picker, tw`shadow-md bg-white flex-row`]} onPress={() => handleVisibleSubarea()}>
+                    <View style={tw`flex-1 justify-center items-center`}>
+                        <Text style={tw`text-[#000]`}>{currentSubarea}</Text>
                     </View>
-                    <View style={{width: 'auto'}}>
+                    <View style={tw`w-auto`}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                     </View>
                 </TouchableOpacity>
@@ -1684,33 +1656,29 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         color: () => 'yellow',
                         labelColor: () => 'black',
                     }}
-                    style={{
-                        alignSelf: 'stretch',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                    }}
+                    style={tw`self-stretch justify-start items-start`}
                     accessor={'product'}
                     backgroundColor={'transparent'}
                 />
 
-                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', borderTopStartRadius: 16, borderTopEndRadius: 16}}>
-                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 2, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
+                <View style={tw`h-auto self-stretch justify-center items-center rounded-tl-2xl border-tr-2xl`}>
+                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
                         <IonIcons name={'menu'} size={28} color={Blue} />
-                        <View style={{width: 4}}></View>
-                        <Text style={{color: Blue, fontSize: 16, fontWeight: 'bold'}}>Empleados por Razón Social</Text>
+                        <View style={tw`w-1`} />
+                        <Text style={tw`text-[${Blue}] text-base font-bold`}>Empleados por Razón Social</Text>
                     </View>
                 </View>
-                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`h-auto self-stretch justify-center items-center`}>
                     {
                         total_razon_social.length > 0
                         &&
                             total_razon_social.map(x => 
-                                <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
-                                    <View style={{flex: 1, paddingHorizontal: 8}}>
-                                        <Text style={{color: Blue, fontSize: 12}}>{x.name}</Text>
+                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                    <View style={tw`flex-1 px-2`}>
+                                        <Text style={tw`text-[${Blue}] text-xs`}>{x.name}</Text>
                                     </View>
-                                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 4}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
+                                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-1`}>
+                                        <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
                                     </View>
                                 </View>
                             )
@@ -1720,8 +1688,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     <View style={{flex: 1, paddingHorizontal: 4}}>
                         <Text style={{color: Blue, fontSize: 14, fontWeight: 'bold'}}>Total General</Text>
                     </View>
-                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
-                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
+                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
+                        <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                     </View>
                 </View>
 
@@ -1877,7 +1845,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Box = ({iconLeft, title, countTitle, lateral, iconLateral, color}) => {
         return(
-            <View style={styles.box}>
+            <View style={box}>
                 <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
                     <IonIcons name={iconLeft} size={22} color={color} />
                 </View>
@@ -1887,7 +1855,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         <Text style={{fontSize: 10, color:'#000'}}>{title}</Text>
                     </View>
                 </View>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`flex-1 justify-center items-center`}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', alignSelf: 'stretch'}}>
                         <Text style={{fontSize: 10, color: color, fontWeight: 'bold'}}>{lateral}</Text>
                     </View>
@@ -1907,8 +1875,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-
-                
             <View style={[styles.container]}>
                 {
                     hasConnection
@@ -1935,8 +1901,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                             <>
                                                 <View style={{marginTop: '3%'}}></View>
                                                 <Title icon={'timer-sand'} title={'Información en Tiempo Real'} tipo={2} vertical={false}/>
-                                                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                                                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                                <View style={tw`h-auto self-stretch`}>
+                                                    <View style={tw`flex-row mb-4`}>
                                                         <Box color={Blue} title={language === '1' ? 'Empleados' : 'Empleados'} countTitle={tiempo_real.empleados && tiempo_real.empleados} iconLeft={'account'} lateral={tiempo_real.empleados_periodo_ant && tiempo_real.empleados_periodo_ant}/>
                                                         <Box color={'#2CA02C'} title={language === '1' ? 'Altas' : 'Altas'} countTitle={tiempo_real.altas_real && tiempo_real.altas_real} iconLeft={'account-plus'} lateral={tiempo_real.altas_real_porcentaje && `${tiempo_real.altas_real_porcentaje}%`} iconLateral={'menu-up'}/>
                                                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : ''} countTitle={tiempo_real.bajas_real && tiempo_real.bajas_real} iconLeft={'account-minus'} lateral={tiempo_real.bajas_real_porcentaje && `${tiempo_real.bajas_real_porcentaje}%`} iconLateral={'menu-down'}/>
@@ -1945,24 +1911,24 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <Title title={'Altas y Bajas por Quincena'} icon={'chart-line'} tipo={2} vertical={false}/>
 
-                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
-                                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
+                                                    <View style={tw`flex-1 justify-center items-center`}>
                                                         <Text style={{color: '#000'}}>{currentQuincena}</Text>
                                                     </View>
-                                                    <View style={{width: 'auto'}}>
+                                                    <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                                                     </View>
                                                 </TouchableOpacity>
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                                                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                                <View style={tw`h-auto self-stretch`}>
+                                                    <View style={tw`flex-row mb-4`}>
                                                         <Box color={Blue} title={language === '1' ? 'Empleados' : 'Empleados'} countTitle={altas_bajas_quincenas.empleados_periodo && altas_bajas_quincenas.empleados_periodo} iconLeft={'account'} lateral={altas_bajas_quincenas.activos_semana_ant && altas_bajas_quincenas.activos_semana_ant}/>
                                                         <Box color={'#2CA02C'} title={language === '1' ? 'Altas' : 'Altas'} countTitle={altas_bajas_quincenas.altas && altas_bajas_quincenas.altas} iconLeft={'account-plus'} lateral={altas_bajas_quincenas.altas_porcentaje && `${altas_bajas_quincenas.altas_porcentaje}%`} iconLateral={'menu-up'}/>
                                                     </View>
                                                 </View>
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                                                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                                <View style={tw`h-auto self-stretch`}>
+                                                    <View style={tw`flex-row mb-4`}>
                                                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : 'Bajas'} countTitle={altas_bajas_quincenas.bajas && altas_bajas_quincenas.bajas} iconLeft={'account-minus'} lateral={altas_bajas_quincenas.bajas_porcentaje && `${altas_bajas_quincenas.bajas_porcentaje}%`} iconLateral={'menu-down'}/>
                                                         <Box color={'#808B96'} title={'IRP'} countTitle={altas_bajas_quincenas.irp_porcentaje && `${altas_bajas_quincenas.irp_porcentaje}%`} iconLeft={'calculator'} />
                                                     </View>
@@ -2003,21 +1969,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     />
                                                 </View>
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
-                                                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Altas</Text>
+                                                <View style={tw`h-auto self-stretch px-2`}>
+                                                    <View style={tw`flex-row justify-center items-center`}>
+                                                        <View style={tw`flex-1 justify-center items-start px-2`}>
+                                                            <Text style={tw`font-bold text-[#000] text-lg`}>Altas</Text>
                                                         </View>
-                                                        <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                                                            <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                                        <TouchableOpacity onPress={() => setInitialState({...initialState, altas: !altas})} style={tw`h-12.5 w-auto justify-center items-center`}>
+                                                            <View style={tw`h-auto w-auto rounded-lg p-1.5 bg-[${Blue}] justify-center items-center flex-row`}>
                                                                 <IonIcons name={'file-document-outline'} size={20} color='#fff' />
-                                                                <Text style={{fontWeight: 'bold', color: '#fff'}}>{language === '1' ? 'Ver detalle de altas' : 'Resume'}</Text>
+                                                                <Text style={tw`font-bold text-[#fff]`}>{language === '1' ? 'Ver detalle de altas' : 'Resume'}</Text>
                                                             </View>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
                                                 
-                                                <View style={{height:'auto', justifyContent: 'flex-start', alignItems: 'flex-start', marginBottom: 15, flex: 1}}>
+                                                <View style={tw`h-auto justify-start items-start mb-4 flex-1`}>
                                                     <PieChart
                                                         absolute={true}
                                                         paddingLeft={'0'}
@@ -2041,21 +2007,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     />
                                                 </View>
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8}}>
-                                                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: '#000', fontSize: 18}}>Bajas</Text>
+                                                <View style={tw`h-auto self-stretch px-2`}>
+                                                    <View style={tw`flex-row justify-center items-center`}>
+                                                        <View style={tw`flex-1 justify-center items-start px-2`}>
+                                                            <Text style={tw`font-bold text-[#000] text-lg`}>Bajas</Text>
                                                         </View>
-                                                        <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={{height: 50, width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                                                            <View style={{height: 'auto', width: 'auto', borderRadius: 8, padding: 6, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                                        <TouchableOpacity onPress={() => setInitialState({...initialState, bajas: !bajas})} style={tw`h-12.5 w-auto justify-center items-center`}>
+                                                            <View style={tw`h-auto w-auto rounded-lg p-1.5 bg-[${Blue}] justify-center items-center flex-row`}>
                                                                 <IonIcons name={'file-document-outline'} size={20} color='#fff' />
-                                                                <Text style={{fontWeight: 'bold', color: '#fff'}}>{language === '1' ? 'Ver detalle de bajas' : 'Resume'}</Text>
+                                                                <Text style={tw`font-bold text-[#fff]`}>{language === '1' ? 'Ver detalle de bajas' : 'Resume'}</Text>
                                                             </View>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
 
-                                                <View style={{height:'auto', justifyContent: 'flex-start', alignItems: 'flex-start', alignSelf: 'stretch', marginBottom: 15, flex: 1}}>
+                                                <View style={tw`h-auto justify-start items-start self-stretch mb-4 flex-1`}>
                                                     <PieChart
                                                         absolute={true}
                                                         paddingLeft={'0'}
@@ -2085,21 +2051,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 </View>
 
                                                 <Title title={'Training'} icon={'chart-bar-stacked'} tipo={2} vertical={false}/>
-                                                <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                                                    <View style={{flexDirection: 'row', marginBottom: 15}}>
+                                                <View style={tw`h-auto self-stretch`}>
+                                                    <View style={tw`flex-row mb-4`}>
                                                         <Box color={Blue} title={language === '1' ? 'Altas' : 'Altas'} countTitle={training.altas && training.altas} iconLeft={'account'} lateral={altas_bajas_quincenas.activos_semana_ant && altas_bajas_quincenas.activos_semana_ant}/>
                                                         <Box color={'#2CA02C'} title={language === '1' ? 'Activos' : 'Activos'} countTitle={training.activos && training.activos} iconLeft={'account-plus'} lateral={training.activos_porcentaje && `${training.activos_porcentaje}%`} iconLateral={'menu-up'}/>
                                                         <Box color={'#FF0000'} title={language === '1' ? 'Bajas' : 'Bajas'} countTitle={training.activos && training.activos} iconLeft={'account-minus'} lateral={training.bajas_porcentaje && `${training.bajas_porcentaje}%`} iconLateral={'menu-down'}/>
                                                     </View>
                                                 </View>
 
-                                                <View style={{height: 35, alignSelf: 'stretch', paddingHorizontal: 8, backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: 0.5, justifyContent: 'center', alignItems: 'center', marginHorizontal: 1.5, marginBottom: 8}}>
-                                                    <View style={{flexDirection: 'row'}}>
-                                                        <View style={{width: 'auto', justifyContent: 'center'}}>
+                                                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mx-0.5 mb-2`}>
+                                                    <View style={tw`flex-row`}>
+                                                        <View style={tw`w-auto justify-center`}>
                                                             <Icon name={'info'} size={24} color={Blue} />
                                                         </View>
-                                                        <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalles</Text>
+                                                        <View style={tw`flex-1 justify-center px-2`}>
+                                                            <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalles</Text>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -2115,7 +2081,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 
 
                                                 <View style={{height: 'auto', marginBottom: 15}}>
-                                                    <View style={{height: 'auto', alignSelf: 'stretch'}}>
+                                                    <View style={tw`h-auto self-stretch`}>
                                                         <FlatList
                                                             showsVerticalScrollIndicator={false}
                                                             showsHorizontalScrollIndicator={false}
@@ -2191,24 +2157,24 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 
                                                 <View style={{marginBottom: 15}}></View>
                                                 <Title title={title} icon={'finance'} tipo={2} vertical={false}/>
-                                                <View style={{height: 'auto',  backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: .5, padding: 3, marginBottom: 8}}>
-                                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                        <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2, marginRight: 6}}>
-                                                            <Text style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
+                                                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2`}>
+                                                    <View style={tw`flex-row items-center`}>
+                                                        <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5 mr-1.5`}>
+                                                            <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                                                         </View>
-                                                        <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Área</Text>
+                                                        <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalle de Área</Text>
                                                     </View>
                                                 </View>
-                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
-                                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
+                                                    <View style={tw`flex-1 justify-center items-center`}>
                                                         <Text style={{color: '#000'}}>{currentArea}</Text>
                                                     </View>
-                                                    <View style={{width: 'auto'}}>
+                                                    <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                                                     </View>
                                                 </TouchableOpacity>
 
-                                                <View style={{flex: 1, height: 'auto', marginHorizontal: 1.5}}>
+                                                <View style={tw`flex-1 h-auto mx-0.5`}>
 
                                                     <PieChart
                                                         absolute={true}
@@ -2234,21 +2200,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 </View>
 
                                                 <View style={{height: 35, alignSelf: 'stretch', paddingHorizontal: 8, backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: 0.5, justifyContent: 'center', alignItems: 'center', marginBottom: 8, marginTop: 8}}>
-                                                    <View style={{flexDirection: 'row'}}>
-                                                        <View style={{width: 'auto', justifyContent: 'center'}}>
+                                                    <View style={tw`flex-row`}>
+                                                        <View style={tw`w-auto justify-center`}>
                                                             <Icon name={'info'} size={24} color={Blue} />
                                                         </View>
-                                                        <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                                                            <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>Detalle de Subárea</Text>
+                                                        <View style={tw`flex-1 justify-center px-2`}>
+                                                            <Text style={tw`font-bold text-[${Blue}] text-lg`}>Detalle de Subárea</Text>
                                                         </View>
                                                     </View>
                                                 </View>
 
-                                                <TouchableOpacity style={[styles.picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
-                                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
+                                                    <View style={tw`flex-1 justify-center items-center`}>
                                                         <Text style={{color: '#000'}}>{currentSubarea}</Text>
                                                     </View>
-                                                    <View style={{width: 'auto'}}>
+                                                    <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
                                                     </View>
                                                 </TouchableOpacity>
@@ -2276,23 +2242,23 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 />
 
                                                 <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 8, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
-                                                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 2, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
+                                                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
                                                         <IonIcons name={'menu'} size={28} color={Blue} />
-                                                        <View style={{width: 4}}></View>
-                                                        <Text style={{color: Blue, fontSize: 16, fontWeight: 'bold'}}>Empleados por Razón Social</Text>
+                                                        <View style={tw`w-1`} />
+                                                        <Text style={tw`text-[${Blue}] text-base font-bold`}>Empleados por Razón Social</Text>
                                                     </View>
                                                 </View>
-                                                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={tw`h-auto self-stretch justify-center items-center`}>
                                                     {
                                                         total_razon_social.length > 0
                                                         &&
                                                             total_razon_social.map(x => 
-                                                                <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
-                                                                    <View style={{flex: 1, paddingHorizontal: 8}}>
-                                                                        <Text style={{color: Blue, fontSize: 12}}>{x.name}</Text>
+                                                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                                                    <View style={tw`flex-1 px-2`}>
+                                                                        <Text style={tw`text-[${Blue}] text-xs`}>{x.name}</Text>
                                                                     </View>
-                                                                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 4}}>
-                                                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
+                                                                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-1`}>
+                                                                        <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
                                                                     </View>
                                                                 </View>
                                                             )
@@ -2302,8 +2268,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     <View style={{flex: 1, paddingHorizontal: 4}}>
                                                         <Text style={{color: Blue, fontSize: 14, fontWeight: 'bold'}}>Total General</Text>
                                                     </View>
-                                                    <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
-                                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{total}</Text>
+                                                    <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
+                                                        <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                                                     </View>
                                                 </View>
                                                 
@@ -2470,24 +2436,24 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     showsHorizontalScrollIndicator={false}
                 >
                     <Title title={language === '1' ? 'Detalle de Altas' : 'Resume'} icon={'chart-bar-stacked'} tipo={2} vertical={false} itCloses={() => setInitialState({...initialState, altas: !altas})}/>
-                    <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', paddingVertical: 6, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
+                    <View style={tw`h-auto self-stretch justify-center items-center`}>
+                        <View style={tw`h-auto self-stretch bg-[#f7f7f7] border border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-1.5 rounded-tl-2xl rounded-tr-2xl`}>
                             <IonIcons name={'menu'} size={28} color={Blue} />
-                            <View style={{width: 4}}></View>
+                            <View style={tw`w-1`} />
                             <Text style={{color: Blue, fontSize: 16}}>Altas por Subárea</Text>
                         </View>
                     </View>
-                    <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={tw`h-auto self-stretch justify-center items-center`}>
                     {
                         detalle_altas.length > 0
                         &&
                             detalle_altas.map(x => 
-                                <View key={x.id} style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#CBCBCB', borderWidth: 1, borderTopWidth: 0.5, borderBottomWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4}}>
-                                    <View style={{flex: 1, paddingHorizontal: 8}}>
+                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                    <View style={tw`flex-1 px-2`}>
                                         <Text style={{color: Blue}}>{x.name}</Text>
                                     </View>
-                                    <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 2, paddingHorizontal: 4}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{x.total}</Text>
+                                    <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 4}}>
+                                        <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
                                     </View>
                                 </View>
                             )
@@ -2495,11 +2461,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         
                     </View>
                     <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                        <View style={{flex: 1, paddingHorizontal: 8}}>
-                            <Text style={{color: Blue, fontWeight: 'bold'}}>{language === '1' ? 'Total General' : ''}</Text>
+                        <View style={tw`flex-1 px-2`}>
+                            <Text style={tw`text-[${Blue}] font-bold`}>{language === '1' ? 'Total General' : ''}</Text>
                         </View>
-                        <View style={{width: 'auto', backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2}}>
-                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#fff'}}>{altas_bajas_quincenas.altas && altas_bajas_quincenas.altas}</Text>
+                        <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
+                            <Text style={tw`text-base font-bold text-[#fff]`}>{altas_bajas_quincenas.altas && altas_bajas_quincenas.altas}</Text>
                         </View>
                     </View>
                 </ScrollView>
@@ -2547,6 +2513,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
         </>
     )
 }
+
+const box = tw`flex-1 h-15 bg-[#fff] flex-row px-1 shadow-md rounded-2xl mx-1.5`
+const picker = tw`justify-center items-center mb-4 h-12.5 px-4 self-stretch rounded-2xl mx-1.5`
+
 
 const styles = StyleSheet.create({
     container: {

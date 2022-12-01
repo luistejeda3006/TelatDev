@@ -23,12 +23,12 @@ export default ({navigation}) => {
             if(data){
                 setTimeout(() => {
                     navigation.navigate('Logged', {language: current, orientation: orientation});
-                }, 5600) //estaba en 5600
+                }, 100) //estaba en 5600
             }
             else {
                 setTimeout(() => {
                     navigation.navigate('Unlogged', {language: current, orientation: orientation});
-                }, 5600) //estaba en 5600
+                }, 100) //estaba en 5600
             }
         }, [])
     );

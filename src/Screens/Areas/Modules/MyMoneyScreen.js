@@ -211,7 +211,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         dispatch(setOperaciones(response.my_money))
                         dispatch(setAgente(obj))
                         setInitialState({...initialState, fechas: respuestita.dates, loading: false});
-                    }, 500)
+                    }, 800)
                 }
             }
             else if(response.status === 401){

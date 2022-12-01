@@ -78,7 +78,7 @@ export default ({navigation, route: {params}}) => {
         useCallback(() => {
             setTimeout(() => {
                 navigation.navigate('Dashboard', {language: language, orientation: orientationInfo.initial});
-            }, (contador === 1 || contador === 0) ? 4000 : 1) //AQUI ERAN 4000 en el primero
+            }, (contador === 1 || contador === 0) ? 100 : 1) //AQUI ERAN 4000 en el primero
         }, [])
     );
    

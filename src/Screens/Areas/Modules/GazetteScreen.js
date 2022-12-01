@@ -96,7 +96,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 setTimeout(() => {
                     setInitialState({...initialState, data: response})
                     setLoading(false)
-                }, 500)
+                }, 800)
             }
             else if(response.status === 401){
                 Alert.alert(

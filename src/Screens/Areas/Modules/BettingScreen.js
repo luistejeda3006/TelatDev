@@ -99,7 +99,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     dispatch(setInstructions(response.instructions))
                     setLoading(false)
                     setLoaded(true)
-                }, 500)
+                }, 800)
                 
             }
         }

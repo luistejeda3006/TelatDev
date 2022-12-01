@@ -129,7 +129,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 setInitialState({...initialState, info: response.info, antiguedad: {...antiguedad, years: spt[0], months: spt[2], days: spt[4]}, periodos: response.periodos, currentPeriodo: !currentPeriodo ? response.periodos[0].label : currentPeriodo, prima_vacacional: response.prima_vacacional, solicitudes: response.solicitud})
                 setTimeout(() => {
                     setLoading(false)
-                }, 500)
+                }, 800)
             }
         }catch(e){
             console.log('algo pasó con el internet')

@@ -14,6 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import RNFetchBlob from 'rn-fetch-blob'
 import tw from 'twrnc'
 import { useFocusEffect } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 let cuenta = 0;
 
@@ -71,6 +72,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
         speakingLevel: '',
         writingLevel: '',
         programs: '',
+        currentProgramsOption: 0,
         currentClose: 0,
         currentCloseOption: 0,
         companies_time: '',
@@ -92,7 +94,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
         currentLevelOptionSpanish: 0,
     })
 
-    const {currentCity, currentContact, currentCityOption, currentAboutUs, currentAboutUsOption, speakingLevel, writingLevel, programs, currentClose, currentCloseOption, companies_time, fullName, email, telefono_1, telefono_2, other, currentContactOption, currentSchedule, currentScheduleOption, currentLevelEnglish, currentLevelOptionEnglish, currentLevelSpanish, currentLevelOptionSpanish} = values
+    const {currentCity, currentContact, currentCityOption, currentAboutUs, currentAboutUsOption, speakingLevel, writingLevel, programs, currentProgramsOption, currentClose, currentCloseOption, companies_time, fullName, email, telefono_1, telefono_2, other, currentContactOption, currentSchedule, currentScheduleOption, currentLevelEnglish, currentLevelOptionEnglish, currentLevelSpanish, currentLevelOptionSpanish} = values
 
     const [initialState, setInitialState] = useState({
         loading: false,
@@ -362,6 +364,10 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
     const handleActionSiete = (value, label) => {
         handleSetState({...values, currentLevelSpanish: value, currentLevelOptionSpanish: label})
     }
+    
+    const handleActionOcho = (value, label) => {
+        handleSetState({...values, programs: value, currentProgramsOption: label})
+    }
 
     const handleSave = async (tipo) => {
         if(cuenta === 0){
@@ -507,7 +513,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
     }
 
     const handleValidateAboutMx = () => {
-        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6 && currentLevelEnglish !== '' && currentLevelSpanish !== '' && programs !== '') handleValidateLanguagesMx()
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 6 && currentLevelEnglish !== '' && currentLevelSpanish !== '' && currentProgramsOption !== 0) handleValidateLanguagesMx()
         else {
             if(currentAboutUsOption === 0) Alerta()
             else {
@@ -531,7 +537,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
     }
 
     const handleValidateAboutUs = () => {
-        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 5 && currentLevelOptionEnglish !== 0 && currentLevelOptionSpanish !== 0 && currentContactOption !== 0 && currentScheduleOption !== 0 && programs !== '' && fullName !== '' && email !== '' && telefono_1 !== '') handleValidateCompaniesUS()
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 5 && currentLevelOptionEnglish !== 0 && currentLevelOptionSpanish !== 0 && currentContactOption !== 0 && currentScheduleOption !== 0 && currentProgramsOption !== 0 && fullName !== '' && email !== '' && telefono_1 !== '') handleValidateCompaniesUS()
         else {
             if(currentAboutUsOption === 0 || currentLevelOptionEnglish === 0 || currentLevelOptionSpanish === 0 || currentContactOption === 0 || currentScheduleOption === 0 || programs === '' || fullName === '' || email === '' || telefono_1 === '') Alerta()
             else {
@@ -566,7 +572,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
                         <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
                         <View style={tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '4%'}] bg-white`}>
-                            <KeyboardAwareScrollView
+                            <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
@@ -657,13 +663,24 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     }
                                                 </View>
 
-                                                <Text style={titleStyle}>{language === '1' ? '¿Puedes manejar distintas aplicaciones y programas en la computadora?' : `Are you able to handle different apps and programs on the computer?`}</Text>
-                                                <Input 
-                                                    value={programs}
-                                                    onChangeText={(e) => handleInputChange(e, 'programs')}
-                                                    placeholder={language === '1' ? 'Especifica' : 'Specify'}
-                                                    ref={handle_programs}
-                                                />
+                                                <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
+                                                <View style={[pickerStyle]} >
+                                                    <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
+                                                        <Picker
+                                                            value={programs}
+                                                            onValueChange={(itemValue, itemIndex) => handleActionOcho(itemValue, itemIndex)}
+                                                            items={levels}
+                                                            placeholder={{}}
+                                                        />
+                                                    </View>
+                                                    {
+                                                        currentProgramsOption === 0
+                                                        &&
+                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
+                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            </View>
+                                                    }
+                                                </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en empleos bilingües?' : '¿Do you have experience in bilingual jobs?'}</Text>
                                                 <View style={[pickerStyle]} >
@@ -855,13 +872,24 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     }
                                                 </View>
 
-                                                <Text style={titleStyle}>{language === '1' ? '¿Puedes manejar distintas aplicaciones y programas en la computadora?' : `Are you able to handle different apps and programs on the computer?`}</Text>
-                                                <Input
-                                                    value={programs}
-                                                    onChangeText={(e) => handleInputChange(e, 'programs')}
-                                                    placeholder={language === '1' ? 'Especifica' : 'Specify'}
-                                                    onSubmitEditing={() => full_name.current.focus()}
-                                                />
+                                                <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
+                                                <View style={[pickerStyle]} >
+                                                    <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
+                                                        <Picker
+                                                            value={programs}
+                                                            onValueChange={(itemValue, itemIndex) => handleActionOcho(itemValue, itemIndex)}
+                                                            items={levels}
+                                                            placeholder={{}}
+                                                        />
+                                                    </View>
+                                                    {
+                                                        currentProgramsOption === 0
+                                                        &&
+                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
+                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            </View>
+                                                    }
+                                                </View>
 
                                                 <Title title={language === '1' ? 'Información de Contacto' : 'Contact Information'} tipo={1} icon={'child'} hasBottom={false}/>
                                                 <Text style={titleStyle}>{language === '1' ? 'Nombre completo' : `Full name`}</Text>
@@ -1010,7 +1038,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         </View>
                                     </TouchableWithoutFeedback>
                                 </View>
-                            </KeyboardAwareScrollView>
+                            </ScrollView>
                         </View>
                     </>
                 :

@@ -213,7 +213,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 dispatch(setQuincena(quincena))
                 setError(false)
                 setLoading(false)
-            }, 500)
+            }, 800)
         }
     
         else if(response.status === 400){

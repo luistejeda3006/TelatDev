@@ -180,7 +180,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     dispatch(setTickets(response.data))
                     dispatch(setPermissions(response.permisos))
                     setLoading(false)
-                }, 500)
+                }, 800)
             }
         }catch(e){
             console.log('e:', e)
