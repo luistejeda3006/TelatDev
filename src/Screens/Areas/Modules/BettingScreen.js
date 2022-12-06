@@ -232,73 +232,75 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const handleCompleted = (id) => {
         Alert.alert(
-            'Guardar quiniela',
-            '¿Seguro que deseas guardar tus resultados?\n\nUna vez guardados, no podrás cambiarlos.',
+            language === '1' ? 'Guardar resultado' : 'Save result',
+            language === '1' ? '¿Seguro que deseas guardar tus resultados?\n\nUna vez guardados, no podrás cambiarlos.' : 'Are you sure you want to save your results?\n\nOnce saved, you will not be able to change them.',
             [
                 {
-                    text: 'Cancelar',
+                    text: langauge === '1' ? 'Cancelar' : 'Cancel',
                     style: "cancel"
                 },
                 { 
-                    text: "Sí, estoy seguro", 
+                    text: language === '1' ? `Sí, estoy seguro` : `Yes, I'm sure`,
                     onPress: async () => {
                         const total_1 = teamUno.find(x => x.id === id)
                         const total_2 = teamDos.find(x => x.id === id)
                         
                         let final_total_1 = total_1 ? total_1.total_1 : 0
                         let final_total_2 = total_2 ? total_2.total_2 : 0
-                        
-                        /* setLoading(true) */
-                        try{
-                            const body = {
-                                "action": "save_resultado",
-                                "data": {
-                                    "id_usuario": id_usuario,
-                                    "id_game": game,
-                                    "goles_local": final_total_1,
-                                    "goles_visit": final_total_2
-                                },
-                                "live": live,
-                                "login": login
-                            }
-                            
-                            const request = await fetch(urlQuiniela, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    token: token,
-                                },
-                                body: JSON.stringify(body)
-                            });
-                            
-                            const {response, status} = await request.json();
-                            if(status){
-                                let nuevos = quinielas.map(x => x.id === id ? ({...x, completed: true, oculta: true, lock: true, fill: status !== 200 ? true : false}) : ({...x, lock: false}))
-                                const edited = data.find(x => x.id === temporalId)
-
-                                const uncompleted = nuevos.find(x => !x.completed)
-                                
-                                const obj = {
-                                    id: edited.id,
-                                    name: edited.name,
-                                    completed: uncompleted ? false : true,
-                                    selected: true,
-                                    partidos: nuevos
+                        if(final_total_1 !== final_total_2){
+                            setLoading(true)
+                            try{
+                                const body = {
+                                    "action": "save_resultado",
+                                    "data": {
+                                        "id_usuario": id_usuario,
+                                        "id_game": game,
+                                        "goles_local": final_total_1,
+                                        "goles_visit": final_total_2
+                                    },
+                                    "live": live,
+                                    "login": login
                                 }
                                 
-                                const finales = data.map(x => x.id !== temporalId ? x : ({...x, ...obj}))
-
-                                const ocup = section === 1 ? 'G' : 'F'
-                                let filtered = finales.filter(x => x.clasified === ocup)
-
-                                if(status === 200 || status === 400){
-                                    dispatch(actionItem({id: temporalId, item: obj}))
-                                    dispatch(setFilteredData(filtered))
-                                    dispatch(setQuinielas(nuevos))
-                                    if(status === 400){
+                                const request = await fetch(urlQuiniela, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        token: token,
+                                    },
+                                    body: JSON.stringify(body)
+                                });
+                                
+                                const {response, status} = await request.json();
+                                if(status){
+                                    let nuevos = quinielas.map(x => x.id === id ? ({...x, completed: true, oculta: true, lock: true, fill: status !== 200 ? true : false}) : ({...x, lock: false}))
+                                    const edited = data.find(x => x.id === temporalId)
+    
+                                    const uncompleted = nuevos.find(x => !x.completed)
+                                    
+                                    const obj = {
+                                        id: edited.id,
+                                        name: edited.name,
+                                        completed: uncompleted ? false : true,
+                                        selected: true,
+                                        partidos: nuevos
+                                    }
+                                    
+                                    const finales = data.map(x => x.id !== temporalId ? x : ({...x, ...obj}))
+    
+                                    const ocup = section === 1 ? 'G' : 'F'
+                                    let filtered = finales.filter(x => x.clasified === ocup)
+    
+                                    if(status === 200){
+                                        setLoading(false)
+                                        dispatch(actionItem({id: temporalId, item: obj}))
+                                        dispatch(setFilteredData(filtered))
+                                        dispatch(setQuinielas(nuevos))
+                                    } else {
+                                        setLoading(false)
                                         Alert.alert(
-                                            'Partido en proceso',
-                                            'No puedes llenar la quiniela una vez que el partido ha comenzado',
+                                            language === '1' ? 'Ops... Algo salió mal' : 'Ops... Something went wrong',
+                                            response.msg,
                                             [
                                                 { 
                                                     text: "OK"
@@ -307,9 +309,28 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         )
                                     }
                                 }
+                            }catch(e){
+                                setLoading(false)
+                                Alert.alert(
+                                    language === '1' ? 'Ops... Algo salió mal' : 'Ops... Something went wrong',
+                                    language === '1' ? 'Ha habido un problema para guardar tu resultado, inténtalo más tarde.' : 'There was a problem saving your result, try again later.',
+                                    [
+                                        { 
+                                            text: "OK"
+                                        }
+                                    ]
+                                )
                             }
-                        }catch(e){
-                            console.log('Algo pasó con el internet')
+                        } else {
+                            Alert.alert(
+                                language === '1' ? 'Ops... Algo salió mal' : 'Ops... Something went wrong',
+                                language === '1' ? 'No puede haber empates en esta ronda.' : 'There can be no ties in this round.',
+                                [
+                                    { 
+                                        text: "OK"
+                                    }
+                                ]
+                            )
                         }
                     }
                 }
@@ -327,11 +348,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const GlobalPodium = ({id, position, name, record, color}) => {
 		return(
-			<Animatable.View 
-				duration={2000}	
-				animation={'fadeInDownBig'}
-                style={tw`h-9 self-stretch border-b-[#dadada] border-b border-t-[#dadada] ${id === 1 ? 'border-t' : ''} justify-center items-center flex-row bg-[${id % 2 === 1 ? '#f7f7f7' : '#fff'}]`}
-			>
+			<View style={tw`h-9 self-stretch border-b-[#dadada] border-b border-t-[#dadada] ${id === 1 ? 'border-t' : ''} justify-center items-center flex-row bg-[${id % 2 === 1 ? '#f7f7f7' : '#fff'}]`}>
 				<View style={tw`h-14 w-14 justify-center items-center`}>
 					<Text style={tw`text-[${color}] text-sm font-${color === Blue ? 'bold' : 'normal'}`}>{position}</Text>
 				</View>
@@ -349,7 +366,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         <IonIcons size={16} color={(id === 1 || id === 2 || id === 3) ? '#fff' : 'transparent'} name={'trophy-variant'}/>
                     </View>
                 </View>
-			</Animatable.View>
+			</View>
 		)
 	}
 
@@ -399,9 +416,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             <View style={tw`h-auto self-stretch flex-row justify-center items-center`}>
                                 <View style={tw`flex-1 h-12.5 justify-center items-center flex-row`}>
                                     <View style={tw`h-[100%] self-stretch flex-row justify-center items-center`}>
-                                        <View 
-                                            
-                                            style={tw`flex-row rounded-3xl h-9.5 w-[100%] justify-center items-center`}>
+                                        <View style={tw`flex-row rounded-3xl h-9.5 w-[100%] justify-center items-center`}>
                                             <View 
                                                 style={tw`h-9 w-9 justify-center items-center rounded-3xl p-1.5 border border-[#dadada]`}>
                                                 <Image
@@ -493,7 +508,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     (completed || lock)
                     ?
                         <>
-                            <View style={tw`justify-center items-center h-auto self-stretch mt-${id === 1 ? '2.5' : 'px'} flex-row mx-2.5`}>
+                            <View style={tw`justify-center items-center h-auto self-stretch mt-${id === 1 ? '2.5' : '0'} flex-row mx-2.5`}>
                                 {
                                     played
                                     ?

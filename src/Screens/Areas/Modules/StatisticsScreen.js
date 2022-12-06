@@ -1124,7 +1124,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             detalle_bajas.map(x => 
                                 <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border border-[#cbcbcb] border-t border-b justify-center items-center flex-row p-1`}>
                                     <View style={tw`flex-1 px-2`}>
-                                        <Text style={{color: Blue}}>{x.name}</Text>
+                                        <Text style={tw`text-[${Blue}]`}>{x.name}</Text>
                                     </View>
                                     <View style={tw`w-${x.total.toString().length === 2 ? 'auto' : 6.5} bg-[${Blue}] justify-center items-center rounded-lg px-1`}>
                                         <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
@@ -1285,11 +1285,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 :
                     first === 'plus'
                     ?
-                        <View style={tw`h-11.5 flex-1 p-1.5 justify-center flex-row border-[${Blue}] border-l border-r border-b`}>
+                        <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
-                            <View style={tw`w-auto justify-center`}>
+                            <View style={{width: 'auto', justifyContent: 'center'}}>
                                 <TouchableOpacity onPress={() => handleChangeVisibility(title)}>
                                     <Icon name={'plus-circle'} size={24} color={Blue} />
                                 </TouchableOpacity>
@@ -1298,11 +1298,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     :
                         first === 'plus_opened'
                         ?
-                            <View style={tw`h-11.5 flex-1 p-1.5 justify-center flex-row border-[${Blue}] border-l border-r border-b`}>
+                            <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                                 <View style={{flex: 1, justifyContent: 'center'}}>
-                                    <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
+                                    <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
                                 </View>
-                                <View style={tw`w-auto justify-center`}>
+                                <View style={{width: 'auto', justifyContent: 'center'}}>
                                     <TouchableOpacity onPress={() =>  handleChangeVisibility(title)}>
                                         <Icon name={'minus-circle'} size={24} color={Blue} />
                                     </TouchableOpacity>
@@ -1310,7 +1310,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         :
                             <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, borderBottomColor: Blue, borderBottomWidth: .5}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
         )
     }
@@ -1363,7 +1363,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     fromZero={true}
                     withCustomBarColorFromData={true}
                     flatColor={true}
-                    style={{height: 'auto'}}
+                    style={tw`h-auto`}
                     yLabelsOffset={30}
                     data={data_altas_bajas_irp}
                     width={Dimensions.get('screen').width - 25}
@@ -1480,7 +1480,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    style={[styles.list, {marginBottom: 10}]}
+                    style={[list, {marginBottom: 10}]}
                     data={training_categorias}
                     numColumns={4}
                     renderItem={({item}) => <Detalle_Gerencia id={item.id} campanna={item.campanna} altas={item.altas} activos={item.activos} bajas={item.bajas} total={item.total} tipo={2}/>}
@@ -1488,13 +1488,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     key={'__'}
                 />
                 
-                <View style={{height: 'auto', marginBottom: 15}}>
+                <View style={tw`h-auto mb-4`}>
                     <View style={tw`h-auto self-stretch`}>
                         <FlatList
                             key={'__1'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={hearder_all}
                             numColumns={5}
                             renderItem={({item}) => <HeaderTable_uno title={item.title}/>}
@@ -1505,7 +1505,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={body_horizontal}
                             numColumns={5}
                             renderItem={({item}) => <BodyTable_uno title={item.fecha} first={item.first}/>}
@@ -1524,7 +1524,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             key={'__$'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={empleados_ubicacion}
                             numColumns={4}
                             renderItem={({item}) => <Empleados_Ubicacion name={item.name} total={item.total} color={item.color}/>}
@@ -1535,7 +1535,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             key={'__$'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={empleados_ubicacion}
                             numColumns={5}
                             renderItem={({item}) => <Empleados_Ubicacion name={item.name} total={item.total} color={item.color}/>}
@@ -1543,7 +1543,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         />
 
                 }
-                <View style={{marginBottom: 15}}></View>
+                <View style={tw`mb-4`}></View>
                 <Title title={'Empleados por Razón Social'} icon={'account-multiple'} tipo={2} vertical={false}/>
                 {
                     !isTablet()
@@ -1552,7 +1552,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             key={'_$_'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={empleados_razon_social}
                             numColumns={2}
                             renderItem={({item}) => <Empleados_Razon_Social name={item.name} total={item.total}/>}
@@ -1565,7 +1565,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 key={'_$_'}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={styles.list}
+                                style={list}
                                 data={empleados_razon_social}
                                 numColumns={2}
                                 renderItem={({item}) => <Empleados_Razon_Social name={item.name} total={item.total}/>}
@@ -1576,7 +1576,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 key={'_$_'}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={styles.list}
+                                style={list}
                                 data={empleados_razon_social}
                                 numColumns={3}
                                 renderItem={({item}) => <Empleados_Razon_Social name={item.name} total={item.total}/>}
@@ -1584,9 +1584,9 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             />
                 }
 
-                <View style={{marginBottom: 15}}></View>
+                <View style={tw`mb-4`}></View>
                 <Title title={title} icon={'finance'} tipo={2} vertical={false}/>
-                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2`}>
+                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2 mx-1.5`}>
                     <View style={tw`flex-row items-center`}>
                         <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5 mr-1.5`}>
                             <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
@@ -1596,7 +1596,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 </View>
                 <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                     <View style={tw`flex-1 justify-center items-center`}>
-                        <Text style={{color: '#000'}}>{currentArea}</Text>
+                        <Text style={tw`text-[#000]`}>{currentArea}</Text>
                     </View>
                     <View style={tw`w-auto`}>
                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1623,7 +1623,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     />
                 </View>
 
-                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mb-2 mt-5`}>
+                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mb-2 mt-5 mx-1.5`}>
                     <View style={tw`flex-row`}>
                         <View style={tw`w-auto justify-center`}>
                             <Icon name={'info'} size={24} color={Blue} />
@@ -1661,8 +1661,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     backgroundColor={'transparent'}
                 />
 
-                <View style={tw`h-auto self-stretch justify-center items-center rounded-tl-2xl border-tr-2xl`}>
-                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
+                <View style={tw`h-auto self-stretch justify-center items-center mt-2 rounded-tl-2xl rounded-tr-2xl`}>
+                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
                         <IonIcons name={'menu'} size={28} color={Blue} />
                         <View style={tw`w-1`} />
                         <Text style={tw`text-[${Blue}] text-base font-bold`}>Empleados por Razón Social</Text>
@@ -1673,7 +1673,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         total_razon_social.length > 0
                         &&
                             total_razon_social.map(x => 
-                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-b border-[#CBCBCB] border-l border-r justify-center items-center flex-row p-1`}>
                                     <View style={tw`flex-1 px-2`}>
                                         <Text style={tw`text-[${Blue}] text-xs`}>{x.name}</Text>
                                     </View>
@@ -1684,36 +1684,36 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             )
                     }
                 </View>
-                <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                    <View style={{flex: 1, paddingHorizontal: 4}}>
-                        <Text style={{color: Blue, fontSize: 14, fontWeight: 'bold'}}>Total General</Text>
+                <View style={tw`h-auto self-stretch bg-[#f7f7f7] border border-[#CBCBCB] justify-center items-center flex-row p-1 rounded-bl-2xl rounded-br-2xl`}>
+                    <View style={tw`flex-1 px-1`}>
+                        <Text style={tw`text-[${Blue}] text-sm font-bold`}>Total General</Text>
                     </View>
                     <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
                         <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                     </View>
                 </View>
 
-                <View style={{marginBottom: 15}}></View>
+                <View style={tw`mb-4`}></View>
                 <Title title={'Índice de Rotación de Personal'} icon={'finance'} tipo={2} vertical={false}/>
-                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
+                <View style={tw`h-auto self-stretch mb-4`}>
                     <FlatList
                         key={'_$%_'}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
-                        style={styles.list}
+                        style={list}
                         data={legendsIRP}
                         numColumns={4}
                         renderItem={({item}) => <Year year={item.year} checked={item.checked}/>}
                         keyExtractor={item => String(item.id)}
                     />
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`justify-center items-center`}>
                     {
                         content
                         ?
                             <LineChart
                                 fromZero={true}
-                                style={{justifyContent: 'center', alignItems: 'center'}}
+                                style={tw`justify-center items-center`}
                                 data={{
                                     labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
                                     datasets: dataIRP,
@@ -1740,15 +1740,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     }
                 </View>
 
-                <View style={{marginBottom: 15}}></View>
+                <View style={tw`mb-4`}></View>
                 <Title title={'Gráficas Comparativas Altas-Bajas-IRP'} icon={'finance'} tipo={2} vertical={false}/>
-                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
-                    <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}}>
+                <View style={tw`h-auto self-stretch mb-4`}>
+                    <View style={tw`h-auto self-stretch mb-2.5`}>
                         <FlatList
                             key={'_8$_'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={yearsPickerUno}
                             numColumns={5}
                             renderItem={({item}) => <YearsPickerUno name={item.name} selected={item.selected}/>}
@@ -1767,7 +1767,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     fromZero={true}
                     withCustomBarColorFromData={true}
                     flatColor={true}
-                    style={{height: 'auto'}}
+                    style={tw`h-auto`}
                     yLabelsOffset={30}
                     data={data_grafica_comparativa_uno}
                     width={Dimensions.get('screen').width - 25}
@@ -1790,15 +1790,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     verticalLabelRotation={0}
                 />
 
-                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8, paddingBottom: 8, borderBottomColor: '#dadada', borderBottomWidth: 1, marginBottom: 15, marginTop: 15}}/>
+                <View style={tw`h-auto self-stretch px-2 pb-2 border border-[#dadada] my-4`} />
 
-                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
-                    <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}}>
+                <View style={tw`h-auto self-stretch mb-4`}>
+                    <View style={tw`h-auto self-stretch mb-2.5`}>
                         <FlatList
                             key={'_$$'}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            style={styles.list}
+                            style={list}
                             data={yearsPickerDos}
                             numColumns={5}
                             renderItem={({item}) => <YearsPickerDos name={item.name} selected={item.selected}/>}
@@ -1817,7 +1817,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     fromZero={true}
                     withCustomBarColorFromData={true}
                     flatColor={true}
-                    style={{height: 'auto'}}
+                    style={tw`h-auto`}
                     yLabelsOffset={30}
                     data={data_grafica_comparativa_dos}
                     width={Dimensions.get('screen').width - 25}
@@ -1846,20 +1846,20 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const Box = ({iconLeft, title, countTitle, lateral, iconLateral, color}) => {
         return(
             <View style={box}>
-                <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={tw`w-auto justify-center items-center`}>
                     <IonIcons name={iconLeft} size={22} color={color} />
                 </View>
-                <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                    <View style={{justifyContent: 'flex-start', paddingLeft: 4}}>
-                        <Text style={{fontSize: 15, color: color}}>{countTitle}</Text>
-                        <Text style={{fontSize: 10, color:'#000'}}>{title}</Text>
+                <View style={tw`w-auto justify-center items-center`}>
+                    <View style={tw`justify-start pl-1`}>
+                        <Text style={[tw`text-base text-[${color}]`, {fontSize: 15}]}>{countTitle}</Text>
+                        <Text style={[tw`text-xs text-[#000]`, {fontSize: 10}]}>{title}</Text>
                     </View>
                 </View>
                 <View style={tw`flex-1 justify-center items-center`}>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', alignSelf: 'stretch'}}>
-                        <Text style={{fontSize: 10, color: color, fontWeight: 'bold'}}>{lateral}</Text>
+                    <View style={tw`flex-1 justify-center items-end self-stretch`}>
+                        <Text style={[tw`text-xs text-[${color}] font-bold`, {fontSize: 10}]}>{lateral}</Text>
                     </View>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', alignSelf: 'stretch'}}>
+                    <View style={tw`flex-1 justify-center items-end self-stretch`}>
                         {
                             iconLateral
                             &&
@@ -1875,7 +1875,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-            <View style={[styles.container]}>
+            <View style={[container]}>
                 {
                     hasConnection
                     ?
@@ -1913,7 +1913,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisiblePeriodos()}>
                                                     <View style={tw`flex-1 justify-center items-center`}>
-                                                        <Text style={{color: '#000'}}>{currentQuincena}</Text>
+                                                        <Text style={tw`text-[#000]`}>{currentQuincena}</Text>
                                                     </View>
                                                     <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -1945,7 +1945,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                         fromZero={true}
                                                         withCustomBarColorFromData={true}
                                                         flatColor={true}
-                                                        style={{height: 'auto'}}
+                                                        style={tw`h-auto`}
                                                         yLabelsOffset={30}
                                                         data={data_altas_bajas_irp}
                                                         width={Dimensions.get('screen').width - 25}
@@ -1997,11 +1997,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                             color: () => 'yellow',
                                                             labelColor: () => 'black',
                                                         }}
-                                                        style={{
-                                                            alignSelf: 'stretch',
-                                                            justifyContent: 'flex-start',
-                                                            alignItems: 'flex-start',
-                                                        }}
+                                                        style={tw`self-stretch justify-start items-start`}
                                                         accessor={'product'}
                                                         backgroundColor={'transparent'}
                                                     />
@@ -2040,11 +2036,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                             color: () => 'yellow',
                                                             labelColor: () => 'black',
                                                         }}
-                                                        style={{
-                                                            flex: 1,
-                                                            justifyContent: 'flex-start',
-                                                            alignItems: 'flex-start',
-                                                        }}
+                                                        style={tw`flex-1 justify-start items-start`}
                                                         backgroundColor={'transparent'}
                                                         accessor={'product'}
                                                     />
@@ -2072,7 +2064,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 <FlatList
                                                     showsVerticalScrollIndicator={false}
                                                     showsHorizontalScrollIndicator={false}
-                                                    style={[styles.list, {marginBottom: 10}]}
+                                                    style={[list, {marginBottom: 10}]}
                                                     data={training_categorias}
                                                     numColumns={2}
                                                     renderItem={({item}) => <Detalle_Gerencia id={item.id} campanna={item.campanna} altas={item.altas} activos={item.activos} bajas={item.bajas} total={item.total} tipo={2}/>}
@@ -2080,12 +2072,12 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 />
                                                 
 
-                                                <View style={{height: 'auto', marginBottom: 15}}>
+                                                <View style={tw`h-auto mb-4`}>
                                                     <View style={tw`h-auto self-stretch`}>
                                                         <FlatList
                                                             showsVerticalScrollIndicator={false}
                                                             showsHorizontalScrollIndicator={false}
-                                                            style={styles.list}
+                                                            style={list}
                                                             data={section === 1 ? headers_1 : section === 2 ? headers_2 : section === 3 ? headers_3 : headers_1}
                                                             numColumns={5}
                                                             renderItem={({item}) => <HeaderTable_uno title={item.title}/>}
@@ -2098,7 +2090,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                             <FlatList
                                                                 showsVerticalScrollIndicator={false}
                                                                 showsHorizontalScrollIndicator={false}
-                                                                style={styles.list}
+                                                                style={list}
                                                                 data={section === 1 ? body_1 : section === 2 ? body_2 : section === 3 ? body_3 : headers_1}
                                                                 numColumns={2}
                                                                 renderItem={({item}) => <BodyTable_uno title={item.fecha} first={item.first}/>}
@@ -2111,7 +2103,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                                 <FlatList
                                                                     showsVerticalScrollIndicator={false}
                                                                     showsHorizontalScrollIndicator={false}
-                                                                    style={styles.list}
+                                                                    style={list}
                                                                     data={section === 1 ? body_1 : section === 2 ? body_2 : section === 3 ? body_3 : headers_1}
                                                                     numColumns={4}
                                                                     renderItem={({item}) => <BodyTable_uno title={item.fecha} first={item.first}/>}
@@ -2122,7 +2114,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                                 <FlatList
                                                                     showsVerticalScrollIndicator={false}
                                                                     showsHorizontalScrollIndicator={false}
-                                                                    style={styles.list}
+                                                                    style={list}
                                                                     data={section === 1 ? body_1 : section === 2 ? body_2 : section === 3 ? body_3 : headers_1}
                                                                     numColumns={3}
                                                                     renderItem={({item}) => <BodyTable_uno title={item.fecha} first={item.first}/>}
@@ -2136,28 +2128,28 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 <FlatList
                                                     showsVerticalScrollIndicator={false}
                                                     showsHorizontalScrollIndicator={false}
-                                                    style={styles.list}
+                                                    style={list}
                                                     data={empleados_ubicacion}
                                                     numColumns={2}
                                                     renderItem={({item}) => <Empleados_Ubicacion name={item.name} total={item.total} color={item.color}/>}
                                                     keyExtractor={item => String(item.id)}
                                                 />
 
-                                                <View style={{marginBottom: 15}}></View>
+                                                <View style={tw`mb-4`}></View>
                                                 <Title title={'Empleados por Razón Social'} icon={'account-multiple'} tipo={2} vertical={false}/>
                                                 <FlatList
                                                     showsVerticalScrollIndicator={false}
                                                     showsHorizontalScrollIndicator={false}
-                                                    style={styles.list}
+                                                    style={list}
                                                     data={empleados_razon_social}
                                                     numColumns={1}
                                                     renderItem={({item}) => <Empleados_Razon_Social name={item.name} total={item.total}/>}
                                                     keyExtractor={item => String(item.id)}
                                                 />
                                                 
-                                                <View style={{marginBottom: 15}}></View>
+                                                <View style={tw`mb-4`}></View>
                                                 <Title title={title} icon={'finance'} tipo={2} vertical={false}/>
-                                                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2`}>
+                                                <View style={tw`h-auto bg-[rgba(50,131,197,.1)] border border-[${Blue}] p-1 mb-2 mx-1.5`}>
                                                     <View style={tw`flex-row items-center`}>
                                                         <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5 mr-1.5`}>
                                                             <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
@@ -2167,7 +2159,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 </View>
                                                 <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleArea()}>
                                                     <View style={tw`flex-1 justify-center items-center`}>
-                                                        <Text style={{color: '#000'}}>{currentArea}</Text>
+                                                        <Text style={tw`text-[#000]`}>{currentArea}</Text>
                                                     </View>
                                                     <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -2189,17 +2181,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                             color: () => 'yellow',
                                                             labelColor: () => 'black',
                                                         }}
-                                                        style={{
-                                                            alignSelf: 'stretch',
-                                                            justifyContent: 'flex-start',
-                                                            alignItems: 'flex-start',
-                                                        }}
+                                                        style={tw`self-stretch justify-start items-start`}
                                                         accessor={'product'}
                                                         backgroundColor={'transparent'}
                                                     />
                                                 </View>
 
-                                                <View style={{height: 35, alignSelf: 'stretch', paddingHorizontal: 8, backgroundColor: 'rgba(50,131,197,.1)', borderColor: Blue, borderWidth: 0.5, justifyContent: 'center', alignItems: 'center', marginBottom: 8, marginTop: 8}}>
+                                                <View style={tw`h-9 self-stretch px-2 bg-[rgba(50,131,197,.1)] border border-[${Blue}] justify-center items-center mb-2 mt-5 mx-1.5`}>
                                                     <View style={tw`flex-row`}>
                                                         <View style={tw`w-auto justify-center`}>
                                                             <Icon name={'info'} size={24} color={Blue} />
@@ -2212,7 +2200,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                                                 <TouchableOpacity style={[picker, tw`shadow-md bg-white`, {flexDirection: 'row'}]} onPress={() => handleVisibleSubarea()}>
                                                     <View style={tw`flex-1 justify-center items-center`}>
-                                                        <Text style={{color: '#000'}}>{currentSubarea}</Text>
+                                                        <Text style={tw`text-[#000]`}>{currentSubarea}</Text>
                                                     </View>
                                                     <View style={tw`w-auto`}>
                                                         <Icon name='caret-down' size={15} color={'#4F4F4F'} />
@@ -2232,17 +2220,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                         color: () => 'yellow',
                                                         labelColor: () => 'black',
                                                     }}
-                                                    style={{
-                                                        alignSelf: 'stretch',
-                                                        justifyContent: 'flex-start',
-                                                        alignItems: 'flex-start',
-                                                    }}
+                                                    style={tw`self-stretch justify-start items-start`}
                                                     accessor={'product'}
                                                     backgroundColor={'transparent'}
                                                 />
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 8, borderTopStartRadius: 16, borderTopEndRadius: 16}}>
-                                                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border-t border-l border-r justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
+                                                <View style={tw`h-auto self-stretch justify-center items-center mt-2 rounded-tl-2xl rounded-tr-2xl`}>
+                                                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border-[#CBCBCB] border justify-center items-center flex-row py-0.5 rounded-tl-2xl rounded-tr-2xl`}>
                                                         <IonIcons name={'menu'} size={28} color={Blue} />
                                                         <View style={tw`w-1`} />
                                                         <Text style={tw`text-[${Blue}] text-base font-bold`}>Empleados por Razón Social</Text>
@@ -2253,7 +2237,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                         total_razon_social.length > 0
                                                         &&
                                                             total_razon_social.map(x => 
-                                                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-b border-[#CBCBCB] border-l border-r justify-center items-center flex-row p-1`}>
                                                                     <View style={tw`flex-1 px-2`}>
                                                                         <Text style={tw`text-[${Blue}] text-xs`}>{x.name}</Text>
                                                                     </View>
@@ -2264,35 +2248,35 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                             )
                                                     }
                                                 </View>
-                                                <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
-                                                    <View style={{flex: 1, paddingHorizontal: 4}}>
-                                                        <Text style={{color: Blue, fontSize: 14, fontWeight: 'bold'}}>Total General</Text>
+                                                <View style={tw`h-auto self-stretch bg-[#f7f7f7] border border-[#CBCBCB] justify-center items-center flex-row p-1 rounded-bl-2xl rounded-br-2xl`}>
+                                                    <View style={tw`flex-1 px-1`}>
+                                                        <Text style={tw`text-[${Blue}] text-sm font-bold`}>Total General</Text>
                                                     </View>
                                                     <View style={tw`w-auto bg-[${Blue}] justify-center items-center rounded-lg px-2 py-0.5`}>
                                                         <Text style={tw`text-base font-bold text-[#fff]`}>{total}</Text>
                                                     </View>
                                                 </View>
                                                 
-                                                <View style={{marginBottom: 15}}></View>
+                                                <View style={tw`mb-4`}></View>
                                                 <Title title={'Índice de Rotación de Personal'} icon={'finance'} tipo={2} vertical={false}/>
-                                                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
+                                                <View style={tw`h-auto self-stretch mb-4`}>
                                                     <FlatList
                                                         showsVerticalScrollIndicator={false}
                                                         showsHorizontalScrollIndicator={false}
-                                                        style={styles.list}
+                                                        style={list}
                                                         data={legendsIRP}
                                                         numColumns={4}
                                                         renderItem={({item}) => <Year year={item.year} checked={item.checked}/>}
                                                         keyExtractor={item => String(item.id)}
                                                     />
                                                 </View>
-                                                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={tw`justify-center items-center`}>
                                                     {
                                                         content
                                                         ?
                                                             <LineChart
                                                                 fromZero={true}
-                                                                style={{justifyContent: 'center', alignItems: 'center'}}
+                                                                style={tw`justify-center items-center`}
                                                                 data={{
                                                                     labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
                                                                     datasets: dataIRP,
@@ -2319,14 +2303,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     }
                                                 </View>
                                                 
-                                                <View style={{marginBottom: 15}}></View>
+                                                <View style={tw`mb-4`}></View>
                                                 <Title title={'Gráficas Comparativas Altas-Bajas-IRP'} icon={'finance'} tipo={2} vertical={false}/>
-                                                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
-                                                    <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}}>
+                                                <View style={tw`h-auto self-stretch px-2 mt-4 mb-1`} />
+                                                <View style={tw`h-auto self-stretch mb-4`}>
+                                                    <View style={tw`h-auto self-stretch mb-2.5`}>
                                                         <FlatList
                                                             showsVerticalScrollIndicator={false}
                                                             showsHorizontalScrollIndicator={false}
-                                                            style={styles.list}
+                                                            style={list}
                                                             data={yearsPickerUno}
                                                             numColumns={5}
                                                             renderItem={({item}) => <YearsPickerUno name={item.name} selected={item.selected}/>}
@@ -2345,7 +2330,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     fromZero={true}
                                                     withCustomBarColorFromData={true}
                                                     flatColor={true}
-                                                    style={{height: 'auto'}}
+                                                    style={tw`h-auto`}
                                                     yLabelsOffset={30}
                                                     data={data_grafica_comparativa_uno}
                                                     width={Dimensions.get('screen').width - 25}
@@ -2368,14 +2353,14 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     verticalLabelRotation={0}
                                                 />
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8, paddingBottom: 8, borderBottomColor: '#dadada', borderBottomWidth: 1, marginBottom: 15, marginTop: 15}} />
+                                                <View style={tw`h-auto self-stretch px-2 pb-2 my-4`} />
 
-                                                <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 15}}>
-                                                    <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}}>
+                                                <View style={tw`h-auto self-stretch mb-4`}>
+                                                    <View style={tw`h-auto self-stretch mb-2.5`}>
                                                         <FlatList
                                                             showsVerticalScrollIndicator={false}
                                                             showsHorizontalScrollIndicator={false}
-                                                            style={styles.list}
+                                                            style={list}
                                                             data={yearsPickerDos}
                                                             numColumns={5}
                                                             renderItem={({item}) => <YearsPickerDos name={item.name} selected={item.selected}/>}
@@ -2394,7 +2379,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     fromZero={true}
                                                     withCustomBarColorFromData={true}
                                                     flatColor={true}
-                                                    style={{height: 'auto'}}
+                                                    style={tw`h-auto`}
                                                     yLabelsOffset={30}
                                                     data={data_grafica_comparativa_dos}
                                                     width={Dimensions.get('screen').width - 25}
@@ -2448,9 +2433,9 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         detalle_altas.length > 0
                         &&
                             detalle_altas.map(x => 
-                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border-t border-b border-[#CBCBCB] justify-center items-center flex-row p-1`}>
+                                <View key={x.id} style={tw`h-auto self-stretch bg-[#fff] border border-[#CBCBCB] justify-center items-center flex-row p-1`}>
                                     <View style={tw`flex-1 px-2`}>
-                                        <Text style={{color: Blue}}>{x.name}</Text>
+                                        <Text style={tw`text-[${Blue}]`}>{x.name}</Text>
                                     </View>
                                     <View style={{width: x.total.toString().length === 2 ? 'auto' : 25, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderRadius: 8, paddingHorizontal: 4}}>
                                         <Text style={tw`text-base font-bold text-[#fff]`}>{x.total}</Text>
@@ -2460,7 +2445,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     }
                         
                     </View>
-                    <View style={{height: 'auto', alignSelf: 'stretch', backgroundColor: '#f7f7f7', borderColor: '#CBCBCB', borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 1, borderTopWidth: 0.5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', flexDirection: 'row', padding: 4, borderBottomStartRadius: 16, borderBottomEndRadius: 16}}>
+                    <View style={tw`h-auto self-stretch bg-[#f7f7f7] border border-[#CBCBCB] justify-center items-center flex-row p-1 rounded-bl-2xl rounded-br-2xl`}>
                         <View style={tw`flex-1 px-2`}>
                             <Text style={tw`text-[${Blue}] font-bold`}>{language === '1' ? 'Total General' : ''}</Text>
                         </View>
@@ -2477,7 +2462,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     ListHeaderComponent={<Header />}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    style={styles.list}
+                    style={list}
                     data={legends_motivo_baja}
                     numColumns={2}
                     renderItem={({item}) => <Motivo legend={item.text} color={item.color}/>}
@@ -2516,45 +2501,5 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
 const box = tw`flex-1 h-15 bg-[#fff] flex-row px-1 shadow-md rounded-2xl mx-1.5`
 const picker = tw`justify-center items-center mb-4 h-12.5 px-4 self-stretch rounded-2xl mx-1.5`
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#fff'
-    },
-    picker: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 15,
-        height: 50,
-        paddingHorizontal: 16,
-        alignSelf: 'stretch',
-        borderRadius: 16,
-        marginHorizontal: 5
-    },
-    list:{
-        height: 'auto',
-        alignSelf: 'stretch',
-    },
-    box: {
-        flex: 1,
-        borderColor: '#CBCBCB',
-        height: 60,
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        paddingHorizontal: 4,
-        shadowColor: '#000',
-        elevation: 5,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
-        borderRadius: 16,
-        marginHorizontal: 5
-    }
-})
+const container = tw`flex-1 items-center justify-center bg-[#fff]`
+const list = tw`h-auto self-stretch`

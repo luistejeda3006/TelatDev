@@ -88,11 +88,10 @@ const StackEmployee = ({route: {params}}) => {
 }
 
 const DrawerEmployeeRoute = ({route: {params}}) => {
-
     return (
         <Drawer.Navigator
 			screenOptions={{headerShown: false, drawerPosition: 'right', drawerStyle: {width: '80%'}, sceneContainerStyle: {backgroundColor: 'transparent'}}}
-            drawerContent={(props) =>  <DrawerEmployees initialParams={{language: '1'}} {...props} />}
+            drawerContent={(props) => <DrawerEmployees initialParams={{language: '1'}} {...props} />}
         >
             <Stack.Screen name={'Modules'} initialParams={{language: '1'}} component={StackEmployee} />
         </Drawer.Navigator>

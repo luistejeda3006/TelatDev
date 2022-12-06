@@ -7,13 +7,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {isIphone, live, login, urlTickets} from '../../../../access/requestedData';
-import {formatDate, getCurrentDate, getLastDayMonth} from '../../../../js/dates';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectPermissions, selectTickets, setTickets, setPermissions, addTicket, formTicket, selectForm} from '../../../../slices/ticketSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import tw from 'twrnc';
 
 let id_usuario = '';
 let id_puesto = '';
@@ -323,50 +322,50 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const Ticket = ({no_ticket, id, fecha, fecha_archivado, nombre, tipo, concepto, prioridad, prioridadBackgroundColor, ubicacion, estado, backgroundColorEstado, asignado, color_fondo, rango, is_table, html}) => {
         return(
-            <TouchableOpacity style={{borderWidth: 2, borderColor: '#dadada', flex: 1, justifyContent: 'center', alignItems: 'center', height: 165, marginBottom: '4%', backgroundColor: color_fondo, borderRadius: 12}} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientationInfo.initial})}>
-                <View style={{flexDirection: 'row', borderBottomWidth: 2, borderBottomColor: '#dadada'}}>
-                    <View style={{borderTopLeftRadius: 12, padding: 4, borderRightWidth: 2, borderRightColor: '#dadada', width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10, backgroundColor: Blue}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 11, color: '#fff', textAlign: 'center'}}>{no_ticket}</Text>
+            <TouchableOpacity style={tw`border-2 border-[#dadada] flex-1 justify-center items-center h-41.5 mb-[4%] bg-[${color_fondo}] rounded-xl`} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientationInfo.initial})}>
+                <View style={tw`flex-row border-b-2 border-b-[#dadada]`}>
+                    <View style={tw`rounded-tl-xl p-1 border-r-2 border-r-[#dadada] w-auto justify-center items-center px-2.5 bg-[${Blue}]`}>
+                        <Text style={tw`font-bold text-xs text-[#fff] text-center`}>{no_ticket}</Text>
                     </View>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000', paddingHorizontal: 6}}>{nombre}</Text>
+                    <View style={tw`flex-1 justify-center`}>
+                        <Text style={tw`text-sm font-bold text-[#000] px-1.5`}>{nombre}</Text>
                     </View>
                 </View>
-                <View style={{alignSelf: 'stretch', height: 'auto', flexDirection: 'row', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
-                    <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{backgroundColor: prioridadBackgroundColor, paddingHorizontal: 4, paddingVertical: 2, borderRadius: 3.5}}>
-                            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 14}}>{prioridad}</Text>   
+                <View style={tw`self-stretch h-auto flex-row justify-center items-center p-1.5`}>
+                    <View style={tw`w-auto justify-center items-center`}>
+                        <View style={tw`bg-[${prioridadBackgroundColor !== 'transparent' ? prioridadBackgroundColor : '#fff'}] px-1 py-0.5 rounded`}>
+                            <Text style={tw`text-[#fff] font-bold text-sm`}>{prioridad}</Text>   
                         </View>
                     </View>
-                    <View style={{flex: 1, paddingLeft: 8}}>
-                        <Text style={{fontSize: 14.5, fontWeight: 'bold', color: '#000'}}>{tipo}</Text>
-                        <Text style={{fontSize: 13, color: '#000'}}>{concepto}</Text>
+                    <View style={tw`flex-1 pl-2`}>
+                        <Text style={tw`text-sm font-bold text-[#000]`}>{tipo}</Text>
+                        <Text style={tw`text-sm text-[#000]`}>{concepto}</Text>
                     </View>
-                    <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center', height: 'auto'}}>
-                        <View style={{backgroundColor: backgroundColorEstado, width: 'auto', borderRadius: 3.5, justifyContent: 'center', alignItems: 'center', paddingVertical: 2, paddingHorizontal: 4, borderRadius: 4}}>
-                            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 14}}>{estado}</Text>   
+                    <View style={tw`w-auto justify-center items-center h-auto`}>
+                        <View style={tw`bg-[${backgroundColorEstado !== 'transparent' ? backgroundColorEstado : '#fff'}] w-auto rounded justify-center items-center py-0.5 px-1`}>
+                            <Text style={tw`text-[#fff] font-bold text-sm`}>{estado}</Text>   
                         </View>
                     </View>
                 </View>
                 {
                     active !== 1
                     ?
-                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
+                        <View style={tw`h-6 self-stretch justify-${concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'end'} items-start`}>
+                            <Text style={tw`text-sm text-[#000] px-1.5 font-bold`}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={tw`font-normal`}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                     :
-                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
+                        <View style={tw`h-6 self-stretch justify-${concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'end'} items-start`}>
+                            <Text style={tw`text-sm text-[#000] px-1.5 font-bold`}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={tw`font-normal`}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                 }
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', marginBottom: 5}}>
-                    <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
+                <View style={tw`flex-1 flex-row justify-center items-end mb-1.5`}>
+                    <View style={tw`flex-1 justify-start items-center flex-row`}>
                         <IonIcons name={'map-marker'} size={18} color={Blue} />
-                        <Text style={{fontSize: 12, color: '#000'}}>{ubicacion}</Text>
+                        <Text style={tw`text-xs text-[#000]`}>{ubicacion}</Text>
                     </View>
-                    <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row', paddingRight: 6}}>
+                    <View style={tw`flex-1 justify-end items-center flex-row pr-1.5`}>
                         <IonIcons name={'map-marker'} size={18} color={'transparent'} />
-                        <Text style={{fontSize: 13, fontWeight: 'bold', color: '#000'}}>{fecha}</Text>
+                        <Text style={tw`text-sm font-bold text-[#000]`}>{fecha}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -530,13 +529,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         return(
             permissions.nuevo_ticket
             ?
-                <View style={{height: 50, alignSelf: 'stretch', flexDirection: 'row', borderColor: '#3283c5', borderBottomWidth: 1, borderTopWidth: 1, backgroundColor: '#fff'}}>
+                <View style={tw`h-12.5 self-stretch flex-row border-b border-t border-[${Blue}] bg-[#fff]`}>
                     {
                         permissions.tickets
                         ?
-                            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                            <View style={tw`flex-1 items-center justify-center bg-[rgba(50,131,197,.1)]`}>
                                 <TouchableWithoutFeedback onPress={() => active !== 1 && handleChangeModule(1)}>
-                                    <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={tw`flex-1 self-stretch justify-center items-center`}>
                                         <Icon name={'ticket'} size={28} color={active === 1 ? Blue : '#acacac'} />
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -547,9 +546,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     {
                         permissions.archivados
                         ?
-                            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                            <View style={tw`flex-1 items-center justify-center bg-[rgba(50,131,197,.1)]`}>
                                 <TouchableWithoutFeedback style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}} onPress={() => active !== 2 && handleChangeModule(2)}>
-                                    <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={tw`flex-1 self-stretch justify-center items-center`}>
                                         <IonIcons name={'archive'} size={30} color={active === 2 ? Blue : '#acacac'} />
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -560,9 +559,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     {
                         permissions.nuevo_ticket
                         ?
-                            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                            <View style={tw`flex-1 items-center justify-center bg-[rgba(50,131,197,.1)]`}>
                                 <TouchableWithoutFeedback style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}} onPress={() => active !== 3 && handleChangeModule(3)}>
-                                    <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={tw`flex-1 self-stretch justify-center items-center`}>
                                         <Icon name={'plus'} size={28} color={active === 3 ? Blue : '#acacac'} />
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -573,9 +572,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     {
                         permissions.expedientes
                         ?
-                            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                            <View style={tw`flex-1 items-center justify-center bg-[rgba(50,131,197,.1)]`}>
                                 <TouchableWithoutFeedback style={{alignSelf: 'stretch', backgroundColor: 'red', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}} onPress={() => active !== 4 && handleChangeModule(4)}>
-                                    <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={tw`flex-1 self-stretch justify-center items-center`}>
                                         <Icon name={'shield'} size={28} color={active === 4 ? Blue : '#c1c1c1'} />
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -618,7 +617,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 ref={refTickets}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={{backgroundColor: '#fff'}}
+                                style={tw`bg-[#fff]`}
                                 refreshControl={
                                     <RefreshControl
                                         progressBackgroundColor={'#EC5C25'}
@@ -646,7 +645,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         active === 2
                                         ?
                                             <>
-                                                <View style={{ flexDirection: 'row', alignSelf: 'stretch', height: 'auto', borderColor: '#dadada', marginTop: 10 }}>
+                                                <View style={tw`flex-row self-stretch h-auto mt-2.5`}>
                                                     <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => {
                                                         getArchivados(value, ending, true)
                                                         setInitialState({...initialState, initial: value, labelInitial: label})
@@ -668,12 +667,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                         showsHorizontalScrollIndicator={false}
                                                         style={{alignSelf: 'stretch'}}
                                                     >
-                                                        <View style={{height: 'auto', alignSelf: 'stretch', marginTop: 10}}>
-                                                        </View>
+                                                        <View style={tw`h-auto self-stretch mt-2.5`} />
                                                         <Text style={styles.title}>{'Tipo de ticket'}</Text>
-                                                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idTipo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
-                                                            <View style={{flex: 1}}>
-                                                                <Text style={{color: '#000'}}>{tipoTicket}</Text>
+                                                        <TouchableOpacity style={[styles.picker, tw`flex-row flex-1 border border-[${idTipo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]`]} onPress={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
+                                                            <View style={tw`flex-1`}>
+                                                                <Text style={tw`text-[#000]`}>{tipoTicket}</Text>
                                                             </View>
                                                             <View style={{width: 'auto'}}>
                                                                 <Icon name='caret-down' size={15} color={'#000'} />
@@ -684,18 +682,18 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                         {
                                                             tipoTicket !== 'Seleccione una opción'
                                                             ?
-                                                                <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idConcepto !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
-                                                                    <View style={{flex: 1}}>
-                                                                        <Text style={{color: '#000'}}>{conceptoTicket}</Text>
+                                                                <TouchableOpacity style={[styles.picker, tw`flex-row flex-1 border border-[${idTipo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]`]} onPress={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
+                                                                    <View style={tw`flex-1`}>
+                                                                        <Text style={tw`text-[#000]`}>{conceptoTicket}</Text>
                                                                     </View>
                                                                     <View style={{width: 'auto'}}>
                                                                         <Icon name='caret-down' size={15} color={'#000'} />
                                                                     </View>
                                                                 </TouchableOpacity>
                                                             :
-                                                                <View style={[styles.picker, {flexDirection: 'row', flex: 1, backgroundColor: '#f7f7f7'}]}>
-                                                                    <View style={{flex: 1}}>
-                                                                        <Text style={{color: '#000'}}>{'Seleccione una opción'}</Text>
+                                                                <View style={[styles.picker, tw`flex-row flex-1 bg-[#f7f7f7]`]}>
+                                                                    <View style={tw`flex-1`}>
+                                                                        <Text style={tw`text-[#000]`}>{'Seleccione una opción'}</Text>
                                                                     </View>
                                                                     <View style={{width: 'auto'}}>
                                                                         <Icon name='caret-down' size={15} color={'#000'} />
@@ -705,21 +703,21 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                         {
                                                             conceptoTicket !== 'Seleccione una opción'
                                                             ?
-                                                                <View style={{flexDirection: 'row', height: 'auto', alignItems: 'center', marginBottom: 10}}>
-                                                                    <Text style={[styles.title, {marginBottom: 0}]}>{'Prioridad:'}</Text>
-                                                                    <View style={{width: 'auto', height: 'auto', backgroundColor: backgroundDesc, alignItems: 'center', justifyContent: 'center', marginLeft: 5, paddingHorizontal: 5, borderRadius: 6, paddingVertical: 4}}>
-                                                                        <Text style={{fontWeight: 'bold', color: colorDesc}}>{conceptoDesc}</Text>
+                                                                <View style={tw`flex-row h-auto items-center mb-2.5`}>
+                                                                    <Text style={[styles.title, tw`mb-0`]}>{'Prioridad:'}</Text>
+                                                                    <View style={tw`w-auto h-auto bg-[${backgroundDesc}] items-center justify-center ml-1.5 px-1.5 rounded-md py-1`}>
+                                                                        <Text style={tw`font-bold text-[${colorDesc}]`}>{conceptoDesc}</Text>
                                                                     </View>
                                                                 </View>
                                                             :
                                                                 <></>
                                                         }
                                                         <Text style={styles.title}>{'Ubicación de requerimiento'}</Text>
-                                                        <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1, borderColor: idUbicacion !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]} onPress={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
-                                                            <View style={{flex: 1}}>
-                                                                <Text style={{color: '#000'}}>{ubicacionTicket}</Text>
+                                                        <TouchableOpacity style={[styles.picker, tw`flex-row flex-1 border border-[${idUbicacion !== 'SEL' ? '#CBCBCB' : '#E68AA6'}]`]} onPress={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
+                                                            <View style={tw`flex-1`}>
+                                                                <Text style={tw`text-[#000]`}>{ubicacionTicket}</Text>
                                                             </View>
-                                                            <View style={{width: 'auto'}}>
+                                                            <View style={tw`w-auto`}>
                                                                 <Icon name='caret-down' size={15} color={'#000'} />
                                                             </View>
                                                         </TouchableOpacity>
@@ -727,12 +725,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                             form.btn_users
                                                             &&
                                                                 <>
-                                                                    <Text style={[styles.title, {fontSize: 12}]}>{'Usuario que solicita [En caso de levantar un ticket por un tercero]'}</Text>
-                                                                    <TouchableOpacity style={[styles.picker, {flexDirection: 'row', flex: 1}]} onPress={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
-                                                                        <View style={{flex: 1}}>
-                                                                            <Text style={{color: '#000'}}>{usuarioTicket}</Text>
+                                                                    <Text style={[styles.title, tw`text-xs`]}>{'Usuario que solicita [En caso de levantar un ticket por un tercero]'}</Text>
+                                                                    <TouchableOpacity style={[styles.picker, tw`flex-row flex-1`]} onPress={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
+                                                                        <View style={tw`flex-1`}>
+                                                                            <Text style={tw`text-[#000]`}>{usuarioTicket}</Text>
                                                                         </View>
-                                                                        <View style={{width: 'auto'}}>
+                                                                        <View style={tw`w-auto`}>
                                                                             <Icon name='caret-down' size={15} color={'#000'} />
                                                                         </View>
                                                                     </TouchableOpacity>
