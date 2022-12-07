@@ -236,7 +236,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             language === '1' ? '¿Seguro que deseas guardar tus resultados?\n\nUna vez guardados, no podrás cambiarlos.' : 'Are you sure you want to save your results?\n\nOnce saved, you will not be able to change them.',
             [
                 {
-                    text: langauge === '1' ? 'Cancelar' : 'Cancel',
+                    text: language === '1' ? 'Cancelar' : 'Cancel',
                     style: "cancel"
                 },
                 { 
@@ -773,7 +773,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 {
                                     global.length > 0
                                     ?
-                                        <>
+                                        <View style={tw`flex-1 self-stretch`}>
                                             <View style={tw`flex-row bg-white ios:pl-[${orientationInfo.initial !== 'PORTRAIT' ? '4%' : 0}]`}>
                                                 <View style={tw`h-14 w-14 justify-center items-center`}>
                                                     <Text style={tw`font-bold text-base text-black`}>-</Text>
@@ -788,7 +788,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     <Text style={tw`font-bold text-base`}></Text>
                                                 </View>
                                             </View>
-                                            <FlatList
+                                            {/* <FlatList
                                                 style={tw`h-auto self-stretch bg-white ios:pl-[${orientationInfo.initial !== 'PORTRAIT' ? '4%' : 0}]`}
                                                 showsVerticalScrollIndicator={false}
                                                 showsHorizontalScrollIndicator={false}
@@ -796,8 +796,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 renderItem={({item}) => <GlobalPodium id={item.id} position={item.position} name={item.name} color={item.color} record={item.record}/>}
                                                 keyExtractor={item => String(item.id)}
                                                 key={'_4'}
-                                            />
-                                        </>
+                                            /> */}
+                                            {
+                                                global.map(x => <GlobalPodium id={x.id} position={x.position} name={x.name} color={x.color} record={x.record} />)
+                                            }
+                                        </View>
                                     :
                                         <View style={tw`flex-1 self-stretch justify-center items-center`}>
                                             <Image 

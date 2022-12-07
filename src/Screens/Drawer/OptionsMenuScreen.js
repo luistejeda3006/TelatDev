@@ -371,7 +371,7 @@ export default ({navigation}) => {
                             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground}} />
                             <View style={tw`flex-1`}>
-                                <View style={tw`h-${orientation === 'PORTRAIT' ? isTablet() ? 15 : 15 : isTablet() ? 13 : 14.5} self-stretch flex-row bg-[${Blue}]`}>
+                                <View style={tw`h-${orientation === 'PORTRAIT' ? isTablet() ? 15 : 16.5 : isTablet() ? 13 : 14.5} self-stretch flex-row bg-[${Blue}]`}>
                                     <View style={tw`w-${orientation === 'PORTRAIT' ? '20%' : '10%'} h-[100%] justify-center items-center`}>
                                         <Image
                                             style={stylesImage}
