@@ -54,7 +54,7 @@ export default (props) => {
         let obj = null;
         if(data.tipo === 'MX'){
             obj = {
-                picture: data.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${data.data.datos_personales.foto}` : '',
+                picture: data.data.datos_personales.foto_url ? data.data.datos_personales.foto_url : '',
                 name: data.data.datos_personales.nombre_completo,
                 position: data.data.datos_laborales.puesto,
                 gender: data.data.datos_personales.genero,
@@ -64,7 +64,7 @@ export default (props) => {
         }
         else {
             obj = {
-                picture: data.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${data.data.datos_personales.foto}` : '',
+                picture: data.data.datos_personales.foto_url ? data.data.datos_personales.foto_url : '',
                 name: data.data.datos_personales.nombre_completo,
                 position: data.data.datos_laborales.puesto,
                 gender: null,

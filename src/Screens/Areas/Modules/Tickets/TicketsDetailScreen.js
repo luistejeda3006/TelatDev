@@ -199,7 +199,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     }
 
     const Chat = ({fecha, mensajes}) => {
-        console.log('mensajes: ', mensajes[0])
         return(
             <>
                 <View style={{flexDirection: 'row', height: 'auto', alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 6, marginTop: 8}}>

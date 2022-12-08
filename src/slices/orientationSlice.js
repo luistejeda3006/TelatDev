@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Orientation from 'react-native-orientation';
-
 const initialState = {
-    orientation: 'PORTRAIT',
+    orientation: Orientation.getInitialOrientation(),
 }
 
 export const navSlice = createSlice({

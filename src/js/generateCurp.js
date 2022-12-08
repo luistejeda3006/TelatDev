@@ -1,5 +1,9 @@
 export default ( nom, pat, mat, fecha, genero, edo ) => {
-    console.log('fecha: ', fecha)
+    console.log('nom: ', nom, 'pat: ', pat, 'mat: ', mat, 'fecha: ', fecha, 'genero: ', genero, 'edo: ', edo)
+    console.log('dia: ', fecha.substring(8,10))
+    console.log('mes: ', fecha.substring(5,7))
+    console.log('año: ', fecha.substring(2,4))
+    let fechita = `${fecha.substring(8,10)}-${fecha.substring(5,7)}-${fecha.substring(0,4)}`
     var quitar, nombres, curp;
     nom=nom.toUpperCase();
     pat=pat.toUpperCase();
@@ -16,11 +20,12 @@ export default ( nom, pat, mat, fecha, genero, edo ) => {
     if (mat=='') mat='X';
     curp  = pat.substring(0,1) + buscaVocal(pat)+ mat.substring(0,1) + nom.substring(0,2);
     curp  = cambiaPalabra(curp);
-    curp += fecha.substring(8,10) + fecha.substring(3,5) + fecha.substring(0,2);
+    curp += fechita.substring(8,10) + fechita.substring(3,5) + fechita.substring(0,2);
     curp += genero + edo;
     curp += buscaConsonante(pat) + buscaConsonante(mat) + buscaConsonante(nom) ;
-    curp += fecha.substring(6,8)=='19'?'0':'A';
+    curp += fechita.substring(6,8)=='19'?'0':'A';
     curp += ultdig(curp);
+    console.log('curp: ', curp)
     return curp;
 }
   

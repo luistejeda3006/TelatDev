@@ -135,25 +135,25 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 {
                     empleados.length > 1
                     ?
-                        <TouchableOpacity style={tw`flex-1 h-7.5 mb-2`} onPress={() => handleHideEmployee(id_empleado)}>
-                            <View style={tw`h-auto self-stretch mb-5`}>
-                                <View style={tw`flex-row items-center h-7.5 justify-center items-center`}>
-                                    <View style={tw`h-auto flex-1 flex-row bg-white justify-center items-center`}>
-                                        <View style={tw`w-[${num_empleado.length <= 3 ? 10 : 11.5}] h-7.5 justify-center items-center bg-[${Blue}] px-1.5 rounded-md`}>
-                                            <Text style={tw`text-xs font-bold text-[#fff]`}>{num_empleado}</Text>
+                        <TouchableOpacity style={{flex: 1, height: 30, marginBottom: oculta ? 10 : 0}} onPress={() => handleHideEmployee(id_empleado)}>
+                            <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 20}}>
+                                <View style={{flexDirection: 'row', alignItems: 'center', height: 30, justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={{height: 'auto', flex: 1, flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
+                                        <View style={{width: num_empleado.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
+                                            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{num_empleado}</Text>
                                         </View>
-                                        <View style={tw`flex-1 h-7.5 ml-1 pl-2.5 pr-2 justify-center items-center bg-[#f7f7f7] border border-[#dadada] rounded-md flex-row`}>
-                                            <View style={tw`w-5 justify-center items-center`}>
+                                        <View style={{flex: 1, height: 30, marginLeft: 4, paddingLeft: 10, paddingRight: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderWidth: 1, borderColor: '#dadada', borderRadius: 5, flexDirection: 'row'}}>
+                                            <View style={{width: 20, justifyContent: 'center', alignItems: 'center'}}>
                                             {
                                                 solicitud_pendiente
                                                 &&
                                                     <IonIcons name={'clock'} size={18} color={'#000'} />
                                             }
                                             </View>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <Text style={tw`text-sm font-bold text-[#000]`}>{nombre}</Text>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{nombre}</Text>
                                             </View>
-                                            <View style={tw`w-5 justify-center items-center`}>
+                                            <View style={{width: 20, justifyContent: 'center', alignItems: 'center'}}>
                                                 <IonIcons name={oculta ? 'chevron-down' : 'chevron-up'} size={18} color={'#000'} />
                                             </View>
                                         </View>
@@ -162,16 +162,16 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         </TouchableOpacity>
                     :
-                        <View style={tw`flex-1 h-7.5 mb-2.5`}>
-                            <View style={tw`h-auto self-stretch mb-5`}>
-                                <View style={tw`flex-row items-center h-7.5 justify-center items-center`}>
-                                    <View style={tw`h-auto flex-1 flex-row bg-white justify-center items-center`}>
-                                        <View style={tw`w-[${num_empleado.length <= 3 ? 10 : 11.5}] h-7.5 justify-center items-center bg-[${Blue}] px-1.5 rounded-md`}>
-                                            <Text style={tw`text-xs font-bold text-[#fff]`}>{num_empleado}</Text>
+                        <View style={{flex: 1, height: 30, marginBottom: oculta ? 10 : 0}}>
+                            <View style={{height: 'auto', alignSelf: 'stretch', marginBottom: 20}}>
+                                <View style={{flexDirection: 'row', alignItems: 'center', height: 30, justifyContent: 'center', alignItems: 'center'}}>
+                                    <View style={{height: 'auto', flex: 1, flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
+                                        <View style={{width: num_empleado.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
+                                            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{num_empleado}</Text>
                                         </View>
-                                        <View style={tw`flex-1 h-7.5 ml-1 px-2 justify-center items-center bg-[#f7f7f7] border border-[#dadada] rounded-md flex-row`}>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <Text style={tw`text-sm font-bold text-[#000]`}>{nombre}</Text>
+                                        <View style={{flex: 1, height: 30, marginLeft: 4, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderWidth: 1, borderColor: '#dadada', borderRadius: 5, flexDirection: 'row'}}>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{nombre}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -183,14 +183,14 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 {
                     !oculta
                     &&
-                        <View style={tw`h-auto p-2.5 mb-2.5`}>
-                            <View style={tw`flex-row self-stretch justify-start items-start`}>
-                                <View style={tw`flex-1 justify-center items-center`}>
-                                    <Text style={[title]}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Entry'}</Text>
+                        <View style={{height: 'auto', padding: 10, marginBottom: 10 }}>
+                            <View style={{flexDirection: 'row', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={[styles.title]}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Entry'}</Text>
                                     <Contenedor title={fecha_ingreso} hasBottomLine={false} />
                                 </View>
-                                <View style={tw`flex-1 ml-1.5 justify-center items-center`}>
-                                    <Text style={title}>{language === '1' ? 'Años' : 'Years'}</Text>
+                                <View style={{flex: 1, marginLeft: 6, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={styles.title}>{language === '1' ? 'Años' : 'Years'}</Text>
                                     <Contenedor title={years} hasBottomLine={false}/>
                                 </View>
                             </View>
@@ -198,117 +198,117 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 orientationInfo.initial === 'PORTRAIT'
                                 ?
                                     <>
-                                        <View style={tw`h-auto self-stretch flex-row mt-1.5`}>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <View style={legends}>
-                                                    <View style={legendHeader}>
-                                                        <Text style={tw`text-xs text-[#000]`}>DC</Text>
+                                        <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', marginTop: 5}}>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={styles.legends}>
+                                                    <View style={styles.headerLegend}>
+                                                        <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
                                                     </View>
-                                                    <View style={subHeaderLegend}>
-                                                        <Text style={tw`text-xl font-bold text-[#000]`}>{dias_correspondientes}</Text>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <View style={legends}>
-                                                    <View style={legendHeader}>
-                                                        <Text style={tw`text-xs text-[#000]`}>DD</Text>
-                                                    </View>
-                                                    <View style={subHeaderLegend}>
-                                                        <Text style={tw`text-xl font-bold text-[#000]`}>{dias_disfrutados}</Text>
+                                                    <View style={styles.subHeaderLegend}>
+                                                        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_correspondientes}</Text>
                                                     </View>
                                                 </View>
                                             </View>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <View style={[legends, {backgroundColor: '#BFCCE7'}]}>
-                                                    <View style={legendHeader}>
-                                                        <Text style={tw`text-xs text-[#000]`}>DP</Text>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={styles.legends}>
+                                                    <View style={styles.headerLegend}>
+                                                        <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
                                                     </View>
-                                                    <View style={subHeaderLegend}>
-                                                        <Text style={tw`text-xl font-bold text-[#000]`}>{dias_pendientes}</Text>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <View style={[legends, {backgroundColor: '#E5E2D2'}]}>
-                                                    <View style={legendHeader}>
-                                                        <Text style={tw`text-xs text-[#000]`}>PA</Text>
-                                                    </View>
-                                                    <View style={subHeaderLegend}>
-                                                        <Text style={tw`text-xl font-bold text-[#000]`}>{dias_periodos_anterior}</Text>
+                                                    <View style={styles.subHeaderLegend}>
+                                                        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_disfrutados}</Text>
                                                     </View>
                                                 </View>
                                             </View>
-                                            <View style={tw`flex-1 justify-center items-center`}>
-                                                <View style={[legends, {backgroundColor: '#C3E5C4'}]}>
-                                                    <View style={legendHeader}>
-                                                        <Text style={tw`text-xs text-[#000]`}>TD</Text>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={[styles.legends, {backgroundColor: '#BFCCE7'}]}>
+                                                    <View style={styles.headerLegend}>
+                                                        <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
                                                     </View>
-                                                    <View style={subHeaderLegend}>
-                                                        <Text style={tw`text-xl font-bold text-[#000]`}>{total_dias}</Text>
+                                                    <View style={styles.subHeaderLegend}>
+                                                        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_pendientes}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={[styles.legends, {backgroundColor: '#E5E2D2'}]}>
+                                                    <View style={styles.headerLegend}>
+                                                        <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
+                                                    </View>
+                                                    <View style={styles.subHeaderLegend}>
+                                                        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_periodos_anterior}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                <View style={[styles.legends, {backgroundColor: '#C3E5C4'}]}>
+                                                    <View style={styles.headerLegend}>
+                                                        <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
+                                                    </View>
+                                                    <View style={styles.subHeaderLegend}>
+                                                        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{total_dias}</Text>
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={tw`flex-row mt-1.5`}>
-                                            <View style={tw`flex-1`}/>
-                                            <View style={tw`flex-1`}>
-                                                <TouchableOpacity onPress={() => handleDetail(id_usuario, id_empleado, solicitud_pendiente, language)} style={tw`flex-row h-auto justify-center items-center mt-2.5 bg-[${Blue}] py-1.5 px-5 rounded-lg`}>
+                                        <View style={{flexDirection: 'row', marginTop: 5}}>
+                                            <View style={{flex: 1}}/>
+                                            <View style={{flex: 1}}>
+                                                <TouchableOpacity onPress={() => handleDetail(id_usuario, id_empleado, solicitud_pendiente, language)} style={{flexDirection: 'row', height: 'auto', justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: Blue, paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                                     <Icon name={'folder-open'} size={18} color={'#fff'} />
-                                                    <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
+                                                    <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
                                     </>
                                 :
-                                    <View style={tw`flex-row`}>
-                                        <View style={tw`flex-1 justify-center items-center flex-row`}>
-                                            <View style={[legends, {marginRight: 10}]}>
-                                                <View style={legendHeader}>
-                                                    <Text style={tw`text-xs text-[#000]`}>DC</Text>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                            <View style={[styles.legends, {marginRight: 10}]}>
+                                                <View style={styles.headerLegend}>
+                                                    <Text style={{fontSize: 12, color: '#000'}}>DC</Text>
                                                 </View>
-                                                <View style={subHeaderLegend}>
-                                                    <Text style={tw`text-xl font-bold text-[#000]`}>{dias_correspondientes}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={[legends, {marginRight: 10}]}>
-                                                <View style={legendHeader}>
-                                                    <Text style={tw`text-xs text-[#000]`}>DD</Text>
-                                                </View>
-                                                <View style={subHeaderLegend}>
-                                                    <Text style={tw`text-xl font-bold text-[#000]`}>{dias_disfrutados}</Text>
+                                                <View style={styles.subHeaderLegend}>
+                                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_correspondientes}</Text>
                                                 </View>
                                             </View>
-                                            <View style={[legends, {backgroundColor: '#BFCCE7', marginRight: 10}]}>
-                                                <View style={legendHeader}>
-                                                    <Text style={tw`text-xs text-[#000]`}>DP</Text>
+                                            <View style={[styles.legends, {marginRight: 10}]}>
+                                                <View style={styles.headerLegend}>
+                                                    <Text style={{fontSize: 12, color: '#000'}}>DD</Text>
                                                 </View>
-                                                <View style={subHeaderLegend}>
-                                                    <Text style={tw`text-xl font-bold text-[#000]`}>{dias_pendientes}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={[legends, {backgroundColor: '#E5E2D2', marginRight: 10}]}>
-                                                <View style={legendHeader}>
-                                                    <Text style={tw`text-xs text-[#000]`}>PA</Text>
-                                                </View>
-                                                <View style={subHeaderLegend}>
-                                                    <Text style={tw`text-xl font-bold text-[#000]`}>{dias_periodos_anterior}</Text>
+                                                <View style={styles.subHeaderLegend}>
+                                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_disfrutados}</Text>
                                                 </View>
                                             </View>
-                                            <View style={[legends, {backgroundColor: '#C3E5C4', marginRight: 10}]}>
-                                                <View style={legendHeader}>
-                                                    <Text style={tw`text-xs text-[#000]`}>TD</Text>
+                                            <View style={[styles.legends, {backgroundColor: '#BFCCE7', marginRight: 10}]}>
+                                                <View style={styles.headerLegend}>
+                                                    <Text style={{fontSize: 12, color: '#000'}}>DP</Text>
                                                 </View>
-                                                <View style={subHeaderLegend}>
-                                                    <Text style={tw`text-xl font-bold text-[#000]`}>{total_dias}</Text>
+                                                <View style={styles.subHeaderLegend}>
+                                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_pendientes}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={[styles.legends, {backgroundColor: '#E5E2D2', marginRight: 10}]}>
+                                                <View style={styles.headerLegend}>
+                                                    <Text style={{fontSize: 12, color: '#000'}}>PA</Text>
+                                                </View>
+                                                <View style={styles.subHeaderLegend}>
+                                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{dias_periodos_anterior}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={[styles.legends, {backgroundColor: '#C3E5C4', marginRight: 10}]}>
+                                                <View style={styles.headerLegend}>
+                                                    <Text style={{fontSize: 12, color: '#000'}}>TD</Text>
+                                                </View>
+                                                <View style={styles.subHeaderLegend}>
+                                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000'}}>{total_dias}</Text>
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={tw`flex-1 justify-center items-center`}>
-                                            <TouchableOpacity onPress={() => handleDetail(id_usuario, id_empleado, solicitud_pendiente, language)} style={tw`h-9 w-[50%] justify-center items-center bg-[${Blue}] px-5 rounded-lg flex-row`}>
+                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                            <TouchableOpacity onPress={() => handleDetail(id_usuario, id_empleado, solicitud_pendiente, language)} style={{height: 35, width: '50%', justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 20, borderRadius: 8, flexDirection: 'row', }}>
                                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
                                                     <Icon name={'folder-open'} size={18} color={'#fff'} />
-                                                    <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
+                                                    <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
@@ -377,7 +377,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 {
                                     empleados.length > 0
                                     ?
-                                        <Pagination data={empleados} Item={Empleado} SearchInput={true} currentFilter={currentFilter} onChangeFilter={() => handleChangeFilter()} handleClean={handleClean} placeholder={currentFilter} property={currentFilter === 'Número Empleado...' ? 'num_empleado' : 'nombre'} handlePage={handlePage} current={currentPage} changing={changing} temporal={temporalEmpleados}/>
+                                        <Pagination data={empleados} Item={Empleado} SearchInput={true} currentFilter={currentFilter} onChangeFilter={() => handleChangeFilter()} handleClean={handleClean} placeholder={currentFilter} property={currentFilter === ('Número Empleado...' || 'Employee Number...') ? 'num_empleado' : 'nombre'} handlePage={handlePage} current={currentPage} changing={changing} temporal={temporalEmpleados}/>
                                     :
                                         !loading
                                         &&
@@ -469,8 +469,65 @@ export default ({navigation, route: {params: {orientation}}}) => {
     )
 }
 
-const title = tw`text-sm text-[${Blue}]`
-const legends = tw`h-16.5 w-13.5 bg-[#f7f7f7] rounded-xl justify-center items-center shadow-md `
-const legendHeader = tw`h-5 self-stretch justify-end items-center`
-const subHeaderLegend = tw`flex-1 self-stretch justify-center items-center pb-1.5`
 const container = tw`flex-1 justify-center items-center bg-[#fff] px-[${isIphone ? '5%' : '3%'}]`
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingHorizontal: isIphone ? '5%' : '3%',
+    },
+    list:{
+        height: 'auto',
+        alignSelf: 'stretch',
+    },
+    title: {
+        fontSize: 13,
+        color: Blue,
+    },
+    box:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 55,
+        flexDirection: 'row',
+        borderColor: '#CBCBCB',
+        borderWidth: 1,
+    },
+    input:{
+        flex: 1,
+        height: 50,
+        color: '#000',
+        fontSize: 15
+    },
+    legends: {
+        height: 65,
+        width: 55,
+        backgroundColor: '#f7f7f7',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        elevation: 5,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+    },
+    headerLegend: {
+        height: 20,
+        alignSelf: 'stretch',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    subHeaderLegend: {
+        flex: 1,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 5
+    }
+})

@@ -450,8 +450,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                 body: JSON.stringify(body)
                             });
                         
-                            const {response} = await request.json();
-                            if(response.status === 200){
+                            const {response, status} = await request.json();
+                            if(status === 200){
                                 cuenta = 0;
                                 setSuccessVisibility(true)
                                 setInitialState({...initialState, loading: false})

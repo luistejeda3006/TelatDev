@@ -55,7 +55,7 @@ export default ({navigation, route: {params}}) => {
 
         if(data.tipo === 'MX'){
             obj = {
-                picture: data.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${data.data.datos_personales.foto}` : '',
+                picture: data.data.datos_personales.foto_url ? data.data.datos_personales.foto_url : '',
                 name: data.data.datos_personales.nombre_login,
                 gender: data.data.datos_personales.genero,
                 tipo: data.tipo
@@ -63,7 +63,7 @@ export default ({navigation, route: {params}}) => {
         }
         else {
             obj = {
-                picture: data.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${data.data.datos_personales.foto}` : '',
+                picture: data.data.datos_personales.foto_url ? data.data.datos_personales.foto_url : '',
                 name: data.data.datos_personales.nombre_login,
                 gender: null,
                 tipo: data.tipo
@@ -78,7 +78,7 @@ export default ({navigation, route: {params}}) => {
         useCallback(() => {
             setTimeout(() => {
                 navigation.navigate('Dashboard', {language: language, orientation: orientationInfo.initial});
-            }, (contador === 1 || contador === 0) ? 4000 : 1) //AQUI ERAN 4000 en el primero
+            }, (contador === 1 || contador === 0) ? 100 : 1) //AQUI ERAN 4000 en el primero
         }, [])
     );
    

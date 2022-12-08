@@ -103,8 +103,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                     'live': live,
                 }
 
-                console.log('body: ', body)
-                console.log('all: ', all)
+                /* console.log('body: ', body)
+                console.log('all: ', all) */
                 try{
                     const request = await fetch(urlJobs, {
                         method: 'POST',
@@ -115,7 +115,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                     });
                     const {response, status} = await request.json();
 
-                    if(status === 201){
+                    if(status === 200){
                         setFilters({...filters, error: false, appointment: false})
                         Alert.alert(
                             language === '1' ? '¡Solicitud Creada Correctamente!' : 'Application Created Successfully!',

@@ -161,6 +161,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                         'login': login,
                         'live': live
                     }
+
+                    console.log('body: ', body)
         
                     const request = await fetch(urlJobs, {
                         method: 'POST',

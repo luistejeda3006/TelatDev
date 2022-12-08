@@ -12,6 +12,7 @@ import {Modal, ModalLoading} from '../../components';
 import {Button} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import tw from 'twrnc';
+import { completeHandlerIOS } from 'react-native-fs';
 
 let contador = 0;
 let sendNotification = 'sendNotification'
@@ -97,6 +98,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const {username, password, recoveryEmail} = values
 
     const handleSubmit = async() => {
+        console.log('entra en función')
         try{
             if(contador === 0){
                 let data = null;
@@ -122,8 +124,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             body: JSON.stringify(body)
                         });
                         
-                        const {response} = await request.json();
-                        if(response.status === 200){
+                        const {response, status} = await request.json();
+                        if(status === 200){
                             setIsLoading(true)
                             setInitialState({...initialState, hide: true})
                             setTimeout(async () => {
@@ -147,7 +149,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             }, 3000)
                         }
                         else {
-                            if(response.response === 'Usuario incorrecto'){
+                            if(response.text === 'Usuario incorrecto'){
                                 Alert.alert(
                                     language === '1' ? 'Error de Autenticación' : 'Authentication Error',
                                     language === '1' ? 'El usuario no existe' : 'User does not exist',
@@ -156,7 +158,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     ]
                                 )
                             }
-                            else if (response.response === 'Contraseña caducada') {
+                            else if (response.text === 'Contraseña caducada') {
                                 Alert.alert(
                                     language === '1' ? 'Contraseña Caducada' : 'Expired Password',
                                     language === '1' ? 'La contraseña ha caducado, restablezcala via intranet desde su navegador' : 'The password has expired, reset it via intranet from your browser',
@@ -166,7 +168,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 )
                             }
     
-                            else if (response.response === 'Cuenta bloqueada') {
+                            else if (response.text === 'Cuenta bloqueada') {
                                 Alert.alert(
                                     language === '1' ? 'Cuenta Bloqueada' : 'Blocked Account',
                                     language === '1' ? 'Cuenta bloqueada por 30 minutos, inténtelo más tarde' : 'Account locked for 30 minutes, try again later',
@@ -178,11 +180,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 handleSubmitForm();
                             }
     
-                            else if (response.response === 'Contraseña incorrecta') {
+                            else if (response.text === 'Contraseña incorrecta') {
                                 setInitialState({...initialState, bloqueo: initialState.bloqueo + 1, error: true})
                             }
     
-                            else if(response.response === 'Usuario nuevo') {
+                            else if(response.text === 'Usuario nuevo') {
                                 Alert.alert(
                                     language === '1' ? 'Usuario Nuevo' : 'New User',
                                     language === '1' ? 'Por favor debe cambiar su contraseña vía intranet, para acceder a la app' : 'Please change your password via intranet, to access the app',
@@ -192,7 +194,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 )
                             }
     
-                            else if(response.response === 'Usuario inactivo'){
+                            else if(response.text === 'Usuario inactivo'){
                                 Alert.alert(
                                     language === '1' ? 'Usuario Inactivo' : 'Inactive User',
                                     language === '1' ? 'El usuario no está activo o no existe' : 'The user is not active or does not exist',
@@ -203,7 +205,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 handleSubmitForm();
                             }
     
-                            else if(response.response === 'Empleado inactivo'){
+                            else if(response.text === 'Empleado inactivo'){
                                 Alert.alert(
                                     language === '1' ? 'Empleado Inactivo' : 'Inactive Employee',
                                     language === '1' ? 'El empleado no está activo o no existe' : 'The employee is not active or does not exist',
@@ -285,6 +287,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         'email': recoveryEmail
                     }
                 }
+                console.log('body: ', body)
 
                 const request = await fetch(urlApp, {
                     method: 'POST',
@@ -294,8 +297,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     body: JSON.stringify(body)
                 });
                 
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     setLoading(false)
                     setBodyMessage({
                         header: language === '1' ? 'Correo Enviado Correctamente' : 'Email Sent Successfully',
@@ -491,7 +494,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             </View>
                             <View style={tw`flex-1 justify-center items-center`}>
                                 <View style={tw`h-auto justify-center items-center px-${isTablet() ? orientationInfo.initial === 'PORTRAIT' ? 30 : 37.5 : 12.5}`}>
-                                    <View style={tw`h-auto w-[50%] pt-4.5 justify-center items-center px-3.5 bg-[rgba(255,255,255, 0.4)] rounded-3xl border border-[#f1f1f1]`}>
+                                    <View style={tw`h-auto w-[50%] pt-4.5 justify-center items-center px-3.5 bg-[rgba(255,255,255,0.4)] rounded-3xl border border-[#f1f1f1]`}>
                                         <View style={tw`shadow-xl justify-center bg-white w-[100%] items-center flex-row rounded-3xl mb-4`}>
                                             <TextInput
                                                 style={styles.input}

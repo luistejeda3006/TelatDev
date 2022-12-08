@@ -286,6 +286,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         
             const {response} = await request.json();
             if(response.status === 200){
+                console.log('response: ', response.usuarios)
                 dispatch(formTicket({TiposTicket: response.tickets_tipo, UbicacionesTicket: response.ubicaciones, UsuariosTicket: response.usuarios, btn_users: response.btn_users}))
             }
         }catch(e){
@@ -322,50 +323,50 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const Ticket = ({no_ticket, id, fecha, fecha_archivado, nombre, tipo, concepto, prioridad, prioridadBackgroundColor, ubicacion, estado, backgroundColorEstado, asignado, color_fondo, rango, is_table, html}) => {
         return(
-            <TouchableOpacity style={tw`border-2 border-[#dadada] flex-1 justify-center items-center h-41.5 mb-[4%] bg-[${color_fondo}] rounded-xl`} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientationInfo.initial})}>
-                <View style={tw`flex-row border-b-2 border-b-[#dadada]`}>
-                    <View style={tw`rounded-tl-xl p-1 border-r-2 border-r-[#dadada] w-auto justify-center items-center px-2.5 bg-[${Blue}]`}>
-                        <Text style={tw`font-bold text-xs text-[#fff] text-center`}>{no_ticket}</Text>
+            <TouchableOpacity style={{borderWidth: 2, borderColor: '#dadada', flex: 1, justifyContent: 'center', alignItems: 'center', height: 165, marginBottom: '4%', backgroundColor: color_fondo, borderRadius: 12}} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientationInfo.initial})}>
+                <View style={{flexDirection: 'row', borderBottomWidth: 2, borderBottomColor: '#dadada'}}>
+                    <View style={{borderTopLeftRadius: 12, padding: 4, borderRightWidth: 2, borderRightColor: '#dadada', width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10, backgroundColor: Blue}}>
+                        <Text style={{fontWeight: 'bold', fontSize: 11, color: '#fff', textAlign: 'center'}}>{no_ticket}</Text>
                     </View>
-                    <View style={tw`flex-1 justify-center`}>
-                        <Text style={tw`text-sm font-bold text-[#000] px-1.5`}>{nombre}</Text>
+                    <View style={{flex: 1, justifyContent: 'center'}}>
+                        <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000', paddingHorizontal: 6}}>{nombre}</Text>
                     </View>
                 </View>
-                <View style={tw`self-stretch h-auto flex-row justify-center items-center p-1.5`}>
-                    <View style={tw`w-auto justify-center items-center`}>
-                        <View style={tw`bg-[${prioridadBackgroundColor !== 'transparent' ? prioridadBackgroundColor : '#fff'}] px-1 py-0.5 rounded`}>
-                            <Text style={tw`text-[#fff] font-bold text-sm`}>{prioridad}</Text>   
+                <View style={{alignSelf: 'stretch', height: 'auto', flexDirection: 'row', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 6}}>
+                    <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{backgroundColor: prioridadBackgroundColor, paddingHorizontal: 4, paddingVertical: 2, borderRadius: 3.5}}>
+                            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 14}}>{prioridad}</Text>   
                         </View>
                     </View>
-                    <View style={tw`flex-1 pl-2`}>
-                        <Text style={tw`text-sm font-bold text-[#000]`}>{tipo}</Text>
-                        <Text style={tw`text-sm text-[#000]`}>{concepto}</Text>
+                    <View style={{flex: 1, paddingLeft: 8}}>
+                        <Text style={{fontSize: 14.5, fontWeight: 'bold', color: '#000'}}>{tipo}</Text>
+                        <Text style={{fontSize: 13, color: '#000'}}>{concepto}</Text>
                     </View>
-                    <View style={tw`w-auto justify-center items-center h-auto`}>
-                        <View style={tw`bg-[${backgroundColorEstado !== 'transparent' ? backgroundColorEstado : '#fff'}] w-auto rounded justify-center items-center py-0.5 px-1`}>
-                            <Text style={tw`text-[#fff] font-bold text-sm`}>{estado}</Text>   
+                    <View style={{width: 'auto', justifyContent: 'center', alignItems: 'center', height: 'auto'}}>
+                        <View style={{backgroundColor: backgroundColorEstado, width: 'auto', borderRadius: 3.5, justifyContent: 'center', alignItems: 'center', paddingVertical: 2, paddingHorizontal: 4, borderRadius: 4}}>
+                            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 14}}>{estado}</Text>   
                         </View>
                     </View>
                 </View>
                 {
                     active !== 1
                     ?
-                        <View style={tw`h-6 self-stretch justify-${concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'end'} items-start`}>
-                            <Text style={tw`text-sm text-[#000] px-1.5 font-bold`}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={tw`font-normal`}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
+                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
+                            <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                     :
-                        <View style={tw`h-6 self-stretch justify-${concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'end'} items-start`}>
-                            <Text style={tw`text-sm text-[#000] px-1.5 font-bold`}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={tw`font-normal`}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
+                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
+                            <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                 }
-                <View style={tw`flex-1 flex-row justify-center items-end mb-1.5`}>
-                    <View style={tw`flex-1 justify-start items-center flex-row`}>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', marginBottom: 5}}>
+                    <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
                         <IonIcons name={'map-marker'} size={18} color={Blue} />
-                        <Text style={tw`text-xs text-[#000]`}>{ubicacion}</Text>
+                        <Text style={{fontSize: 12, color: '#000'}}>{ubicacion}</Text>
                     </View>
-                    <View style={tw`flex-1 justify-end items-center flex-row pr-1.5`}>
+                    <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row', paddingRight: 6}}>
                         <IonIcons name={'map-marker'} size={18} color={'transparent'} />
-                        <Text style={tw`text-sm font-bold text-[#000]`}>{fecha}</Text>
+                        <Text style={{fontSize: 13, fontWeight: 'bold', color: '#000'}}>{fecha}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -626,7 +627,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         onRefresh={() => {
                                             cuenta = 0;
                                             if(active === 1) setInitialState({...initialState, reloadTickets: reloadTickets + 1, show_start: false, show_end: false})
-                                            if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false})
+                                            /* if(active === 2) setInitialState({...initialState, reloadArchivados: reloadArchivados + 1, show_start: false, show_end: false, show_start: false}) */
                                             if(active === 4) setInitialState({...initialState, reloadExpedientes: reloadExpedientes + 1, show_start: false, show_end: false})
                                         }}
                                     />

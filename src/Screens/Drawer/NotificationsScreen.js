@@ -40,9 +40,12 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                 "login": login,
                 "action": "get_notificaciones",
                 "live": live,
-                "tipo": origin,
-                "data": valueNotificationToken
+                "data": {
+                    "token": valueNotificationToken
+                }
             }
+
+            console.log('body:', body)
     
             const request = await fetch(urlApp, {
                 method: 'POST',
@@ -53,13 +56,13 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200){
-                if(response.info.length > 0){
+            const {response, status} = await request.json();
+            if(status === 200){
+                if(response.length > 0){
                     setLoading(false)
-                    setNotifications(response.info)
+                    setNotifications(response)
                     dispatch(setNotification(false))
-                    await AsyncStorage.setItem(lastNotify, String(response.info[0].id))
+                    await AsyncStorage.setItem(lastNotify, String(response[0].id))
                 } else setLoading(false)
             }
             else setLoading(false)

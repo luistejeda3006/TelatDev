@@ -63,15 +63,17 @@ export default ({navigation}) => {
     const [modules, setModules] = useState([])
     /* const [notification, setNotificacion] = useState(false) */
     const [loading, setLoading] = useState(true)
+    const [valueNotificationToken, setValueNotificationToken] = useState('')
     const {hasConnection, askForConnection} = useConnection();
     const {arrived} = useNotification()
     const {sound: openSound} = useSound('pop.mp3')
 
     const getToken = async() => {
-        valueNotificationToken = await AsyncStorage.getItem(notificationToken);
-        console.log('value: ', valueNotificationToken)
+        let value = await AsyncStorage.getItem(notificationToken);
+        console.log('value: ', value)
         valueSendNotification = await AsyncStorage.getItem(sendNotification) || '0';
         await AsyncStorage.setItem(sendNotification, '0')
+        setValueNotificationToken(value)
     }
 
     useEffect(() => {
@@ -222,6 +224,8 @@ export default ({navigation}) => {
                     'token': valueNotificationToken
                 }
             }
+
+            console.log('body: ', body)
             
             const request = await fetch(urlApp, {
                 method: 'POST',
@@ -233,8 +237,8 @@ export default ({navigation}) => {
             });
 
             
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setModules(response.permisos)
                 let notify = await AsyncStorage.getItem(lastNotify) || undefined;
                 
@@ -276,7 +280,7 @@ export default ({navigation}) => {
     }
 
     useEffect(() => {
-        getInformation()
+        if(valueNotificationToken) getInformation()
     },[hasConnection, valueNotificationToken])
 
     const getVersion = async () => {

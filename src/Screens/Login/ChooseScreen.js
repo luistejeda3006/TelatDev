@@ -315,9 +315,11 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
         try{
             const body = {
                 "login": login,
-                "action": "get_notificacion_cand",
+                "action": "get_notification",
                 "live": live,
-                "data": valueNotificationToken
+                "data": {
+                    "token": valueNotificationToken 
+                }
             }
     
             const request = await fetch(urlApp, {
@@ -328,8 +330,8 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setVacantsUsa(response.vacantes_usa)
                 let notify = await AsyncStorage.getItem(lastNotify) || undefined;
                 if(response.info.id){
