@@ -292,10 +292,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     let filtered = finales.filter(x => x.clasified === ocup)
     
                                     if(status === 200){
-                                        setLoading(false)
-                                        dispatch(actionItem({id: temporalId, item: obj}))
-                                        dispatch(setFilteredData(filtered))
-                                        dispatch(setQuinielas(nuevos))
+                                        setTimeout(() => {
+                                            setLoading(false)
+                                            dispatch(actionItem({id: temporalId, item: obj}))
+                                            dispatch(setFilteredData(filtered))
+                                            dispatch(setQuinielas(nuevos))
+                                        }, 800)
                                     } else {
                                         setLoading(false)
                                         Alert.alert(
@@ -788,15 +790,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     <Text style={tw`font-bold text-base`}></Text>
                                                 </View>
                                             </View>
-                                            {/* <FlatList
-                                                style={tw`h-auto self-stretch bg-white ios:pl-[${orientationInfo.initial !== 'PORTRAIT' ? '4%' : 0}]`}
-                                                showsVerticalScrollIndicator={false}
-                                                showsHorizontalScrollIndicator={false}
-                                                data={global}
-                                                renderItem={({item}) => <GlobalPodium id={item.id} position={item.position} name={item.name} color={item.color} record={item.record}/>}
-                                                keyExtractor={item => String(item.id)}
-                                                key={'_4'}
-                                            /> */}
                                             {
                                                 global.map(x => <GlobalPodium id={x.id} position={x.position} name={x.name} color={x.color} record={x.record} />)
                                             }

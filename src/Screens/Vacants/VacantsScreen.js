@@ -57,7 +57,6 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 'action': 'get_vacantes',
                 'data': {
                     'idioma': language,
-                    'country': 'MX',
                     'token': valueNotificationToken
                 },
                 'login': login,
@@ -72,11 +71,11 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
+            const {response, status} = await request.json();
 
-            if(response.status === 200){
+            if(status === 200){
                 setResult(1)
-                data = response.vacants.sort((a, b) => b.prioridad.localeCompare(a.prioridad));
+                data = response.sort((a, b) => b.prioridad.localeCompare(a.prioridad));
                 const justMX = data.filter(x => x.region === 'MX' && x)
                 const justUSA = data.filter(x => x.region === 'US' && x)
                 
@@ -89,7 +88,7 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                 setLoading(!loading)
                 setVisible(!visible)
             }
-            if(response.status === 404){
+            if(status === 404){
                 setResult(0)
                 setLoading(!loading)
             }

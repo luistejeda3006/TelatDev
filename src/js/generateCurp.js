@@ -1,5 +1,5 @@
 export default ( nom, pat, mat, fecha, genero, edo ) => {
-    
+    console.log('fecha: ', fecha)
     var quitar, nombres, curp;
     nom=nom.toUpperCase();
     pat=pat.toUpperCase();

@@ -4,7 +4,7 @@ export const version = Platform.OS === 'ios' ? '1.2.1' : '2.2.1'; //hasta el mom
 export const siteKey = '6Lf3qkYUAAAAAOHdvDrADAxIEOHs9dCttWCgHukI';
 export const baseUrl = 'https://telat.mx/intranet/';
 export const urlApp = 'https://telat.mx/webservices/api/acceso';
-export const urlJobs = 'https://telat.mx/webservices/api/jobs';
+export const urlJobs = 'https://app.telat-group.com/api/jobs';
 export const urlNomina = 'https://telat.mx/webservices/api/nominas';
 export const urlMoney = 'https://telat.mx/webservices/api/my_money';
 export const urlGaceta = 'https://telat.mx/webservices/api/gaceta';

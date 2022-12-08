@@ -57,9 +57,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
-                let newArray = response.states
+            const {response, status} = await request.json();
+            if(status === 200){
+                let newArray = response
                 newArray = [first, ...newArray]
                 newArray = [...newArray, NE]
                 setStatesData(newArray)
@@ -155,7 +155,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                 try{
                     const body = {
                         'action': 'get_rfc',
-                        'data': obj_1.info_rfc,
+                        'data':{
+                            'rfc': obj_1.info_rfc,
+                        },
                         'login': login,
                         'live': live
                     }
@@ -168,8 +170,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                         body: JSON.stringify(body)
                     });
             
-                    const {response} = await request.json();
-                    if(response.status === 200){
+                    const {response, status} = await request.json();
+                    if(status === 200){
                         data = await AsyncStorage.getItem(key) || '';
                         if(data) {
                             await AsyncStorage.removeItem(keyState).then( () => AsyncStorage.setItem(keyState, stateSend.label));
@@ -182,7 +184,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                         setFilters({...filters, error: false});
                     }
 
-                    else if(response.status === 400) {
+                    else if(status === 400) {
                         Alerta()
                     }
                 }catch(e){

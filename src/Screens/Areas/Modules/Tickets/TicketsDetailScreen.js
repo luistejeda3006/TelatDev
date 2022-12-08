@@ -199,11 +199,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     }
 
     const Chat = ({fecha, mensajes}) => {
+        console.log('mensajes: ', mensajes[0])
         return(
             <>
-                <View style={tw`flex-row h-auto self-stretch justify-end items-center mb-1.5 mt-2`}>
+                <View style={{flexDirection: 'row', height: 'auto', alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 6, marginTop: 8}}>
                     <Icon name={'calendar'} size={15} color={Blue} />
-                    <Text style={tw`text-xs ml-1.5 text-[${Blue}] rounded-lg`}>{fecha}</Text>
+                    <Text style={{fontSize: 12, marginLeft: 5, color: Blue, borderRadius: 8}}>{fecha}</Text>
                 </View>
 
                 <FlatList
@@ -213,11 +214,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     data={mensajes}
                     numColumns={1}
                     renderItem={({item}) =>
-                    <View style={tw`border-2 border-[#f7f7f7] flex-1 justify-center items-center h-auto my-[2%] rounded-2xl p-1 pt-2 pb-2.5 bg-[rgba(247,247,247,.5)]`} onPress={() => navigation.navigate('test_2')}>
-                        <View style={tw`flex-row`}>
-                            <View style={tw`flex-1 justify-center`}>
-                                <View style={tw`h-auto self-stretch justify-center items-center flex-row`}>
-                                    <View style={tw`justify-center items-center mr-1.5 bg-[#dcdcdc] rounded-full w-9.5 h-9.5`}>
+                    <View style={{borderWidth: 2.5, borderColor: '#f7f7f7', flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', marginVertical: '2%', borderRadius: 14, padding: 4, paddingTop: 8, marginBottom: 10, backgroundColor: 'rgba(247,247,247,.5)'}} onPress={() => navigation.navigate('test_2')}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex: 1, justifyContent: 'center'}}>
+                                <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                    <View style={{justifyContent: 'center', alignItems: 'center', marginRight: 5, backgroundColor: '#dcdcdc', borderRadius: 35, width: 38, height: 38}}>
                                         {
                                             item.picture !== ''
                                             ?
@@ -234,21 +235,21 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                 />
                                         }
                                     </View>
-                                    <View style={tw`flex-1 self-stretch justify-center items-start`}>
-                                        <Text style={tw`text-sm font-bold text-[${Blue}]`}>{item.usuario}</Text>
+                                    <View style={{flex: 1, alignSelf:'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
+                                        <Text style={{fontSize: 14, fontWeight: 'bold', color: Blue}}>{item.usuario}</Text>
                                     </View>
-                                    <View style={tw`w-auto h-[100%] rounded-lg justify-center items-center flex-row`}>
+                                    <View style={{width: 'auto', height: '100%', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
                                         <IonIcons name={'clock-outline'} size={18} color={Blue} />
                                         <Text style={{color: Blue, fontSize: 12, marginLeft: 3}}>{item.hora}</Text>
                                     </View>
                                 </View>
-                                <View style={tw`h-${item.title ? 'auto' : 0} self-stretch justify-center items-start`}>
-                                    <Text style={tw`text-base text-[${Blue}]`}>{item.title}</Text>
+                                <View style={{height: item.title ? 'auto' : 0, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
+                                    <Text style={{fontSize: 15.5, color: Blue}}>{item.title}</Text>
                                 </View>
                                 {
                                     item.has_filtro
                                     &&
-                                        <View style={tw`mt-2.5`}>
+                                        <View style={{marginTop: 10}}>
                                             <View style={{height: item.filtro_autorizacion ? 'auto' : 0, alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}>
                                                 <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{item.filtro_autorizacion && 'Ticket Autorizado: '}</Text>
                                                 {
@@ -298,12 +299,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         ?
                                             <View style={{height: 'auto', flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 10, paddingBottom: 5, borderTopColor: '#f7f7f7', borderTopWidth: 2.5}}>
                                                 <TouchableOpacity onPress={async () => await Linking.openURL(item.url)} style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                    <View style={tw`h-auto w-auto justify-center items-center`} >
-                                                        <View style={tw`h-auto w-auto border border-[#dadada]`}>
+                                                    <View style={{height: 'auto', width: 'auto', justifyContent: 'center', alignItems: 'center'}} >
+                                                        <View style={{height: 'auto', width: 'auto', borderWidth: 1, borderColor: '#dadada'}}>
                                                             <IonIcons name={item.url.includes('.pdf') ? 'file-pdf' : (item.url.includes('.docx') || item.url.includes('.doc')) ? 'file-word' : 'file-excel'} size={32} color={item.url.includes('.pdf') ? '#d53f40' : (item.url.includes('.docx') || item.url.includes('.doc')) ? '#185abd' : '#107c41'} />
                                                         </View>
                                                     </View>
-                                                    <View style={tw`flex-1`}>
+                                                    <View style={{flex: 1}}>
                                                         <Text style={{color: Blue, fontSize: 13, marginLeft: 4, textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}}>{item.nombre}</Text>
                                                     </View>
                                                 </TouchableOpacity>
@@ -311,7 +312,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         :
                                             <View style={{height: 'auto', flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', paddingTop: 10, paddingBottom: 5, borderTopColor: '#f7f7f7', borderTopWidth: 2.5}}>
                                                 <TouchableOpacity onPress={async () => await Linking.openURL(item.url)} style={{flexDirection: 'row', alignItems: 'center'}}>
-                                                    <View style={tw`h-auto w-auto justify-center items-center`} >
+                                                    <View style={{height: 'auto', width: 'auto', justifyContent: 'center', alignItems: 'center'}} >
                                                         <View style={{height: 'auto', width: 'auto', paddingHorizontal: 2, paddingVertical: 1, borderWidth: 1, borderColor: '#dadada', justifyContent: 'center', alignItems: 'center'}}>
                                                             <Image 
                                                                 style={{
@@ -323,7 +324,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                             />
                                                         </View>
                                                     </View>
-                                                    <View style={tw`flex-1`}>
+                                                    <View style={{flex: 1}}>
                                                         <Text style={{color: Blue, fontSize: 13, marginLeft: 4, textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}}>{item.nombre}</Text>
                                                     </View> 
                                                 </TouchableOpacity>

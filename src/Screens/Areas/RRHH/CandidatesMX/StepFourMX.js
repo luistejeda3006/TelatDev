@@ -97,10 +97,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                 all = {...all, ...obj_4};
                 const body = {
                     'action': 'insert_precandidato',
+                    'country': 'MX',
                     'data': all,
                     'login': login,
                     'live': live,
-                    'country': 'MX'
                 }
 
                 console.log('body: ', body)
@@ -113,9 +113,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                         },
                         body: JSON.stringify(body)
                     });
-                    const {response} = await request.json();
+                    const {response, status} = await request.json();
 
-                    if(response.status === 201){
+                    if(status === 201){
                         setFilters({...filters, error: false, appointment: false})
                         Alert.alert(
                             language === '1' ? '¡Solicitud Creada Correctamente!' : 'Application Created Successfully!',
@@ -130,7 +130,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                         navigation.navigate('Choose')
                     }
 
-                    else if(response.status === 400){
+                    else if(status === 400){
                         await AsyncStorage.removeItem(keyOne);
                         await AsyncStorage.removeItem(keyTwo);
                         await AsyncStorage.removeItem(keyThree);
@@ -145,7 +145,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                         navigation.navigate('Choose')
                     }
 
-                    else if(response.status === 405) {
+                    else if(status === 405) {
                         console.log('se ejecutó la acción 2 veces pero se guardó solo una vez')
                     }
                 }catch(e){
