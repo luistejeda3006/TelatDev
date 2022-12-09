@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StatusBar, SafeAreaView} from 'react-native';
-import {HeaderLandscape, HeaderPortrait, FailedNetwork} from '../../components';
+import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep} from '../../components';
 import {ProgressSteps} from 'react-native-progress-steps';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
@@ -10,8 +10,14 @@ import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/col
 import {useFocusEffect} from '@react-navigation/native';
 import * as Yup from 'yup';
 import tw from 'twrnc';
+import { useSelector } from 'react-redux';
+import { selectStep } from '../../slices/progressStepSlice';
+
+let step = null;
 
 export default ({navigation, route: {params: {language, orientation, country}}}) => {
+    step = useSelector(selectStep)
+
     const required = '*';
     const invalidEmail = country === 'US' ? 'Invalid Email' : language === '1' ? 'Correo Inválido' : 'Invalid Email';
     const invalidNumber = country === 'US' ? 'Invalid Number' : language === '1' ? 'Número Inválido' : 'Invalid Number';
@@ -154,24 +160,19 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         {
                             hasConnection
                             ?
-                                <View style={tw`flex-1 px-2`}>
-                                    <ProgressSteps
-                                        labelFontSize={11}
-                                        activeStepIconBorderColor={'#3283C5'}
-                                        activeLabelColor={'#3283C5'}
-                                        completedProgressBarColor={'#3283C5'}
-                                        completedStepIconColor={'#3283C5'}
-                                        activeStepNumColor={'#3283C5'}
-                                        completedLabelColor={'#3283C5'}
-                                        topOffset={15}
-                                        marginBottom={30}
-                                        scrollable={true}>
+                                <ProgressStep>
+                                    {
+                                        step === 1
+                                        ?
                                             <StepOneUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Basic Info.' : 'Basic Information'} language={language} orientation={orientationInfo.initial}/>
-                                            {/* <StepTwoUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Employment Info.' : 'Employment Information'} language={language} orientation={orientationInfo.initial}/> */}
-                                            <StepTwoUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Competences Abilities' : 'Competences Abilities'} language={language} orientation={orientationInfo.initial}/>
-                                            <StepThreeUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'References Info.' : 'References Information'} language={language} orientation={orientationInfo.initial}/>
-                                    </ProgressSteps>
-                                </View>
+                                        :
+                                            step === 2
+                                            ?
+                                                <StepTwoUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Competences Abilities' : 'Competences Abilities'} language={language} orientation={orientationInfo.initial}/>
+                                            :
+                                                <StepThreeUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'References Info.' : 'References Information'} language={language} orientation={orientationInfo.initial}/>
+                                    }
+                                </ProgressStep>
                             :
                                 <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                         }

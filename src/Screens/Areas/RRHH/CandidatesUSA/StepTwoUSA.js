@@ -290,580 +290,561 @@ export default ({navigation, language, orientation, ...rest}) => {
     }
 
     return (
-        <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-        >
-            <ProgressStep
-                errors={error}
-                {...rest}
-                nextBtnText={'Next'}
-                previousBtnText=''
-                nextBtnTextStyle={{color: '#fff', backgroundColor: '#1177E9', padding: 12, borderRadius: 15, fontWeight: 'bold'}}
-                previousBtnTextStyle={{color: 'orange'}}
-                nextBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnDisabled={true}
-                nextBtnDisabled={false}
-                onNext={() => handleValues()}
-            >
-                <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
-                    {
-                        orientationInfo.initial === 'PORTRAIT'
-                        ?
-                            !isTablet()
-                            ?
-                                <>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'title'} title={'Abilities'}/>
-                                        </View>
-                                    </View>
+        <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
+            {
+                orientationInfo.initial === 'PORTRAIT'
+                ?
+                    !isTablet()
+                    ?
+                        <>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'title'} title={'Abilities'}/>
+                                </View>
+                            </View>
 
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                                            <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                    <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                                </View>
+                                <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={'transparent'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={Blue} />
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                languages.map((x,i) =>
+                                    x.id === 1
+                                    ?
+                                        <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                <InputForm
+                                                    radius={false}
+                                                    status={true}
+                                                    placeholder={'EXAMPLE. SPANISH'}
+                                                    fieldName={x.boxName}
+                                                />
+                                            </View>
+                                            <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
+                                            </View>
                                         </View>
-                                        <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={'transparent'} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={Blue} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {
-                                        languages.map((x,i) =>
-                                            x.id === 1
-                                            ?
-                                                <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                        <InputForm
-                                                            radius={false}
-                                                            status={true}
-                                                            placeholder={'EXAMPLE. SPANISH'}
-                                                            fieldName={x.boxName}
-                                                        />
-                                                    </View>
-                                                    <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                        <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
-                                                    </View>
+                                    :
+                                        x.visible
+                                        && 
+                                            <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                    <InputForm
+                                                        radius={false}
+                                                        status={true}
+                                                        placeholder={'EXAMPLE. SPANISH'}
+                                                        fieldName={x.boxName}
+                                                    />
                                                 </View>
-                                            :
-                                                x.visible
-                                                && 
-                                                    <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                        <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                            <InputForm
-                                                                radius={false}
-                                                                status={true}
-                                                                placeholder={'EXAMPLE. SPANISH'}
-                                                                fieldName={x.boxName}
-                                                            />
-                                                        </View>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                            <IonIcons name={'close-thick'} size={22} color={'#fff'} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                        )
-                                    }
+                                                <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                    <IonIcons name={'close-thick'} size={22} color={'#fff'} />
+                                                </TouchableOpacity>
+                                            </View>
+                                )
+                            }
 
+                            <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
+                            <Picker 
+                                fieldName={'levelComputer_3_US'}
+                                items={englishOptionsData}
+                            />
+                            <TitleForms type={'subtitle'} title={'What programs are you familiar with?'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'Example. Word, Excel...'}
+                                fieldName={'familiarPrograms_3_US'}
+                            />
+
+                            <TitleForms type={'title'} title={'Work Experience'}/>
+
+                            <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
+                            <Picker 
+                                fieldName={'workExperience_3_US'}
+                                items={closeOptions}
+                                contador={1}
+                                handleAction_uno={handleAction_uno}
+                            />
+                            
+                            {
+                                pEmpleo
+                                &&
+                                    <>
+                                        <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
+                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                        <TitleForms type={'subtitle'} title={'Line of business'} />
+                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
+
+                                        <TitleForms type={'subtitle'} title={'Starting date'} />
+                                        <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
+                                        <TitleForms type={'subtitle'} title={'End date'} />
+                                        <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
+
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
+                    
+                                        <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
+                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                        <TitleForms type={'subtitle'} title={'Line of business'} />
+                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
+                                        
+                                        <TitleForms type={'subtitle'} title={'Starting date'} />
+                                        <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
+                                        <TitleForms type={'subtitle'} title={'End date'} />
+                                        <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
+                                        
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
+                                    </>
+                            }
+                        </>
+                    :
+                        <>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'title'} title={'Abilities'}/>
+                                </View>
+                            </View>
+
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                    <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                                </View>
+                                <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={'transparent'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={Blue} />
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                languages.map((x,i) =>
+                                    x.id === 1
+                                    ?
+                                        <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                <InputForm
+                                                    radius={false}
+                                                    status={true}
+                                                    placeholder={'EXAMPLE. SPANISH'}
+                                                    fieldName={x.boxName}
+                                                />
+                                            </View>
+                                            <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
+                                            </View>
+                                        </View>
+                                    :
+                                        x.visible
+                                        && 
+                                            <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                    <InputForm
+                                                        radius={false}
+                                                        status={true}
+                                                        placeholder={'EXAMPLE. SPANISH'}
+                                                        fieldName={x.boxName}
+                                                    />
+                                                </View>
+                                                <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                    <IonIcons name={'close-thick'} size={22} color={'#fff'} />
+                                                </TouchableOpacity>
+                                            </View>
+                                )
+                            }
+
+                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                <View style={{flex: 1, marginRight: '3%'}}>
                                     <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
                                     <Picker 
                                         fieldName={'levelComputer_3_US'}
                                         items={englishOptionsData}
                                     />
+                                </View>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'subtitle'} title={'\nWhat programs are you familiar with?'} />
+                                    <InputForm
+                                        status={true}
+                                        placeholder={'Example. Word, Excel...'}
+                                        fieldName={'familiarPrograms_3_US'}
+                                    />
+                                </View>
+                            </View>
+
+                            <TitleForms type={'title'} title={'Work Experience'}/>
+                            <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
+                            <Picker 
+                                fieldName={'workExperience_3_US'}
+                                items={closeOptions}
+                                contador={1}
+                                handleAction_uno={handleAction_uno}
+                            />
+                            
+                            {
+                                pEmpleo
+                                &&
+                                    <>
+                                        <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                                <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={'Line of business'} />
+                                                <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                            </View>
+                                        </View>
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Starting date'} />
+                                                <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'End date'} />
+                                                <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
+                                            </View>
+                                        </View>
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
+
+                                        <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                                <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={'Line of business'} />
+                                                <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                            </View>
+                                        </View>
+
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Starting date'} />
+                                                <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'End date'} />
+                                                <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
+                                            </View>
+                                        </View>
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
+                                    </>
+                            }
+                        </>
+                :
+                    !isTablet()
+                    ?
+                        <>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'title'} title={'Abilities'}/>
+                                </View>
+                            </View>
+
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                    <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                                </View>
+                                <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={'transparent'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={Blue} />
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                languages.map((x,i) =>
+                                    x.id === 1
+                                    ?
+                                        <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                <InputForm
+                                                    radius={false}
+                                                    status={true}
+                                                    placeholder={'EXAMPLE. SPANISH'}
+                                                    fieldName={x.boxName}
+                                                />
+                                            </View>
+                                            <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
+                                            </View>
+                                        </View>
+                                    :
+                                        x.visible
+                                        && 
+                                            <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                    <InputForm
+                                                        radius={false}
+                                                        status={true}
+                                                        placeholder={'EXAMPLE. SPANISH'}
+                                                        fieldName={x.boxName}
+                                                    />
+                                                </View>
+                                                <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                    <IonIcons name={'close-thick'} size={22} color={'#fff'} />
+                                                </TouchableOpacity>
+                                            </View>
+                                )
+                            }
+
+                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                <View style={{flex: 1, marginRight: '3%'}}>
+                                    <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
+                                    <Picker 
+                                        fieldName={'levelComputer_3_US'}
+                                        items={englishOptionsData}
+                                    />
+                                </View>
+                                <View style={{flex: 1}}>
                                     <TitleForms type={'subtitle'} title={'What programs are you familiar with?'} />
                                     <InputForm
                                         status={true}
                                         placeholder={'Example. Word, Excel...'}
                                         fieldName={'familiarPrograms_3_US'}
                                     />
+                                </View>
+                            </View>
 
-                                    <TitleForms type={'title'} title={'Work Experience'}/>
-
-                                    <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
-                                    <Picker 
-                                        fieldName={'workExperience_3_US'}
-                                        items={closeOptions}
-                                        contador={1}
-                                        handleAction_uno={handleAction_uno}
-                                    />
-                                    
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
+                            <TitleForms type={'title'} title={'Work Experience'}/>
+                            <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
+                            <Picker 
+                                fieldName={'workExperience_3_US'}
+                                items={closeOptions}
+                                contador={1}
+                                handleAction_uno={handleAction_uno}
+                            />
+                            
+                            {
+                                pEmpleo
+                                &&
+                                    <>
+                                        <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'Company (Name)'} />
                                                 <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
                                                 <TitleForms type={'subtitle'} title={'Line of business'} />
                                                 <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
+                                            </View>
+                                        </View>
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
 
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'Starting date'} />
                                                 <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'End date'} />
                                                 <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
+                                            </View>
+                                        </View>
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
 
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
-                         
-                                                <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
+                                        <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'Company (Name)'} />
                                                 <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
                                                 <TitleForms type={'subtitle'} title={'Line of business'} />
                                                 <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
-                                                
+                                            </View>
+                                        </View>
+
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'Starting date'} />
                                                 <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
                                                 <TitleForms type={'subtitle'} title={'End date'} />
                                                 <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
-                                                
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
-                                            </>
-                                    }
-                                </>
-                            :
-                                <>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'title'} title={'Abilities'}/>
+                                            </View>
                                         </View>
-                                    </View>
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
+                                    </>
+                            }
+                        </>
+                    :
+                        //horizontal tablet
+                        <>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'title'} title={'Abilities'}/>
+                                </View>
+                            </View>
 
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                                            <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                            <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                    <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                                </View>
+                                <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={'transparent'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
+                                    <IonIcons name={'plus'} size={20} color={Blue} />
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                languages.map((x,i) =>
+                                    x.id === 1
+                                    ?
+                                        <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                <InputForm
+                                                    radius={false}
+                                                    status={true}
+                                                    placeholder={'EXAMPLE. SPANISH'}
+                                                    fieldName={x.boxName}
+                                                />
+                                            </View>
+                                            <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
+                                            </View>
                                         </View>
-                                        <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={'transparent'} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={Blue} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {
-                                        languages.map((x,i) =>
-                                            x.id === 1
-                                            ?
-                                                <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                        <InputForm
-                                                            radius={false}
-                                                            status={true}
-                                                            placeholder={'EXAMPLE. SPANISH'}
-                                                            fieldName={x.boxName}
-                                                        />
-                                                    </View>
-                                                    <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                        <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
-                                                    </View>
+                                    :
+                                        x.visible
+                                        && 
+                                            <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                    <InputForm
+                                                        radius={false}
+                                                        status={true}
+                                                        placeholder={'EXAMPLE. SPANISH'}
+                                                        fieldName={x.boxName}
+                                                    />
                                                 </View>
-                                            :
-                                                x.visible
-                                                && 
-                                                    <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                        <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                            <InputForm
-                                                                radius={false}
-                                                                status={true}
-                                                                placeholder={'EXAMPLE. SPANISH'}
-                                                                fieldName={x.boxName}
-                                                            />
-                                                        </View>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                            <IonIcons name={'close-thick'} size={22} color={'#fff'} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                        )
-                                    }
+                                                <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
+                                                    <IonIcons name={'close-thick'} size={22} color={'#fff'} />
+                                                </TouchableOpacity>
+                                            </View>
+                                )
+                            }
 
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
-                                            <Picker 
-                                                fieldName={'levelComputer_3_US'}
-                                                items={englishOptionsData}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={'\nWhat programs are you familiar with?'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={'Example. Word, Excel...'}
-                                                fieldName={'familiarPrograms_3_US'}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={'Work Experience'}/>
-                                    <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
+                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                <View style={{flex: 1, marginRight: '3%'}}>
+                                    <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
                                     <Picker 
-                                        fieldName={'workExperience_3_US'}
-                                        items={closeOptions}
-                                        contador={1}
-                                        handleAction_uno={handleAction_uno}
+                                        fieldName={'levelComputer_3_US'}
+                                        items={englishOptionsData}
                                     />
-                                    
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
-
-                                                <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
-                                            </>
-                                    }
-                                </>
-                        :
-                            !isTablet()
-                            ?
-                                <>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'title'} title={'Abilities'}/>
-                                        </View>
-                                    </View>
-
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                                            <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
-                                        </View>
-                                        <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={'transparent'} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={Blue} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {
-                                        languages.map((x,i) =>
-                                            x.id === 1
-                                            ?
-                                                <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                        <InputForm
-                                                            radius={false}
-                                                            status={true}
-                                                            placeholder={'EXAMPLE. SPANISH'}
-                                                            fieldName={x.boxName}
-                                                        />
-                                                    </View>
-                                                    <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                        <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
-                                                    </View>
-                                                </View>
-                                            :
-                                                x.visible
-                                                && 
-                                                    <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                        <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                            <InputForm
-                                                                radius={false}
-                                                                status={true}
-                                                                placeholder={'EXAMPLE. SPANISH'}
-                                                                fieldName={x.boxName}
-                                                            />
-                                                        </View>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                            <IonIcons name={'close-thick'} size={22} color={'#fff'} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                        )
-                                    }
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
-                                            <Picker 
-                                                fieldName={'levelComputer_3_US'}
-                                                items={englishOptionsData}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={'What programs are you familiar with?'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={'Example. Word, Excel...'}
-                                                fieldName={'familiarPrograms_3_US'}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={'Work Experience'}/>
-                                    <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
-                                    <Picker 
-                                        fieldName={'workExperience_3_US'}
-                                        items={closeOptions}
-                                        contador={1}
-                                        handleAction_uno={handleAction_uno}
+                                </View>
+                                <View style={{flex: 1}}>
+                                    <TitleForms type={'subtitle'} title={'What programs are you familiar with?'} />
+                                    <InputForm
+                                        status={true}
+                                        placeholder={'Example. Word, Excel...'}
+                                        fieldName={'familiarPrograms_3_US'}
                                     />
-                                    
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
+                                </View>
+                            </View>
 
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
-
-                                                <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
-                                            </>
-                                    }
-                                </>
-                            :
-                                //horizontal tablet
-                                <>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'title'} title={'Abilities'}/>
+                            <TitleForms type={'title'} title={'Work Experience'}/>
+                            <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
+                            <Picker 
+                                fieldName={'workExperience_3_US'}
+                                items={closeOptions}
+                                contador={1}
+                                handleAction_uno={handleAction_uno}
+                            />
+                            
+                            {
+                                pEmpleo
+                                &&
+                                    <>
+                                        <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                                <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={'Line of business'} />
+                                                <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                            </View>
                                         </View>
-                                    </View>
-
-                                    <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                                            <Text style={{color: Blue}}>What languages do you speak and write fluently</Text>
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Starting date'} />
+                                                <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'End date'} />
+                                                <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
+                                            </View>
                                         </View>
-                                        <TouchableOpacity style={{height: 28, width: 28, backgroundColor: 'transparent', borderRadius: 25, borderWidth: 1, borderColor: 'transparent', justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={'transparent'} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center'}}>
-                                            <IonIcons name={'plus'} size={20} color={Blue} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {
-                                        languages.map((x,i) =>
-                                            x.id === 1
-                                            ?
-                                                <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                        <InputForm
-                                                            radius={false}
-                                                            status={true}
-                                                            placeholder={'EXAMPLE. SPANISH'}
-                                                            fieldName={x.boxName}
-                                                        />
-                                                    </View>
-                                                    <View style={{width: 50, height: 50, backgroundColor: 'rgba(50,131,197,.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Blue, borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                        <IonIcons name={'lock'} size={22} color={x.id === 1 ? Blue : '#fff'} />
-                                                    </View>
-                                                </View>
-                                            :
-                                                x.visible
-                                                && 
-                                                    <View style={{marginBottom: 10, flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
-                                                        <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                                            <InputForm
-                                                                radius={false}
-                                                                status={true}
-                                                                placeholder={'EXAMPLE. SPANISH'}
-                                                                fieldName={x.boxName}
-                                                            />
-                                                        </View>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{width: 50, height: 50, backgroundColor: '#DC3644', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#adadad', borderTopEndRadius: 20, borderBottomEndRadius: 20, paddingRight: 3}}>
-                                                            <IonIcons name={'close-thick'} size={22} color={'#fff'} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                        )
-                                    }
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
 
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={'What is your level of knowledge using computers?'} />
-                                            <Picker 
-                                                fieldName={'levelComputer_3_US'}
-                                                items={englishOptionsData}
-                                            />
+                                        <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Company (Name)'} />
+                                                <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                            </View>
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={'Line of business'} />
+                                                <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                            </View>
                                         </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={'What programs are you familiar with?'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={'Example. Word, Excel...'}
-                                                fieldName={'familiarPrograms_3_US'}
-                                            />
+
+                                        <TitleForms type={'subtitle'} title={'Position'} />
+                                        <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
+
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'Starting date'} />
+                                                <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
+                                            </View>
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={'End date'} />
+                                                <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
+                                            </View>
                                         </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={'Work Experience'}/>
-                                    <TitleForms type={'subtitle'} title={'Would this be your first job?'} />
-                                    <Picker 
-                                        fieldName={'workExperience_3_US'}
-                                        items={closeOptions}
-                                        contador={1}
-                                        handleAction_uno={handleAction_uno}
-                                    />
-                                    
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresa_3_US'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresa_3_US'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñado_3_US'} ref={input_puesto}/>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activies'} fieldName={'activities_3_US'} multiline={true} numberOfLines={10}/>
-
-                                                <TitleForms type={'title'} title={'Second Work Experience (Optional)'} />
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={'Company (Name)'} fieldName={'nombreEmpresaOpcional_3_US'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={'Line of business'} />
-                                                        <InputForm status={true} placeholder={'Line of business'} fieldName={'giroEmpresaOpcional_3_US'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <TitleForms type={'subtitle'} title={'Position'} />
-                                                <InputForm status={true} placeholder={'Position'} fieldName={'puestoDesempeñadoOpcional_3_US'} ref={input_puesto_opcional}/>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3_US'} language={'2'} />
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'subtitle'} title={'Activities'} />
-                                                <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
-                                            </>
-                                    }
-                                </>
-                    }
-                </View>
-            </ProgressStep>
-        </KeyboardAwareScrollView>
+                                        <TitleForms type={'subtitle'} title={'Activities'} />
+                                        <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
+                                    </>
+                            }
+                        </>
+            }
+        </View>
     )
 }
 

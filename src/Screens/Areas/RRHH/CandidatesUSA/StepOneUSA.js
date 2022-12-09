@@ -4,7 +4,6 @@ import {InputForm, Politics, Picker, TitleForms, CheckBox} from '../../../../com
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
-import {ProgressStep} from 'react-native-progress-steps';
 import DeviceInfo from 'react-native-device-info';
 import {baseUrl, live, login, siteKey, urlJobs, contactEmail} from '../../../../access/requestedData';
 import {useOrientation} from '../../../../hooks';
@@ -12,6 +11,7 @@ import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
 
 export default ({navigation, language, orientation, ...rest}) => {
+
     const {isTablet} = DeviceInfo;
     const input_nom = useRef()
     const input_last = useRef()
@@ -253,28 +253,187 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     return (
         <>
-            <KeyboardAwareScrollView
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-            >
-                <ProgressStep
-                    errors={error}
-                    {...rest}
-                    nextBtnText={'Next'}
-                    nextBtnTextStyle={{color: '#fff', backgroundColor: '#1177E9', padding: 12, borderRadius: 15, fontWeight: 'bold'}}
-                    nextBtnStyle={{ textAlign: 'center', padding: 0 }}
-                    previousBtnStyle={{ textAlign: 'center', padding: 0 }}
-                    nextBtnDisabled={!politics} //!politics
-                    onNext={() => handleValues()}
-                >
-                    <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
-                        {
-                            orientationInfo.initial === 'PORTRAIT'
-                            ?
-                                !isTablet()
-                                ?
-                                    <>
-                                        <TitleForms type={'title'} title={'Personal Information'}/>
+            <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
+                {
+                    orientationInfo.initial === 'PORTRAIT'
+                    ?
+                        !isTablet()
+                        ?
+                            <>
+                                <TitleForms type={'title'} title={'Personal Information'}/>
+                                <TitleForms type={'subtitle'} title={'Name(s)'} />
+                                <InputForm
+                                    status={true}
+                                    placeholder={'NAME(S)'}
+                                    fieldName={'nombre_1_US'}
+                                    ref={input_nom}
+                                    onSubmitEditing={() => input_last.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={'Last name'} />
+                                <InputForm
+                                    status={true}
+                                    placeholder={'LAST NAME'}
+                                    fieldName={'lastName_1_US'}
+                                    ref={input_last}
+                                    onSubmitEditing={() => input_email.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={'E-mail'} />
+                                <InputForm 
+                                    keyboardType='email-address'
+                                    status={true} 
+                                    placeholder='example@example.com'
+                                    fieldName={'email_1_US'} 
+                                    ref={input_email}
+                                    autoCapitalize = 'none'
+                                    onSubmitEditing={() => input_phone_number.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={'Phone Number'} />
+                                <InputForm 
+                                    keyboardType='numeric'
+                                    status={true} 
+                                    placeholder='PHONE NUMBER '
+                                    fieldName={'phone_number_1_US'} 
+                                    ref={input_phone_number}
+                                    onSubmitEditing={() => input_home_number.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={'Landline'} />
+                                <InputForm 
+                                    keyboardType='numeric'
+                                    status={true} 
+                                    placeholder='LANDLINE NUMBER'
+                                    fieldName={'home_number_1_US'} 
+                                    ref={input_home_number}
+                                    onSubmitEditing={() => input_address.current.focus()}
+                                />
+
+                                <TitleForms type={'title'} title={'Address'}/>
+                                <TitleForms type={'subtitle'} title={'Address'} />
+                                <InputForm
+                                    status={true} 
+                                    placeholder='ADDRESS'
+                                    fieldName={'address_1_US'} 
+                                    ref={input_address}
+                                    onSubmitEditing={() => input_city.current.focus()}
+                                />
+
+                                <TitleForms type={'subtitle'} title={'City'} />
+                                <InputForm
+                                    status={true} 
+                                    placeholder='CITY'
+                                    fieldName={'city_1_US'} 
+                                    ref={input_city}
+                                    onSubmitEditing={() => input_state.current.focus()}
+                                />
+
+                                <TitleForms type={'subtitle'} title={'State'} />
+                                <InputForm
+                                    status={true} 
+                                    placeholder='STATE'
+                                    fieldName={'state_1_US'} 
+                                    ref={input_state}
+                                    onSubmitEditing={() => input_zip.current.focus()}
+                                />
+
+                                <TitleForms type={'subtitle'} title={'Zip Code'} />
+                                <InputForm
+                                    maxLength={5}
+                                    keyboardType='numeric'
+                                    status={true} 
+                                    placeholder='ZIP CODE'
+                                    fieldName={'zip_1_US'} 
+                                    ref={input_zip}
+                                    onSubmitEditing={() => input_position.current.focus()}
+                                />
+                                
+                                <TitleForms type={'title'} title={'Application Information'}/>
+                                <TitleForms type={'subtitle'} title={'Position of Interest'} />
+                                <InputForm
+                                    status={true} 
+                                    placeholder='POSITION'
+                                    fieldName={'position_1_US'} 
+                                    ref={input_position}
+                                    onSubmitEditing={() => input_salary.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
+                                <InputForm
+                                    status={true}
+                                    placeholder={'$0.00'}
+                                    keyboardType="numeric"
+                                    fieldName={'salary_1_US'}
+                                    ref={input_salary}
+                                />
+                                <TitleForms type={'subtitle'} title={'Are you at least 18 years old?'} />
+                                <Picker
+                                    fieldName={'Is18_1_US'}
+                                    items={closeOptions}
+                                />
+                                <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
+                                <Picker
+                                    fieldName={'legally_1_US'}
+                                    items={closeOptions}
+                                />
+                                <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
+                                <Picker
+                                    fieldName={'recruitment_1_US'}
+                                    items={recruitmentData}
+                                    handleAction_dos={handleAction_dos}
+                                    contador={2}
+                                />
+
+                                {
+                                    recruitment === 1 || recruitment === 2
+                                    ?
+                                        recruitment === 1
+                                        ?
+                                            <>
+                                                <TitleForms type={'subtitle'} title={'Job Board'} />
+                                                <Picker
+                                                    fieldName={'recruitmentDesc_1_US'}
+                                                    items={jobBoardData}
+                                                />
+                                            </>
+                                        :
+                                            <>
+                                                <TitleForms type={'subtitle'} title={'Social Media'} />
+                                                <Picker
+                                                    fieldName={'recruitmentDesc_1_US'}
+                                                    items={socialNetworksData}
+                                                />
+                                            </>
+                                    :
+                                        recruitment === 3 || recruitment === 4
+                                        ?
+                                            recruitment === 3
+                                            ?
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={'Name of the employee that is referring you'} />
+                                                    <InputForm
+                                                        status={true} 
+                                                        placeholder='Enter the full name'
+                                                        fieldName={'recruitmentDesc_1_US'} 
+                                                        ref={input_email}
+                                                    />
+                                                </>
+                                            :
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={'Other'} />
+                                                    <InputForm
+                                                        status={true} 
+                                                        placeholder='Specify'
+                                                        fieldName={'recruitmentDesc_1_US'} 
+                                                        ref={input_email}
+                                                    />
+                                                </>
+                                        :
+                                            <></>
+                                }
+                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                            </>
+                        :
+                            <>
+                                <TitleForms type={'title'} title={'Personal Information'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={'Name(s)'} />
                                         <InputForm
                                             status={true}
@@ -283,6 +442,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_nom}
                                             onSubmitEditing={() => input_last.current.focus()}
                                         />
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'Last name'} />
                                         <InputForm
                                             status={true}
@@ -291,25 +452,33 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_last}
                                             onSubmitEditing={() => input_email.current.focus()}
                                         />
-                                        <TitleForms type={'subtitle'} title={'E-mail'} />
-                                        <InputForm 
-                                            keyboardType='email-address'
-                                            status={true} 
-                                            placeholder='example@example.com'
-                                            fieldName={'email_1_US'} 
-                                            ref={input_email}
-                                            autoCapitalize = 'none'
-                                            onSubmitEditing={() => input_phone_number.current.focus()}
-                                        />
+                                    </View>
+                                </View>
+                                
+                                <TitleForms type={'subtitle'} title={'E-mail'} />
+                                <InputForm 
+                                    keyboardType='email-address'
+                                    status={true} 
+                                    placeholder='example@example.com'
+                                    fieldName={'email_1_US'} 
+                                    ref={input_email}
+                                    autoCapitalize = 'none'
+                                    onSubmitEditing={() => input_phone_number.current.focus()}
+                                />
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={'Phone Number'} />
                                         <InputForm 
                                             keyboardType='numeric'
-                                            status={true} 
+                                            status={true}
                                             placeholder='PHONE NUMBER '
                                             fieldName={'phone_number_1_US'} 
                                             ref={input_phone_number}
                                             onSubmitEditing={() => input_home_number.current.focus()}
                                         />
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'Landline'} />
                                         <InputForm 
                                             keyboardType='numeric'
@@ -319,8 +488,12 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_home_number}
                                             onSubmitEditing={() => input_address.current.focus()}
                                         />
+                                    </View>
+                                </View>
 
-                                        <TitleForms type={'title'} title={'Address'}/>
+                                <TitleForms type={'title'} title={'Address'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={'Address'} />
                                         <InputForm
                                             status={true} 
@@ -329,7 +502,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_address}
                                             onSubmitEditing={() => input_city.current.focus()}
                                         />
-
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'City'} />
                                         <InputForm
                                             status={true} 
@@ -338,7 +512,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_city}
                                             onSubmitEditing={() => input_state.current.focus()}
                                         />
+                                    </View>
+                                </View>
 
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={'State'} />
                                         <InputForm
                                             status={true} 
@@ -346,8 +524,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             fieldName={'state_1_US'} 
                                             ref={input_state}
                                             onSubmitEditing={() => input_zip.current.focus()}
-                                        />
-
+                                            />
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'Zip Code'} />
                                         <InputForm
                                             maxLength={5}
@@ -358,9 +537,13 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_zip}
                                             onSubmitEditing={() => input_position.current.focus()}
                                         />
-                                        
-                                        <TitleForms type={'title'} title={'Application Information'}/>
-                                        <TitleForms type={'subtitle'} title={'Position of Interest'} />
+                                    </View>
+                                </View>
+
+                                <TitleForms type={'title'} title={'Application Information'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'\nPosition of Interest'} />
                                         <InputForm
                                             status={true} 
                                             placeholder='POSITION'
@@ -368,6 +551,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             ref={input_position}
                                             onSubmitEditing={() => input_salary.current.focus()}
                                         />
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
                                         <InputForm
                                             status={true}
@@ -376,24 +561,37 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             fieldName={'salary_1_US'}
                                             ref={input_salary}
                                         />
-                                        <TitleForms type={'subtitle'} title={'Are you at least 18 years old?'} />
+                                    </View>
+                                </View>
+                                
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'\nAre you at least 18 years old?'} />
                                         <Picker
                                             fieldName={'Is18_1_US'}
                                             items={closeOptions}
                                         />
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
                                         <Picker
                                             fieldName={'legally_1_US'}
                                             items={closeOptions}
                                         />
-                                        <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'\nHow did you hear about this position?'} />
                                         <Picker
                                             fieldName={'recruitment_1_US'}
                                             items={recruitmentData}
                                             handleAction_dos={handleAction_dos}
                                             contador={2}
                                         />
-
+                                    </View>
+                                    <View style={{flex: 1}}>
                                         {
                                             recruitment === 1 || recruitment === 2
                                             ?
@@ -441,603 +639,175 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 :
                                                     <></>
                                         }
-                                        <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
-                                    </>
-                                :
-                                    <>
-                                        <TitleForms type={'title'} title={'Personal Information'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Name(s)'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'NAME(S)'}
-                                                    fieldName={'nombre_1_US'}
-                                                    ref={input_nom}
-                                                    onSubmitEditing={() => input_last.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Last name'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'LAST NAME'}
-                                                    fieldName={'lastName_1_US'}
-                                                    ref={input_last}
-                                                    onSubmitEditing={() => input_email.current.focus()}
-                                                />
-                                            </View>
+                                    </View>
+                                </View>
+                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                            </>
+                    :
+                        !isTablet()
+                        ?
+                            <>
+                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                    <TitleForms type={'title'} title={'Personal Information'}/>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'Name(s)'} />
+                                            <InputForm
+                                                status={true}
+                                                placeholder={'NAME(S)'}
+                                                fieldName={'nombre_1_US'}
+                                                ref={input_nom}
+                                                onSubmitEditing={() => input_last.current.focus()}
+                                            />
                                         </View>
-                                        
-                                        <TitleForms type={'subtitle'} title={'E-mail'} />
-                                        <InputForm 
-                                            keyboardType='email-address'
-                                            status={true} 
-                                            placeholder='example@example.com'
-                                            fieldName={'email_1_US'} 
-                                            ref={input_email}
-                                            autoCapitalize = 'none'
-                                            onSubmitEditing={() => input_phone_number.current.focus()}
-                                        />
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'Last name'} />
+                                            <InputForm
+                                                status={true}
+                                                placeholder={'LAST NAME'}
+                                                fieldName={'lastName_1_US'}
+                                                ref={input_last}
+                                                onSubmitEditing={() => input_email.current.focus()}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'E-mail'} />
+                                            <InputForm 
+                                                keyboardType='email-address'
+                                                status={true} 
+                                                placeholder='example@example.com'
+                                                fieldName={'email_1_US'} 
+                                                ref={input_email}
+                                                autoCapitalize = 'none'
+                                                onSubmitEditing={() => input_phone_number.current.focus()}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'Phone Number'} />
+                                            <InputForm 
+                                                keyboardType='numeric'
+                                                status={true} 
+                                                placeholder='PHONE NUMBER '
+                                                fieldName={'phone_number_1_US'} 
+                                                ref={input_phone_number}
+                                                onSubmitEditing={() => input_home_number.current.focus()}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'Landline'} />
+                                            <InputForm 
+                                                keyboardType='numeric'
+                                                status={true} 
+                                                placeholder='LANDLINE NUMBER'
+                                                fieldName={'home_number_1_US'} 
+                                                ref={input_home_number}
+                                                onSubmitEditing={() => input_address.current.focus()}
+                                            />
+                                        </View>
+                                    </View>
+                                    <TitleForms type={'title'} title={'Address'}/>
+                                    
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'Address'} />
+                                            <InputForm
+                                                status={true} 
+                                                placeholder='ADDRESS'
+                                                fieldName={'address_1_US'} 
+                                                ref={input_address}
+                                                onSubmitEditing={() => input_city.current.focus()}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'City'} />
+                                            <InputForm
+                                                status={true} 
+                                                placeholder='CITY'
+                                                fieldName={'city_1_US'} 
+                                                ref={input_city}
+                                                onSubmitEditing={() => input_state.current.focus()}
+                                            />
+                                        </View>
+                                    </View>
 
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Phone Number'} />
-                                                <InputForm 
-                                                    keyboardType='numeric'
-                                                    status={true}
-                                                    placeholder='PHONE NUMBER '
-                                                    fieldName={'phone_number_1_US'} 
-                                                    ref={input_phone_number}
-                                                    onSubmitEditing={() => input_home_number.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Landline'} />
-                                                <InputForm 
-                                                    keyboardType='numeric'
-                                                    status={true} 
-                                                    placeholder='LANDLINE NUMBER'
-                                                    fieldName={'home_number_1_US'} 
-                                                    ref={input_home_number}
-                                                    onSubmitEditing={() => input_address.current.focus()}
-                                                />
-                                            </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'State'} />
+                                            <InputForm
+                                                status={true} 
+                                                placeholder='STATE'
+                                                fieldName={'state_1_US'} 
+                                                ref={input_state}
+                                                onSubmitEditing={() => input_zip.current.focus()}
+                                            />
                                         </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'Zip Code'} />
+                                            <InputForm
+                                                maxLength={5}
+                                                keyboardType='numeric'
+                                                status={true} 
+                                                placeholder='ZIP CODE'
+                                                fieldName={'zip_1_US'} 
+                                                ref={input_zip}
+                                                onSubmitEditing={() => input_position.current.focus()}
+                                            />
+                                        </View>
+                                    </View>
+                                    
+                                    <TitleForms type={'title'} title={'Application Information'}/>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'Position of Interest'} />
+                                            <InputForm
+                                                status={true} 
+                                                placeholder='POSITION'
+                                                fieldName={'position_1_US'} 
+                                                ref={input_position}
+                                                onSubmitEditing={() => input_salary.current.focus()}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
+                                            <InputForm
+                                                status={true}
+                                                placeholder={'$0.00'}
+                                                keyboardType="numeric"
+                                                fieldName={'salary_1_US'}
+                                                ref={input_salary}
+                                            />
+                                        </View>
+                                    </View>
+                                    
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'\nAre you at least 18 years old?'} />
+                                            <Picker
+                                                fieldName={'Is18_1_US'}
+                                                items={closeOptions}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
+                                            <Picker
+                                                fieldName={'legally_1_US'}
+                                                items={closeOptions}
+                                            />
+                                        </View>
+                                    </View>
 
-                                        <TitleForms type={'title'} title={'Address'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Address'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='ADDRESS'
-                                                    fieldName={'address_1_US'} 
-                                                    ref={input_address}
-                                                    onSubmitEditing={() => input_city.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'City'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='CITY'
-                                                    fieldName={'city_1_US'} 
-                                                    ref={input_city}
-                                                    onSubmitEditing={() => input_state.current.focus()}
-                                                />
-                                            </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
+                                            <Picker
+                                                fieldName={'recruitment_1_US'}
+                                                items={recruitmentData}
+                                                handleAction_dos={handleAction_dos}
+                                                contador={2}
+                                            />
                                         </View>
-
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'State'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='STATE'
-                                                    fieldName={'state_1_US'} 
-                                                    ref={input_state}
-                                                    onSubmitEditing={() => input_zip.current.focus()}
-                                                    />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Zip Code'} />
-                                                <InputForm
-                                                    maxLength={5}
-                                                    keyboardType='numeric'
-                                                    status={true} 
-                                                    placeholder='ZIP CODE'
-                                                    fieldName={'zip_1_US'} 
-                                                    ref={input_zip}
-                                                    onSubmitEditing={() => input_position.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        <TitleForms type={'title'} title={'Application Information'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'\nPosition of Interest'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='POSITION'
-                                                    fieldName={'position_1_US'} 
-                                                    ref={input_position}
-                                                    onSubmitEditing={() => input_salary.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'$0.00'}
-                                                    keyboardType="numeric"
-                                                    fieldName={'salary_1_US'}
-                                                    ref={input_salary}
-                                                />
-                                            </View>
-                                        </View>
-                                        
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'\nAre you at least 18 years old?'} />
-                                                <Picker
-                                                    fieldName={'Is18_1_US'}
-                                                    items={closeOptions}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
-                                                <Picker
-                                                    fieldName={'legally_1_US'}
-                                                    items={closeOptions}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'\nHow did you hear about this position?'} />
-                                                <Picker
-                                                    fieldName={'recruitment_1_US'}
-                                                    items={recruitmentData}
-                                                    handleAction_dos={handleAction_dos}
-                                                    contador={2}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                {
-                                                    recruitment === 1 || recruitment === 2
-                                                    ?
-                                                        recruitment === 1
-                                                        ?
-                                                            <>
-                                                                <TitleForms type={'subtitle'} title={'Job Board'} />
-                                                                <Picker
-                                                                    fieldName={'recruitmentDesc_1_US'}
-                                                                    items={jobBoardData}
-                                                                />
-                                                            </>
-                                                        :
-                                                            <>
-                                                                <TitleForms type={'subtitle'} title={'Social Media'} />
-                                                                <Picker
-                                                                    fieldName={'recruitmentDesc_1_US'}
-                                                                    items={socialNetworksData}
-                                                                />
-                                                            </>
-                                                    :
-                                                        recruitment === 3 || recruitment === 4
-                                                        ?
-                                                            recruitment === 3
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={'Name of the employee that is referring you'} />
-                                                                    <InputForm
-                                                                        status={true} 
-                                                                        placeholder='Enter the full name'
-                                                                        fieldName={'recruitmentDesc_1_US'} 
-                                                                        ref={input_email}
-                                                                    />
-                                                                </>
-                                                            :
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={'Other'} />
-                                                                    <InputForm
-                                                                        status={true} 
-                                                                        placeholder='Specify'
-                                                                        fieldName={'recruitmentDesc_1_US'} 
-                                                                        ref={input_email}
-                                                                    />
-                                                                </>
-                                                        :
-                                                            <></>
-                                                }
-                                            </View>
-                                        </View>
-                                        <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
-                                    </>
-                            :
-                                !isTablet()
-                                ?
-                                    <>
-                                        <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                            <TitleForms type={'title'} title={'Personal Information'}/>
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'Name(s)'} />
-                                                    <InputForm
-                                                        status={true}
-                                                        placeholder={'NAME(S)'}
-                                                        fieldName={'nombre_1_US'}
-                                                        ref={input_nom}
-                                                        onSubmitEditing={() => input_last.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'Last name'} />
-                                                    <InputForm
-                                                        status={true}
-                                                        placeholder={'LAST NAME'}
-                                                        fieldName={'lastName_1_US'}
-                                                        ref={input_last}
-                                                        onSubmitEditing={() => input_email.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'E-mail'} />
-                                                    <InputForm 
-                                                        keyboardType='email-address'
-                                                        status={true} 
-                                                        placeholder='example@example.com'
-                                                        fieldName={'email_1_US'} 
-                                                        ref={input_email}
-                                                        autoCapitalize = 'none'
-                                                        onSubmitEditing={() => input_phone_number.current.focus()}
-                                                    />
-                                                </View>
-                                            </View>
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'Phone Number'} />
-                                                    <InputForm 
-                                                        keyboardType='numeric'
-                                                        status={true} 
-                                                        placeholder='PHONE NUMBER '
-                                                        fieldName={'phone_number_1_US'} 
-                                                        ref={input_phone_number}
-                                                        onSubmitEditing={() => input_home_number.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'Landline'} />
-                                                    <InputForm 
-                                                        keyboardType='numeric'
-                                                        status={true} 
-                                                        placeholder='LANDLINE NUMBER'
-                                                        fieldName={'home_number_1_US'} 
-                                                        ref={input_home_number}
-                                                        onSubmitEditing={() => input_address.current.focus()}
-                                                    />
-                                                </View>
-                                            </View>
-                                            <TitleForms type={'title'} title={'Address'}/>
-                                            
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'Address'} />
-                                                    <InputForm
-                                                        status={true} 
-                                                        placeholder='ADDRESS'
-                                                        fieldName={'address_1_US'} 
-                                                        ref={input_address}
-                                                        onSubmitEditing={() => input_city.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'City'} />
-                                                    <InputForm
-                                                        status={true} 
-                                                        placeholder='CITY'
-                                                        fieldName={'city_1_US'} 
-                                                        ref={input_city}
-                                                        onSubmitEditing={() => input_state.current.focus()}
-                                                    />
-                                                </View>
-                                            </View>
-
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'State'} />
-                                                    <InputForm
-                                                        status={true} 
-                                                        placeholder='STATE'
-                                                        fieldName={'state_1_US'} 
-                                                        ref={input_state}
-                                                        onSubmitEditing={() => input_zip.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'Zip Code'} />
-                                                    <InputForm
-                                                        maxLength={5}
-                                                        keyboardType='numeric'
-                                                        status={true} 
-                                                        placeholder='ZIP CODE'
-                                                        fieldName={'zip_1_US'} 
-                                                        ref={input_zip}
-                                                        onSubmitEditing={() => input_position.current.focus()}
-                                                    />
-                                                </View>
-                                            </View>
-                                            
-                                            <TitleForms type={'title'} title={'Application Information'}/>
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'Position of Interest'} />
-                                                    <InputForm
-                                                        status={true} 
-                                                        placeholder='POSITION'
-                                                        fieldName={'position_1_US'} 
-                                                        ref={input_position}
-                                                        onSubmitEditing={() => input_salary.current.focus()}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
-                                                    <InputForm
-                                                        status={true}
-                                                        placeholder={'$0.00'}
-                                                        keyboardType="numeric"
-                                                        fieldName={'salary_1_US'}
-                                                        ref={input_salary}
-                                                    />
-                                                </View>
-                                            </View>
-                                            
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'\nAre you at least 18 years old?'} />
-                                                    <Picker
-                                                        fieldName={'Is18_1_US'}
-                                                        items={closeOptions}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
-                                                    <Picker
-                                                        fieldName={'legally_1_US'}
-                                                        items={closeOptions}
-                                                    />
-                                                </View>
-                                            </View>
-
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
-                                                    <Picker
-                                                        fieldName={'recruitment_1_US'}
-                                                        items={recruitmentData}
-                                                        handleAction_dos={handleAction_dos}
-                                                        contador={2}
-                                                    />
-                                                </View>
-                                                <View style={{flex: 1}}>
-                                                    {
-                                                        recruitment === 1 || recruitment === 2
-                                                        ?
-                                                            recruitment === 1
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={'Job Board'} />
-                                                                    <Picker
-                                                                        fieldName={'recruitmentDesc_1_US'}
-                                                                        items={jobBoardData}
-                                                                    />
-                                                                </>
-                                                            :
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={'Social Media'} />
-                                                                    <Picker
-                                                                        fieldName={'recruitmentDesc_1_US'}
-                                                                        items={socialNetworksData}
-                                                                    />
-                                                                </>
-                                                        :
-                                                            recruitment === 3 || recruitment === 4
-                                                            ?
-                                                                recruitment === 3
-                                                                ?
-                                                                    <>
-                                                                        <TitleForms type={'subtitle'} title={'Name of the employee that is referring you'} />
-                                                                        <InputForm
-                                                                            status={true} 
-                                                                            placeholder='Enter the full name'
-                                                                            fieldName={'recruitmentDesc_1_US'} 
-                                                                            ref={input_email}
-                                                                        />
-                                                                    </>
-                                                                :
-                                                                    <>
-                                                                        <TitleForms type={'subtitle'} title={'Other'} />
-                                                                        <InputForm
-                                                                            status={true} 
-                                                                            placeholder='Specify'
-                                                                            fieldName={'recruitmentDesc_1_US'} 
-                                                                            ref={input_email}
-                                                                        />
-                                                                    </>
-                                                            :
-                                                                <></>
-                                                    }
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
-                                    </>
-                                :
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                        <TitleForms type={'title'} title={'Personal Information'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Name(s)'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'NAME(S)'}
-                                                    fieldName={'nombre_1_US'}
-                                                    ref={input_nom}
-                                                    onSubmitEditing={() => input_last.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Last name'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'LAST NAME'}
-                                                    fieldName={'lastName_1_US'}
-                                                    ref={input_last}
-                                                    onSubmitEditing={() => input_email.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-                                        
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'E-mail'} />
-                                                <InputForm 
-                                                    keyboardType='email-address'
-                                                    status={true} 
-                                                    placeholder='example@example.com'
-                                                    fieldName={'email_1_US'} 
-                                                    ref={input_email}
-                                                    autoCapitalize = 'none'
-                                                    onSubmitEditing={() => input_phone_number.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Phone Number'} />
-                                                <InputForm 
-                                                    keyboardType='numeric'
-                                                    status={true} 
-                                                    placeholder='PHONE NUMBER '
-                                                    fieldName={'phone_number_1_US'} 
-                                                    ref={input_phone_number}
-                                                    onSubmitEditing={() => input_home_number.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Landline'} />
-                                                <InputForm 
-                                                    keyboardType='numeric'
-                                                    status={true} 
-                                                    placeholder='LANDLINE NUMBER'
-                                                    fieldName={'home_number_1_US'} 
-                                                    ref={input_home_number}
-                                                    onSubmitEditing={() => input_address.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        {/* //aqui vamos con el resto en telefono */}
-                                        <TitleForms type={'title'} title={'Address'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Address'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='ADDRESS'
-                                                    fieldName={'address_1_US'} 
-                                                    ref={input_address}
-                                                    onSubmitEditing={() => input_city.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'City'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='CITY'
-                                                    fieldName={'city_1_US'} 
-                                                    ref={input_city}
-                                                    onSubmitEditing={() => input_state.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'State'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='STATE'
-                                                    fieldName={'state_1_US'} 
-                                                    ref={input_state}
-                                                    onSubmitEditing={() => input_zip.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Zip Code'} />
-                                                <InputForm
-                                                    maxLength={5}
-                                                    keyboardType='numeric'
-                                                    status={true} 
-                                                    placeholder='ZIP CODE'
-                                                    fieldName={'zip_1_US'} 
-                                                    ref={input_zip}
-                                                    onSubmitEditing={() => input_position.current.focus()}
-                                                />
-                                            </View>
-                                        </View>
-                                        
-                                        <TitleForms type={'title'} title={'Application Information'}/>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Position of Interest'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    placeholder='POSITION'
-                                                    fieldName={'position_1_US'} 
-                                                    ref={input_position}
-                                                    onSubmitEditing={() => input_salary.current.focus()}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
-                                                <InputForm
-                                                    status={true}
-                                                    placeholder={'$0.00'}
-                                                    keyboardType="numeric"
-                                                    fieldName={'salary_1_US'}
-                                                    ref={input_salary}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={'Are you at least 18 years old?'} />
-                                                <Picker
-                                                    fieldName={'Is18_1_US'}
-                                                    items={closeOptions}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
-                                                <Picker
-                                                    fieldName={'legally_1_US'}
-                                                    items={closeOptions}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
-                                        <Picker
-                                            fieldName={'recruitment_1_US'}
-                                            items={recruitmentData}
-                                            handleAction_dos={handleAction_dos}
-                                            contador={2}
-                                        />
-
                                         <View style={{flex: 1}}>
                                             {
                                                 recruitment === 1 || recruitment === 2
@@ -1047,7 +817,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         <>
                                                             <TitleForms type={'subtitle'} title={'Job Board'} />
                                                             <Picker
-                                                                fieldName={'job_board_1_USA'}
+                                                                fieldName={'recruitmentDesc_1_US'}
                                                                 items={jobBoardData}
                                                             />
                                                         </>
@@ -1055,7 +825,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         <>
                                                             <TitleForms type={'subtitle'} title={'Social Media'} />
                                                             <Picker
-                                                                fieldName={'social_media_1_USA'}
+                                                                fieldName={'recruitmentDesc_1_US'}
                                                                 items={socialNetworksData}
                                                             />
                                                         </>
@@ -1069,9 +839,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <InputForm
                                                                     status={true} 
                                                                     placeholder='Enter the full name'
-                                                                    fieldName={'referred_1_USA'} 
+                                                                    fieldName={'recruitmentDesc_1_US'} 
                                                                     ref={input_email}
-                                                                    onSubmitEditing={() => input_telefono_personal.current.focus()}
                                                                 />
                                                             </>
                                                         :
@@ -1080,21 +849,236 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <InputForm
                                                                     status={true} 
                                                                     placeholder='Specify'
-                                                                    fieldName={'other_1_USA'} 
+                                                                    fieldName={'recruitmentDesc_1_US'} 
                                                                     ref={input_email}
-                                                                    onSubmitEditing={() => input_telefono_personal.current.focus()}
                                                                 />
                                                             </>
                                                     :
-                                                        <></>   
+                                                        <></>
                                             }
                                         </View>
-                                        <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
                                     </View>
-                        }
-                    </View>
-                </ProgressStep>
-            </KeyboardAwareScrollView>
+                                </View>
+                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                            </>
+                        :
+                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                <TitleForms type={'title'} title={'Personal Information'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'Name(s)'} />
+                                        <InputForm
+                                            status={true}
+                                            placeholder={'NAME(S)'}
+                                            fieldName={'nombre_1_US'}
+                                            ref={input_nom}
+                                            onSubmitEditing={() => input_last.current.focus()}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'Last name'} />
+                                        <InputForm
+                                            status={true}
+                                            placeholder={'LAST NAME'}
+                                            fieldName={'lastName_1_US'}
+                                            ref={input_last}
+                                            onSubmitEditing={() => input_email.current.focus()}
+                                        />
+                                    </View>
+                                </View>
+                                
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'E-mail'} />
+                                        <InputForm 
+                                            keyboardType='email-address'
+                                            status={true} 
+                                            placeholder='example@example.com'
+                                            fieldName={'email_1_US'} 
+                                            ref={input_email}
+                                            autoCapitalize = 'none'
+                                            onSubmitEditing={() => input_phone_number.current.focus()}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'Phone Number'} />
+                                        <InputForm 
+                                            keyboardType='numeric'
+                                            status={true} 
+                                            placeholder='PHONE NUMBER '
+                                            fieldName={'phone_number_1_US'} 
+                                            ref={input_phone_number}
+                                            onSubmitEditing={() => input_home_number.current.focus()}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'Landline'} />
+                                        <InputForm 
+                                            keyboardType='numeric'
+                                            status={true} 
+                                            placeholder='LANDLINE NUMBER'
+                                            fieldName={'home_number_1_US'} 
+                                            ref={input_home_number}
+                                            onSubmitEditing={() => input_address.current.focus()}
+                                        />
+                                    </View>
+                                </View>
+
+                                {/* //aqui vamos con el resto en telefono */}
+                                <TitleForms type={'title'} title={'Address'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'Address'} />
+                                        <InputForm
+                                            status={true} 
+                                            placeholder='ADDRESS'
+                                            fieldName={'address_1_US'} 
+                                            ref={input_address}
+                                            onSubmitEditing={() => input_city.current.focus()}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'City'} />
+                                        <InputForm
+                                            status={true} 
+                                            placeholder='CITY'
+                                            fieldName={'city_1_US'} 
+                                            ref={input_city}
+                                            onSubmitEditing={() => input_state.current.focus()}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'State'} />
+                                        <InputForm
+                                            status={true} 
+                                            placeholder='STATE'
+                                            fieldName={'state_1_US'} 
+                                            ref={input_state}
+                                            onSubmitEditing={() => input_zip.current.focus()}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'Zip Code'} />
+                                        <InputForm
+                                            maxLength={5}
+                                            keyboardType='numeric'
+                                            status={true} 
+                                            placeholder='ZIP CODE'
+                                            fieldName={'zip_1_US'} 
+                                            ref={input_zip}
+                                            onSubmitEditing={() => input_position.current.focus()}
+                                        />
+                                    </View>
+                                </View>
+                                
+                                <TitleForms type={'title'} title={'Application Information'}/>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'Position of Interest'} />
+                                        <InputForm
+                                            status={true} 
+                                            placeholder='POSITION'
+                                            fieldName={'position_1_US'} 
+                                            ref={input_position}
+                                            onSubmitEditing={() => input_salary.current.focus()}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'What are your salary expectations for this position?'} />
+                                        <InputForm
+                                            status={true}
+                                            placeholder={'$0.00'}
+                                            keyboardType="numeric"
+                                            fieldName={'salary_1_US'}
+                                            ref={input_salary}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={'Are you at least 18 years old?'} />
+                                        <Picker
+                                            fieldName={'Is18_1_US'}
+                                            items={closeOptions}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={'Are you legally eligible for employment in the United States?'} />
+                                        <Picker
+                                            fieldName={'legally_1_US'}
+                                            items={closeOptions}
+                                        />
+                                    </View>
+                                </View>
+
+                                <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
+                                <Picker
+                                    fieldName={'recruitment_1_US'}
+                                    items={recruitmentData}
+                                    handleAction_dos={handleAction_dos}
+                                    contador={2}
+                                />
+
+                                <View style={{flex: 1}}>
+                                    {
+                                        recruitment === 1 || recruitment === 2
+                                        ?
+                                            recruitment === 1
+                                            ?
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={'Job Board'} />
+                                                    <Picker
+                                                        fieldName={'job_board_1_USA'}
+                                                        items={jobBoardData}
+                                                    />
+                                                </>
+                                            :
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={'Social Media'} />
+                                                    <Picker
+                                                        fieldName={'social_media_1_USA'}
+                                                        items={socialNetworksData}
+                                                    />
+                                                </>
+                                        :
+                                            recruitment === 3 || recruitment === 4
+                                            ?
+                                                recruitment === 3
+                                                ?
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={'Name of the employee that is referring you'} />
+                                                        <InputForm
+                                                            status={true} 
+                                                            placeholder='Enter the full name'
+                                                            fieldName={'referred_1_USA'} 
+                                                            ref={input_email}
+                                                            onSubmitEditing={() => input_telefono_personal.current.focus()}
+                                                        />
+                                                    </>
+                                                :
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={'Other'} />
+                                                        <InputForm
+                                                            status={true} 
+                                                            placeholder='Specify'
+                                                            fieldName={'other_1_USA'} 
+                                                            ref={input_email}
+                                                            onSubmitEditing={() => input_telefono_personal.current.focus()}
+                                                        />
+                                                    </>
+                                            :
+                                                <></>   
+                                    }
+                                </View>
+                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                            </View>
+                }
+            </View>
             <View style={styles.container}>
                 <ConfirmGoogleCaptcha
                     ref={_ref => captchaForm = _ref}
