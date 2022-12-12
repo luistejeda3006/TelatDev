@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {selectDataNotification, selectNotification, selectVisibleSliders, setLanguageApp, setNotification, setVisibleSliders} from '../../slices/varSlice';
 import {useFocusEffect} from '@react-navigation/native';
+import {setChecked, setError, setStep, setVerified} from '../../slices/progressStepSlice';
 import tw from 'twrnc';
 
 let key = 'Language'
@@ -645,6 +646,10 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                             setCount(0)
                             setIsHide(!isHide)
                             setVisibility(!visibility)
+                            dispatch(setVerified(undefined))
+                            dispatch(setError(true))
+                            dispatch(setChecked(false))
+                            dispatch(setStep(1))
                             navigation.navigate('Register', {language: language, orientation: orientationInfo.initial, country: 'MX'})
                         }}
                     >
@@ -661,6 +666,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                             setCount(0)
                             setIsHide(!isHide)
                             setVisibility(!visibility)
+                            dispatch(setStep(1))
                             navigation.navigate('Register', {language: language, orientation: orientationInfo.initial, country: 'US'})
                         }}
                     >

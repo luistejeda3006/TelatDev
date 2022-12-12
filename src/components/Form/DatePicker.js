@@ -6,10 +6,10 @@ import {formatDate} from '../../js/dates'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 let initialDate = new Date()
-export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false}) => {
+export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false, label}) => {
     const [field, helpers, meta] = useField(fieldName);
     const { value, setValue } = meta
-    const [dateLabel, setDateLabel] = useState('')
+    const [dateLabel, setDateLabel] = useState(label)
     const [date, setDate] = useState(initialDate)
     const [open, setOpen] = useState(false)
 

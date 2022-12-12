@@ -6,7 +6,7 @@ const initialState = {
     tokenInfo: '',
     userInfo: '',
     notification: false,
-    dataNotification: undefined
+    dataNotification: undefined,
 }
 
 export const navSlice = createSlice({
@@ -19,6 +19,7 @@ export const navSlice = createSlice({
         setUserInfo: (state, action) => {state.userInfo = action.payload},
         setNotification: (state, action) => {state.notification = action.payload},
         setDataNotification: (state, action) => {state.dataNotification = action.payload},
+        
     }
 })
 
@@ -29,5 +30,6 @@ export const selectUserInfo = (state) => state.navVariables.userInfo;
 export const selectLanguageApp = (state) => state.navVariables.languageApp;
 export const selectNotification = (state) => state.navVariables.notification;
 export const selectDataNotification = (state) => state.navVariables.dataNotification;
+
 
 export default navSlice.reducer

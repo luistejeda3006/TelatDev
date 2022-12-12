@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, Alert, BackHandler} from 'react-native';
-import {InputForm, TitleForms} from '../../../../components';
+import {InputForm, ProgressStepActions, TitleForms} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useOrientation} from '../../../../hooks';
@@ -196,121 +196,109 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     return (
         <KeyboardAwareScrollView
+            contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
         >
-            <ProgressStep
-                errors={error}
-                {...rest}
-                nextBtnText={language === '1' ? 'Siguiente' : 'Next'}
-                previousBtnText=''
-                nextBtnTextStyle={{color: '#fff', backgroundColor: '#1177E9', padding: 12, borderRadius: 15, fontWeight: 'bold'}}
-                previousBtnTextStyle={{color: 'orange'}}
-                nextBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnDisabled={true}
-                nextBtnDisabled={false}
-                onSubmit={() => handleValues()}
-                finishBtnText={language === '1' ? 'Finalizar' : 'Finish'}
-            >
-                <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
-                    {
-                        orientationInfo.initial === 'PORTRAIT'
-                        ?
-                            <>
-                                <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
-                                <View style={styles.container}>
-                                    <View style={styles.header}>
-                                        <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
-                                    </View>
-                                    <View style={styles.body}>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'} />
-                                        <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_1'} ref={input_nombre_uno} onSubmitEditing={() => input_ocupacion_uno.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                        <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_1'} ref={input_ocupacion_uno} onSubmitEditing={() => input_relacion_uno.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                        <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'}ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                        <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'}ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
-                                    </View>
+            <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
+                {
+                    orientationInfo.initial === 'PORTRAIT'
+                    ?
+                        <>
+                            <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
+                            <View style={styles.container}>
+                                <View style={styles.header}>
+                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
                                 </View>
-                                <View style={[styles.container, {marginBottom: 15}]}>
-                                    <View style={styles.header}>
-                                        <Text style={styles.title}> {language === '1' ? 'Referencia No.2' : 'Reference Number 2'} </Text>
-                                    </View>
-                                    <View style={styles.body}>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
-                                        <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_2'} ref={input_nombre_dos} onSubmitEditing={() => input_ocupacion_dos.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                        <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_2'} ref={input_ocupacion_dos} onSubmitEditing={() => input_relacion_dos.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                        <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                        <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos}/>
-                                    </View>
+                                <View style={styles.body}>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'} />
+                                    <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_1'} ref={input_nombre_uno} onSubmitEditing={() => input_ocupacion_uno.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
+                                    <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_1'} ref={input_ocupacion_uno} onSubmitEditing={() => input_relacion_uno.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
+                                    <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'}ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
+                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'}ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
                                 </View>
-                            </>
-                        :
-                            <>
-                                <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
-                                <View style={styles.container}>
-                                    <View style={styles.header}>
-                                        <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
-                                    </View>
-                                    <View style={styles.body}>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_1'} ref={input_nombre_uno} onSubmitEditing={() => input_ocupacion_uno.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_1'} ref={input_ocupacion_uno} onSubmitEditing={() => input_relacion_uno.current.focus()}/>
-                                            </View>
+                            </View>
+                            <View style={[styles.container, {marginBottom: 15}]}>
+                                <View style={styles.header}>
+                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.2' : 'Reference Number 2'} </Text>
+                                </View>
+                                <View style={styles.body}>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
+                                    <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_2'} ref={input_nombre_dos} onSubmitEditing={() => input_ocupacion_dos.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
+                                    <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_2'} ref={input_ocupacion_dos} onSubmitEditing={() => input_relacion_dos.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
+                                    <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
+                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos}/>
+                                </View>
+                            </View>
+                            <ProgressStepActions handleNext={handleValues} language={language}/>
+                        </>
+                    :
+                        <>
+                            <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
+                            <View style={styles.container}>
+                                <View style={styles.header}>
+                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
+                                </View>
+                                <View style={styles.body}>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_1'} ref={input_nombre_uno} onSubmitEditing={() => input_ocupacion_uno.current.focus()}/>
                                         </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'} ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                                <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'} ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
-                                            </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_1'} ref={input_ocupacion_uno} onSubmitEditing={() => input_relacion_uno.current.focus()}/>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'} ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
+                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'} ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
                                         </View>
                                     </View>
                                 </View>
-                                <View style={[styles.container, {marginBottom: 15}]}>
-                                    <View style={styles.header}>
-                                        <Text style={styles.title}> {language === '1' ? 'Referencia No.2' : 'Reference Number 2'} </Text>
-                                    </View>
-                                    <View style={styles.body}>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_2'} ref={input_nombre_dos} onSubmitEditing={() => input_ocupacion_dos.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_2'} ref={input_ocupacion_dos} onSubmitEditing={() => input_relacion_dos.current.focus()}/>
-                                            </View>
+                            </View>
+                            <View style={[styles.container, {marginBottom: 15}]}>
+                                <View style={styles.header}>
+                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.2' : 'Reference Number 2'} </Text>
+                                </View>
+                                <View style={styles.body}>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_2'} ref={input_nombre_dos} onSubmitEditing={() => input_ocupacion_dos.current.focus()}/>
                                         </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                                <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos} />
-                                            </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_2'} ref={input_ocupacion_dos} onSubmitEditing={() => input_relacion_dos.current.focus()}/>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
+                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos} />
                                         </View>
                                     </View>
                                 </View>
-                            </>
-                    }
-                </View>
-            </ProgressStep>
+                            </View>
+                            <ProgressStepActions handleNext={handleValues} language={language}/>
+                        </>
+                }
+            </View>
         </KeyboardAwareScrollView>
     )
 }
@@ -346,5 +334,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: '#fff'
-    }
+    },
+    scrollContainer: {
+        flexGrow:1,
+    },
 })

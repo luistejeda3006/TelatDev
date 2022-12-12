@@ -1,19 +1,22 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Alert, BackHandler} from 'react-native';
-import {InputForm, Picker, TitleForms, DatePicker} from '../../../../components';
-import {ProgressStep} from 'react-native-progress-steps';
+import {InputForm, Picker, TitleForms, DatePicker, ProgressStepActions} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {diffBetweenDates} from '../../../../js/dates'
+import {useDispatch, useSelector} from 'react-redux';
+import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 
 let inicial = null;
 let terminal = null;
 let inicialOpcional = null;
 let terminalOpcional = null;
 export default ({navigation, language, orientation, ...rest}) => {
+    const dispatch = useDispatch()
+    const step = useSelector(selectStep)
     const {isTablet} = DeviceInfo;
     const {submitForm, values} = useFormikContext();
 
@@ -225,7 +228,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         if(studyGrade === 1 || studyGrade === 2 || studyGrade === 3){
             if(esCertificado_3 !== undefined && esCertificado_3 !== 'SEL'){
                 handleData()
-                setFilters({...filters, error: false})
+                dispatch(setStep(step + 1))
             }
             else {
                 Alerta();
@@ -234,7 +237,7 @@ export default ({navigation, language, orientation, ...rest}) => {
 
         else {
             handleData();
-            setFilters({...filters, error: false})
+            dispatch(setStep(step + 1))
         }
 
     }
@@ -336,723 +339,338 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     return (
         <KeyboardAwareScrollView
+            contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
         >
-            <ProgressStep
-                errors={error}
-                {...rest}
-                nextBtnText={language === '1' ? 'Siguiente' : 'Next'}
-                previousBtnText=''
-                nextBtnTextStyle={{color: '#fff', backgroundColor: '#1177E9', padding: 12, borderRadius: 15, fontWeight: 'bold'}}
-                previousBtnTextStyle={{color: 'orange'}}
-                nextBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnDisabled={true}
-                nextBtnDisabled={false}
-                onNext={() => handleValues()}
-            >
-                <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
-                    {
-                        orientationInfo.initial === 'PORTRAIT'
+            <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
+                {
+                    orientationInfo.initial === 'PORTRAIT'
+                    ?
+                        !isTablet()
                         ?
-                            !isTablet()
-                            ?
-                                <>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
-                                    <Picker 
-                                        fieldName={'nivelEscolar_3'}
-                                        items={schoolLevelData}
-                                        required={true}
-                                        handleAction_cinco={handleAction_cinco}
-                                        contador={5}
-                                    />
-                                    {
+                            <>
+                                <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
+                                <Picker 
+                                    fieldName={'nivelEscolar_3'}
+                                    items={schoolLevelData}
+                                    required={true}
+                                    handleAction_cinco={handleAction_cinco}
+                                    contador={5}
+                                />
+                                {
+                                    studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                    ?
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
+                                            <Picker 
+                                                fieldName={'esCertificado_3'}
+                                                items={closeOptions}
+                                                required={true}
+                                            />
+                                        </>
+                                    :
+                                        <></>
+                                }
+                                
+                                {
+                                    studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
+                                    ?
                                         studyGrade === 1 || studyGrade === 2 || studyGrade === 3
                                         ?
                                             <>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                <InputForm keyboardType='numeric' maxLength={4} status={true} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                            </>
+                                        :
+                                            studyGrade === 4
+                                            ?
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
+                                                    <Picker
+                                                        fieldName={'gradoAvance_3'}
+                                                        items={gradoAvanceData}
+                                                    />
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                </>
+                                            :
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                </>
+                                    :
+                                        <></>
+                                }
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
+                                <Picker 
+                                    fieldName={'estudiasActualmente_3'}
+                                    items={closeOptions} 
+                                    handleAction_uno={handleAction_uno}
+                                    contador={1}
+                                    required={false}
+                                />
+                                {
+                                    currentlyStudy
+                                    &&
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
+                                        </>
+                                }
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
+                                <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales} />
+                                <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
+                                <Picker
+                                    fieldName={'nivelEscritura_3'}
+                                    items={englishOptionsData} 
+                                    required={true}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
+                                <Picker 
+                                    fieldName={'nivelLectura_3'}
+                                    items={englishOptionsData}
+                                    required={true}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
+                                <Picker
+                                    fieldName={'nivelComprension_3'}
+                                    items={englishOptionsData}
+                                    required={true}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
+                                <Picker 
+                                    fieldName={'nivelConversacional_3'}
+                                    items={englishOptionsData}
+                                    required={true}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
+                                <Picker
+                                    fieldName={'dondeAprendio_3'}
+                                    items={dAprendioData}
+                                />
+            
+                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
+                                <Picker 
+                                    fieldName={'primerEmpleo_3'}
+                                    items={closeOptions}
+                                    handleAction_dos={handleAction_dos}
+                                    contador={2}
+                                />
+                                {/* {segunda accion de picker} */}
+                                {
+                                    pEmpleo
+                                    &&
+                                        <>
+                                            <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                            <DatePicker fieldName={'fechaIngreso_3'} label={fechaIngreso_3 ? `${fechaIngreso_3.substring(8,10)}-${fechaIngreso_3.substring(5,7)}-${fechaIngreso_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                            <DatePicker fieldName={'fechaSalida_3'} label={fechaSalida_3 ? `${fechaSalida_3.substring(8,10)}-${fechaSalida_3.substring(5,7)}-${fechaSalida_3.substring(0,4)}` : ''} language={language} required={true} />
+
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                            <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                            <Picker 
+                                                fieldName={'contactar_3'}
+                                                items={closeOptions}
+                                                handleAction_tres={handleAction_tres}
+                                                contador={3}
+                                            />
+                                            {
+                                                contact
+                                                ?
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'}/>
+                                                    </>
+                                                :
+                                                <></>
+                                            }
+                                            
+                                            <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                            <DatePicker fieldName={'fechaIngresoOpcional_3'} label={fechaIngresoOpcional_3 ? `${fechaIngresoOpcional_3.substring(8,10)}-${fechaIngresoOpcional_3.substring(5,7)}-${fechaIngresoOpcional_3.substring(0,4)}` : ''} language={language} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                            <DatePicker fieldName={'fechaSalidaOpcional_3'} label={fechaSalidaOpcional_3 ? `${fechaSalidaOpcional_3.substring(8,10)}-${fechaSalidaOpcional_3.substring(5,7)}-${fechaSalidaOpcional_3.substring(0,4)}` : ''}  language={language} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                            <Picker 
+                                                fieldName={'contactarOpcional_3'}
+                                                items={closeOptions}
+                                                handleAction_cuatro={handleAction_cuatro}
+                                                contador={4}
+                                                required={false}
+                                            />
+                                            {
+                                                contactOptional
+                                                ?
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'}/>
+                                                    </>
+                                                :
+                                                    <></>
+                                            }
+                                    </>
+                                }
+                                <ProgressStepActions handleNext={handleValues} language={language}/>
+                            </>
+                        :
+                            <>
+                                <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
+                                        <Picker 
+                                            fieldName={'nivelEscolar_3'}
+                                            items={schoolLevelData}
+                                            required={true}
+                                            handleAction_cinco={handleAction_cinco}
+                                            contador={5}
+                                        />
+                                    </View>
+                                    {
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                        ?
+                                            
+                                            <View style={{flex: 1}}>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
                                                 <Picker 
                                                     fieldName={'esCertificado_3'}
                                                     items={closeOptions}
                                                     required={true}
                                                 />
-                                            </>
+                                            </View>
                                         :
                                             <></>
                                     }
-                                    
-                                    {
-                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
+                                </View>
+                                
+                                
+                                {
+                                    studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
+                                    ?
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3
                                         ?
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                </View>
+                                            </View>
+                                        :
+                                            studyGrade === 4
                                             ?
                                                 <>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' maxLength={4} status={true} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
+                                                            <Picker
+                                                                fieldName={'gradoAvance_3'}
+                                                                items={gradoAvanceData}
+                                                            />
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                        </View>
+                                                    </View>
                                                 </>
                                             :
-                                                studyGrade === 4
-                                                ?
-                                                    <>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
-                                                        <Picker
-                                                            fieldName={'gradoAvance_3'}
-                                                            items={gradoAvanceData}
-                                                        />
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                        <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
-                                                    </>
-                                                :
-                                                    <>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                        <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
-                                                    </>
-                                        :
-                                            <></>
-                                    }
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
-                                    <Picker 
-                                        fieldName={'estudiasActualmente_3'}
-                                        items={closeOptions} 
-                                        handleAction_uno={handleAction_uno}
-                                        contador={1}
-                                        required={false}
-                                    />
-                                    {
-                                        currentlyStudy
-                                        &&
-                                            <>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
-                                            </>
-                                    }
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
-                                    <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales} />
-                                    <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
-                                    <Picker
-                                        fieldName={'nivelEscritura_3'}
-                                        items={englishOptionsData} 
-                                        required={true}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
-                                    <Picker 
-                                        fieldName={'nivelLectura_3'}
-                                        items={englishOptionsData}
-                                        required={true}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
-                                    <Picker
-                                        fieldName={'nivelComprension_3'}
-                                        items={englishOptionsData}
-                                        required={true}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
-                                    <Picker 
-                                        fieldName={'nivelConversacional_3'}
-                                        items={englishOptionsData}
-                                        required={true}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
-                                    <Picker
-                                        fieldName={'dondeAprendio_3'}
-                                        items={dAprendioData}
-                                    />
-                
-                                    <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
-                                    <Picker 
-                                        fieldName={'primerEmpleo_3'}
-                                        items={closeOptions}
-                                        handleAction_dos={handleAction_dos}
-                                        contador={2}
-                                    />
-                                    {/* {segunda accion de picker} */}
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
-
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                <DatePicker fieldName={'fechaSalida_3'} language={language} required={true} />
-
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                <Picker 
-                                                    fieldName={'contactar_3'}
-                                                    items={closeOptions}
-                                                    handleAction_tres={handleAction_tres}
-                                                    contador={3}
-                                                />
-                                                {
-                                                    contact
-                                                    ?
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'}/>
-                                                        </>
-                                                    :
-                                                    <></>
-                                                }
-                                                
-                                                <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                <Picker 
-                                                    fieldName={'contactarOpcional_3'}
-                                                    items={closeOptions}
-                                                    handleAction_cuatro={handleAction_cuatro}
-                                                    contador={4}
-                                                    required={false}
-                                                />
-                                                {
-                                                    contactOptional
-                                                    ?
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'}/>
-                                                        </>
-                                                    :
-                                                        <></>
-                                                }
-                                        </>
-                                    }
-                                </>
-                            :
-                                <>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
-                                            <Picker 
-                                                fieldName={'nivelEscolar_3'}
-                                                items={schoolLevelData}
-                                                required={true}
-                                                handleAction_cinco={handleAction_cinco}
-                                                contador={5}
-                                            />
-                                        </View>
-                                        {
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3
-                                            ?
-                                                
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
-                                                    <Picker 
-                                                        fieldName={'esCertificado_3'}
-                                                        items={closeOptions}
-                                                        required={true}
-                                                    />
-                                                </View>
-                                            :
-                                                <></>
-                                        }
-                                    </View>
-                                    
-                                    
-                                    {
-                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
-                                        ?
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3
-                                            ?
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                        <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                    </View>
-                                                </View>
-                                            :
-                                                studyGrade === 4
-                                                ?
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
-                                                                <Picker
-                                                                    fieldName={'gradoAvance_3'}
-                                                                    items={gradoAvanceData}
-                                                                />
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
+                                                <>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
                                                         </View>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                            </View>
+                                                    </View>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
                                                         </View>
-                                                    </>
-                                                :
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                         </View>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
-                                                            </View>
-                                                        </View>
-                                                    </>
-                                        :
-                                            <></>
-                                    }
-                                    
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
-                                            <Picker 
-                                                fieldName={'estudiasActualmente_3'}
-                                                items={closeOptions} 
-                                                handleAction_uno={handleAction_uno}
-                                                contador={1}
-                                                required={false}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            {
-                                                currentlyStudy
-                                                &&
-                                                    <>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
-                                                    </>
-                                            }
-                                        </View>
+                                                    </View>
+                                                </>
+                                    :
+                                        <></>
+                                }
+                                
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
+                                        <Picker 
+                                            fieldName={'estudiasActualmente_3'}
+                                            items={closeOptions} 
+                                            handleAction_uno={handleAction_uno}
+                                            contador={1}
+                                            required={false}
+                                        />
                                     </View>
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
-                                            <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
-                                        </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
-                                            <Picker
-                                                fieldName={'nivelEscritura_3'}
-                                                items={englishOptionsData} 
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
-                                            <Picker 
-                                                fieldName={'nivelLectura_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
-                                            <Picker
-                                                fieldName={'nivelComprension_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
-                                            <Picker 
-                                                fieldName={'nivelConversacional_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
-                                            <Picker
-                                                fieldName={'dondeAprendio_3'}
-                                                items={dAprendioData}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
-                                            <Picker 
-                                                fieldName={'primerEmpleo_3'}
-                                                items={closeOptions}
-                                                handleAction_dos={handleAction_dos}
-                                                contador={2}
-                                            />
-                                        </View>
-                                    </View>
-                                    {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
-                                                    </View>
-
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactar_3'}
-                                                            items={closeOptions}
-                                                            handleAction_tres={handleAction_tres}
-                                                            contador={3}
-                                                        />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contact
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
-                                                                </>
-                                                            :
-                                                                <></>
-                                                        }
-                                                    </View>
-                                                </View>
-
-                                                <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactarOpcional_3'}
-                                                            items={closeOptions}
-                                                            handleAction_cuatro={handleAction_cuatro}
-                                                            contador={4}
-                                                            required={false}
-                                                        />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contactOptional
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
-                                                                </>
-                                                            :
-                                                                <></>
-                                                        }
-                                                    </View>
-                                                </View>
-                                        </>
-                                    }
-                                </>
-                        :
-                            isTablet()
-                            ?
-                                <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                    
-                                    <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
-                                            <Picker 
-                                                fieldName={'nivelEscolar_3'}
-                                                items={schoolLevelData}
-                                                required={true}
-                                                handleAction_cinco={handleAction_cinco}
-                                                contador={5}
-                                            />
-                                        </View>
-                                        {
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4
-                                            ?
-                                                studyGrade === 1 || studyGrade === 2 || studyGrade === 3
-                                                ?
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
-                                                        <Picker 
-                                                            fieldName={'esCertificado_3'}
-                                                            items={closeOptions}
-                                                            required={true}
-                                                        />
-                                                    </View>
-                                                :
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
-                                                        <Picker
-                                                            fieldName={'gradoAvance_3'}
-                                                            items={gradoAvanceData}
-                                                        />
-                                                    </View>
-                                            :
-                                                <></>
-                                        }
-                                    </View>
-                           
-                                    {
-                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
-                                        ?
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3
-                                            ?
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                        <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                    </View>
-                                                </View>
-                                            :
-                                                studyGrade === 4
-                                                ?
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                            </View>
-                                                        </View>
-                                                    </>
-                                                :
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
-                                                            </View>
-                                                        </View>
-                                                    </>
-                                        :
-                                            <></>
-                                    }
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
-                                            <Picker 
-                                                fieldName={'estudiasActualmente_3'}
-                                                items={closeOptions} 
-                                                handleAction_uno={handleAction_uno}
-                                                contador={1}
-                                                required={false}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                    <View style={{flex: 1}}>
                                         {
                                             currentlyStudy
                                             &&
@@ -1061,250 +679,286 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
                                                 </>
                                         }
-                                        </View>
                                     </View>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
-                                            <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
-                                        </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
                                     </View>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
-                                            <Picker
-                                                fieldName={'nivelEscritura_3'}
-                                                items={englishOptionsData} 
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
-                                            <Picker 
-                                                fieldName={'nivelLectura_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
-                                            <Picker
-                                                fieldName={'nivelComprension_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
+                                        <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
                                     </View>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
-                                            <Picker 
-                                                fieldName={'nivelConversacional_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
-                                            <Picker
-                                                fieldName={'dondeAprendio_3'}
-                                                items={dAprendioData}
-                                            />
-                                        </View>
+                                </View>
+
+                                <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
+                                        <Picker
+                                            fieldName={'nivelEscritura_3'}
+                                            items={englishOptionsData} 
+                                            required={true}
+                                        />
                                     </View>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
-                                            <Picker 
-                                                fieldName={'primerEmpleo_3'}
-                                                items={closeOptions}
-                                                handleAction_dos={handleAction_dos}
-                                                contador={2}
-                                            />
-                                        </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
+                                        <Picker 
+                                            fieldName={'nivelLectura_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
+                                        <Picker
+                                            fieldName={'nivelComprension_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
+                                        <Picker 
+                                            fieldName={'nivelConversacional_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
+                                        <Picker
+                                            fieldName={'dondeAprendio_3'}
+                                            items={dAprendioData}
+                                        />
+                                    </View>
+                                </View>
+
+                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
+                                        <Picker 
+                                            fieldName={'primerEmpleo_3'}
+                                            items={closeOptions}
+                                            handleAction_dos={handleAction_dos}
+                                            contador={2}
+                                        />
+                                    </View>
+                                </View>
+                                {
+                                    pEmpleo
+                                    &&
+                                        <>
+                                            <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                                </View>
+
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                </View>
+
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngreso_3'} label={fechaIngreso_3 ? `${fechaIngreso_3.substring(8,10)}-${fechaIngreso_3.substring(5,7)}-${fechaIngreso_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalida_3'} label={fechaSalida_3 ? `${fechaSalida_3.substring(8,10)}-${fechaSalida_3.substring(5,7)}-${fechaSalida_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactar_3'}
+                                                        items={closeOptions}
+                                                        handleAction_tres={handleAction_tres}
+                                                        contador={3}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contact
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
+                                                            </>
+                                                        :
+                                                            <></>
+                                                    }
+                                                </View>
+                                            </View>
+
+                                            <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngresoOpcional_3'} label={fechaIngresoOpcional_3 ? `${fechaIngresoOpcional_3.substring(8,10)}-${fechaIngresoOpcional_3.substring(5,7)}-${fechaIngresoOpcional_3.substring(0,4)}` : ''} language={language} />
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalidaOpcional_3'} label={fechaSalidaOpcional_3 ? `${fechaSalidaOpcional_3.substring(8,10)}-${fechaSalidaOpcional_3.substring(5,7)}-${fechaSalidaOpcional_3.substring(0,4)}` : ''}  language={language} />
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactarOpcional_3'}
+                                                        items={closeOptions}
+                                                        handleAction_cuatro={handleAction_cuatro}
+                                                        contador={4}
+                                                        required={false}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contactOptional
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
+                                                            </>
+                                                        :
+                                                            <></>
+                                                    }
+                                                </View>
+                                            </View>
+                                    </>
+                                }
+                                <ProgressStepActions handleNext={handleValues} language={language}/>
+                            </>
+                    :
+                        isTablet()
+                        ?
+                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                
+                                <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
+                                        <Picker 
+                                            fieldName={'nivelEscolar_3'}
+                                            items={schoolLevelData}
+                                            required={true}
+                                            handleAction_cinco={handleAction_cinco}
+                                            contador={5}
+                                        />
                                     </View>
                                     {
-                                        pEmpleo
-                                        &&
-                                            <>
-                                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactar_3'}
-                                                            items={closeOptions}
-                                                            handleAction_tres={handleAction_tres}
-                                                            contador={3}
-                                                        />
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contact
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
-                                                                </>
-                                                            :
-                                                            <></>
-                                                        }
-                                                    </View>
-                                                </View>
-                                                <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>     
-                                                    </View>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactarOpcional_3'}
-                                                            items={closeOptions}
-                                                            handleAction_cuatro={handleAction_cuatro}
-                                                            contador={4}
-                                                            required={false}
-                                                        />
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contactOptional
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
-                                                                </>
-                                                            :
-                                                            <></>
-                                                        }
-                                                    </View>
-                                                </View>
-                                                
-                                            </>
-                                    }
-                                </View>
-                            :
-                                <>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
-                                            <Picker 
-                                                fieldName={'nivelEscolar_3'}
-                                                items={schoolLevelData}
-                                                required={true}
-                                                handleAction_cinco={handleAction_cinco}
-                                                contador={5}
-                                            />
-                                        </View>
-                                        {
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4
+                                        ?
                                             studyGrade === 1 || studyGrade === 2 || studyGrade === 3
                                             ?
-                                                
-                                                <View style={{flex: 1}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
                                                     <Picker 
                                                         fieldName={'esCertificado_3'}
@@ -1313,357 +967,695 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     />
                                                 </View>
                                             :
-                                                <></>
-                                        }
-                                    </View>
-                                    
-                                    
-                                    {
-                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
-                                        ?
-                                            studyGrade === 1 || studyGrade === 2 || studyGrade === 3
-                                            ?
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                        <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
-                                                    </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
+                                                    <Picker
+                                                        fieldName={'gradoAvance_3'}
+                                                        items={gradoAvanceData}
+                                                    />
                                                 </View>
-                                            :
-                                                studyGrade === 4
-                                                ?
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
-                                                                <Picker
-                                                                    fieldName={'gradoAvance_3'}
-                                                                    items={gradoAvanceData}
-                                                                />
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
-                                                            
-                                                        </View>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                            </View>
-                                                        </View>
-                                                    </>
-                                                :
-                                                    <>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
-                                                            </View>
-                                                        </View>
-                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
-                                                            </View>
-                                                            <View style={{flex: 1}}>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                                <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
-                                                            </View>
-                                                        </View>
-                                                    </>
                                         :
                                             <></>
                                     }
-                                    
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
-                                            <Picker 
-                                                fieldName={'estudiasActualmente_3'}
-                                                items={closeOptions} 
-                                                handleAction_uno={handleAction_uno}
-                                                contador={1}
-                                                required={false}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            {
-                                                currentlyStudy
-                                                &&
-                                                    <>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
-                                                    </>
-                                            }
-                                        </View>
-                                    </View>
+                                </View>
+                        
+                                {
+                                    studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
+                                    ?
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                        ?
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                </View>
+                                            </View>
+                                        :
+                                            studyGrade === 4
+                                            ?
+                                                <>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                        </View>
+                                                    </View>
+                                                </>
+                                            :
+                                                <>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                        </View>
+                                                    </View>
+                                                </>
+                                    :
+                                        <></>
+                                }
 
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
-                                            <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
-                                        </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
+                                        <Picker 
+                                            fieldName={'estudiasActualmente_3'}
+                                            items={closeOptions} 
+                                            handleAction_uno={handleAction_uno}
+                                            contador={1}
+                                            required={false}
+                                        />
                                     </View>
-
-                                    <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
-                                            <Picker
-                                                fieldName={'nivelEscritura_3'}
-                                                items={englishOptionsData} 
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
-                                            <Picker 
-                                                fieldName={'nivelLectura_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
-                                            <Picker
-                                                fieldName={'nivelComprension_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
-                                            <Picker 
-                                                fieldName={'nivelConversacional_3'}
-                                                items={englishOptionsData}
-                                                required={true}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
-                                            <Picker
-                                                fieldName={'dondeAprendio_3'}
-                                                items={dAprendioData}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
-
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
-                                            <Picker 
-                                                fieldName={'primerEmpleo_3'}
-                                                items={closeOptions}
-                                                handleAction_dos={handleAction_dos}
-                                                contador={2}
-                                            />
-                                        </View>
-                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
                                     {
-                                        pEmpleo
+                                        currentlyStudy
                                         &&
                                             <>
-                                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
-                                                    </View>
-
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
-                                                    </View>
-
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngreso_3'} language={language} required={true}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalida_3'} language={language} required={true} />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactar_3'}
-                                                            items={closeOptions}
-                                                            handleAction_tres={handleAction_tres}
-                                                            contador={3}
-                                                        />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contact
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
-                                                                </>
-                                                            :
-                                                                <></>
-                                                        }
-                                                    </View>
-                                                </View>
-
-                                                <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
-                                                        <DatePicker fieldName={'fechaIngresoOpcional_3'} language={language} />
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
-                                                        <DatePicker fieldName={'fechaSalidaOpcional_3'} language={language} />
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
-                                                    </View>
-                                                    <View style={{flex: 1}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                        <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
-                                                    </View>
-                                                </View>
-                                                
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
-                                                        <Picker 
-                                                            fieldName={'contactarOpcional_3'}
-                                                            items={closeOptions}
-                                                            handleAction_cuatro={handleAction_cuatro}
-                                                            contador={4}
-                                                            required={false}
-                                                        />
-                                                    </View>
-                                                </View>
-
-                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        {
-                                                            contactOptional
-                                                            ?
-                                                                <>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
-                                                                </>
-                                                            :
-                                                                <></>
-                                                        }
-                                                    </View>
-                                                </View>
-                                        </>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
+                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
+                                            </>
                                     }
-                                </>
-                    }
-                </View>
-            </ProgressStep>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
+                                        <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
+                                    </View>
+                                </View>
+                                <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
+                                        <Picker
+                                            fieldName={'nivelEscritura_3'}
+                                            items={englishOptionsData} 
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
+                                        <Picker 
+                                            fieldName={'nivelLectura_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
+                                        <Picker
+                                            fieldName={'nivelComprension_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
+                                        <Picker 
+                                            fieldName={'nivelConversacional_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
+                                        <Picker
+                                            fieldName={'dondeAprendio_3'}
+                                            items={dAprendioData}
+                                        />
+                                    </View>
+                                </View>
+                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
+                                        <Picker 
+                                            fieldName={'primerEmpleo_3'}
+                                            items={closeOptions}
+                                            handleAction_dos={handleAction_dos}
+                                            contador={2}
+                                        />
+                                    </View>
+                                </View>
+                                {
+                                    pEmpleo
+                                    &&
+                                        <>
+                                            <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngreso_3'} label={fechaIngreso_3 ? `${fechaIngreso_3.substring(8,10)}-${fechaIngreso_3.substring(5,7)}-${fechaIngreso_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalida_3'} label={fechaSalida_3 ? `${fechaSalida_3.substring(8,10)}-${fechaSalida_3.substring(5,7)}-${fechaSalida_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto} />
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactar_3'}
+                                                        items={closeOptions}
+                                                        handleAction_tres={handleAction_tres}
+                                                        contador={3}
+                                                    />
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contact
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
+                                                            </>
+                                                        :
+                                                        <></>
+                                                    }
+                                                </View>
+                                            </View>
+                                            <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngresoOpcional_3'} label={fechaIngresoOpcional_3 ? `${fechaIngresoOpcional_3.substring(8,10)}-${fechaIngresoOpcional_3.substring(5,7)}-${fechaIngresoOpcional_3.substring(0,4)}` : ''} language={language} />
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalidaOpcional_3'} label={fechaSalidaOpcional_3 ? `${fechaSalidaOpcional_3.substring(8,10)}-${fechaSalidaOpcional_3.substring(5,7)}-${fechaSalidaOpcional_3.substring(0,4)}` : ''}  language={language} />
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'flex-start'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>     
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactarOpcional_3'}
+                                                        items={closeOptions}
+                                                        handleAction_cuatro={handleAction_cuatro}
+                                                        contador={4}
+                                                        required={false}
+                                                    />
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contactOptional
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
+                                                            </>
+                                                        :
+                                                        <></>
+                                                    }
+                                                </View>
+                                            </View>
+                                            
+                                        </>
+                                }
+                            </View>
+                        :
+                            <>
+                                <TitleForms type={'title'} title={language === '1' ? 'Formación académica' : 'Education'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel escolar' : 'School level'} />
+                                        <Picker 
+                                            fieldName={'nivelEscolar_3'}
+                                            items={schoolLevelData}
+                                            required={true}
+                                            handleAction_cinco={handleAction_cinco}
+                                            contador={5}
+                                        />
+                                    </View>
+                                    {
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                        ?
+                                            
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Tienes un certificado?' : 'Do you have a study certificate?'} />
+                                                <Picker 
+                                                    fieldName={'esCertificado_3'}
+                                                    items={closeOptions}
+                                                    required={true}
+                                                />
+                                            </View>
+                                        :
+                                            <></>
+                                    }
+                                </View>
+                                
+                                
+                                {
+                                    studyGrade === 1 || studyGrade === 2 || studyGrade === 3 || studyGrade === 4 || studyGrade === 5 
+                                    ?
+                                        studyGrade === 1 || studyGrade === 2 || studyGrade === 3
+                                        ?
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                </View>
+                                            </View>
+                                        :
+                                            studyGrade === 4
+                                            ?
+                                                <>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Grado de Avance' : 'Degree of progress'} />
+                                                            <Picker
+                                                                fieldName={'gradoAvance_3'}
+                                                                items={gradoAvanceData}
+                                                            />
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                        </View>
+                                                        
+                                                    </View>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                        </View>
+                                                    </View>
+                                                </>
+                                            :
+                                                <>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Título académico' : 'Degree'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu título académico' : 'Especify degree'} fieldName={'tituloAcademico_3'} ref={input_titulo_academico} onSubmitEditing={() => input_institucion.current.focus()}/>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Institución donde estudiaste' : 'Where did you study? (Institution’s name)'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
+                                                        </View>
+                                                        <View style={{flex: 1}}>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
+                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                        </View>
+                                                    </View>
+                                                </>
+                                    :
+                                        <></>
+                                }
+                                
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Estudias actualmente' : 'Are you studying at the moment?'} />
+                                        <Picker 
+                                            fieldName={'estudiasActualmente_3'}
+                                            items={closeOptions} 
+                                            handleAction_uno={handleAction_uno}
+                                            contador={1}
+                                            required={false}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        {
+                                            currentlyStudy
+                                            &&
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu horario' : 'Especify schedule'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'horarioTurno_3'} ref={input_horario_turno} onSubmitEditing={() => input_otros_estudios.current.focus()}/>
+                                                </>
+                                        }
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Otros estudios' : 'Other studies'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Otros estudios' : 'Other studies'} fieldName={'otrosEstudios_3'} ref={input_otros_estudios} onSubmitEditing={() => input_paquetes_computacionales.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Paquetes computacionales que manejas' : 'Computer programs that you handle'} />
+                                        <InputForm status={true} placeholder='EXCEL, WORD, ETC ...' fieldName={'paquetesComputacionales_3'} ref={input_paquetes_computacionales}/>
+                                    </View>
+                                </View>
+
+                                <TitleForms type={'title'} title={language === '1' ? 'Nivel de Inglés' : 'English level'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de escritura' : 'Writing'} />
+                                        <Picker
+                                            fieldName={'nivelEscritura_3'}
+                                            items={englishOptionsData} 
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de lectura' : 'Reading'} />
+                                        <Picker 
+                                            fieldName={'nivelLectura_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel de comprensión' : 'Comprehension'} />
+                                        <Picker
+                                            fieldName={'nivelComprension_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nivel conversacional' : 'Speaking'} />
+                                        <Picker 
+                                            fieldName={'nivelConversacional_3'}
+                                            items={englishOptionsData}
+                                            required={true}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Dónde lo aprendiste' : 'Where did you learn it?'} />
+                                        <Picker
+                                            fieldName={'dondeAprendio_3'}
+                                            items={dAprendioData}
+                                        />
+                                    </View>
+                                </View>
+
+                                <TitleForms type={'title'} title={language === '1' ? 'Experiencia laboral' : 'Work experience'} />
+
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Este sería tu primer empleo?' : 'This would be your first job?'} />
+                                        <Picker 
+                                            fieldName={'primerEmpleo_3'}
+                                            items={closeOptions}
+                                            handleAction_dos={handleAction_dos}
+                                            contador={2}
+                                        />
+                                    </View>
+                                </View>
+                                {
+                                    pEmpleo
+                                    &&
+                                        <>
+                                            <TitleForms type={'title'} title={language === '1' ? 'Experiencia Laboral (Último Empleo)' : 'Work Experience (Last Job)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresa_3'} ref={input_nombre_empresa} onSubmitEditing={() => input_giro.current.focus()}/>
+                                                </View>
+
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresa_3'} ref={input_giro} onSubmitEditing={() => input_puesto.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                </View>
+
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngreso_3'} label={fechaIngreso_3 ? `${fechaIngreso_3.substring(8,10)}-${fechaIngreso_3.substring(5,7)}-${fechaIngreso_3.substring(0,4)}` : ''} language={language} required={true}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalida_3'} label={fechaSalida_3 ? `${fechaSalida_3.substring(8,10)}-${fechaSalida_3.substring(5,7)}-${fechaSalida_3.substring(0,4)}` : ''} language={language} required={true} />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalida_3'} ref={input_motivo_salida} onSubmitEditing={() => input_jefe_directo.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactar_3'}
+                                                        items={closeOptions}
+                                                        handleAction_tres={handleAction_tres}
+                                                        contador={3}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contact
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porque_3'} />
+                                                            </>
+                                                        :
+                                                            <></>
+                                                    }
+                                                </View>
+                                            </View>
+
+                                            <TitleForms type={'title'} title={language === '1' ? 'Segunda Experiencia Laboral (Opcional)' : 'Second Work Experience (Optional)'} />
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Empresa (Nombre)' : 'Company (Name)'} fieldName={'nombreEmpresaOpcional_3'} ref={input_nombre_empresa_opcional} onSubmitEditing={() => input_giro_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Giro de la empresa' : 'Line of business'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Giro de la empresa' : 'Line of business'} fieldName={'giroEmpresaOpcional_3'} ref={input_giro_opcional} onSubmitEditing={() => input_puesto_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
+                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
+                                                    <DatePicker fieldName={'fechaIngresoOpcional_3'} label={fechaIngresoOpcional_3 ? `${fechaIngresoOpcional_3.substring(8,10)}-${fechaIngresoOpcional_3.substring(5,7)}-${fechaIngresoOpcional_3.substring(0,4)}` : ''} language={language} />
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
+                                                    <DatePicker fieldName={'fechaSalidaOpcional_3'} label={fechaSalidaOpcional_3 ? `${fechaSalidaOpcional_3.substring(8,10)}-${fechaSalidaOpcional_3.substring(5,7)}-${fechaSalidaOpcional_3.substring(0,4)}` : ''}  language={language} />
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Reason for exit'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Motivo de Salida' : 'Reason for exit'} fieldName={'motivoSalidaOpcional_3'} ref={input_motivo_salida_opcional} onSubmitEditing={() => input_jefe_directo_opcional.current.focus()}/>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
+                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
+                                                    <Picker 
+                                                        fieldName={'contactarOpcional_3'}
+                                                        items={closeOptions}
+                                                        handleAction_cuatro={handleAction_cuatro}
+                                                        contador={4}
+                                                        required={false}
+                                                    />
+                                                </View>
+                                            </View>
+
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    {
+                                                        contactOptional
+                                                        ?
+                                                            <>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por qué?' : 'Why?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica' : 'Especify'} fieldName={'porqueOpcional_3'} />
+                                                            </>
+                                                        :
+                                                            <></>
+                                                    }
+                                                </View>
+                                            </View>
+                                    </>
+                                }
+                            </>
+                }
+            </View>
         </KeyboardAwareScrollView>
     )
 }
@@ -1684,5 +1676,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'orange',
         fontWeight:'bold'
+    },
+    scrollContainer: {
+        flexGrow:1,
     },
 })

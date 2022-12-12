@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, Alert, BackHandler, Linking} from 'react-native';
-import {InputForm, TitleForms} from '../../../../components';
+import {InputForm, ProgressStepActions, TitleForms} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useOrientation} from '../../../../hooks';
@@ -221,6 +221,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 <InputForm status={true} placeholder={'OCCUPATION'} fieldName={'ocupacionRelacionDos_4_US'} ref={input_ocupacion_dos}/>
                             </View>
                         </View>
+                        <ProgressStepActions language={'2'} handleNext={handleValues}/>
                     </>
                 :
                     <>
@@ -269,6 +270,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                             </View>
                         </View>
                     </>
+                    
             }
         </View>
     )

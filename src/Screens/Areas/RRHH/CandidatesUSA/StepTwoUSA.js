@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'react-native';
-import {InputForm, Picker, Calendar, TitleForms, DatePicker} from '../../../../components';
+import {InputForm, Picker, Calendar, TitleForms, DatePicker, ProgressStepActions} from '../../../../components';
 import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
@@ -409,6 +409,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
                                     </>
                             }
+
+                            <ProgressStepActions language={'2'} handleNext={handleValues}/>
                         </>
                     :
                         <>
@@ -552,6 +554,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
                                     </>
                             }
+                            <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                         </>
                 :
                     !isTablet()
@@ -698,6 +701,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
                                     </>
                             }
+                            <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                         </>
                     :
                         //horizontal tablet
@@ -842,6 +846,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <InputForm isTextArea={true} status={true} placeholder={'Main Activities'} fieldName={'activitiesOpcional_3_US'} multiline={true} numberOfLines={10}/>
                                     </>
                             }
+                            <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                         </>
             }
         </View>

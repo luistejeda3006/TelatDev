@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Alert, Linking, BackHandler} from 'react-native';
-import {InputForm, Politics, Picker, TitleForms, CheckBox} from '../../../../components';
+import {InputForm, Politics, Picker, TitleForms, CheckBox, ProgressStepActions} from '../../../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
@@ -9,8 +9,15 @@ import {baseUrl, live, login, siteKey, urlJobs, contactEmail} from '../../../../
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectError, selectStep, selectVerified, selectChecked, setError, setStep, setChecked, setVerified} from '../../../../slices/progressStepSlice';
 
 export default ({navigation, language, orientation, ...rest}) => {
+    const dispatch = useDispatch()
+    const step = useSelector(selectStep)
+    const error = useSelector(selectError)
+    const verified = useSelector(selectVerified)
+    const checked = useSelector(selectChecked)
 
     const {isTablet} = DeviceInfo;
     const input_nom = useRef()
@@ -26,9 +33,7 @@ export default ({navigation, language, orientation, ...rest}) => {
     const input_salary = useRef()
 
     const first = {label: 'Select', value: 'SEL'};
-    const [verified, setVerified] = useState('')
     const [recruitmentData, setRecruitmentData] = useState([])
-    const [checked, setChecked] = useState(false);
 
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
@@ -77,9 +82,8 @@ export default ({navigation, language, orientation, ...rest}) => {
         visibility: false,
         show: false,
         politics: false,
-        error: false,
     });
-    const {recruitment, politics, visibility, error} = filters;
+    const {recruitment, politics, visibility} = filters;
     
     const {submitForm, values} = useFormikContext();
     
@@ -156,7 +160,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                 try{
                     const body = {
                         'action': 'get_email',
-                        'data': email_1_US,
+                        'data': {
+                            'email': email_1_US,
+                            /* 'telefono:': phone_number_1_US */
+                        },
                         'login': login,
                         'live': live
                     }
@@ -169,8 +176,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                         body: JSON.stringify(body)
                     });
             
-                    const {response} = await request.json();
-                    if(response.status === 200){
+                    const {response, status} = await request.json();
+                    if(status === 200){
                         let data = await AsyncStorage.getItem(key) || '';
                         if(data) {
                             await AsyncStorage.removeItem(key).then(() => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
@@ -178,11 +185,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                         else {
                             await AsyncStorage.setItem(key, JSON.stringify(obj_1));
                         }
-                        setFilters({...filters, error: false});
+                        dispatch(setStep(step + 1))
                     }
 
                     else if(response.status === 400) {
-                        setFilters({...filters, error: true})
+                        dispatch(setError(true))
                         Alerta()
                     }
                 }catch(e){
@@ -230,23 +237,26 @@ export default ({navigation, language, orientation, ...rest}) => {
     
         return () => backHandler.remove();
     }, [language]);
-
+    
     const onMessage = event => {
         if (event && event.nativeEvent.data) {
             if (['cancel', 'error', 'expired'].includes(event.nativeEvent.data)) {
                 setFilters({...filters, politics: !politics})
-                setChecked(!checked)
+                dispatch(setError(true))
+                dispatch(setChecked(!checked))
                 captchaForm.hide();
                 return;
             } else {
-                setVerified(event.nativeEvent.data)
+                dispatch(setVerified(event.nativeEvent.data))
+                dispatch(setError(false))
                 captchaForm.hide()
             }
         }
     }
 
     const handleChecked = () => {
-        setChecked(!checked)
+        dispatch(setChecked(!checked))
+        dispatch(setError(!error))
         setFilters({...filters, politics: !politics})
         if(!politics && !verified) captchaForm.show()
     }
@@ -428,6 +438,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <></>
                                 }
                                 <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                                <ProgressStepActions language={'2'} handleNext={handleValues}/>
                             </>
                         :
                             <>
@@ -642,6 +653,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     </View>
                                 </View>
                                 <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                                <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                             </>
                     :
                         !isTablet()
@@ -860,6 +872,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     </View>
                                 </View>
                                 <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                                <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                             </>
                         :
                             <View style={{flex: 1, alignSelf: 'stretch'}}>
@@ -1076,6 +1089,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     }
                                 </View>
                                 <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                                <ProgressStepActions handleNext={() => handleValues()} language={language}/>
                             </View>
                 }
             </View>

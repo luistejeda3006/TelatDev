@@ -1,13 +1,18 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Alert, Text, BackHandler} from 'react-native';
-import {InputForm, Picker, DatePicker, TitleForms} from '../../../../components';
-import {ProgressStep} from 'react-native-progress-steps';
+import {InputForm, Picker, DatePicker, TitleForms, ProgressStepActions} from '../../../../components';
 import {KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {useFormikContext} from "formik";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectStep, setError, setStep} from '../../../../slices/progressStepSlice';
+import tw from 'twrnc'
 
 export default ({navigation, language, orientation, ...rest}) => {
+    const dispatch = useDispatch()
+    const step = useSelector(selectStep)
+
     const input_puesto = useRef()
     const input_salario = useRef()
     const input_calle = useRef()
@@ -185,12 +190,12 @@ export default ({navigation, language, orientation, ...rest}) => {
         if(index !== undefined && index !== 0){
             if(index === 1){
                 handleLastPart();
-                setFilters({...filters, error: false});
+                dispatch(setError(false))
             }
             else {
                 if(lugarExtranjero_2 !== undefined && lugarExtranjero_2 !== '' && tiempoExtranjero_2 !==  undefined && tiempoExtranjero_2 !== ''){
                     handleLastPart();
-                    setFilters({...filters, error: false});
+                    dispatch(setError(false))
                 }
                 else {
                     Alerta();
@@ -270,6 +275,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                 else {
                     data = await AsyncStorage.setItem(key, JSON.stringify(obj_2));
                 }
+                dispatch(setStep(step + 1))
             }
             else {
                 Alert.alert(
@@ -298,13 +304,13 @@ export default ({navigation, language, orientation, ...rest}) => {
             if(index === 1 || index === 2 || index === 3){
                 if(index === 1){
                     handleLastPart();
-                    setFilters({...filters, error: false});
+                    dispatch(setError(false))
                 }
 
                 else {
                     if(numeroDocumento_2 !== undefined && numeroDocumento_2 !== '' && emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && expiracion_2 !== 'No seleccionada' && expiracion_2 !== 'Not selected'){
                         handleLastPart();
-                        setFilters({...filters, error: false});
+                        dispatch(setError(false))
                     }
                     else {
                         Alerta();
@@ -314,7 +320,7 @@ export default ({navigation, language, orientation, ...rest}) => {
             else {
                 if(emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && numeroDocumento_2 !== undefined && numeroDocumento_2 !== ''){
                     handleLastPart();
-                    setFilters({...filters, error: false});
+                    dispatch(setError(false))
                 }
 
                 else {
@@ -402,7 +408,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         }
         else {
             Alerta();
-            console.log('alerta_1')
+            console.log('alerta_3')
         }
     }
 
@@ -465,1030 +471,271 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     return (
         <KeyboardAwareScrollView
+            contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
         >
-            <ProgressStep
-                errors={error}
-                {...rest}
-                nextBtnText={language === '1' ? 'Siguiente' : 'Next'}
-                previousBtnText=''
-                nextBtnTextStyle={{color: '#fff', backgroundColor: '#1177E9', padding: 12, borderRadius: 15, fontWeight: 'bold'}}
-                previousBtnTextStyle={{color: 'orange'}}
-                nextBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnStyle={{ textAlign: 'center', padding: 0 }}
-                previousBtnDisabled={true}
-                nextBtnDisabled={false}
-                onNext={() => handleValues()}
-            >
-                <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
-                    {
-                        orientation === 'PORTRAIT'
+            <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
+                {
+                    orientation === 'PORTRAIT'
+                    ?
+                        !isTablet()
                         ?
-                            !isTablet()
-                            ?
-                                <>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
-                                    <InputForm 
-                                        status={true}
-                                        fieldName={'puestoSolicitado_2'}
-                                        ref={input_puesto}
-                                        onSubmitEditing={() => input_salario.current.focus()}
-                                        placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
-                                    {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
-                                    <Picker 
-                                        fieldName={'experiencia_2'}
-                                        items={experienceData}
-                                    /> */}
-                                    {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
-                                    <Picker
-                                        fieldName={'disponibilidadTurno_2'}
-                                        items={scheduleData}
-                                    /> */}
-                                    {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
-                                    <Picker
-                                        fieldName={'actualmenteTrabaja_2'}
-                                        items={closeOptions}
-                                        handleAction_uno={handleAction_uno}
-                                        contador={1}
-                                    />
-                                    {
-                                        editable
-                                        &&
-                                            <>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
-                                                <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
-                                            </>
-                                    } */}
-                                    
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
-                                    <Picker
-                                        items={recruitmentData}
-                                        fieldName={'medioReclutamiento_2'}
-                                        handleAction_dos={handleAction_dos}
-                                        contador={2}
-                                    />
-                                    {
-                                        recruitment === 7 || recruitment === 10
-                                        ?
-                                            recruitment === 7
-                                            ?
-                                                <>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
-                                                    <InputForm 
-                                                        status={true}
-                                                        fieldName={'medioReclutamientoDesc_2'}
-                                                        placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
-                                                    />
-                                                </>
-                                            :
-                                                <>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
-                                                    <InputForm
-                                                        status={true}
-                                                        fieldName={'medioReclutamientoDesc_2'}
-                                                        placeholder={language === '1' ? 'Especifique' : 'Especify'}
-                                                    />
-                                                </>
-                                        :
-                                            <>
-                                            </>
-                                    }
-                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
-                                    <Picker
-                                        items={closeOptions}
-                                        fieldName={'trabajoTelat_2'}
-                                        handleAction_tres={handleAction_tres}
-                                        contador={3}
-                                    />
-                                    {
-                                        worked
-                                        &&
-                                            <>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
-                                                <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
-                                                <InputForm 
-                                                    status={worked}
-                                                    ref={input_motivo_salida}
-                                                    placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
-                                                    fieldName={'motivosSalida_2'}
-                                                />
-                                            </>
-                                    }
-
-                                    <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
-                                    <View style={styles.box}>
-                                        <Text>{nombres_1.toUpperCase()}</Text>
-                                    </View>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
-                                    <View style={styles.box}>
-                                        <Text>{apellidoPaterno_1.toUpperCase()}</Text>
-                                    </View>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
-                                    <View style={styles.box}>
-                                        <Text>{apellidoMaterno_1.toUpperCase()}</Text>
-                                    </View>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
-                                    <View style={styles.box}>
-                                        <Text>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
-                                    </View>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
-                                    <View style={styles.box}>
-                                        <Text>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
-                                    </View>
-                                    {
-                                        LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
-                                        &&
-                                            <>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
-                                                <View style={styles.box}>
-                                                    <Text>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
-                                                </View>
-                                            </>
-                                    }
-                                    {
-                                        LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
+                            <>
+                                <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
+                                <InputForm 
+                                    status={true}
+                                    fieldName={'puestoSolicitado_2'}
+                                    ref={input_puesto}
+                                    onSubmitEditing={() => input_salario.current.focus()}
+                                    placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
+                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
+                                <Picker 
+                                    fieldName={'experiencia_2'}
+                                    items={experienceData}
+                                /> */}
+                                {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
+                                <Picker
+                                    fieldName={'disponibilidadTurno_2'}
+                                    items={scheduleData}
+                                /> */}
+                                {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
+                                <Picker
+                                    fieldName={'actualmenteTrabaja_2'}
+                                    items={closeOptions}
+                                    handleAction_uno={handleAction_uno}
+                                    contador={1}
+                                />
+                                {
+                                    editable
+                                    &&
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
+                                            <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
+                                        </>
+                                } */}
+                                
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
+                                <Picker
+                                    items={recruitmentData}
+                                    fieldName={'medioReclutamiento_2'}
+                                    handleAction_dos={handleAction_dos}
+                                    contador={2}
+                                />
+                                {
+                                    recruitment === 7 || recruitment === 10
+                                    ?
+                                        recruitment === 7
                                         ?
                                             <>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
-                                                <Picker
-                                                    items={documentData}
-                                                    fieldName={'tipoDocumento_2'}
-                                                    handleAction_cuatro={handleAction_cuatro}
-                                                    contador={4}
-                                                />
-                                                {
-                                                    index === 2 || index === 3 || index === 4
-                                                    ?
-                                                        index === 2 || index == 3
-                                                        ?
-                                                            <>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                <DatePicker fieldName={'emision_2'} language={language} />
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                <DatePicker fieldName={'expiracion_2'} language={language} />
-                                                            </>
-                                                        :
-                                                            <>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                <DatePicker fieldName={'emision_2'} language={language} />
-                                                            </>
-                                                    :
-                                                        <></>
-                                                }
-                                            </>
-                                        :
-                                            <>
-                                                {
-                                                    LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
-                                                    &&
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
-                                                            <View style={styles.box}>
-                                                                <Text>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
-                                                            </View>
-                                                        </>
-                                                }
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
-                                                <Picker
-                                                    items={closeOptions}
-                                                    fieldName={'vivisteExtranjero_2'}
-                                                    handleAction_cinco={handleAction_cinco}
-                                                    contador={5}
-                                                />
-                                                {
-                                                    foreigh
-                                                    &&
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()} />
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
-                                                        </>
-                                                }
-                                            </>
-                                    }
-                                    
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
-                                    <Picker
-                                        items={estadocvData}
-                                        fieldName={'estadocv_2'}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
-                                    <Picker
-                                        items={numericData}
-                                        fieldName={'numeroHijos_2'}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
-                                    <Picker
-                                        items={numericData}
-                                        fieldName={'dependientesEconomicos_2'}
-                                    />
-                                    {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
-                                    <Picker
-                                        items={transportData}
-                                        fieldName={'tipoTransporte_2'}
-                                    /> */}
-                                    
-                                    <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} onSubmitEditing={() => input_numero_externo.current.focus()} ref={input_calle}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
-                                    <InputForm
-                                        status={true} 
-                                        placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} 
-                                        fieldName={'numeroExterior_2'}
-                                        ref={input_numero_externo}
-                                        onSubmitEditing={() => input_numero_interno.current.focus()}
-                                    />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                    <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
-                                    <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                    <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                    <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
-                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                    <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
-                                </>
-                            :
-                                <>
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
+                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
                                                 <InputForm 
                                                     status={true}
-                                                    fieldName={'puestoSolicitado_2'}
-                                                    ref={input_puesto}
-                                                    onSubmitEditing={() => input_salario.current.focus()}
-                                                    placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
+                                                    fieldName={'medioReclutamientoDesc_2'}
+                                                    placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
                                                 />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
-                                            </View>
-                                        </View>
-                                        {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
-                                                <Picker 
-                                                    fieldName={'experiencia_2'}
-                                                    items={experienceData}
+                                            </>
+                                        :
+                                            <>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
+                                                <InputForm
+                                                    status={true}
+                                                    fieldName={'medioReclutamientoDesc_2'}
+                                                    placeholder={language === '1' ? 'Especifique' : 'Especify'}
                                                 />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
-                                                <Picker
-                                                    fieldName={'disponibilidadTurno_2'}
-                                                    items={scheduleData}
-                                                />
-                                            </View>
-                                        </View> */}
-                                        {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
-                                                <Picker 
-                                                    fieldName={'actualmenteTrabaja_2'}
-                                                    items={closeOptions}
-                                                    handleAction_uno={handleAction_uno}
-                                                    contador={1}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                {
-                                                    editable
-                                                    &&
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
-                                                            <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
-                                                        </>
-                                                }
-                                            </View>
-                                        </View> */}
+                                            </>
+                                    :
+                                        <>
+                                        </>
+                                }
+                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
+                                <Picker
+                                    items={closeOptions}
+                                    fieldName={'trabajoTelat_2'}
+                                    handleAction_tres={handleAction_tres}
+                                    contador={3}
+                                />
+                                {
+                                    worked
+                                    &&
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
+                                            <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
+                                            <InputForm 
+                                                status={worked}
+                                                ref={input_motivo_salida}
+                                                placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
+                                                fieldName={'motivosSalida_2'}
+                                            />
+                                        </>
+                                }
 
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
-                                                <Picker
-                                                    items={recruitmentData}
-                                                    fieldName={'medioReclutamiento_2'}
-                                                    handleAction_dos={handleAction_dos}
-                                                    contador={2}
-                                                />
+                                <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
+                                <View style={styles.box}>
+                                    <Text style={tw`text-[#000]`}>{nombres_1.toUpperCase()}</Text>
+                                </View>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
+                                <View style={styles.box}>
+                                    <Text style={tw`text-[#000]`}>{apellidoPaterno_1.toUpperCase()}</Text>
+                                </View>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
+                                <View style={styles.box}>
+                                    <Text style={tw`text-[#000]`}>{apellidoMaterno_1.toUpperCase()}</Text>
+                                </View>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
+                                <View style={styles.box}>
+                                    <Text style={tw`text-[#000]`}>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
+                                </View>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
+                                <View style={styles.box}>
+                                    <Text style={tw`text-[#000]`}>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
+                                </View>
+                                {
+                                    LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
+                                    &&
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
                                             </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                        </>
+                                }
+                                {
+                                    LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
+                                    ?
+                                        <>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
+                                            <Picker
+                                                items={documentData}
+                                                fieldName={'tipoDocumento_2'}
+                                                handleAction_cuatro={handleAction_cuatro}
+                                                contador={4}
+                                            />
                                             {
-                                                recruitment === 7 || recruitment === 10
+                                                index === 2 || index === 3 || index === 4
                                                 ?
-                                                    recruitment === 7
+                                                    index === 2 || index == 3
                                                     ?
                                                         <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
-                                                            <InputForm 
-                                                                status={true}
-                                                                fieldName={'medioReclutamientoDesc_2'}
-                                                                placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
-                                                            />
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
+                                                            <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
+                                                            <DatePicker fieldName={'expiracion_2'} label={expiracion_2 ? `${expiracion_2.substring(8,10)}-${expiracion_2.substring(5,7)}-${expiracion_2.substring(0,4)}` : ''} language={language} />
                                                         </>
                                                     :
                                                         <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
-                                                            <InputForm
-                                                                status={true}
-                                                                fieldName={'medioReclutamientoDesc_2'}
-                                                                placeholder={language === '1' ? 'Especifique' : 'Especify'}
-                                                            />
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
+                                                            <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
                                                         </>
                                                 :
+                                                    <></>
+                                            }
+                                        </>
+                                    :
+                                        <>
+                                            {
+                                                LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
+                                                &&
                                                     <>
-                                                    </>
-                                            }
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
-                                                <Picker
-                                                    items={closeOptions}
-                                                    fieldName={'trabajoTelat_2'}
-                                                    handleAction_tres={handleAction_tres}
-                                                    contador={3}
-                                                />
-                                            </View>
-                                            {
-                                                worked
-                                                &&
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '\n¿Cuándo?' : '\nWhen?'} />
-                                                        <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
-                                                    </View>
-                                            }
-                                        </View>
-                                            {
-                                                worked
-                                                &&
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
-                                                            <InputForm
-                                                                status={worked}
-                                                                ref={input_motivo_salida}
-                                                                placeholder={language === '1' ? 'Especifica los motivos por los cuales salió' : 'Especify leaving reason'}
-                                                                fieldName={'motivosSalida_2'}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                            }
-                                        <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
-                                                <View style={styles.box}>
-                                                    <Text>{nombres_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
-                                                <View style={styles.box}>
-                                                    <Text>{apellidoPaterno_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
-                                                <View style={styles.box}>
-                                                    <Text>{apellidoMaterno_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
-                                                <View style={styles.box}>
-                                                    <Text>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
-                                                <View style={styles.box}>
-                                                    <Text>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
-                                                </View>
-                                            </View>
-                                            {
-                                                LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
-                                                &&
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
                                                         <View style={styles.box}>
-                                                            <Text>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
+                                                            <Text style={tw`text-[#000]`}>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
                                                         </View>
-                                                    </View>
-                                            }
-                                            
-                                        </View>
-                                        
-                                        {
-                                            LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
-                                            ?
-                                                <>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
-                                                        </View>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica tu nacionalidad' : 'Especify your nationality'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
-                                                            <Picker
-                                                                items={documentData}
-                                                                fieldName={'tipoDocumento_2'}
-                                                                handleAction_cuatro={handleAction_cuatro}
-                                                                contador={4}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    {
-                                                        index === 2 || index === 3 || index === 4
-                                                        ?
-                                                            index === 2 || index == 3
-                                                            ?
-                                                                <>
-                                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                        </View>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                            <DatePicker fieldName={'emision_2'} language={language} />
-                                                                        </View>
-                                                                    </View>
-                                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                            <DatePicker fieldName={'expiracion_2'} language={language} />
-                                                                        </View>
-                                                                    </View>
-                                                                </>
-                                                            :
-                                                                <>
-                                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                            <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                        </View>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                            <DatePicker fieldName={'emision_2'} language={language} />
-                                                                        </View>
-                                                                    </View>
-                                                                </>
-                                                        :
-                                                            <></>
-                                                    }
-                                                </>
-                                            :
-                                                <>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
-                                                            <Picker
-                                                                items={closeOptions}
-                                                                fieldName={'vivisteExtranjero_2'}
-                                                                handleAction_cinco={handleAction_cinco}
-                                                                contador={5}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    {
-                                                        foreigh
-                                                        &&
-                                                            <>
-                                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica el lugar' : 'Where?'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()}/>
-                                                                    </View>
-                                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
-                                                                    </View>
-                                                                </View>
-                                                            </>
-                                                    }
-                                                </>
-                                        }
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
-                                                <Picker
-                                                    items={estadocvData}
-                                                    fieldName={'estadocv_2'}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
-                                                <Picker
-                                                    items={numericData}
-                                                    fieldName={'numeroHijos_2'}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
-                                                <Picker
-                                                    items={numericData}
-                                                    fieldName={'dependientesEconomicos_2'}
-                                                />
-                                            </View>
-                                            {/* <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
-                                                <Picker
-                                                    items={transportData}
-                                                    fieldName={'tipoTransporte_2'}
-                                                />
-                                            </View> */}
-                                        </View>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
-                                            
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} fieldName={'numeroExterior_2'} ref={input_numero_externo} onSubmitEditing={() => input_numero_interno.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                                <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                                <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </>
-                        :
-                            isTablet()
-                            ?
-                                <>
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
-                                                <InputForm 
-                                                    status={true}
-                                                    fieldName={'puestoSolicitado_2'}
-                                                    ref={input_puesto}
-                                                    onSubmitEditing={() => input_salario.current.focus()}
-                                                    placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
-                                            </View>
-                                            {/* <View style={{flex: 1}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
-                                                <Picker 
-                                                    fieldName={'experiencia_2'}
-                                                    items={experienceData}
-                                                />
-                                            </View> */}
-                                        </View>
-                                        {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
-                                                <Picker
-                                                    fieldName={'disponibilidadTurno_2'}
-                                                    items={scheduleData}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
-                                                <Picker 
-                                                    fieldName={'actualmenteTrabaja_2'}
-                                                    items={closeOptions}
-                                                    handleAction_uno={handleAction_uno}
-                                                    contador={1}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}}>
-                                                {
-                                                    editable
-                                                    &&
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
-                                                            <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
-                                                        </>
-                                                }
-                                            </View>
-                                        </View> */}
-
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
-                                                <Picker
-                                                    items={recruitmentData}
-                                                    fieldName={'medioReclutamiento_2'}
-                                                    handleAction_dos={handleAction_dos}
-                                                    contador={2}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                            {
-                                                recruitment === 7 || recruitment === 10
-                                                ?
-                                                    recruitment === 7
-                                                    ?
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
-                                                            <InputForm 
-                                                                status={true}
-                                                                fieldName={'medioReclutamientoDesc_2'}
-                                                                placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
-                                                            />
-                                                        </>
-                                                    :
-                                                        <>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
-                                                            <InputForm
-                                                                status={true}
-                                                                fieldName={'medioReclutamientoDesc_2'}
-                                                                placeholder={language === '1' ? 'Especifique' : 'Especify'}
-                                                            />
-                                                        </>
-                                                :
-                                                    <>
                                                     </>
                                             }
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
-                                                <Picker
-                                                    items={closeOptions}
-                                                    fieldName={'trabajoTelat_2'}
-                                                    handleAction_tres={handleAction_tres}
-                                                    contador={3}
-                                                />
-                                            </View>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
+                                            <Picker
+                                                items={closeOptions}
+                                                fieldName={'vivisteExtranjero_2'}
+                                                handleAction_cinco={handleAction_cinco}
+                                                contador={5}
+                                            />
                                             {
-                                                worked
+                                                foreigh
                                                 &&
-                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
-                                                        <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
-                                                    </View>
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()} />
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
+                                                    </>
                                             }
-                                        </View>
-                                            {
-                                                worked
-                                                &&
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
-                                                            <InputForm 
-                                                                status={worked}
-                                                                ref={input_motivo_salida}
-                                                                placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
-                                                                fieldName={'motivosSalida_2'}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                            }
-                                        <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
-                                                <View style={styles.box}>
-                                                    <Text>{nombres_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
-                                                <View style={styles.box}>
-                                                    <Text>{apellidoPaterno_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
-                                                <View style={styles.box}>
-                                                    <Text>{apellidoMaterno_1.toUpperCase()}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
-                                                <View style={styles.box}>
-                                                    <Text>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
-                                                <View style={styles.box}>
-                                                    <Text>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        
-                                        {
-                                            LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
-                                            ?
-                                                <>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
-                                                        </View>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
-                                                        </View>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
-                                                            <Picker
-                                                                items={documentData}
-                                                                fieldName={'tipoDocumento_2'}
-                                                                handleAction_cuatro={handleAction_cuatro}
-                                                                contador={4}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    {
-                                                        index === 2 || index === 3 || index === 4
-                                                        ?
-                                                            index === 2 || index == 3
-                                                            ?
-                                                                <>
-                                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                        </View>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                            <DatePicker fieldName={'emision_2'} language={language} />
-                                                                        </View>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                            <DatePicker fieldName={'expiracion_2'} language={language} />
-                                                                        </View>
-                                                                    </View>
-                                                                </>
-                                                            :
-                                                                <>
-                                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
-                                                                        </View>
-                                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                            <DatePicker fieldName={'emision_2'} language={language} />
-                                                                        </View>
-                                                                    </View>
-                                                                </>
-                                                        :
-                                                            <></>
-                                                    }
-                                                </>
-                                            :
-                                                <>
-                                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                        {
-                                                            LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
-                                                            &&
-                                                                <View style={{flex: 1, marginRight: '3%'}}>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
-                                                                    <View style={styles.box}>
-                                                                        <Text>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
-                                                                    </View>
-                                                                </View>
-                                                        }
-                                                        
-                                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
-                                                            <Picker
-                                                                items={closeOptions}
-                                                                fieldName={'vivisteExtranjero_2'}
-                                                                handleAction_cinco={handleAction_cinco}
-                                                                contador={5}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    {
-                                                        foreigh
-                                                        &&
-                                                            <>
-                                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()}/>
-                                                                    </View>
-                                                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
-                                                                    </View>
-                                                                </View>
-                                                            </>
-                                                    }
-                                                </>
-                                        }
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
-                                                <Picker
-                                                    items={estadocvData}
-                                                    fieldName={'estadocv_2'}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
-                                                <Picker
-                                                    items={numericData}
-                                                    fieldName={'numeroHijos_2'}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
-                                                <Picker
-                                                    items={numericData}
-                                                    fieldName={'dependientesEconomicos_2'}
-                                                />
-                                            </View>
-                                            {/* <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
-                                                <Picker
-                                                    items={transportData}
-                                                    fieldName={'tipoTransporte_2'}
-                                                />
-                                            </View> */}
-                                        </View>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
-                                            
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} fieldName={'numeroExterior_2'} ref={input_numero_externo} onSubmitEditing={() => input_numero_interno.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                                <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'}/>
-                                                <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
-                                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
-                                            </View>
-                                        </View>
-                                        <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
-                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                                <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
-                                            </View>
-                                            <View style={{flex: 1, marginRight: '3%'}}>
-                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
-                                            </View>
-                                        </View>
-                                    </View>
-                                </>
-                            :
-                                <>
+                                        </>
+                                }
+                                
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
+                                <Picker
+                                    items={estadocvData}
+                                    fieldName={'estadocv_2'}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
+                                <Picker
+                                    items={numericData}
+                                    fieldName={'numeroHijos_2'}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
+                                <Picker
+                                    items={numericData}
+                                    fieldName={'dependientesEconomicos_2'}
+                                />
+                                {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
+                                <Picker
+                                    items={transportData}
+                                    fieldName={'tipoTransporte_2'}
+                                /> */}
+                                
+                                <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} onSubmitEditing={() => input_numero_externo.current.focus()} ref={input_calle}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
+                                <InputForm
+                                    status={true} 
+                                    placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} 
+                                    fieldName={'numeroExterior_2'}
+                                    ref={input_numero_externo}
+                                    onSubmitEditing={() => input_numero_interno.current.focus()}
+                                />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
+                                <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
+                                <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
+                                <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
+                                <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
+                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
+                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
+                                <ProgressStepActions handleNext={handleValues} language={language}/>
+                            </>
+                        :
+                            <>
                                 <View style={{flex: 1, alignSelf: 'stretch'}}>
                                     <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1544,7 +791,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             }
                                         </View>
                                     </View> */}
-                
+
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
@@ -1585,51 +832,51 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                     </View>
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                    <View style={{flex: 1, marginRight: '3%'}}>
-                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
-                                        <Picker
-                                            items={closeOptions}
-                                            fieldName={'trabajoTelat_2'}
-                                            handleAction_tres={handleAction_tres}
-                                            contador={3}
-                                        />
-                                    </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
+                                            <Picker
+                                                items={closeOptions}
+                                                fieldName={'trabajoTelat_2'}
+                                                handleAction_tres={handleAction_tres}
+                                                contador={3}
+                                            />
+                                        </View>
                                         {
                                             worked
                                             &&
                                                 <View style={{flex: 1, marginRight: '3%'}}>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '\n¿Cuándo?' : '\nWhen?'} />
                                                     <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
                                                 </View>
                                         }
                                     </View>
-                                    {
-                                        worked
-                                        &&
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                                <View style={{flex: 1}}>
-                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
-                                                    <InputForm 
-                                                        status={worked}
-                                                        ref={input_motivo_salida}
-                                                        placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
-                                                        fieldName={'motivosSalida_2'}
-                                                    />
+                                        {
+                                            worked
+                                            &&
+                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
+                                                        <InputForm
+                                                            status={worked}
+                                                            ref={input_motivo_salida}
+                                                            placeholder={language === '1' ? 'Especifica los motivos por los cuales salió' : 'Especify leaving reason'}
+                                                            fieldName={'motivosSalida_2'}
+                                                        />
+                                                    </View>
                                                 </View>
-                                            </View>
-                                    }
+                                        }
                                     <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
                                             <View style={styles.box}>
-                                                <Text>{nombres_1.toUpperCase()}</Text>
+                                                <Text style={tw`text-[#000]`}>{nombres_1.toUpperCase()}</Text>
                                             </View>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
                                             <View style={styles.box}>
-                                                <Text>{apellidoPaterno_1.toUpperCase()}</Text>
+                                                <Text style={tw`text-[#000]`}>{apellidoPaterno_1.toUpperCase()}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -1637,13 +884,13 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
                                             <View style={styles.box}>
-                                                <Text>{apellidoMaterno_1.toUpperCase()}</Text>
+                                                <Text style={tw`text-[#000]`}>{apellidoMaterno_1.toUpperCase()}</Text>
                                             </View>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
                                             <View style={styles.box}>
-                                                <Text>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
+                                                <Text style={tw`text-[#000]`}>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -1651,7 +898,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
                                             <View style={styles.box}>
-                                                <Text>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
+                                                <Text style={tw`text-[#000]`}>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
                                             </View>
                                         </View>
                                         {
@@ -1660,10 +907,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
                                                     <View style={styles.box}>
-                                                        <Text>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
+                                                        <Text style={tw`text-[#000]`}>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
                                                     </View>
                                                 </View>
                                         }
+                                        
                                     </View>
                                     
                                     {
@@ -1672,18 +920,18 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
                                                     </View>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
-                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica tu nacionalidad' : 'Especify your nationality'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
                                                     </View>
                                                 </View>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                         <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
-                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
                                                     </View>
                                                 </View>
                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1706,15 +954,17 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
-                                                                        <DatePicker fieldName={'emision_2'} language={language} />
+                                                                        <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
                                                                     </View>
+                                                                </View>
+                                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
-                                                                        <DatePicker fieldName={'expiracion_2'} language={language} />
+                                                                        <DatePicker fieldName={'expiracion_2'} label={expiracion_2 ? `${expiracion_2.substring(8,10)}-${expiracion_2.substring(5,7)}-${expiracion_2.substring(0,4)}` : ''} language={language} />
                                                                     </View>
                                                                 </View>
                                                             </>
@@ -1723,11 +973,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
-                                                                        <DatePicker fieldName={'emision_2'} language={language} />
+                                                                        <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
                                                                     </View>
                                                                 </View>
                                                             </>
@@ -1754,8 +1004,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         <>
                                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
-                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()} />
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Especifica el lugar' : 'Where?'} />
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()}/>
                                                                 </View>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
@@ -1801,8 +1051,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
-                                            <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
+                                        
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
@@ -1859,20 +1110,769 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
                                         </View>
                                     </View>
                                 </View>
+                                <ProgressStepActions handleNext={handleValues} language={language}/>
                             </>
-                    }
-                    
-                </View>
-            </ProgressStep>
+                    :
+                        isTablet()
+                        ?
+                            <>
+                                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                    <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
+                                            <InputForm 
+                                                status={true}
+                                                fieldName={'puestoSolicitado_2'}
+                                                ref={input_puesto}
+                                                onSubmitEditing={() => input_salario.current.focus()}
+                                                placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
+                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                        </View>
+                                        {/* <View style={{flex: 1}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
+                                            <Picker 
+                                                fieldName={'experiencia_2'}
+                                                items={experienceData}
+                                            />
+                                        </View> */}
+                                    </View>
+                                    {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
+                                            <Picker
+                                                fieldName={'disponibilidadTurno_2'}
+                                                items={scheduleData}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
+                                            <Picker 
+                                                fieldName={'actualmenteTrabaja_2'}
+                                                items={closeOptions}
+                                                handleAction_uno={handleAction_uno}
+                                                contador={1}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}}>
+                                            {
+                                                editable
+                                                &&
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
+                                                        <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
+                                                    </>
+                                            }
+                                        </View>
+                                    </View> */}
+
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
+                                            <Picker
+                                                items={recruitmentData}
+                                                fieldName={'medioReclutamiento_2'}
+                                                handleAction_dos={handleAction_dos}
+                                                contador={2}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                        {
+                                            recruitment === 7 || recruitment === 10
+                                            ?
+                                                recruitment === 7
+                                                ?
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
+                                                        <InputForm 
+                                                            status={true}
+                                                            fieldName={'medioReclutamientoDesc_2'}
+                                                            placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
+                                                        />
+                                                    </>
+                                                :
+                                                    <>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
+                                                        <InputForm
+                                                            status={true}
+                                                            fieldName={'medioReclutamientoDesc_2'}
+                                                            placeholder={language === '1' ? 'Especifique' : 'Especify'}
+                                                        />
+                                                    </>
+                                            :
+                                                <>
+                                                </>
+                                        }
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
+                                            <Picker
+                                                items={closeOptions}
+                                                fieldName={'trabajoTelat_2'}
+                                                handleAction_tres={handleAction_tres}
+                                                contador={3}
+                                            />
+                                        </View>
+                                        {
+                                            worked
+                                            &&
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
+                                                    <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
+                                                </View>
+                                        }
+                                    </View>
+                                        {
+                                            worked
+                                            &&
+                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
+                                                        <InputForm 
+                                                            status={worked}
+                                                            ref={input_motivo_salida}
+                                                            placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
+                                                            fieldName={'motivosSalida_2'}
+                                                        />
+                                                    </View>
+                                                </View>
+                                        }
+                                    <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{nombres_1.toUpperCase()}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{apellidoPaterno_1.toUpperCase()}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{apellidoMaterno_1.toUpperCase()}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
+                                            <View style={styles.box}>
+                                                <Text style={tw`text-[#000]`}>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    {
+                                        LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
+                                        ?
+                                            <>
+                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
+                                                    </View>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
+                                                    </View>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
+                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
+                                                    </View>
+                                                </View>
+                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
+                                                        <Picker
+                                                            items={documentData}
+                                                            fieldName={'tipoDocumento_2'}
+                                                            handleAction_cuatro={handleAction_cuatro}
+                                                            contador={4}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                {
+                                                    index === 2 || index === 3 || index === 4
+                                                    ?
+                                                        index === 2 || index == 3
+                                                        ?
+                                                            <>
+                                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                    </View>
+                                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
+                                                                        <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
+                                                                    </View>
+                                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
+                                                                        <DatePicker fieldName={'expiracion_2'} label={expiracion_2 ? `${expiracion_2.substring(8,10)}-${expiracion_2.substring(5,7)}-${expiracion_2.substring(0,4)}` : ''} language={language} />
+                                                                    </View>
+                                                                </View>
+                                                            </>
+                                                        :
+                                                            <>
+                                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                    </View>
+                                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
+                                                                        <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
+                                                                    </View>
+                                                                </View>
+                                                            </>
+                                                    :
+                                                        <></>
+                                                }
+                                            </>
+                                        :
+                                            <>
+                                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                    {
+                                                        LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
+                                                        &&
+                                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
+                                                                <View style={styles.box}>
+                                                                    <Text style={tw`text-[#000]`}>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
+                                                                </View>
+                                                            </View>
+                                                    }
+                                                    
+                                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                                        <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
+                                                        <Picker
+                                                            items={closeOptions}
+                                                            fieldName={'vivisteExtranjero_2'}
+                                                            handleAction_cinco={handleAction_cinco}
+                                                            contador={5}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                {
+                                                    foreigh
+                                                    &&
+                                                        <>
+                                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()}/>
+                                                                </View>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
+                                                                </View>
+                                                            </View>
+                                                        </>
+                                                }
+                                            </>
+                                    }
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
+                                            <Picker
+                                                items={estadocvData}
+                                                fieldName={'estadocv_2'}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
+                                            <Picker
+                                                items={numericData}
+                                                fieldName={'numeroHijos_2'}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
+                                            <Picker
+                                                items={numericData}
+                                                fieldName={'dependientesEconomicos_2'}
+                                            />
+                                        </View>
+                                        {/* <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
+                                            <Picker
+                                                items={transportData}
+                                                fieldName={'tipoTransporte_2'}
+                                            />
+                                        </View> */}
+                                    </View>
+                                    <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
+                                        
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} fieldName={'numeroExterior_2'} ref={input_numero_externo} onSubmitEditing={() => input_numero_interno.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
+                                            <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'}/>
+                                            <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
+                                            <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
+                                        </View>
+                                    </View>
+                                    <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
+                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
+                                            <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                        </View>
+                                        <View style={{flex: 1, marginRight: '3%'}}>
+                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
+                                        </View>
+                                    </View>
+                                    <ProgressStepActions handleNext={handleValues} language={language}/>
+                                </View>
+                            </>
+                        :
+                            <>
+                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                <TitleForms type={'title'} title={language === '1' ? 'Datos generales' : 'General Information'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto que solicita' : 'Requested position'} />
+                                        <InputForm 
+                                            status={true}
+                                            fieldName={'puestoSolicitado_2'}
+                                            ref={input_puesto}
+                                            onSubmitEditing={() => input_salario.current.focus()}
+                                            placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
+                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                    </View>
+                                </View>
+                                {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
+                                        <Picker 
+                                            fieldName={'experiencia_2'}
+                                            items={experienceData}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Disponibilidad de turno' : 'Schedule preferences'} />
+                                        <Picker
+                                            fieldName={'disponibilidadTurno_2'}
+                                            items={scheduleData}
+                                        />
+                                    </View>
+                                </View> */}
+                                {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Trabaja actualmente' : 'Are you currently working?'} />
+                                        <Picker 
+                                            fieldName={'actualmenteTrabaja_2'}
+                                            items={closeOptions}
+                                            handleAction_uno={handleAction_uno}
+                                            contador={1}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        {
+                                            editable
+                                            &&
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Horario laboral' : 'Work schedule'}/>
+                                                    <InputForm status={editable} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'horarioLaboral_2'}/>
+                                                </>
+                                        }
+                                    </View>
+                                </View> */}
+            
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de reclutamiento' : 'Recruitment platform'} />
+                                        <Picker
+                                            items={recruitmentData}
+                                            fieldName={'medioReclutamiento_2'}
+                                            handleAction_dos={handleAction_dos}
+                                            contador={2}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                    {
+                                        recruitment === 7 || recruitment === 10
+                                        ?
+                                            recruitment === 7
+                                            ?
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Quién te refirío?' : 'Who referred you?'} />
+                                                    <InputForm 
+                                                        status={true}
+                                                        fieldName={'medioReclutamientoDesc_2'}
+                                                        placeholder={language === '1' ? 'Escribe el nombre completo de tu referido' : 'Enter the full name of the person who referred you'}
+                                                    />
+                                                </>
+                                            :
+                                                <>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Otro' : 'Other'} />
+                                                    <InputForm
+                                                        status={true}
+                                                        fieldName={'medioReclutamientoDesc_2'}
+                                                        placeholder={language === '1' ? 'Especifique' : 'Especify'}
+                                                    />
+                                                </>
+                                        :
+                                            <>
+                                            </>
+                                    }
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                <View style={{flex: 1, marginRight: '3%'}}>
+                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Has trabajado anteriormente en esta empresa?' : 'Have you worked with us before?'} />
+                                    <Picker
+                                        items={closeOptions}
+                                        fieldName={'trabajoTelat_2'}
+                                        handleAction_tres={handleAction_tres}
+                                        contador={3}
+                                    />
+                                </View>
+                                    {
+                                        worked
+                                        &&
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? '¿Cuándo?' : 'When?'} />
+                                                <InputForm status={worked} placeholder={language === '1' ? 'Cuándo trabajaste con nosotros' : 'When did you work with us?'} fieldName={'cuandoTrabajo_2'} ref={input_cuando} onSubmitEditing={() => input_motivo_salida.current.focus()}/>
+                                            </View>
+                                    }
+                                </View>
+                                {
+                                    worked
+                                    &&
+                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                            <View style={{flex: 1}}>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Motivo de salida' : 'Leaving reason'} />
+                                                <InputForm 
+                                                    status={worked}
+                                                    ref={input_motivo_salida}
+                                                    placeholder={language === '1' ? 'Específica los motivos por los cuales salió' : 'Especify leaving reason'}
+                                                    fieldName={'motivosSalida_2'}
+                                                />
+                                            </View>
+                                        </View>
+                                }
+                                <TitleForms type={'title'} title={language === '1' ? 'Información Personal' : 'Personal Information'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
+                                        <View style={styles.box}>
+                                            <Text style={tw`text-[#000]`}>{nombres_1.toUpperCase()}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
+                                        <View style={styles.box}>
+                                            <Text style={tw`text-[#000]`}>{apellidoPaterno_1.toUpperCase()}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
+                                        <View style={styles.box}>
+                                            <Text style={tw`text-[#000]`}>{apellidoMaterno_1.toUpperCase()}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
+                                        <View style={styles.box}>
+                                            <Text style={tw`text-[#000]`}>{genero_1 === 'H' ? language === '1' ? 'MASCULINO' : 'MALE' : language === '1' ? 'FEMENINO' : 'FEMALE'}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
+                                        <View style={styles.box}>
+                                            <Text style={tw`text-[#000]`}>{LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD' ? language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD' : LugarNacimiento}</Text>
+                                        </View>
+                                    </View>
+                                    {
+                                        LugarNacimiento !== 'NACIDO EN EL EXTRANJERO'
+                                        &&
+                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Nacionalidad' : 'Nationality'} />
+                                                <View style={styles.box}>
+                                                    <Text style={tw`text-[#000]`}>{language === '1' ? 'MEXICANA' : 'MEXICAN'}</Text>
+                                                </View>
+                                            </View>
+                                    }
+                                </View>
+                                
+                                {
+                                    LugarNacimiento === 'NACIDO EN EL EXTRANJERO' || LugarNacimiento === 'BORN ABROAD'
+                                    ?
+                                        <>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} />                     
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica tu lugar de nacimiento' : 'Especify your place of birth'} fieldName={'lugarNacimientoExtranjero_2'} ref={input_lugar_nacimiento} onSubmitEditing={() => input_nacionalidad.current.focus()}/>
+                                                </View>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica tu nacionalidad' : 'Especify your nationality'} fieldName={'nacionalidadExtranjero_2'} ref={input_nacionalidad} onSubmitEditing={() => input_tiempo_mexico.current.focus()}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Por cuanto tiempo has vivido en México?' : 'For how long have you lived in Mexico?'} />
+                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica cuanto tiempo has vivido en México' : 'Especify how long have you lived in Mexico'} fieldName={'tiempoMexicoExtranjero_2'} ref={input_tiempo_mexico}/>
+                                                </View>
+                                            </View>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Tipo de documento migratorio' : 'Type of immigration document'} />
+                                                    <Picker
+                                                        items={documentData}
+                                                        fieldName={'tipoDocumento_2'}
+                                                        handleAction_cuatro={handleAction_cuatro}
+                                                        contador={4}
+                                                    />
+                                                </View>
+                                            </View>
+                                            {
+                                                index === 2 || index === 3 || index === 4
+                                                ?
+                                                    index === 2 || index == 3
+                                                    ?
+                                                        <>
+                                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                </View>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
+                                                                    <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
+                                                                </View>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
+                                                                    <DatePicker fieldName={'expiracion_2'} label={expiracion_2 ? `${expiracion_2.substring(8,10)}-${expiracion_2.substring(5,7)}-${expiracion_2.substring(0,4)}` : ''} language={language} />
+                                                                </View>
+                                                            </View>
+                                                        </>
+                                                    :
+                                                        <>
+                                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                </View>
+                                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                                    <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
+                                                                    <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
+                                                                </View>
+                                                            </View>
+                                                        </>
+                                                :
+                                                    <></>
+                                            }
+                                        </>
+                                    :
+                                        <>
+                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                <View style={{flex: 1, marginRight: '3%'}}>
+                                                    <TitleForms type={'subtitle'} title={language === '1' ? '¿Viviste en el extrajero?' : 'Did you live abroad?'} />
+                                                    <Picker
+                                                        items={closeOptions}
+                                                        fieldName={'vivisteExtranjero_2'}
+                                                        handleAction_cinco={handleAction_cinco}
+                                                        contador={5}
+                                                    />
+                                                </View>
+                                            </View>
+                                            {
+                                                foreigh
+                                                &&
+                                                    <>
+                                                        <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Específica el lugar' : 'Where?'} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'lugarExtranjero_2'} ref={input_lugar} onSubmitEditing={() => input_tiempo.current.focus()} />
+                                                            </View>
+                                                            <View style={{flex: 1, marginRight: '3%'}}>
+                                                                <TitleForms type={'subtitle'} title={language === '1' ? 'Tiempo de vivir en el extranjero' : 'How long did you live abroad? '} />
+                                                                <InputForm status={true} placeholder={language === '1' ? 'Especifique' : 'Especify'} fieldName={'tiempoExtranjero_2'} ref={input_tiempo} />
+                                                            </View>
+                                                        </View>
+                                                    </>
+                                            }
+                                        </>
+                                }
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Estado civil' : 'Marital status'} />
+                                        <Picker
+                                            items={estadocvData}
+                                            fieldName={'estadocv_2'}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número de hijos' : 'How many children do you have?'} />
+                                        <Picker
+                                            items={numericData}
+                                            fieldName={'numeroHijos_2'}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Dependientes económicos' : 'Economic dependents'} />
+                                        <Picker
+                                            items={numericData}
+                                            fieldName={'dependientesEconomicos_2'}
+                                        />
+                                    </View>
+                                    {/* <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Medio de transporte' : 'Means of transport'} />
+                                        <Picker
+                                            items={transportData}
+                                            fieldName={'tipoTransporte_2'}
+                                        />
+                                    </View> */}
+                                </View>
+                                <TitleForms type={'title'} title={language === '1' ? 'Domicilio' : 'Address'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Calle' : 'Street name'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Calle' : 'Street name'} fieldName={'calle_2'} ref={input_calle} onSubmitEditing={() => input_numero_externo.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Número de casa (externo)' : 'House number (external)'} fieldName={'numeroExterior_2'} ref={input_numero_externo} onSubmitEditing={() => input_numero_interno.current.focus()}/>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
+                                        <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} fieldName={'ciudad_2'} ref={input_ciudad} onSubmitEditing={() => input_estado.current.focus()}/>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Estado (Estado)' : 'State (Estado)'} fieldName={'estado_2'} ref={input_estado} onSubmitEditing={() => input_calle_uno.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 1' : 'Between street 1'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Entre calle 1' : 'Between street 1'} fieldName={'calle_uno_2'} ref={input_calle_uno} onSubmitEditing={() => input_calle_dos.current.focus()}/>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Entre calle 2' : 'Between street 2'} />
+                                        <InputForm status={true} placeholder={language === '1' ? 'Entre calle 2' : 'Between street 2'} fieldName={'calle_dos_2'} ref={input_calle_dos} onSubmitEditing={() => input_email.current.focus()}/>
+                                    </View>
+                                </View>
+                                <TitleForms type={'title'} title={language === '1' ? 'Datos de contacto' : 'Contact details'} />
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
+                                        <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                    </View>
+                                </View>
+                                <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
+                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                    </View>
+                                    <View style={{flex: 1, marginRight: '3%'}}>
+                                        <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
+                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
+                                    </View>
+                                </View>
+                                <ProgressStepActions handleNext={handleValues} language={language}/>
+                            </View>
+                        </>
+                }
+                
+            </View>
         </KeyboardAwareScrollView>
     )
 }
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow:1,
+    },
     label: {
         fontSize: 14,
         color: '#1177E9',

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep} from '../../components';
-import {ProgressSteps} from 'react-native-progress-steps';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
 import {useOrientation, useConnection, useNavigation} from '../../hooks';
@@ -10,14 +9,16 @@ import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/col
 import {useFocusEffect} from '@react-navigation/native';
 import * as Yup from 'yup';
 import tw from 'twrnc';
-import { useSelector } from 'react-redux';
-import { selectStep } from '../../slices/progressStepSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectStep} from '../../slices/progressStepSlice';
 
 let step = null;
-
+let data = []
 export default ({navigation, route: {params: {language, orientation, country}}}) => {
+    const dispatch = useDispatch()
     step = useSelector(selectStep)
 
+    const [data, setData] = useState([])
     const required = '*';
     const invalidEmail = country === 'US' ? 'Invalid Email' : language === '1' ? 'Correo Inválido' : 'Invalid Email';
     const invalidNumber = country === 'US' ? 'Invalid Number' : language === '1' ? 'Número Inválido' : 'Invalid Number';
@@ -34,13 +35,25 @@ export default ({navigation, route: {params: {language, orientation, country}}})
 
     useFocusEffect(
         useCallback(() => {
+            if(country === 'US'){
+                setData([
+                    {id: 1, title: 'Basic Information'},
+                    {id: 2, title: 'Competences and Abilities'},
+                    {id: 3, title: 'Employment History'}
+                ])
+            } else {
+                setData([
+                    {id: 1, title: language === '1' ? 'Información Básica' : 'Basic Information'},
+                    {id: 2, title: language === '1' ? 'Información Personal' : 'Personal Information'},
+                    {id: 3, title: language === '1' ? 'Curriculum' : 'Resume'},
+                    {id: 4, title: language === '1' ? 'Referencias Personales' : 'Personal References'}
+                ])
+            }
             handlePath('Choose')
         }, [])
     );
+    
 
-    useEffect(() => {
-        askForConnection()
-    },[])
 
     return (
         <>
@@ -160,17 +173,17 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         {
                             hasConnection
                             ?
-                                <ProgressStep>
+                                <ProgressStep data={data}>
                                     {
                                         step === 1
                                         ?
-                                            <StepOneUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Basic Info.' : 'Basic Information'} language={language} orientation={orientationInfo.initial}/>
+                                            <StepOneUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                                         :
                                             step === 2
                                             ?
-                                                <StepTwoUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'Competences Abilities' : 'Competences Abilities'} language={language} orientation={orientationInfo.initial}/>
+                                                <StepTwoUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                                             :
-                                                <StepThreeUSA navigation={navigation} label={orientationInfo.initial === 'PORTRAIT' ? 'References Info.' : 'References Information'} language={language} orientation={orientationInfo.initial}/>
+                                                <StepThreeUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                                     }
                                 </ProgressStep>
                             :
@@ -378,24 +391,23 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         {
                             hasConnection
                             ?
-                                <View style={tw`flex-1 px-2`}>
-                                    <ProgressSteps
-                                        labelFontSize={11}
-                                        activeStepIconBorderColor={'#3283C5'}
-                                        activeLabelColor={'#3283C5'}
-                                        completedProgressBarColor={'#3283C5'}
-                                        completedStepIconColor={'#3283C5'}
-                                        activeStepNumColor={'#3283C5'}
-                                        completedLabelColor={'#3283C5'}
-                                        topOffset={15}
-                                        marginBottom={30}
-                                        scrollable={true}>
-                                            <StepOneMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Inf. Básica' : 'Información Básica' : orientationInfo.initial === 'PORTRAIT' ? 'Basic Info.' : 'Basic Information'} language={language} orientation={orientationInfo.initial}/>
-                                            <StepTwoMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Inf. Personal' : 'Información Personal' : orientationInfo.initial === 'PORTRAIT' ? 'Personal Info.' : 'Personal Information'} language={language} orientation={orientationInfo.initial}/>
-                                            <StepThreeMX navigation={navigation} label={language === '1' ? 'Currículum' : 'Resume'} language={language} orientation={orientationInfo.initial}/>
-                                            <StepFourMX navigation={navigation} label={language === '1' ? orientationInfo.initial === 'PORTRAIT' ? 'Ref. Personales' : 'Referencias Personales' : orientationInfo.initial === 'PORTRAIT' ? 'Personal Ref.' : 'Personal References'} language={language} orientation={orientationInfo.initial}/>
-                                    </ProgressSteps>
-                                </View>
+                                <ProgressStep data={data}>
+                                    {
+                                        step === 1
+                                        ?
+                                            <StepOneMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                        :
+                                            step === 2
+                                            ?
+                                                <StepTwoMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                            :
+                                                step === 3
+                                                ?
+                                                    <StepThreeMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                :
+                                                    <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                    }
+                                </ProgressStep>
                             :
                                 <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                         }
