@@ -6,7 +6,7 @@ import {formatDate} from '../../js/dates'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 let initialDate = new Date()
-export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false, label}) => {
+export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false, label = ''}) => {
     const [field, helpers, meta] = useField(fieldName);
     const { value, setValue } = meta
     const [dateLabel, setDateLabel] = useState(label)
@@ -28,9 +28,9 @@ export default ({fieldName, language = '1', shortFormat = true, isModule = false
         setDateLabel(formated)
         setDate(date)
     }
-    
+    console.log('value: ', field.value)
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', borderRadius: 20, height: 'auto', alignSelf: 'stretch'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', alignSelf: 'stretch'}}>
             <TouchableOpacity style={[styles.picker, {justifyContent: shortFormat ? 'flex-start' : 'center'}]} onPress={() => setOpen(true)}>
                 <View style={{flex: 1}}>
                     <Text style={{color: '#000', fontSize: 15}}>{dateLabel ? dateLabel : 'No seleccionada'}</Text>
@@ -38,7 +38,7 @@ export default ({fieldName, language = '1', shortFormat = true, isModule = false
                 {
                     ((field.value === '' || field.value === undefined && required) || (dateLabel === '' && required))
                     &&
-                        <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
                             <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
                         </View>
                 }
@@ -64,8 +64,7 @@ const styles = StyleSheet.create({
         borderColor: '#CBCBCB',
         borderWidth: 1,
         marginBottom: 10,
-        borderRadius: 20,
-        height: 48,
+        height: 40,
         alignSelf: 'stretch',
         flex: 1,
         flexDirection: 'row',

@@ -1892,7 +1892,7 @@ const styles = StyleSheet.create({
     box: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        height: 50,
+        height: 40,
         alignSelf: 'stretch',
         flexDirection: 'row',
         backgroundColor: '#f7f7f7',
@@ -1900,7 +1900,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         alignItems: 'center',
-        borderRadius: 20,
         paddingHorizontal: 12,
         paddingVertical: 10,
     },

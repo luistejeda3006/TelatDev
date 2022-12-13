@@ -9,10 +9,10 @@ import {useField} from 'formik';
 //icon hace referencia a que si la caja tendrá icono {icon: Nombre del icono :: String}
 //...rest son el resto de propiedades que pudiera tener el campo de texto
 
-export default forwardRef(({status, radius = true, fieldName, icon, isTextArea = false, ...rest}, ref) => {
+export default forwardRef(({status, radius = true, fieldName, icon, isTextArea = false, capitalize = true, ...rest}, ref) => {
     const [field, meta] = useField(fieldName);
     return (
-        <View style={(meta.error !== 'Requerido' && meta.error !== 'Required') ? [styles.box, {borderTopStartRadius: 20, borderBottomStartRadius: 20, borderTopEndRadius: radius ? 20 : 0, borderBottomEndRadius: radius ? 20 : 0}] : [styles.box, {borderTopStartRadius: 20, borderBottomStartRadius: 20, borderTopEndRadius: 20, borderBottomEndRadius: 20}]}>
+        <View style={(meta.error !== 'Requerido' && meta.error !== 'Required') ? [styles.box] : [styles.box]}>
             {
                 !icon
                 ?
@@ -21,7 +21,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                         style={!isTextArea ? styles.input : [styles.input, {height: 80, textAlign: 'auto'}]}
                         onChangeText={field.onChange(fieldName)}
                         value={field.value}
-                        autoCapitalize = 'characters'
+                        autoCapitalize = {capitalize ? 'characters' : 'none'}
                         placeholderTextColor='#c1c1c1'
                         onBlur={field.onBlur(fieldName)}
                         editable={status}
@@ -29,7 +29,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                     />
                 :
                     <>
-                        <View style={{backgroundColor: '#F7F7F7', width: 50, height: 48, paddingLeft: 3, justifyContent: 'center', alignItems: 'center', borderColor: '#f1f1f1', borderWidth: 1, borderTopLeftRadius: 20, borderBottomLeftRadius: 20}}>
+                        <View style={{backgroundColor: '#F7F7F7', width: 50, height: 40, paddingLeft: 3, justifyContent: 'center', alignItems: 'center', borderColor: '#f1f1f1', borderWidth: 1}}>
                             <Icon name={icon} size={20} color='black' />
                         </View>
                         <TextInput
@@ -50,7 +50,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                 status 
                 &&
                     meta.error &&
-                    <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
                         <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
                     </View>
             }
@@ -71,8 +71,7 @@ const styles = StyleSheet.create({
     },
     input:{
         flex: 1,
-        height: 48,
-        borderRadius: 20,
+        height: 40,
         color: '#000',
         paddingLeft: 8
     }

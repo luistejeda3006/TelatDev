@@ -9,7 +9,7 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
         ?
             <View style={box}>
                 <TextInput
-                    style={tw`text-[#000] bg-[${edit ? '#fff' : '#f7f7f7'}] h-12 flex-1 rounded-3xl`}
+                    style={tw`text-[#000] bg-[${edit ? '#fff' : '#f7f7f7'}] h-12 flex-1`}
                     ref={ref}
                     value={value}
                     placeholderTextColor={'#CBCBCB'}
@@ -18,7 +18,7 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
                 {
                     value === ''
                     &&
-                        <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
+                        <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
                             <Ionicons name='asterisk' color={'red'} size={12}/>
                         </View>
                 }
@@ -35,4 +35,4 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
     )
 })
 
-const box = tw`justify-start items-center h-12.5 flex-row border border-[#CBCBCB] mb-2.5 bg-white px-3 py-2.5 w-[99%] rounded-3xl`
+const box = tw`justify-start items-center h-12.5 flex-row border border-[#CBCBCB] mb-2.5 bg-white px-3 py-2.5 w-[99%]`

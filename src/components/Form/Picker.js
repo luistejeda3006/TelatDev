@@ -50,7 +50,7 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
                 </View>
                 {
                     (field.value === 'SEL' || field.value === undefined) &&
-                    <View style={{height: 48, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
                         <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
                     </View>
                 }
@@ -75,8 +75,7 @@ const styles = StyleSheet.create({
         borderColor: '#CBCBCB',
         borderWidth: 1,
         marginBottom: 10,
-        borderRadius: 20,
-        height: 48,
+        height: 40,
         flexDirection: 'row',
         paddingRight: 10,
         paddingLeft: isIphone ? 10 : 0

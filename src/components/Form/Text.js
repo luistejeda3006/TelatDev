@@ -1,12 +1,19 @@
 import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 
-export default ({title, type = 'title'}) => {
+export default ({title, type = 'title', Item = undefined}) => {
     return (
         type === 'title'
         ?
-            <View style={{borderColor: '#CBCBCB', borderBottomWidth: .5, marginBottom: 10, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', paddingBottom: 6, marginTop: 10}}>
-                <Text style={[styles.title,{color: '#383838'}]}>{title}</Text>
+            <View style={{alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', height: 50, flexDirection: 'row'}}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
+                    <Text style={[styles.title,{color: '#383838'}]}>{title}</Text>
+                </View>
+                {
+                    Item
+                    &&
+                        <Item />
+                }
             </View>
         :
             <Text style={styles.label}>{title}</Text>
@@ -20,7 +27,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         color: 'orange',
         fontWeight:'bold'
     },

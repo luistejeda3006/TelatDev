@@ -24,7 +24,7 @@ export default ({data, children}) => {
                     {
                         step > id
                         ?
-                            <IonIcons name={'check-bold'} size={16} color={Blue} />
+                            <IonIcons name={'check'} size={16} color={Blue} />
                         :
                             <Text style={tw`font-bold text-xs text-[${step >= id ? Blue : '#fff'}]`}>{id}</Text>
                     }
@@ -59,13 +59,7 @@ export default ({data, children}) => {
                 {data.map(x => <Legend total={data.length} {...x}/>)}
             </View>
             <View style={tw`flex-1 self-stretch border-t border-t-[#dadada] border-b border-b-[#dadada] bg-[#fff]`}>
-                <KeyboardAwareScrollView
-                    contentContainerStyle={styles.scrollContainer}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    {children}
-                </KeyboardAwareScrollView>
+                {children}
             </View>
         </View>
     )

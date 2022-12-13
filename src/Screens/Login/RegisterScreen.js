@@ -74,99 +74,261 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         onSubmit={() => {}}
                         initialValues={{}}
                         validationSchema={Yup.object({
-                            //paso 1 USA
-                            nombre_1_US: Yup.string()
+                            //PASO 1
+                            //Personal Information
+                            nombre_1: Yup.string()
                             .required(required),
-                            lastName_1_US: Yup.string()
+                            last_1: Yup.string()
                             .required(required),
-                            email_1_US: Yup.string()
-                            .email(invalidEmail)
+                            ssn_1: Yup.string()
                             .required(required),
-                            phone_number_1_US: Yup.string()
+                            email_1: Yup.string()
+                            .required(required)
+                            .email(invalidEmail),
+                            phone_1: Yup.string()
                             .required(required),
-                            home_number_1_US: Yup.string(),
-                            address_1_US: Yup.string()
-                            .required(required),
-                            city_1_US: Yup.string()
-                            .required(required),
-                            state_1_US: Yup.string()
-                            .required(required),
-                            zip_1_US: Yup.string()
-                            .required(required),
-                            position_1_US: Yup.string()
-                            .required(required),
-                            recruitment_1_US: Yup.string()
-                            .required(required),
-                            recruitmentDesc_1_US: Yup.string()
-                            .required(required),
-                            job_board_1_USA: Yup.string()
-                            .required(required),
-                            social_media_1_USA: Yup.string()
-                            .required(required),
-                            referred_1_USA: Yup.string()
-                            .required(required),
-                            other_1_USA: Yup.string()
-                            .required(required),
-                            Is18_1_US: Yup.string()
-                            .required(required),
+                            alt_phone_1: Yup.string(),
 
-                            salary_1_US: Yup.string()
+                            //Mailing Address
+                            street_1: Yup.string()
+                            .required(required),
+                            city_1: Yup.string()
+                            .required(required),
+                            state_1: Yup.string()
+                            .required(required),
+                            zipcode_1: Yup.string()
                             .required(required),
                             
-                            legally_1_US: Yup.string()
+                            //Emergency Contact
+                            emer_name_1: Yup.string()
+                            .required(required),
+                            emer_phone_1: Yup.string()
+                            .required(required),
+                            id_1: Yup.string()
+                            .required(required),
+                            id_state_1: Yup.string()
+                            .required(required),
+                            id_exp_date_1: Yup.date()
                             .required(required),
                             
-                            //paso 3
-                            languageUno_3_US: Yup.string()
+                            //Position
+                            referred_by_1: Yup.string()
                             .required(required),
-                            languageDos_3_US: Yup.string()
+                            desired_position: Yup.string()
                             .required(required),
-                            languageTres_3_US: Yup.string()
+                            date_available_1: Yup.string()
                             .required(required),
-                            languageCuatro_3_US: Yup.string()
-                            .required(required),
-                            languageCinco_3_US: Yup.string()
+                            willing_work_1: Yup.string()
                             .required(required),
                             
-                            levelComputer_3_US: Yup.string()
-                            .required(required),
-                            familiarPrograms_3_US: Yup.string()
-                            .required(required),
-                            workExperience_3_US: Yup.string()
+                            //Restrictions
+                            list_any_1: Yup.string()
                             .required(required),
 
-                            nombreEmpresa_3_US: Yup.string()
+                            //Important
+                            misdemeanor_1: Yup.string()
                             .required(required),
-                            giroEmpresa_3_US: Yup.string()
+                            misdemeanor_detail_1: Yup.string()
                             .required(required),
-                            puestoDesempeñado_3_US: Yup.string()
+                            adjudication_1: Yup.string()
                             .required(required),
-                            fechaIngreso_3_US: Yup.string()
-                            .required(required),
-                            fechaSalida_3_US: Yup.string()
-                            .required(required),
-                            activities_3_US: Yup.string()
+                            adjudication_detail_1: Yup.string()
                             .required(required),
 
-                            nombreEmpresaOpcional_3_US:Yup.string(),
-                            giroEmpresaOpcional_3_US: Yup.string(),
-                            puestoDesempeñadoOpcional_3_US: Yup.string(),
-                            fechaIngresoOpcional_3_US: Yup.string(),
-                            fechaSalidaOpcional_3_US: Yup.string(),
-                            activitiesOpcional_3_US: Yup.string(),
+                            //PASO 2
 
-                            nombreRelacionUno_4_US: Yup.string()
+                            diploma_2: Yup.string()
                             .required(required),
-                            telefonoRelacionUno_4_US: Yup.string()
-                            .required(required),
-                            ocupacionRelacionUno_4_US: Yup.string()
+                            level_2: Yup.string()
                             .required(required),
 
-                            nombreRelacionDos_4_US: Yup.string()
+                            //School
+                            type_school_uno_2: Yup.string()
                             .required(required),
-                            telefonoRelacionDos_4_US: Yup.string()
+                            school_name_uno_2: Yup.string()
                             .required(required),
-                            ocupacionRelacionDos_4_US: Yup.string()
+                            location_uno_2: Yup.string()
+                            .required(required),
+                            graduated_uno_2: Yup.string()
+                            .required(required),
+                            certificate_uno_2: Yup.string()
+                            .required(required),
+                            schedule_uno_2: Yup.string()
+                            .required(required),
+
+                            type_school_dos_2: Yup.string()
+                            .required(required),
+                            school_name_dos_2: Yup.string()
+                            .required(required),
+                            location_dos_2: Yup.string()
+                            .required(required),
+                            graduated_dos_2: Yup.string()
+                            .required(required),
+                            certificate_dos_2: Yup.string()
+                            .required(required),
+                            schedule_dos_2: Yup.string()
+                            .required(required),
+
+                            type_school_tres_2: Yup.string()
+                            .required(required),
+                            school_name_tres_2: Yup.string()
+                            .required(required),
+                            location_tres_2: Yup.string()
+                            .required(required),
+                            graduated_tres_2: Yup.string()
+                            .required(required),
+                            certificate_tres_2: Yup.string()
+                            .required(required),
+                            schedule_tres_2: Yup.string()
+                            .required(required),
+                            
+                            type_school_cuatro_2: Yup.string()
+                            .required(required),
+                            school_name_cuatro_2: Yup.string()
+                            .required(required),
+                            location_cuatro_2: Yup.string()
+                            .required(required),
+                            graduated_cuatro_2: Yup.string()
+                            .required(required),
+                            certificate_cuatro_2: Yup.string()
+                            .required(required),
+                            schedule_cuatro_2: Yup.string()
+                            .required(required),
+                            
+                            type_school_cinco_2: Yup.string()
+                            .required(required),
+                            school_name_cinco_2: Yup.string()
+                            .required(required),
+                            location_cinco_2: Yup.string()
+                            .required(required),
+                            graduated_cinco_2: Yup.string()
+                            .required(required),
+                            certificate_cinco_2: Yup.string()
+                            .required(required),
+                            schedule_cinco_2: Yup.string()
+                            .required(required),
+                            
+                            //Qualifications
+                            qualifications_2: Yup.string()
+                            .required(required),
+                            
+                            //Scores
+                            english_proficiency_2: Yup.string()
+                            .required(required),
+                            spanish_proficiency_2: Yup.string()
+                            .required(required),
+                            
+                            //PASO 3
+                            
+                            //Experience
+                            any_experience_3: Yup.string()
+                            .required(required),
+
+                            //Work Experience
+                            
+                            company_uno_3: Yup.string()
+                            .required(required),
+                            address_uno_3: Yup.string()
+                            .required(required),
+                            phone_uno_3: Yup.string()
+                            .required(required),
+                            supervisor_uno_3: Yup.string()
+                            .required(required),
+                            position_uno_3: Yup.string()
+                            .required(required),
+                            average_uno_3: Yup.string()
+                            .required(required),
+                            starting_uno_3: Yup.string()
+                            .required(required),
+                            ending_uno_3: Yup.string()
+                            .required(required),
+                            reason_uno_3: Yup.string()
+                            .required(required),
+                            summary_uno_3: Yup.string()
+                            .required(required),
+
+                            company_dos_3: Yup.string()
+                            .required(required),
+                            address_dos_3: Yup.string()
+                            .required(required),
+                            phone_dos_3: Yup.string()
+                            .required(required),
+                            supervisor_dos_3: Yup.string()
+                            .required(required),
+                            position_dos_3: Yup.string()
+                            .required(required),
+                            average_dos_3: Yup.string()
+                            .required(required),
+                            starting_dos_3: Yup.string()
+                            .required(required),
+                            ending_dos_3: Yup.string()
+                            .required(required),
+                            reason_dos_3: Yup.string()
+                            .required(required),
+                            summary_dos_3: Yup.string()
+                            .required(required),
+
+                            company_tres_3: Yup.string()
+                            .required(required),
+                            address_tres_3: Yup.string()
+                            .required(required),
+                            phone_tres_3: Yup.string()
+                            .required(required),
+                            supervisor_tres_3: Yup.string()
+                            .required(required),
+                            position_tres_3: Yup.string()
+                            .required(required),
+                            average_tres_3: Yup.string()
+                            .required(required),
+                            starting_tres_3: Yup.string()
+                            .required(required),
+                            ending_tres_3: Yup.string()
+                            .required(required),
+                            reason_tres_3: Yup.string()
+                            .required(required),
+                            summary_tres_3: Yup.string()
+                            .required(required),
+
+                            company_cuatro_3: Yup.string()
+                            .required(required),
+                            address_cuatro_3: Yup.string()
+                            .required(required),
+                            phone_cuatro_3: Yup.string()
+                            .required(required),
+                            supervisor_cuatro_3: Yup.string()
+                            .required(required),
+                            position_cuatro_3: Yup.string()
+                            .required(required),
+                            average_cuatro_3: Yup.string()
+                            .required(required),
+                            starting_cuatro_3: Yup.string()
+                            .required(required),
+                            ending_cuatro_3: Yup.string()
+                            .required(required),
+                            reason_cuatro_3: Yup.string()
+                            .required(required),
+                            summary_cuatro_3: Yup.string()
+                            .required(required),
+
+                            company_cinco_3: Yup.string()
+                            .required(required),
+                            address_cinco_3: Yup.string()
+                            .required(required),
+                            phone_cinco_3: Yup.string()
+                            .required(required),
+                            supervisor_cinco_3: Yup.string()
+                            .required(required),
+                            position_cinco_3: Yup.string()
+                            .required(required),
+                            average_cinco_3: Yup.string()
+                            .required(required),
+                            starting_cinco_3: Yup.string()
+                            .required(required),
+                            ending_cinco_3: Yup.string()
+                            .required(required),
+                            reason_cinco_3: Yup.string()
+                            .required(required),
+                            summary_cinco_3: Yup.string()
                             .required(required),
                         })}
                     >
