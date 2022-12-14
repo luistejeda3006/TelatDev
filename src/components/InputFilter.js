@@ -25,7 +25,7 @@ export default ({handleInputChange = () => {}, handleFilterChange = () => {}, va
                 />
             </View>
             <TouchableOpacity onPress={() => value === '' ? handleFilterChange() : handleClean()}>
-                <View style={[{width: 50, height: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 35, paddingRight: 2}]}>
+                <View style={[{width: 50, height: 45, justifyContent: 'center', alignItems: 'center', borderRadius: 35, paddingRight: 2}]}>
                     {
                         value === ''
                         ?
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     box:{
         justifyContent: 'center',
         alignItems: 'center',
-        height: 50,
+        height: 45,
         flexDirection: 'row',
         borderColor: '#dadada',
         borderWidth: 1,

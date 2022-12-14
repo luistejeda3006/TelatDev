@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     box:{
         justifyContent: 'flex-start',
         alignItems: 'center',
-        height: 50,
+        height: 45,
         flexDirection: 'row',
         borderColor: '#CBCBCB',
         borderWidth: 1,

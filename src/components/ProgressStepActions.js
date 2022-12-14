@@ -7,7 +7,7 @@ import {Blue} from '../colors/colorsApp'
 
 import tw from 'twrnc'
 
-export default ({language = '1', handleNext = () => {}}) => {
+export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
     const dispatch = useDispatch()
     const error = useSelector(selectError)
     const step = useSelector(selectStep)
@@ -26,14 +26,14 @@ export default ({language = '1', handleNext = () => {}}) => {
             {
                 !error
                 ?
-                    <TouchableOpacity style={tw`w-auto h-auto bg-[${Blue}] justify-center items-center rounded-2xl pl-3 pr-1 py-2 flex-row`} onPress={() => handleNexts()}>
-                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? 'Siguiente' : 'Next'}</Text>
-                        <IonIcons name={'chevron-right'} size={25} color='#fff' />
+                    <TouchableOpacity style={tw`w-auto h-auto bg-[${Blue}] justify-center items-center rounded-2xl px-3.5 pr-1.5 py-1.5 flex-row`} onPress={() => handleNext()}>
+                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5 mr-1`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
+                        <IonIcons name={!finalStep ? 'chevron-right' : 'check'} size={18} color='#fff' />
                     </TouchableOpacity>
                 :
-                    <View style={tw`w-auto h-auto bg-[#dadada] justify-center items-center rounded-2xl pl-3 pr-1 py-2 flex-row`}>
-                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? 'Siguiente' : 'Next'}</Text>
-                        <IonIcons name={'chevron-right'} size={25} color='#fff' />
+                    <View style={tw`w-auto h-auto bg-[#dadada] justify-center items-center rounded-2xl px-3.5 pr-1.5 py-1.5 flex-row`}>
+                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5 mr-1`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
+                        <IonIcons name={!finalStep ? 'chevron-right' : 'check'} size={18} color='#fff' />
                     </View>
             }
         </View>

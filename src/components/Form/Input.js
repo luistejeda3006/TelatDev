@@ -29,7 +29,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                     />
                 :
                     <>
-                        <View style={{backgroundColor: '#F7F7F7', width: 50, height: 40, paddingLeft: 3, justifyContent: 'center', alignItems: 'center', borderColor: '#f1f1f1', borderWidth: 1}}>
+                        <View style={{backgroundColor: '#F7F7F7', width: 50, height: 45, paddingLeft: 3, justifyContent: 'center', alignItems: 'center', borderColor: '#f1f1f1', borderWidth: 1}}>
                             <Icon name={icon} size={20} color='black' />
                         </View>
                         <TextInput
@@ -51,7 +51,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                 &&
                     meta.error &&
                     <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                        <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
+                        <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                     </View>
             }
         </View>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     input:{
         flex: 1,
-        height: 40,
+        height: 45,
         color: '#000',
         paddingLeft: 8
     }

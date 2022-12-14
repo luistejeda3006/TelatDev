@@ -39,7 +39,7 @@ export default forwardRef(({fieldName, required = false, edit = true, value ,...
                     meta.error
                     &&
                         <View style={{height: '100%', width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                            <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
+                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                         </View>
                 }
             </View>

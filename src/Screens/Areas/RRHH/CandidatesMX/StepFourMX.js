@@ -206,7 +206,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                     ?
                         <>
                             <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
-                            <View style={styles.container}>
+                            <View style={[styles.container, {marginTop: 5}]}>
                                 <View style={styles.header}>
                                     <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
                                 </View>
@@ -218,7 +218,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
                                     <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'}ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'}ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
+                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'}ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
                                 </View>
                             </View>
                             <View style={[styles.container, {marginBottom: 15}]}>
@@ -233,10 +233,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
                                     <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos}/>
+                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos}/>
                                 </View>
                             </View>
-                            <ProgressStepActions handleNext={handleValues} language={language}/>
+                            <ProgressStepActions handleNext={handleValues} language={language} finalStep={true}/>
                         </>
                     :
                         <>
@@ -263,7 +263,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'} ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'} ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
                                         </View>
                                     </View>
                                 </View>
@@ -290,12 +290,12 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos} />
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos} />
                                         </View>
                                     </View>
                                 </View>
                             </View>
-                            <ProgressStepActions handleNext={handleValues} language={language}/>
+                            <ProgressStepActions handleNext={handleValues} language={language} finalStep={true}/>
                         </>
                 }
             </View>

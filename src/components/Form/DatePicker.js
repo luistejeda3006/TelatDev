@@ -28,18 +28,18 @@ export default ({fieldName, language = '1', shortFormat = true, isModule = false
         setDateLabel(formated)
         setDate(date)
     }
-    console.log('value: ', field.value)
+
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', alignSelf: 'stretch'}}>
             <TouchableOpacity style={[styles.picker, {justifyContent: shortFormat ? 'flex-start' : 'center'}]} onPress={() => setOpen(true)}>
                 <View style={{flex: 1}}>
-                    <Text style={{color: '#000', fontSize: 15}}>{dateLabel ? dateLabel : 'No seleccionada'}</Text>
+                    <Text style={{color: '#000', fontSize: 15}}>{dateLabel ? dateLabel : language === '1' ? 'No seleccionada' : 'Not selected'}</Text>
                 </View>
                 {
                     ((field.value === '' || field.value === undefined && required) || (dateLabel === '' && required))
                     &&
-                        <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                            <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
+                        <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                         </View>
                 }
             </TouchableOpacity>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         borderColor: '#CBCBCB',
         borderWidth: 1,
         marginBottom: 10,
-        height: 40,
+        height: 45,
         alignSelf: 'stretch',
         flex: 1,
         flexDirection: 'row',

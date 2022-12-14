@@ -1,7 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'react-native';
 import {InputForm, Picker, Calendar, TitleForms, DatePicker, ProgressStepActions, MultiTextForm} from '../../../../components';
-import tw from 'twrnc'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
 import {useOrientation} from '../../../../hooks';
@@ -9,24 +8,12 @@ import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Blue} from '../../../../colors/colorsApp';
-import { isIphone } from '../../../../access/requestedData';
-
-let inicial = null;
-let terminal = null;
-let inicialOpcional = null;
-let terminalOpcional = null;
-let languagesCompleted = 0;
+import {isIphone} from '../../../../access/requestedData';
+import tw from 'twrnc'
 
 export default ({navigation, language, orientation, ...rest}) => {
     const {isTablet} = DeviceInfo;
     const {submitForm, values} = useFormikContext();
-
-    const input_nombre_empresa = useRef()
-    const input_giro = useRef()
-    const input_puesto = useRef()
-    const input_nombre_empresa_opcional = useRef()
-    const input_giro_opcional = useRef()
-    const input_puesto_opcional = useRef()
 
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
@@ -61,42 +48,42 @@ export default ({navigation, language, orientation, ...rest}) => {
     const [schools, setSchools] = useState([
         {
             id: 2,
-            type: 'type_school_dos_2',
-            school: 'school_name_uno_2',
-            location: 'location_uno_2',
-            graduated: 'graduated_uno_2',
-            certificate: 'certificate_uno_2',
-            schedule: 'schedule_uno_2',
+            curr_nivel_estudio: 'type_school_dos_2',
+            curr_institucion: 'school_name_uno_2',
+            curr_ubicacion: 'location_uno_2',
+            curr_certificado: 'certificate_uno_2',
+            curr_titulo: 'graduated_uno_2',
+            curr_horario: 'schedule_uno_2',
             visible: false,
         },
         {
             id: 3,
-            type: 'type_school_tres_2',
-            school: 'school_name_tres_2',
-            location: 'location_tres_2',
-            graduated: 'graduated_tres_2',
-            certificate: 'certificate_tres_2',
-            schedule: 'schedule_tres_2',
+            curr_nivel_estudio: 'type_school_tres_2',
+            curr_institucion: 'school_name_tres_2',
+            curr_ubicacion: 'location_tres_2',
+            curr_certificado: 'certificate_tres_2',
+            curr_titulo: 'graduated_tres_2',
+            curr_horario: 'schedule_tres_2',
             visible: false,
         },
         {
             id: 4,
-            type: 'type_school_cuatro_2',
-            school: 'school_name_cuatro_2',
-            location: 'location_cuatro_2',
-            graduated: 'graduated_cuatro_2',
-            certificate: 'certificate_cuatro_2',
-            schedule: 'schedule_cuatro_2',
+            curr_nivel_estudio: 'type_school_cuatro_2',
+            curr_institucion: 'school_name_cuatro_2',
+            curr_ubicacion: 'location_cuatro_2',
+            curr_certificado: 'certificate_cuatro_2',
+            curr_titulo: 'graduated_cuatro_2',
+            curr_horario: 'schedule_cuatro_2',
             visible: false,
         },
         {
             id: 5,
-            type: 'type_school_cinco_2',
-            school: 'school_name_cinco_2',
-            location: 'location_cinco_2',
-            graduated: 'graduated_cinco_2',
-            certificate: 'certificate_cinco_2',
-            schedule: 'schedule_cinco_2',
+            curr_nivel_estudio: 'type_school_cinco_2',
+            curr_institucion: 'school_name_cinco_2',
+            curr_ubicacion: 'location_cinco_2',
+            curr_certificado: 'certificate_cinco_2',
+            curr_titulo: 'graduated_cinco_2',
+            curr_horario: 'schedule_cinco_2',
             visible: false,
         },
     ])
@@ -219,7 +206,6 @@ export default ({navigation, language, orientation, ...rest}) => {
         )
     }
 
-
     const handleAction_uno = (index) => {
         if(index === 1) setFilters({...filters, pEmpleo: true})
         else setFilters({...filters, pEmpleo: false})
@@ -272,8 +258,9 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     const Item = () => {
         return(
-            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 28, width: 28, backgroundColor: 'rgba(50,131,197,.1)', borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? 1 : 0}}>
-                <IonIcons name={'plus'} size={20} color={Blue} />
+            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 35, width: 'auto', flexDirection: 'row', backgroundColor: Blue, borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center', paddingLeft: 6, paddingRight: 10}}>
+                <IonIcons name={'plus'} size={20} color={'#fff'} />
+                <Text style={tw`text-[#fff] font-bold text-sm ml-1`}>Add Experience</Text>
             </TouchableOpacity>
         )
     }
@@ -307,7 +294,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     fieldName={'level_2'}
                                 />
 
-                                <TitleForms type={'title'} title={'School'} Item={Item}/>
+                                <TitleForms type={'title'} title={'Schools'} Item={Item}/>
                                 <TitleForms type={'subtitle'} title={'Type Of School'} />
                                 <Picker 
                                     fieldName={'type_school_uno_2'}
@@ -347,48 +334,48 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         x.visible
                                         &&
                                             <>
-                                                <View style={{flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20}} key={x.id}>
+                                                <View style={{flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20, marginBottom: 4}} key={x.id}>
                                                     <View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                                        <Text style={tw`text-base text-[${Blue}] font-bold`}>{`Option(${x.id})`}</Text>
+                                                        <Text style={tw`text-base text-[${Blue}] font-bold`}>{`School (Optional)`}</Text>
                                                     </View>
-                                                    <View style={{width: 'auto', height: 40, justifyContent: 'center', alignItems: 'flex-end', borderTopEndRadius: 20, borderBottomEndRadius: 20}}>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{height: 28, width: 28, backgroundColor: 'rgba(219,62,47,.1)', borderRadius: 25, borderWidth: 1, borderColor: '#DB3E2F', justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? 1 : 0}}>
-                                                            <IonIcons name={'close'} size={18} color={'#DB3E2F'} />
+                                                    <View style={{width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'flex-end', borderTopEndRadius: 20, borderBottomEndRadius: 20,}}>
+                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{height: 32, width: 32, backgroundColor: 'rgba(219,62,47,.1)', borderRadius: 25, borderWidth: 1, borderColor: '#DB3E2F', justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? 1 : 0}}>
+                                                            <IonIcons name={'trash-can'} size={22} color={'#DB3E2F'} />
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
                                                 <TitleForms type={'subtitle'} title={'Type Of School'} />
                                                 <Picker 
-                                                    fieldName={x.type}
+                                                    fieldName={x.curr_nivel_estudio}
                                                     items={schoolOptions}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'School Name'} />
                                                 <InputForm
                                                     status={true}
-                                                    fieldName={x.school}
+                                                    fieldName={x.curr_institucion}
                                                     placeholder={'SCHOOL NAME'}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Location'} />
                                                 <InputForm
                                                     status={true}
-                                                    fieldName={x.location}
+                                                    fieldName={x.curr_ubicacion}
                                                     placeholder={'LOCATION'}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Graduated'} />
                                                 <Picker 
-                                                    fieldName={x.graduated}
+                                                    fieldName={x.curr_titulo}
                                                     items={closeOptions}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
                                                 <InputForm
                                                     status={true}
-                                                    fieldName={x.certificate}
+                                                    fieldName={x.curr_certificado}
                                                     placeholder={'TYPE OF DEGREE OR CERTIFICA'}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
                                                 <InputForm
                                                     status={true}
-                                                    fieldName={x.schedule}
+                                                    fieldName={x.curr_horario}
                                                     placeholder={'SCHEDULE'}
                                                 />
                                             </>

@@ -383,7 +383,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
                                                 <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
                                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                <InputForm keyboardType='numeric' maxLength={4} status={true} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={4} status={true} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                             </>
                                         :
                                             studyGrade === 4
@@ -399,7 +399,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
                                                     <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                 </>
                                             :
                                                 <>
@@ -408,7 +408,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Institución dónde estudiaste' : 'Where did you study? (Institution’s name)'} />
                                                     <InputForm status={true} placeholder={language === '1' ? 'Específica el nombre de la institución' : 'Especify where did you study? (Institution’s name)'} fieldName={'institucion_3'} ref={input_institucion} onSubmitEditing={() => input_año.current.focus()}/>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                 </>
                                     :
                                         <></>
@@ -485,9 +485,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
                                             <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñado_3'} ref={input_puesto} onSubmitEditing={() => input_salario_inicial.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
 
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
                                             <DatePicker fieldName={'fechaIngreso_3'} label={fechaIngreso_3 ? `${fechaIngreso_3.substring(8,10)}-${fechaIngreso_3.substring(5,7)}-${fechaIngreso_3.substring(0,4)}` : ''} language={language} required={true}/>
@@ -499,7 +499,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
                                             <InputForm status={true} placeholder={language === '1' ? 'Nombre completo jefe directo' : 'Full name direct manager'} fieldName={'jefeDirecto_3'} ref={input_jefe_directo} onSubmitEditing={() => input_telefono_contacto.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                            <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                            <InputForm maxLength={10} keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
                                             <Picker 
                                                 fieldName={'contactar_3'}
@@ -526,9 +526,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Puesto' : 'Position'} />
                                             <InputForm status={true} placeholder={language === '1' ? 'Puesto' : 'Position'} fieldName={'puestoDesempeñadoOpcional_3'} ref={input_puesto_opcional} onSubmitEditing={() => input_salario_inicial_opcional.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de ingreso' : 'Starting date'} />
                                             <DatePicker fieldName={'fechaIngresoOpcional_3'} label={fechaIngresoOpcional_3 ? `${fechaIngresoOpcional_3.substring(8,10)}-${fechaIngresoOpcional_3.substring(5,7)}-${fechaIngresoOpcional_3.substring(0,4)}` : ''} language={language} />
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de Salida' : 'End date'} />
@@ -538,7 +538,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Jefe directo' : 'Direct manager'} />
                                             <InputForm status={true} placeholder={language === '1' ? 'Jefe directo' : 'Full name direct manager'} fieldName={'jefeDirectoOpcional_3'} ref={input_jefe_directo_opcional} onSubmitEditing={() => input_telefono_contacto_opcional.current.focus()}/>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                            <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
                                             <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
                                             <Picker 
                                                 fieldName={'contactarOpcional_3'}
@@ -605,7 +605,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                 </View>
                                             </View>
                                         :
@@ -632,7 +632,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                         </View>
                                                     </View>
                                                 </>
@@ -651,7 +651,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                         </View>
                                                     </View>
                                                 </>
@@ -781,12 +781,12 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
                                                 </View>
 
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
                                                 </View>
                                             </View>
 
@@ -815,7 +815,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                                    <InputForm maxLength={10} keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
                                                 </View>
                                             </View>
 
@@ -868,11 +868,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
                                                 </View>
                                             </View>
 
@@ -901,7 +901,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>
                                                 </View>
                                             </View>
                                             
@@ -991,7 +991,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                 </View>
                                             </View>
                                         :
@@ -1009,7 +1009,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1, marginRight: '3%'}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                         </View>
                                                     </View>
                                                 </>
@@ -1026,7 +1026,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                         </View>
                                                     </View>
                                                 </>
@@ -1144,11 +1144,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
                                                 </View>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
                                                 </View>
                                             </View>
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1174,7 +1174,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto} />
+                                                    <InputForm maxLength={10} keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto} />
                                                 </View>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
@@ -1218,11 +1218,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
                                                 </View>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional}/>
                                                 </View>
                                             </View>
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1248,7 +1248,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>     
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional}/>     
                                                 </View>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? '¿Podemos contactarlo?' : 'Can we contact them?'} />
@@ -1323,7 +1323,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                    <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año} />
                                                 </View>
                                             </View>
                                         :
@@ -1351,7 +1351,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                         </View>
                                                     </View>
                                                 </>
@@ -1370,7 +1370,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                         </View>
                                                         <View style={{flex: 1}}>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Graduado(a)(año)' : 'Year of graduation'} />
-                                                            <InputForm keyboardType='numeric' status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
+                                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} maxLength={4} placeholder={'(e. g. 2011)'} fieldName={'añoGraduacion_3'} ref={input_año}/>
                                                         </View>
                                                     </View>
                                                 </>
@@ -1500,12 +1500,12 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicial_3'} ref={input_salario_inicial} onSubmitEditing={() => input_salario_final.current.focus()}/>
                                                 </View>
 
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinal_3'} ref={input_salario_final}/>
                                                 </View>
                                             </View>
 
@@ -1534,7 +1534,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm maxLength={10} keyboardType='numeric' status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
+                                                    <InputForm maxLength={10} keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder={language === '1' ? 'Teléfono de Contacto' : 'Contact Phone Number'} fieldName={'jefeDirectoTelefono_3'} ref={input_telefono_contacto}/>
                                                 </View>
                                             </View>
 
@@ -1587,11 +1587,11 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo inicial' : 'Starting salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioInicialOpcional_3'} ref={input_salario_inicial_opcional} onSubmitEditing={() => input_salario_final_opcional.current.focus()}/>
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Sueldo final' : 'Final salary'} />
-                                                    <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salarioFinalOpcional_3'} ref={input_salario_final_opcional} />
                                                 </View>
                                             </View>
 
@@ -1620,7 +1620,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 </View>
                                                 <View style={{flex: 1}}>
                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número teléfonico' : 'Phone number'} />
-                                                    <InputForm keyboardType='numeric' maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
+                                                    <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número teléfonico' : 'Phone number'}  fieldName={'jefeDirectoTelefonoOpcional_3'} ref={input_telefono_contacto_opcional} />
                                                 </View>
                                             </View>
                                             

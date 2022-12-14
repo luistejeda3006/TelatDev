@@ -5,7 +5,7 @@ export default ({title, type = 'title', Item = undefined}) => {
     return (
         type === 'title'
         ?
-            <View style={{alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', height: 50, flexDirection: 'row'}}>
+            <View style={{alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', height: 'auto', paddingVertical: 10, flexDirection: 'row'}}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
                     <Text style={[styles.title,{color: '#383838'}]}>{title}</Text>
                 </View>

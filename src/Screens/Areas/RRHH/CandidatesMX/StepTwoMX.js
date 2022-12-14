@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Alert, Text, BackHandler} from 'react-native';
 import {InputForm, Picker, DatePicker, TitleForms, ProgressStepActions} from '../../../../components';
 import {KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {useFormikContext} from "formik";
+import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
@@ -210,7 +210,7 @@ export default ({navigation, language, orientation, ...rest}) => {
     }
 
     const handleLastPart = async () => {
-        if(email_2.includes("@") && email_2.includes(".")){
+        if(email_2.includes('@') && email_2.includes('.')){
             if(numeroPersonal_2.length === 10){
                 
                 let tipo = '';
@@ -418,7 +418,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                 language === '1' ? 'Campos Vacíos' : 'Empty Fields',
                 language === '1' ? 'Revise y llene los campos faltantes' : 'Review and fill in the missing fields',
                 [
-                    { text: "OK"}
+                    { text: 'OK'}
                 ]
             )
         )
@@ -492,7 +492,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     placeholder={language === '1' ? 'Puesto que solicitas' : 'Position you are applying for'}
                                 />
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
                                 {/* <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
                                 <Picker 
                                     fieldName={'experiencia_2'}
@@ -630,7 +630,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     ?
                                                         <>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
                                                             <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de expiración del documento' : 'Expiration date of the document'} />
@@ -639,7 +639,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     :
                                                         <>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                            <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
                                                             <DatePicker fieldName={'emision_2'} label={emision_2 ? `${emision_2.substring(8,10)}-${emision_2.substring(5,7)}-${emision_2.substring(0,4)}` : ''} language={language} />
                                                         </>
@@ -714,7 +714,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} />
                                 <InputForm status={true} placeholder={language === '1' ? 'Número de casa (interno)' : 'House number (internal)'} fieldName={'numeroInterior_2'} ref={input_numero_interno} onSubmitEditing={() => input_codigo_postal.current.focus()}/>
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
                                 <InputForm status={true} placeholder={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} fieldName={'colonia_2'} ref={input_barrio} onSubmitEditing={() => input_ciudad.current.focus()}/>
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Ciudad (Municipio / Delegación)' : 'City (Municipio / Delegación)'} />
@@ -729,9 +729,9 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
                                 <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
                                 <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
+                                <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_fijo}/>
                                 <ProgressStepActions handleNext={handleValues} language={language}/>
                             </>
                         :
@@ -751,7 +751,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
                                         </View>
                                     </View>
                                     {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -954,7 +954,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
@@ -973,7 +973,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Especifica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
@@ -1067,7 +1067,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                            <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                            <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
                                         </View>
                                     </View>
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1100,17 +1100,17 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                            <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                            <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
                                         </View>
                                     </View>
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo}/>
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_fijo}/>
                                         </View>
                                     </View>
                                 </View>
@@ -1135,7 +1135,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                            <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
                                         </View>
                                         {/* <View style={{flex: 1}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Experiencia en el puesto (años)' : 'Previous experience in this role (years)'}/>
@@ -1321,7 +1321,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
@@ -1338,7 +1338,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                        <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                     </View>
                                                                     <View style={{flex: 1, marginRight: '3%'}}>
                                                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
@@ -1441,7 +1441,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                            <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                            <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Barrio (Colonia)' : 'Neighborhood (Colonia)'} />
@@ -1470,15 +1470,15 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                            <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                            <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
                                         </View>
                                         <View style={{flex: 1, marginRight: '3%'}}>
                                             <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
+                                            <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_fijo} />
                                         </View>
                                     </View>
                                     <ProgressStepActions handleNext={handleValues} language={language}/>
@@ -1501,7 +1501,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     </View>
                                     <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Salario pretendido' : 'Expected salary'} />
-                                        <InputForm keyboardType='numeric' status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
+                                        <InputForm keyboardType='number-pad' returnKeyType={'done'} status={true} placeholder='$0.00' fieldName={'salario_2'} ref={input_salario}/>
                                     </View>
                                 </View>
                                 {/* <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1703,7 +1703,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                 </View>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of essue of the document'} />
@@ -1720,7 +1720,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                             <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Número de documento migratorio' : 'Number of migratory document'} />
-                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType="numeric"/>
+                                                                    <InputForm status={true} placeholder={language === '1' ? 'Específica el número de documento migratorio' : 'Especify number of migratory document'} fieldName={'numeroDocumento_2'} maxLength={10} keyboardType='number-pad' returnKeyType={'done'}/>
                                                                 </View>
                                                                 <View style={{flex: 1, marginRight: '3%'}}>
                                                                     <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de emisión del documento' : 'Date of issue of the document'} />
@@ -1813,7 +1813,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     </View>
                                     <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Código postal' : 'Zip code'} />
-                                        <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType="numeric" ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
+                                        <InputForm status={true} maxLength={5} placeholder={language === '1' ? 'Código postal' : 'Zip code'} fieldName={'codigoPostal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_codigo_postal} onSubmitEditing={() => input_barrio.current.focus()}/>
                                     </View>
                                 </View>
                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
@@ -1846,17 +1846,17 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                     <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Correo electrónico' : 'E-mail address'} />
-                                        <InputForm keyboardType="email-address" icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
+                                        <InputForm keyboardType='email-address' icon={'envelope'} status={true} placeholder='example@example.com' fieldName={'email_2'} ref={input_email} onSubmitEditing={() => input_telefono_personal.current.focus()}/>
                                     </View>
                                 </View>
                                 <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
                                     <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono celular' : 'Phone number'} />
-                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType="numeric" ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
+                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroPersonal_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_personal} onSubmitEditing={() => input_telefono_fijo.current.focus()}/>
                                     </View>
                                     <View style={{flex: 1, marginRight: '3%'}}>
                                         <TitleForms type={'subtitle'} title={language === '1' ? 'Teléfono fijo' : 'Landline phone'} />
-                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType="numeric" ref={input_telefono_fijo} />
+                                        <InputForm icon={'phone'} status={true} maxLength={10} placeholder='55-11-22-33-44' fieldName={'numeroFijo_2'} keyboardType='number-pad' returnKeyType={'done'} ref={input_telefono_fijo} />
                                     </View>
                                 </View>
                                 <ProgressStepActions handleNext={handleValues} language={language}/>
@@ -1892,7 +1892,7 @@ const styles = StyleSheet.create({
     box: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        height: 40,
+        height: 45,
         alignSelf: 'stretch',
         flexDirection: 'row',
         backgroundColor: '#f7f7f7',

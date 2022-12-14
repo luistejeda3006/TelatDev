@@ -7,9 +7,9 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
     return(
         !optional
         ?
-            <View style={box}>
+            <View style={styles.box}>
                 <TextInput
-                    style={tw`text-[#000] bg-[${edit ? '#fff' : '#f7f7f7'}] h-12 flex-1`}
+                    style={tw`text-[#000] bg-[${edit ? '#fff' : '#f7f7f7'}] flex-1`}
                     ref={ref}
                     value={value}
                     placeholderTextColor={'#CBCBCB'}
@@ -18,14 +18,14 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
                 {
                     value === ''
                     &&
-                        <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
-                            <Ionicons name='asterisk' color={'red'} size={12}/>
+                        <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                         </View>
                 }
             </View>
         :
             <TextInput
-                style={[box, tw`text-black bg-[${edit ? '#fff' : '#f7f7f7'}]`]}
+                style={[styles.box, tw`text-black bg-[${edit ? '#fff' : '#f7f7f7'}]`]}
                 ref={ref}
                 value={value}
                 placeholderTextColor={'#CBCBCB'}
@@ -35,4 +35,19 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
     )
 })
 
-const box = tw`justify-start items-center h-12.5 flex-row border border-[#CBCBCB] mb-2.5 bg-white px-3 py-2.5 w-[99%]`
+const styles = StyleSheet.create({
+    box: {
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        height: 45,
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: '#cbcbcb',
+        marginBottom: 10,
+        backgroundColor: '#fff',
+        marginBottom: 10,
+        paddingRight: 10,
+        width: '100%',
+        paddingLeft: 8
+    }
+})

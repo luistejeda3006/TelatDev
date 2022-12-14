@@ -114,7 +114,7 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                             //Position
                             referred_by_1: Yup.string()
                             .required(required),
-                            desired_position: Yup.string()
+                            desired_position_1: Yup.string()
                             .required(required),
                             date_available_1: Yup.string()
                             .required(required),
@@ -330,6 +330,9 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                             .required(required),
                             summary_cinco_3: Yup.string()
                             .required(required),
+
+                            temporal: Yup.string()
+                            .required(required)
                         })}
                     >
                         {

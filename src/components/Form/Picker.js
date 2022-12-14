@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Picker from 'react-native-picker-select';
 import {useField} from 'formik';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -50,8 +50,8 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
                 </View>
                 {
                     (field.value === 'SEL' || field.value === undefined) &&
-                    <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                        <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
+                    <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                        <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                     </View>
                 }
             </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         borderColor: '#CBCBCB',
         borderWidth: 1,
         marginBottom: 10,
-        height: 40,
+        height: 45,
         flexDirection: 'row',
         paddingRight: 10,
         paddingLeft: isIphone ? 10 : 0

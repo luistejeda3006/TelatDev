@@ -15,7 +15,8 @@ import tw from 'twrnc'
 
 export default ({navigation, language, ...rest}) => {
     const orientation = useSelector(selectOrientation)
-
+    const [statesData, setStatesData] = useState([])
+    const [hiden, setHiden] = useState(true)
     const dispatch = useDispatch()
     const step = useSelector(selectStep)
     const error = useSelector(selectError)
@@ -49,6 +50,12 @@ export default ({navigation, language, ...rest}) => {
         {label: 'YES', value: '1'},
     ]
 
+    useEffect(() => {
+        if(statesData.length > 0){
+            setHiden(false)
+        }
+    }, [statesData])
+    
     const handleAction_uno = (index) => {
         console.log('index de misdemeanor: ', index)
         setFilters({...filters, misdemeanor: index})
@@ -70,11 +77,7 @@ export default ({navigation, language, ...rest}) => {
     
     const {submitForm, values} = useFormikContext();
     
-    const {
-        id_exp_date_1
-    } = values;
-
-    console.log('id_exp_date_1: ', id_exp_date_1)
+    const {nombre_1, last_1, ssn_1, email_1, phone_1, alt_phone_1, street_1, city_1, state_1, zipcode_1, emer_name_1, emer_phone_1, id_1, id_state_1, id_exp_date_1, referred_by_1, desired_position_1, date_available_1, willing_work_1, list_any_1, misdemeanor_1, misdemeanor_detail_1, adjudication_1, adjudication_detail_1} = values;
 
     const Alerta = () => {
         Alert.alert(
@@ -98,9 +101,146 @@ export default ({navigation, language, ...rest}) => {
         navigation.navigate('Choose')
     }
 
-    const handleValues = async () => {
+    const handleFinal = async () => {
+        let obj_1 = {
+            info_nombre: nombre_1,
+            info_apellido_p: last_1,
+            info_ssn: ssn_1,
+            info_email: email_1,
+            info_telefono_celular: phone_1,
+            info_telefono_fijo: alt_phone_1,
+            info_calle: street_1,
+            info_ciudad: city_1,
+            info_estado: state_1,
+            info_cp: zipcode_1,
+            infom_contacto: emer_name_1,
+            infom_telefono: emer_phone_1,
+            info_curp: id_1,
+            info_doc_state_id: id_state_1,
+            info_doc_expiracion: id_exp_date_1,
+            cand_reclutamiento_desc: referred_by_1,
+            cand_puesto_solicitado: desired_position_1,
+            cand_fecha_disponibilidad: date_available_1,
+            cand_disponibilidad_turno: willing_work_1,
+            cand_list_disponibilidad: list_any_1,
+            info_convicto: misdemeanor_1,
+            info_convicto_details: misdemeanor_detail_1,
+            info_adjudicacion: adjudication_1,
+            info_adjudication_details: adjudication_detail_1
+        }
+
+        
+        console.log('obj_1: ', obj_1)
+
+        try{
+            const body = {
+                'action': 'get_email',
+                'data': {
+                    'email': email_1,
+                    'telefono': phone_1
+                },
+                'login': login,
+                'live': live
+            }
+
+            console.log('body: ', body)
+
+            const request = await fetch(urlJobs, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+    
+            const {response, status} = await request.json();
+            if(status === 200){
+                let key = 'stepOne'
+                let data = await AsyncStorage.getItem(key) || '';
+                if(data) {
+                    await AsyncStorage.removeItem(key).then(() => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
+                }
+                else {
+                    await AsyncStorage.setItem(key, JSON.stringify(obj_1));
+                }
+                dispatch(setStep(step + 1))
+            }
+
+            else if(status === 400) {
+                dispatch(setError(true))
+                Alerta()
+            }
+        }catch(e){
+            console.log('error: ', e)
+            Alert.alert(
+                'Connection Failed',
+                'Please, Verify Internet Connection',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        }
+    }
+
+    const handleValidateAdjudication = () => {
+        if(adjudication_1 === undefined || adjudication_1 === 'SEL'){
+            Alert.alert(
+                'Empty Fields',
+                'Review and fill in the missing fields',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        } else {
+            if(adjudication_1 === '0'){
+                handleFinal()
+            } else {
+                if(adjudication_detail_1 === undefined || adjudication_detail_1 === ''){
+                    Alert.alert(
+                        'Empty Fields',
+                        'Review and fill in the missing fields',
+                        [
+                            { text: 'OK'}
+                        ]
+                    )
+                } else {
+                    handleFinal()
+                }
+            }
+        }
+    }
+
+    const handleValidateMisdemeanor = () => {
+        if(misdemeanor_1 === undefined || misdemeanor_1 === 'SEL'){
+            Alert.alert(
+                'Empty Fields',
+                'Review and fill in the missing fields',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        } else {
+            if(misdemeanor_1 === '0'){
+                handleValidateAdjudication()
+            } else {
+                if(misdemeanor_detail_1 === undefined || misdemeanor_detail_1 === ''){
+                    Alert.alert(
+                        'Empty Fields',
+                        'Review and fill in the missing fields',
+                        [
+                            { text: 'OK'}
+                        ]
+                    )
+                } else {
+                    handleValidateAdjudication()
+                }
+            }
+        }
+    }
+
+    const handleValues = () => {
         let key = 'stepOne'
-        if(address_1_US === undefined || address_1_US === '' || city_1_US === undefined || city_1_US === '' || email_1_US === undefined || email_1_US === '' || lastName_1_US === undefined || lastName_1_US === '' || nombre_1_US === undefined || nombre_1_US === '' || phone_number_1_US === undefined || phone_number_1_US === '' || recruitment_1_US === undefined || recruitment_1_US === '' || recruitmentDesc_1_US === undefined || recruitmentDesc_1_US === '' || state_1_US === undefined || state_1_US === '' || zip_1_US === undefined || zip_1_US === '' || position_1_US === undefined || position_1_US === ''|| Is18_1_US === undefined || Is18_1_US === 'SEL' || legally_1_US === undefined || legally_1_US === 'SEL'){
+        if(nombre_1 === undefined || nombre_1 === '' || last_1 === undefined || last_1 === '' || ssn_1 === undefined || ssn_1 === '' || email_1 === undefined || email_1 === '' || phone_1 === undefined || phone_1 === '' || street_1 === undefined || street_1 === '' || city_1 === undefined || city_1 === '' || state_1 === undefined || state_1 === '' || zipcode_1 === undefined || zipcode_1 === '' || emer_name_1 === undefined || emer_phone_1 === '' || id_1 === undefined || id_1 === '' || id_state_1 === undefined || id_state_1 === '' || id_exp_date_1 === undefined || id_exp_date_1 === '' || referred_by_1 === undefined || referred_by_1 === '' || desired_position_1 === undefined || desired_position_1 === '' || date_available_1 === undefined || date_available_1 === '' || willing_work_1 === undefined || willing_work_1 === '' || list_any_1 === undefined || list_any_1 === ''){
             Alert.alert(
                 'Empty Fields',
                 'Review and fill in the missing fields',
@@ -111,68 +251,7 @@ export default ({navigation, language, ...rest}) => {
         }
         else {
             if(verified) {
-                let obj_1 = {
-                    info_nombre: nombre_1_US,
-                    info_apellido_p: lastName_1_US,
-                    info_email: email_1_US,
-                    info_telefono_fijo: home_number_1_US,
-                    info_telefono_celular: phone_number_1_US,
-                    info_ciudad: city_1_US,
-                    info_estado: state_1_US,
-                    info_calle: address_1_US,
-                    info_cp: zip_1_US,
-                    cand_puesto_solicitado: position_1_US,
-                    cand_medio_reclutamiento: recruitment_1_US,
-                    cand_reclutamiento_desc: recruitmentDesc_1_US,
-                    cand_prueba_edad:Is18_1_US,
-                    cand_legal:legally_1_US
-                }
-
-                try{
-                    const body = {
-                        'action': 'get_email',
-                        'data': {
-                            'email': email_1_US,
-                            /* 'telefono:': phone_number_1_US */
-                        },
-                        'login': login,
-                        'live': live
-                    }
-        
-                    const request = await fetch(urlJobs, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(body)
-                    });
-            
-                    const {response, status} = await request.json();
-                    if(status === 200){
-                        let data = await AsyncStorage.getItem(key) || '';
-                        if(data) {
-                            await AsyncStorage.removeItem(key).then(() => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
-                        }
-                        else {
-                            await AsyncStorage.setItem(key, JSON.stringify(obj_1));
-                        }
-                        dispatch(setStep(step + 1))
-                    }
-
-                    else if(response.status === 400) {
-                        dispatch(setError(true))
-                        Alerta()
-                    }
-                }catch(e){
-                    console.log('error: ', e)
-                    Alert.alert(
-                        'Connection Failed',
-                        'Please, Verify Internet Connection',
-                        [
-                            { text: 'OK'}
-                        ]
-                    )
-                }
+                handleValidateMisdemeanor()
             }
             else {
                 Alert.alert(
@@ -232,6 +311,46 @@ export default ({navigation, language, ...rest}) => {
         if(!politics && !verified) captchaForm.show()
     }
 
+    const getStates = async () => {
+        try{
+            const body = {
+                'action': 'get_estados',
+                'login': login,
+                'live': live
+            }
+    
+            const request = await fetch(urlJobs, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+    
+            const {response, status} = await request.json();
+            if(status === 200){
+                let newArray = response
+                newArray = [first, ...newArray]
+                newArray = [...newArray]
+                setStatesData(newArray)
+            }
+        }catch(e){
+            Alert.alert(
+                language === '1' ? 'Error de Conexión' : 'Connection Failed',
+                language === '1' ? 'Por favor, Verifique su Conexión de Internet' : 'Please, Verify Internet Connection',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        }
+    }
+
+    useEffect(() => {
+        getStates()
+    },[])
+
+    const birthPlaceData = statesData
+
     return (
         <>
             <KeyboardAwareScrollView
@@ -277,6 +396,7 @@ export default ({navigation, language, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={'E-mail Address'} />
                                     <InputForm
                                         status={true}
+                                        keyboardType='email-address'
                                         placeholder={'example@example.com'}
                                         fieldName={'email_1'}
                                         capitalize={false}
@@ -287,6 +407,8 @@ export default ({navigation, language, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={'Phone Number'} />
                                     <InputForm
                                         status={true}
+                                        keyboardType='number-pad' 
+                                        returnKeyType={'done'}
                                         placeholder={'PHONE NUMBER'}
                                         fieldName={'phone_1'}
                                         ref={input_phone}
@@ -296,6 +418,8 @@ export default ({navigation, language, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={'Alternate Phone'} />
                                     <InputForm
                                         status={true}
+                                        keyboardType='number-pad' 
+                                        returnKeyType={'done'}
                                         placeholder={'ALTERNATE NUMBER'}
                                         fieldName={'alt_phone_1'}
                                         ref={input_alt_phone}
@@ -334,8 +458,11 @@ export default ({navigation, language, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={'Zip Code'} />
                                     <InputForm
                                         status={true}
+                                        keyboardType='number-pad' 
+                                        returnKeyType={'done'}
                                         placeholder={'ZIP CODE'}
                                         fieldName={'zipcode_1'}
+                                        maxLength={5}
                                         ref={input_zipcode}
                                         onSubmitEditing={() => input_emer_name.current.focus()}
                                     />
@@ -354,6 +481,8 @@ export default ({navigation, language, ...rest}) => {
                                     <TitleForms type={'subtitle'} title={'Phone'} />
                                     <InputForm
                                         status={true}
+                                        keyboardType='number-pad' 
+                                        returnKeyType={'done'}
                                         placeholder={'EMERGENCY PHONE NUMBER'}
                                         fieldName={'emer_phone_1'}
                                         ref={input_emer_phone}
@@ -380,10 +509,9 @@ export default ({navigation, language, ...rest}) => {
                                     />
 
                                     <TitleForms type={'subtitle'} title={'ID Expiration Date'} />
-                                    <DatePicker fieldName={'id_exp_date_1'} language={language} required={true}/>
+                                    <DatePicker fieldName={'id_exp_date_1'} language={'2'} required={true}/>
 
                                     <TitleForms type={'title'} title={'Position'}/>
-
                                     <TitleForms type={'subtitle'} title={'Referred by? Or how did you hear about DataXport/Telat Project?'} />
                                     <InputForm
                                         status={true}
@@ -402,10 +530,10 @@ export default ({navigation, language, ...rest}) => {
                                     />
 
                                     <TitleForms type={'subtitle'} title={'Date Available to Start'} />
-                                    <DatePicker fieldName={'date_available_1'} language={language} required={true}/>
+                                    <DatePicker fieldName={'date_available_1'} language={'2'} required={true}/>
 
                                     <TitleForms type={'subtitle'} title={'Willing to Work Overtime'} />
-                                    <DatePicker fieldName={'willing_work_1'} language={language} required={true}/>
+                                    <DatePicker fieldName={'willing_work_1'} language={'2'} required={true}/>
 
                                     <TitleForms type={'title'} title={'Restrictions'}/>
                                     
@@ -444,7 +572,7 @@ export default ({navigation, language, ...rest}) => {
                                                 <View style={tw`h-3 self-stretch`}/>
                                             </>
                                     }
-                                    <TitleForms type={'subtitle'} title={'How did you hear about this position?'} />
+                                    <TitleForms type={'subtitle'} title={'Have you ever been subjected to a deferred adjudication (sentenced to probation) of any charge'} />
                                     <Picker
                                         fieldName={'adjudication_1'}
                                         items={closeOptions}
@@ -468,8 +596,16 @@ export default ({navigation, language, ...rest}) => {
                                             </>
                                     }
 
+                                    {
+                                        hiden
+                                        &&
+                                            <Picker 
+                                                fieldName={'temporal'}
+                                                items={birthPlaceData}
+                                            />
+                                    }
                                     <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
-                                    <ProgressStepActions handleNext={() => handleValues()} language={language}/>
+                                    <ProgressStepActions handleNext={() => handleValues()} language={'2'}/>
                                 </>
                             :
                                 <>

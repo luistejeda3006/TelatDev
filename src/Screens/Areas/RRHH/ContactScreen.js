@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect, useCallback} from 'react'
-import {View, Text, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, StatusBar} from 'react-native'
+import {View, Text, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, StatusBar} from 'react-native'
 import {useConnection, useOrientation, useNavigation, useForm, useScroll} from '../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,13 +8,11 @@ import {request, PERMISSIONS} from 'react-native-permissions';
 import {HeaderPortrait, Input, Modal, MultiText, ModalLoading, FailedNetwork, Title} from '../../../components'
 import Picker from 'react-native-picker-select';
 import {isIphone, live, login, urlJobs} from '../../../access/requestedData';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import * as Animatable from 'react-native-animatable';
 import RNFetchBlob from 'rn-fetch-blob'
 import tw from 'twrnc'
 import { useFocusEffect } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 let cuenta = 0;
 
@@ -584,14 +582,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                     <View style={tw`mt-[1.5%]`}/>
                                     <Title title={language === '1' ? 'Información Básica' : 'Basic Information'} tipo={1} icon={'child'} hasBottom={false}/>
                                     <Text style={titleStyle}>{language === '1' ? 'Ciudad' : 'City'}</Text>
-                                    <View style={[pickerStyle, tw`bg-[#f7f7f7]`]}>
+                                    <View style={[styles.picker, tw`bg-[#f7f7f7]`]}>
                                         <View style={tw`flex-1 justify-center items-start ios:px-1 android:px-4`}>
                                             <Text style={tw`text-[#000] text-base`}>{currentCity}</Text>
                                         </View>
                                     </View>
 
                                     <Text style={titleStyle}>{language === '1' ? '¿Cómo te enteraste de nosotros?' : 'How did you find out about the job?'}</Text>
-                                    <View style={[pickerStyle]} >
+                                    <View style={[styles.picker]} >
                                         <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                             <Picker
                                                 value={currentAboutUs}
@@ -603,8 +601,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         {
                                             currentAboutUsOption === 0
                                             &&
-                                                <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                    <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                    <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                 </View>
                                         }
                                     </View>
@@ -626,7 +624,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         ?
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés conversacional?' : `What's your speaking English level?`}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelEnglish}
@@ -638,14 +636,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentLevelOptionEnglish === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés en escritura?' : `What's your writing English level?`}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelSpanish}
@@ -657,14 +655,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentLevelOptionSpanish === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={programs}
@@ -676,14 +674,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentProgramsOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en empleos bilingües?' : '¿Do you have experience in bilingual jobs?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentClose}
@@ -695,8 +693,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentCloseOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -758,7 +756,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     ref={phone_2}
                                                 />
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cómo prefieres que te contactemos?' : 'How do you prefer to be contacted?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentContact}
@@ -770,13 +768,13 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentContactOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
                                                 <Text style={titleStyle}>{language === '1' ? '¿En qué horario podemos contactarte?' : 'At what time can we reach you?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentSchedule}
@@ -788,8 +786,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentScheduleOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -797,7 +795,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         :
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en Call Center o empleos de Atención a Clientes?' : 'Do you have experience in Call Center or Customer Service jobs?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentClose}
@@ -809,8 +807,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentCloseOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -836,7 +834,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         <View style={tw`h-2.5 self-stretch`} />
                                                 }
                                                 <Text style={titleStyle}>{language === '1' ? 'Nivel de Inglés' : 'English profiency'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelEnglish}
@@ -848,13 +846,13 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentLevelOptionEnglish === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
                                                 <Text style={titleStyle}>{language === '1' ? 'Nivel de Español' : 'Spanish profiency'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelSpanish}
@@ -866,14 +864,14 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentLevelOptionSpanish === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={programs}
@@ -885,8 +883,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentProgramsOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -932,7 +930,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     ref={phone_2}
                                                 />
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cómo prefieres que te contactemos?' : 'How do you prefer to be contacted?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentContact}
@@ -944,13 +942,13 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentContactOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
                                                 <Text style={titleStyle}>{language === '1' ? '¿En qué horario podemos contactarte?' : 'At what time can we reach you?'}</Text>
-                                                <View style={[pickerStyle]} >
+                                                <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentSchedule}
@@ -962,8 +960,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     {
                                                         currentScheduleOption === 0
                                                         &&
-                                                            <View style={tw`h-[100%] w-[${!isIphone ? 12.5 : 7.5}] justify-center items-center rounded-3xl`}>
-                                                                <IonIcons name='asterisk' color={'red'} size={12}/>
+                                                            <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -1070,3 +1068,17 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
 const titleStyle = tw`text-sm text-[${Blue}] mb-1.5`
 const pickerStyle = tw`justify-center border border-[#CBCBCB] mb-2.5 h-12.5 rounded-3xl px-${isIphone ? '2.5' : 'px'} w-[99%] flex-row`
 const boxStyle = tw`h-auto justify-center items-center border border-[#CBCBCB] bg-white p-2.5 self-stretch rounded-3xl`
+
+const styles = StyleSheet.create({
+    picker: {
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#CBCBCB',
+        marginBottom: 10,
+        height: 45,
+        paddingHorizontal: isIphone ? 10 : 1,
+        width: '100%',
+        flexDirection: 'row',
+        paddingRight: 10
+    }
+})
