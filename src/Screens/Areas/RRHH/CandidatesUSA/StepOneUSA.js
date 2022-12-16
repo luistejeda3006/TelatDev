@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Alert, Linking, BackHandler, Text} from 'react-native';
 import {InputForm, Politics, Picker, TitleForms, CheckBox, ProgressStepActions, DatePicker, MultiTextForm} from '../../../../components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import DeviceInfo from 'react-native-device-info';
@@ -10,10 +9,11 @@ import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectError, selectStep, selectVerified, selectChecked, setError, setStep, setChecked, setVerified} from '../../../../slices/progressStepSlice';
-import { selectOrientation } from '../../../../slices/orientationSlice';
+import {selectOrientation} from '../../../../slices/orientationSlice';
+import {setStepOneUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
-export default ({navigation, language, ...rest}) => {
+export default ({navigation, language}) => {
     const orientation = useSelector(selectOrientation)
     const [statesData, setStatesData] = useState([])
     const [hiden, setHiden] = useState(true)
@@ -101,6 +101,18 @@ export default ({navigation, language, ...rest}) => {
         navigation.navigate('Choose')
     }
 
+    const AlertaEmpty = () => {
+        return (
+            Alert.alert(
+                'Empty Fields',
+                'Review and fill in the missing fields',
+                [
+                    { text: 'OK'}
+                ]
+            )
+        )
+    }
+
     const handleFinal = async () => {
         let obj_1 = {
             info_nombre: nombre_1,
@@ -129,9 +141,6 @@ export default ({navigation, language, ...rest}) => {
             info_adjudication_details: adjudication_detail_1
         }
 
-        
-        console.log('obj_1: ', obj_1)
-
         try{
             const body = {
                 'action': 'get_email',
@@ -142,9 +151,7 @@ export default ({navigation, language, ...rest}) => {
                 'login': login,
                 'live': live
             }
-
-            console.log('body: ', body)
-
+            
             const request = await fetch(urlJobs, {
                 method: 'POST',
                 headers: {
@@ -155,14 +162,7 @@ export default ({navigation, language, ...rest}) => {
     
             const {response, status} = await request.json();
             if(status === 200){
-                let key = 'stepOne'
-                let data = await AsyncStorage.getItem(key) || '';
-                if(data) {
-                    await AsyncStorage.removeItem(key).then(() => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
-                }
-                else {
-                    await AsyncStorage.setItem(key, JSON.stringify(obj_1));
-                }
+                dispatch(setStepOneUSA(obj_1))
                 dispatch(setStep(step + 1))
             }
 
@@ -184,25 +184,13 @@ export default ({navigation, language, ...rest}) => {
 
     const handleValidateAdjudication = () => {
         if(adjudication_1 === undefined || adjudication_1 === 'SEL'){
-            Alert.alert(
-                'Empty Fields',
-                'Review and fill in the missing fields',
-                [
-                    { text: 'OK'}
-                ]
-            )
+            AlertaEmpty()
         } else {
             if(adjudication_1 === '0'){
                 handleFinal()
             } else {
                 if(adjudication_detail_1 === undefined || adjudication_detail_1 === ''){
-                    Alert.alert(
-                        'Empty Fields',
-                        'Review and fill in the missing fields',
-                        [
-                            { text: 'OK'}
-                        ]
-                    )
+                    AlertaEmpty()
                 } else {
                     handleFinal()
                 }
@@ -212,25 +200,13 @@ export default ({navigation, language, ...rest}) => {
 
     const handleValidateMisdemeanor = () => {
         if(misdemeanor_1 === undefined || misdemeanor_1 === 'SEL'){
-            Alert.alert(
-                'Empty Fields',
-                'Review and fill in the missing fields',
-                [
-                    { text: 'OK'}
-                ]
-            )
+            AlertaEmpty()
         } else {
             if(misdemeanor_1 === '0'){
                 handleValidateAdjudication()
             } else {
                 if(misdemeanor_detail_1 === undefined || misdemeanor_detail_1 === ''){
-                    Alert.alert(
-                        'Empty Fields',
-                        'Review and fill in the missing fields',
-                        [
-                            { text: 'OK'}
-                        ]
-                    )
+                    AlertaEmpty()
                 } else {
                     handleValidateAdjudication()
                 }
@@ -241,13 +217,7 @@ export default ({navigation, language, ...rest}) => {
     const handleValues = () => {
         let key = 'stepOne'
         if(nombre_1 === undefined || nombre_1 === '' || last_1 === undefined || last_1 === '' || ssn_1 === undefined || ssn_1 === '' || email_1 === undefined || email_1 === '' || phone_1 === undefined || phone_1 === '' || street_1 === undefined || street_1 === '' || city_1 === undefined || city_1 === '' || state_1 === undefined || state_1 === '' || zipcode_1 === undefined || zipcode_1 === '' || emer_name_1 === undefined || emer_phone_1 === '' || id_1 === undefined || id_1 === '' || id_state_1 === undefined || id_state_1 === '' || id_exp_date_1 === undefined || id_exp_date_1 === '' || referred_by_1 === undefined || referred_by_1 === '' || desired_position_1 === undefined || desired_position_1 === '' || date_available_1 === undefined || date_available_1 === '' || willing_work_1 === undefined || willing_work_1 === '' || list_any_1 === undefined || list_any_1 === ''){
-            Alert.alert(
-                'Empty Fields',
-                'Review and fill in the missing fields',
-                [
-                    { text: 'OK'}
-                ]
-            )
+            AlertaEmpty()
         }
         else {
             if(verified) {
@@ -605,7 +575,7 @@ export default ({navigation, language, ...rest}) => {
                                             />
                                     }
                                     <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
-                                    <ProgressStepActions handleNext={() => handleValues()} language={'2'}/>
+                                    <ProgressStepActions handleNext={() => handleValues()} language={'2'} type={2}/>
                                 </>
                             :
                                 <>

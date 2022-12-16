@@ -1,18 +1,23 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'react-native';
-import {InputForm, Picker, Calendar, TitleForms, DatePicker, ProgressStepActions, MultiTextForm} from '../../../../components';
+import {InputForm, Picker, TitleForms, ProgressStepActions, MultiTextForm} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Blue} from '../../../../colors/colorsApp';
 import {isIphone} from '../../../../access/requestedData';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectStep, setStep} from '../../../../slices/progressStepSlice';
+import {setSchoolsUSA, setStepTwoUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
-export default ({navigation, language, orientation, ...rest}) => {
+export default ({navigation, language, orientation}) => {
     const {isTablet} = DeviceInfo;
+    const dispatch = useDispatch()
+    const step = useSelector(selectStep)
+
     const {submitForm, values} = useFormikContext();
 
     const {orientationInfo} = useOrientation({
@@ -49,11 +54,11 @@ export default ({navigation, language, orientation, ...rest}) => {
         {
             id: 2,
             curr_nivel_estudio: 'type_school_dos_2',
-            curr_institucion: 'school_name_uno_2',
-            curr_ubicacion: 'location_uno_2',
-            curr_certificado: 'certificate_uno_2',
-            curr_titulo: 'graduated_uno_2',
-            curr_horario: 'schedule_uno_2',
+            curr_institucion: 'school_name_dos_2',
+            curr_ubicacion: 'location_dos_2',
+            curr_certificado: 'certificate_dos_2',
+            curr_titulo: 'graduated_dos_2',
+            curr_horario: 'schedule_dos_2',
             visible: false,
         },
         {
@@ -95,102 +100,114 @@ export default ({navigation, language, orientation, ...rest}) => {
     });
 
     const {
-        fechaIngreso_3_US,
-        fechaSalida_3_US,
-        fechaIngresoOpcional_3_US,
-        fechaSalidaOpcional_3_US,
+        diploma_2,
+        level_2,
 
-        languageUno_3_US,
-        languageDos_3_US,
-        languageTres_3_US,
-        languageCuatro_3_US,
-        languageCinco_3_US,
+        type_school_uno_2,
+        school_name_uno_2,
+        location_uno_2,
+        graduated_uno_2,
+        certificate_uno_2,
+        schedule_uno_2,
 
-        levelComputer_3_US,
-        familiarPrograms_3_US,
+        type_school_dos_2,
+        school_name_dos_2,
+        location_dos_2,
+        graduated_dos_2,
+        certificate_dos_2,
+        schedule_dos_2,
 
-        workExperience_3_US,
-        nombreEmpresa_3_US,
-        giroEmpresa_3_US,
-        puestoDesempeñado_3_US,
-        activities_3_US,
+        type_school_tres_2,
+        school_name_tres_2,
+        location_tres_2,
+        graduated_tres_2,
+        certificate_tres_2,
+        schedule_tres_2,
 
-        nombreEmpresaOpcional_3_US,
-        giroEmpresaOpcional_3_US,
-        puestoDesempeñadoOpcional_3_US,
-        activitiesOpcional_3_US,
+        type_school_cuatro_2,
+        school_name_cuatro_2,
+        location_cuatro_2,
+        graduated_cuatro_2,
+        certificate_cuatro_2,
+        schedule_cuatro_2,
+
+        type_school_cinco_2,
+        school_name_cinco_2,
+        location_cinco_2,
+        graduated_cinco_2,
+        certificate_cinco_2,
+        schedule_cinco_2,
+
+        qualifications_2,
+        english_proficiency_2,
+        spanish_proficiency_2,
 
     } = values;
-    const {error, pEmpleo, contador} = filters;
+
+    const {pEmpleo, contador} = filters;
 
     const handleValues = async () => {
-        let key = 'stepTwo'
-        let keyIdiomas = 'stepTwoIdiomas'
-        let idiomas = [
-            {idioma: languageUno_3_US},
-            {idioma: languageDos_3_US ? languageDos_3_US : ''},
-            {idioma: languageTres_3_US ? languageTres_3_US : ''},
-            {idioma: languageCuatro_3_US ? languageCuatro_3_US : ''},
-            {idioma: languageCinco_3_US ? languageCinco_3_US : ''}
-        ]
-
-        const newLanguages = idiomas.filter(x => x.idioma !== '' || x.idioma && undefined && x)
-
-        let obj_3 = {
-            cand_primer_empleo: workExperience_3_US,
-            curr_usa_computadora: levelComputer_3_US,
-            curr_pkg_computo: familiarPrograms_3_US,
-            refl_nombre_empresa1: nombreEmpresa_3_US,
-            refl_giro_empresa1: giroEmpresa_3_US,
-            refl_puesto1: puestoDesempeñado_3_US,
-            refl_actividades1: activities_3_US,
-
-            refl_fecha_inicio1: fechaIngreso_3_US === 'Not selected' ? null : fechaIngreso_3_US,
-            refl_fecha_final1: fechaSalida_3_US === 'Not selected' ? null : fechaSalida_3_US,
-            refl_nombre_empresa2: nombreEmpresaOpcional_3_US ? nombreEmpresaOpcional_3_US : '',
-            refl_giro_empresa2: giroEmpresaOpcional_3_US ? giroEmpresaOpcional_3_US : '',
-            refl_puesto2: puestoDesempeñadoOpcional_3_US ? puestoDesempeñadoOpcional_3_US : '',
-            refl_actividades2: activitiesOpcional_3_US,
-
-            refl_fecha_inicio2: fechaIngresoOpcional_3_US === 'Not selected' ? null : fechaIngresoOpcional_3_US,
-            refl_fecha_final2: fechaSalidaOpcional_3_US === 'Not selected' ? null : fechaSalidaOpcional_3_US,
-        }
-        
-        if(pEmpleo){
-            if(levelComputer_3_US === undefined || levelComputer_3_US === 'SEL' || familiarPrograms_3_US === undefined || familiarPrograms_3_US === '' || nombreEmpresa_3_US === undefined || nombreEmpresa_3_US === '' || giroEmpresa_3_US === undefined || giroEmpresa_3_US === '' || puestoDesempeñado_3_US === undefined || puestoDesempeñado_3_US === '' || fechaIngreso_3_US === '' || fechaIngreso_3_US === undefined || fechaSalida_3_US === '' || fechaSalida_3_US === undefined || activities_3_US === undefined || activities_3_US === ''){
-                Alerta()
-            }
-            else {
-
-                let data = await AsyncStorage.getItem(key) || '';
-                if(data) {
-                    await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_3)));
-                    await AsyncStorage.removeItem(keyIdiomas).then( () => AsyncStorage.setItem(keyIdiomas, JSON.stringify(newLanguages)));
-                }
-                else {
-                    await AsyncStorage.setItem(key, JSON.stringify(obj_3));
-                    await AsyncStorage.setItem(keyIdiomas, JSON.stringify(newLanguages));
-                }
-                setFilters({...filters, error: false});
-            }
+        if(diploma_2 === '' || diploma_2 === undefined || level_2 === '' || level_2 === undefined || type_school_uno_2 === 'SEL' || type_school_uno_2 === undefined || school_name_uno_2 === '' || school_name_uno_2 === undefined || location_uno_2 === '' || location_uno_2 === undefined || graduated_uno_2 === 'SEL' || graduated_uno_2 === undefined || certificate_uno_2 === '' || certificate_uno_2 === undefined || schedule_uno_2 === '' || schedule_uno_2 === undefined || qualifications_2 === '' || qualifications_2 === undefined || english_proficiency_2 === 'SEL' || english_proficiency_2 === undefined || spanish_proficiency_2 === 'SEL' || spanish_proficiency_2 === undefined){
+            Alerta()
+        } else {
+            let key = 'stepTwo'
+            let keySchools = 'stepTwoSchools'
+            let schools = [
+                {
+                    curr_nivel_estudio: type_school_uno_2,
+                    curr_institucion: school_name_uno_2,
+                    curr_ubicacion: location_uno_2,
+                    curr_certificado: graduated_uno_2,
+                    curr_titulo: certificate_uno_2,
+                    curr_horario: schedule_uno_2,
+                },
+                {
+                    curr_nivel_estudio: (type_school_dos_2 === 'SEL' || type_school_dos_2 === undefined) ? '' : type_school_dos_2,
+                    curr_institucion: (school_name_dos_2 === '' || school_name_dos_2 === undefined) ? '' : school_name_dos_2,
+                    curr_ubicacion: (location_dos_2 === '' || location_dos_2 === undefined) ? '' : location_dos_2,
+                    curr_certificado: (graduated_dos_2 === 'SEL' || graduated_dos_2 === undefined) ? '' : graduated_dos_2,
+                    curr_titulo: (certificate_dos_2 === '' || certificate_dos_2 === undefined) ? '' : certificate_dos_2,
+                    curr_horario: (schedule_dos_2 === '' || schedule_dos_2 === undefined) ? '' : schedule_dos_2,
+                },
+                {
+                    curr_nivel_estudio: (type_school_tres_2 === 'SEL' || type_school_tres_2 === undefined) ? '' : type_school_tres_2,
+                    curr_institucion: (school_name_tres_2 === '' || school_name_tres_2 === undefined) ? '' : school_name_tres_2,
+                    curr_ubicacion: (location_tres_2 === '' || location_tres_2 === undefined) ? '' : location_tres_2,
+                    curr_certificado: (graduated_tres_2 === 'SEL' || graduated_tres_2 === undefined) ? '' : graduated_tres_2,
+                    curr_titulo: (certificate_tres_2 === '' || certificate_tres_2 === undefined) ? '' : certificate_tres_2,
+                    curr_horario: (schedule_tres_2 === '' || schedule_tres_2 === undefined) ? '' : schedule_tres_2,
+                },
+                {
+                    curr_nivel_estudio: (type_school_cuatro_2 === 'SEL' || type_school_cuatro_2 === undefined) ? '' : type_school_cuatro_2,
+                    curr_institucion: (school_name_cuatro_2 === '' || school_name_cuatro_2 === undefined) ? '' : school_name_cuatro_2,
+                    curr_ubicacion: (location_cuatro_2 === '' || location_cuatro_2 === undefined) ? '' : location_cuatro_2,
+                    curr_certificado: (graduated_cuatro_2 === 'SEL' || graduated_cuatro_2 === undefined) ? '' : graduated_cuatro_2,
+                    curr_titulo: (certificate_cuatro_2 === '' || certificate_cuatro_2 === undefined) ? '' : certificate_cuatro_2,
+                    curr_horario: (schedule_cuatro_2 === '' || schedule_cuatro_2 === undefined) ? '' : schedule_cuatro_2,
+                },
+                {
+                    curr_nivel_estudio: (type_school_cinco_2 === 'SEL' || type_school_cinco_2 === undefined) ? '' : type_school_cinco_2,
+                    curr_institucion: (school_name_cinco_2 === '' || school_name_cinco_2 === undefined) ? '' : school_name_cinco_2,
+                    curr_ubicacion: (location_cinco_2 === '' || location_cinco_2 === undefined) ? '' : location_cinco_2,
+                    curr_certificado: (graduated_cinco_2 === 'SEL' || graduated_cinco_2 === undefined) ? '' : graduated_cinco_2,
+                    curr_titulo: (certificate_cinco_2 === '' || certificate_cinco_2 === undefined) ? '' : certificate_cinco_2,
+                    curr_horario: (schedule_cinco_2 === '' || schedule_cinco_2 === undefined) ? '' : schedule_cinco_2,
+                },
+            ]
+    
+            const newSchools = schools.filter(x => (x.curr_nivel_estudio !== '' && x.curr_institucion !== '' && x.curr_ubicacion !== '' && x.curr_certificado !== '' && x.curr_titulo !== '' && x.curr_horario !== '') && x)
             
-        }
-        else {
-            if(levelComputer_3_US === undefined || levelComputer_3_US === 'SEL' || familiarPrograms_3_US === undefined || familiarPrograms_3_US === '' || workExperience_3_US === undefined || workExperience_3_US === 'SEL'){
-                Alerta()
+            let obj_2 = {
+                cand_certificaciones: diploma_2,
+                cand_mayor_nivel: level_2,
+                curr_pkg_computo: qualifications_2,
+                eva_ingles: english_proficiency_2,
+                eva_espanol: spanish_proficiency_2
             }
-            else {
-                let data = await AsyncStorage.getItem(key) || '';
-                if(data) {
-                    await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_3)));
-                    await AsyncStorage.removeItem(keyIdiomas).then( () => AsyncStorage.setItem(keyIdiomas, JSON.stringify(idiomas)));
-                }
-                else {
-                    await AsyncStorage.setItem(key, JSON.stringify(obj_3));
-                    await AsyncStorage.setItem(keyIdiomas, JSON.stringify(idiomas));
-                }
-                setFilters({...filters, error: false});
-            }
+
+            dispatch(setStepTwoUSA(obj_2))
+            dispatch(setSchoolsUSA(newSchools))
+            dispatch(setStep(step + 1))
         }
     }
 
@@ -204,11 +221,6 @@ export default ({navigation, language, orientation, ...rest}) => {
                 ]
             )
         )
-    }
-
-    const handleAction_uno = (index) => {
-        if(index === 1) setFilters({...filters, pEmpleo: true})
-        else setFilters({...filters, pEmpleo: false})
     }
 
     useEffect(() => {
@@ -320,7 +332,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
                                 <InputForm
                                     status={true}
-                                    placeholder={'TYPE OF DEGREE OR CERTIFICA'}
+                                    placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
                                     fieldName={'certificate_uno_2'}
                                 />
                                 <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
@@ -345,9 +357,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                     </View>
                                                 </View>
                                                 <TitleForms type={'subtitle'} title={'Type Of School'} />
-                                                <Picker 
+                                                <Picker
                                                     fieldName={x.curr_nivel_estudio}
                                                     items={schoolOptions}
+                                                    required={false}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'School Name'} />
                                                 <InputForm
@@ -357,20 +370,21 @@ export default ({navigation, language, orientation, ...rest}) => {
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Location'} />
                                                 <InputForm
-                                                    status={true}
+                                                    status={true} 
                                                     fieldName={x.curr_ubicacion}
                                                     placeholder={'LOCATION'}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Graduated'} />
-                                                <Picker 
+                                                <Picker
                                                     fieldName={x.curr_titulo}
                                                     items={closeOptions}
+                                                    required={false}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
                                                 <InputForm
                                                     status={true}
                                                     fieldName={x.curr_certificado}
-                                                    placeholder={'TYPE OF DEGREE OR CERTIFICA'}
+                                                    placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
                                                 />
                                                 <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
                                                 <InputForm
@@ -392,17 +406,17 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 />
                                 
                                 <TitleForms type={'title'} title={'Assessment Scores'}/>
-                                <TitleForms type={'subtitle'} title={'Graduated'} />
-                                <Picker 
+                                <TitleForms type={'subtitle'} title={'English Proficiency'} />
+                                <Picker
                                     fieldName={'english_proficiency_2'}
                                     items={proficiencyOptions}
                                 />
-                                <TitleForms type={'subtitle'} title={'Graduated'} />
-                                <Picker 
+                                <TitleForms type={'subtitle'} title={'Spanish Proficiency'} />
+                                <Picker
                                     fieldName={'spanish_proficiency_2'}
                                     items={proficiencyOptions}
                                 />
-                                <ProgressStepActions language={'2'} handleNext={handleValues}/>
+                                <ProgressStepActions language={'2'} handleNext={handleValues} type={2}/>
                             </>
                         :
                             <>

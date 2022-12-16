@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native'
-import { Modal } from 'react-native-paper';
+import {Modal} from 'react-native-paper';
 
 export default ({visibility, handleDismiss, orientation, children}) => {
     return (

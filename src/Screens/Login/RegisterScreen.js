@@ -1,22 +1,33 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StatusBar, SafeAreaView} from 'react-native';
-import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep} from '../../components';
+import {View, StatusBar, SafeAreaView, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep, Modal, RadioButton} from '../../components';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
 import {useOrientation, useConnection, useNavigation} from '../../hooks';
 import {Formik} from 'formik';
-import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/colorsApp';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import * as Yup from 'yup';
-import tw from 'twrnc';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep} from '../../slices/progressStepSlice';
+import {selectCurriculumUSA, selectSchoolsUSA, selectStatements, selectStatementsVisible, selectStepOneUSA, selectStepThreeUSA, selectStepTwoUSA, setStatements} from '../../slices/applicationForm';
+import tw from 'twrnc';
+import { selectOrientation } from '../../slices/orientationSlice';
+import { live, login } from '../../access/requestedData';
 
 let step = null;
 let data = []
-export default ({navigation, route: {params: {language, orientation, country}}}) => {
+export default ({navigation, route: {params: {language, country}}}) => {
     const dispatch = useDispatch()
     step = useSelector(selectStep)
+    const orientation = useSelector(selectOrientation)
+    const statementsVisible = useSelector(selectStatementsVisible)
+    const statements = useSelector(selectStatements)
+    const schools = useSelector(selectSchoolsUSA)
+    const curriculum = useSelector(selectCurriculumUSA)
+    const stepOneInfo = useSelector(selectStepOneUSA)
+    const stepTwoInfo = useSelector(selectStepTwoUSA)
+    const stepThreeInfo = useSelector(selectStepThreeUSA)
 
     const [data, setData] = useState([])
     const required = '*';
@@ -53,7 +64,81 @@ export default ({navigation, route: {params: {language, orientation, country}}})
         }, [])
     );
     
+    const handleSave = () => {
+        let cand_statement = !statements ? 0 : 1
+        let all = {...stepOneInfo, ...stepTwoInfo}
+        all = {...all, ...stepThreeInfo}
+        all = {...all, cand_statement}
+        console.log('schools: ', schools)
+        console.log('curriculum: ', curriculum)
+        console.log('all: ', all)
 
+        const body = {
+            action: 'insert_precandidato',
+            country: 'US',
+            data: {
+                info: {
+                    'info_nombre': 'Rufina',
+                    'info_apellido_p': 'Reyes',
+                    'info_ssn': 58454,
+                    'info_email': 'ruffireyes@gmail.com',
+                    'info_telefono_fijo': '',
+                    'info_telefono_celular': 5618486774,
+                    'info_ciudad': 'CDMX',
+                    'info_estado': 'Venustiano Carranza',
+                    'info_calle': 'Martin del Campo',
+                    'info_cp': 15500,
+                    'infom_contacto': 'Anahi Reyes',
+                    'infom_telefono': 5656565656,
+                    'info_curp': 'RESR961209MVZYNF07',
+                    'info_doc_state_id': 448,
+                    'info_doc_expiracion': 2025,
+                    'cand_reclutamiento_desc': 'OCC',
+                    'cand_puesto_solicitado': 'PHP Developer',
+                    'cand_fecha_disponibilidad': '2022-12-19',
+                    'cand_list_disponibilidad': 2,
+                    'cand_disponibilidad_turno': 'YES',
+                    'info_convicto': 'NO',
+                    'info_convicto_details': '',
+                    'info_adjudicacion': 'NO',
+                    'info_adjudication_details': '',
+                    'curr_pkg_computo': 'OFFICE',
+                    'cand_certificaciones': '',
+                    'cand_mayor_nivel': '',
+                    'cand_primer_empleo': 1,
+                    'cand_statement': '',
+                    'eva_ingles': 'Intermedio',
+                    'eva_espanol': 'Avanzado' 
+                },
+                curriculum: [
+                    {
+                        'curr_nivel_estudio': 'Bachillerato',
+                        'curr_institucion': 'IPN',
+                        'curr_ubicacion': '',
+                        'curr_certificado': 2,
+                        'curr_titulo': 'Técnico',
+                        'curr_horario': '7-11'
+                    }
+                ],
+                referencias_laborales: [
+                    {
+                        'refl_nombre_empresa': 'Caltec',
+                        'refl_direccion': 'Dumas 30',
+                        'refl_telefono': 6545444546,
+                        'refl_puesto': 'Programador web',
+                        'refl_actividad': 'Desarrollo sistemas',
+                        'refl_hrs_promedio': '8',
+                        'refl_jefe_directo': 'Juan Ursua',
+                        'refl_fecha_ingreso': '2019-03-05',
+                        'refl_fecha_salida': '2021-08-05',
+                        'refl_motivo_salida': 'Crecimiento'
+                    }
+                ]
+            },
+            live: live,
+            login: login
+        }
+    }
 
     return (
         <>
@@ -156,57 +241,33 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                             schedule_uno_2: Yup.string()
                             .required(required),
 
-                            type_school_dos_2: Yup.string()
-                            .required(required),
-                            school_name_dos_2: Yup.string()
-                            .required(required),
-                            location_dos_2: Yup.string()
-                            .required(required),
-                            graduated_dos_2: Yup.string()
-                            .required(required),
-                            certificate_dos_2: Yup.string()
-                            .required(required),
-                            schedule_dos_2: Yup.string()
-                            .required(required),
+                            type_school_dos_2: Yup.string(),
+                            school_name_dos_2: Yup.string(),
+                            location_dos_2: Yup.string(),
+                            graduated_dos_2: Yup.string(),
+                            certificate_dos_2: Yup.string(),
+                            schedule_dos_2: Yup.string(),
 
-                            type_school_tres_2: Yup.string()
-                            .required(required),
-                            school_name_tres_2: Yup.string()
-                            .required(required),
-                            location_tres_2: Yup.string()
-                            .required(required),
-                            graduated_tres_2: Yup.string()
-                            .required(required),
-                            certificate_tres_2: Yup.string()
-                            .required(required),
-                            schedule_tres_2: Yup.string()
-                            .required(required),
+                            type_school_tres_2: Yup.string(),
+                            school_name_tres_2: Yup.string(),
+                            location_tres_2: Yup.string(),
+                            graduated_tres_2: Yup.string(),
+                            certificate_tres_2: Yup.string(),
+                            schedule_tres_2: Yup.string(),
                             
-                            type_school_cuatro_2: Yup.string()
-                            .required(required),
-                            school_name_cuatro_2: Yup.string()
-                            .required(required),
-                            location_cuatro_2: Yup.string()
-                            .required(required),
-                            graduated_cuatro_2: Yup.string()
-                            .required(required),
-                            certificate_cuatro_2: Yup.string()
-                            .required(required),
-                            schedule_cuatro_2: Yup.string()
-                            .required(required),
+                            type_school_cuatro_2: Yup.string(),
+                            school_name_cuatro_2: Yup.string(),
+                            location_cuatro_2: Yup.string(),
+                            graduated_cuatro_2: Yup.string(),
+                            certificate_cuatro_2: Yup.string(),
+                            schedule_cuatro_2: Yup.string(),
                             
-                            type_school_cinco_2: Yup.string()
-                            .required(required),
-                            school_name_cinco_2: Yup.string()
-                            .required(required),
-                            location_cinco_2: Yup.string()
-                            .required(required),
-                            graduated_cinco_2: Yup.string()
-                            .required(required),
-                            certificate_cinco_2: Yup.string()
-                            .required(required),
-                            schedule_cinco_2: Yup.string()
-                            .required(required),
+                            type_school_cinco_2: Yup.string(),
+                            school_name_cinco_2: Yup.string(),
+                            location_cinco_2: Yup.string(),
+                            graduated_cinco_2: Yup.string(),
+                            certificate_cinco_2: Yup.string(),
+                            schedule_cinco_2: Yup.string(),
                             
                             //Qualifications
                             qualifications_2: Yup.string()
@@ -247,89 +308,49 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                             summary_uno_3: Yup.string()
                             .required(required),
 
-                            company_dos_3: Yup.string()
-                            .required(required),
-                            address_dos_3: Yup.string()
-                            .required(required),
-                            phone_dos_3: Yup.string()
-                            .required(required),
-                            supervisor_dos_3: Yup.string()
-                            .required(required),
-                            position_dos_3: Yup.string()
-                            .required(required),
-                            average_dos_3: Yup.string()
-                            .required(required),
-                            starting_dos_3: Yup.string()
-                            .required(required),
-                            ending_dos_3: Yup.string()
-                            .required(required),
-                            reason_dos_3: Yup.string()
-                            .required(required),
-                            summary_dos_3: Yup.string()
-                            .required(required),
+                            company_dos_3: Yup.string(),
+                            address_dos_3: Yup.string(),
+                            phone_dos_3: Yup.string(),
+                            supervisor_dos_3: Yup.string(),
+                            position_dos_3: Yup.string(),
+                            average_dos_3: Yup.string(),
+                            starting_dos_3: Yup.string(),
+                            ending_dos_3: Yup.string(),
+                            reason_dos_3: Yup.string(),
+                            summary_dos_3: Yup.string(),
 
-                            company_tres_3: Yup.string()
-                            .required(required),
-                            address_tres_3: Yup.string()
-                            .required(required),
-                            phone_tres_3: Yup.string()
-                            .required(required),
-                            supervisor_tres_3: Yup.string()
-                            .required(required),
-                            position_tres_3: Yup.string()
-                            .required(required),
-                            average_tres_3: Yup.string()
-                            .required(required),
-                            starting_tres_3: Yup.string()
-                            .required(required),
-                            ending_tres_3: Yup.string()
-                            .required(required),
-                            reason_tres_3: Yup.string()
-                            .required(required),
-                            summary_tres_3: Yup.string()
-                            .required(required),
+                            company_tres_3: Yup.string(),
+                            address_tres_3: Yup.string(),
+                            phone_tres_3: Yup.string(),
+                            supervisor_tres_3: Yup.string(),
+                            position_tres_3: Yup.string(),
+                            average_tres_3: Yup.string(),
+                            starting_tres_3: Yup.string(),
+                            ending_tres_3: Yup.string(),
+                            reason_tres_3: Yup.string(),
+                            summary_tres_3: Yup.string(),
 
-                            company_cuatro_3: Yup.string()
-                            .required(required),
-                            address_cuatro_3: Yup.string()
-                            .required(required),
-                            phone_cuatro_3: Yup.string()
-                            .required(required),
-                            supervisor_cuatro_3: Yup.string()
-                            .required(required),
-                            position_cuatro_3: Yup.string()
-                            .required(required),
-                            average_cuatro_3: Yup.string()
-                            .required(required),
-                            starting_cuatro_3: Yup.string()
-                            .required(required),
-                            ending_cuatro_3: Yup.string()
-                            .required(required),
-                            reason_cuatro_3: Yup.string()
-                            .required(required),
-                            summary_cuatro_3: Yup.string()
-                            .required(required),
+                            company_cuatro_3: Yup.string(),
+                            address_cuatro_3: Yup.string(),
+                            phone_cuatro_3: Yup.string(),
+                            supervisor_cuatro_3: Yup.string(),
+                            position_cuatro_3: Yup.string(),
+                            average_cuatro_3: Yup.string(),
+                            starting_cuatro_3: Yup.string(),
+                            ending_cuatro_3: Yup.string(),
+                            reason_cuatro_3: Yup.string(),
+                            summary_cuatro_3: Yup.string(),
 
-                            company_cinco_3: Yup.string()
-                            .required(required),
-                            address_cinco_3: Yup.string()
-                            .required(required),
-                            phone_cinco_3: Yup.string()
-                            .required(required),
-                            supervisor_cinco_3: Yup.string()
-                            .required(required),
-                            position_cinco_3: Yup.string()
-                            .required(required),
-                            average_cinco_3: Yup.string()
-                            .required(required),
-                            starting_cinco_3: Yup.string()
-                            .required(required),
-                            ending_cinco_3: Yup.string()
-                            .required(required),
-                            reason_cinco_3: Yup.string()
-                            .required(required),
-                            summary_cinco_3: Yup.string()
-                            .required(required),
+                            company_cinco_3: Yup.string(),
+                            address_cinco_3: Yup.string(),
+                            phone_cinco_3: Yup.string(),
+                            supervisor_cinco_3: Yup.string(),
+                            position_cinco_3: Yup.string(),
+                            average_cinco_3: Yup.string(),
+                            starting_cinco_3: Yup.string(),
+                            ending_cinco_3: Yup.string(),
+                            reason_cinco_3: Yup.string(),
+                            summary_cinco_3: Yup.string(),
 
                             temporal: Yup.string()
                             .required(required)
@@ -578,6 +599,64 @@ export default ({navigation, route: {params: {language, orientation, country}}})
                         }
                 </Formik>
             }
+
+            <Modal visibility={statementsVisible} orientation={orientation}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    style={tw`h-auto self-stretch px-4`}>
+                    <View style={tw`h-auto self-stretch justify-start items-center`}>
+                        <Text style={tw`text-[${Blue}] font-bold text-xl`}>Statements</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify mt-1.5 mb-2`}>
+                        <Text style={tw`text-sm text-[#000] font-bold text-justify`}>Please read the following statements carefully. By signing this application, you indicate your understanding and acceptance of the following:</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify pt-2.5 mb-1.5 border-b border-b-[#dadada] border-t border-t-[#dadada]`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}><Text style={tw`font-bold`}>1. </Text>I authorize any of the persons or organizations referenced in this application to provide <Text style={tw`font-bold text-[${Blue}]`}>DataXport.Net</Text>, LLC any and all information concerning my previous employment, education, or any other information, personal or otherwise, with regards to any of the subjects covered by this application, and I hereby release all such parties from all liability from any damages which may result from furnishing such information.
+I certify that all the information provided by me in connection with my application, whether on this document or provided separately, is true and complete, and I understand that any misstatement or falsification of information may be grounds for refusal to hire, or if hired, termination.</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify py-2.5 border-b border-b-[#dadada]`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}><Text style={tw`font-bold`}>2. </Text>I understand that as a condition of employment, I will be required to provide legal proof of authorization to work in the United States. If I am offered employment at DataXport, I MUST provide these documents on or before my first day of employment. Documents must be on USCIS's list of acceptable documents for establishing identity and employment authorization. Expired documents will NOT be accepted. The most common documents • A valid U.S. passport, U.S. passport card, or permanent resident card; OR • A valid photo ID AND one of the following: Social Security Card, birth certificate, or employment authorization document issued by the Department of Homeland Security.</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify py-2.5 border-b border-b-[#dadada]`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}><Text style={tw`font-bold`}>3. </Text>I authorize any of the persons or organizations referenced in this application to provide <Text style={tw`font-bold text-[${Blue}]`}>DataXport.Net</Text>, LLC any and all information concerning my previous employment, education, or any other information, personal or otherwise, with regards to any of the subjects covered by this application, and I hereby release all such parties from all liability from any damages which may result from furnishing such information.</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify py-2.5 border-b border-b-[#dadada]`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}><Text style={tw`font-bold`}>4. </Text>I understand that given the nature of work at DataXport and in order to be considered for employment, I will be responsible for obtaining a pre-employment background check and drug test at my expense. I understand that by signing below, I give consent to DataXport to request my full criminal background information from the Texas Department of Public Safety if necessary.</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify py-2.5 border-b border-b-[#dadada]`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}><Text style={tw`font-bold`}>5. </Text>I understand that I may need to provide additional documentation in order to be considered for certain positions, such as a valid driver license and driving record, or applicable certifications.</Text>
+                    </View>
+                    <View style={tw`h-auto self-stretch items-start justify-center text-justify py-2.5 border-b border-b-[#dadada] mt-1.5`}>
+                        <Text style={tw`text-xs text-[#000] text-justify`}>I am aware of the statements above and I agree with them.</Text>
+                        <View style={tw`h-1.5`}/>
+                        <RadioButton 
+                            legend={'NO'}
+                            checked={!statements ? true : false}
+                            width={0}
+                            handleCheck={() => dispatch(setStatements(false))}
+                        />
+                        <View style={tw`h-1.5`}/>
+                        <RadioButton 
+                            legend={'YES'}
+                            checked={!statements ? false : true}
+                            width={0}
+                            handleCheck={() => dispatch(setStatements(true))}
+                        />
+                        <View style={tw`h-2`}/>
+                    </View>
+                    <View style={tw`h-12.5 flex-row items-center justify-end`}>
+                        <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[#6C757D]`}>
+                            <Text style={tw`text-[#fff] font-bold`}>Cancel</Text>
+                        </TouchableOpacity>
+                        <View style={tw`w-3`}/>
+                        <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}]`} onPress={handleSave}>
+                            <Text style={tw`text-[#fff] font-bold`}>Submit Application</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </ScrollView>
+            </Modal>
             </View>
         </>
     );

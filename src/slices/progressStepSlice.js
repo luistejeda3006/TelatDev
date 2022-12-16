@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     step: 1,
     error: true,
-    /* verified: undefined,
-    checked: false, */
-    verified: true,
-    checked: false
+    verified: undefined,
+    checked: false,
+    /* verified: true,
+    checked: false */
 }
 
 export const navSlice = createSlice({

@@ -1,27 +1,27 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Alert, BackHandler, TouchableOpacity, Linking} from 'react-native';
 import {DatePicker, InputForm, MultiTextForm, Picker, ProgressStepActions, TitleForms} from '../../../../components';
-import {ProgressStep} from 'react-native-progress-steps';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {contactEmail, isIphone, live, login, origen, urlJobs} from '../../../../access/requestedData';
-import {getCurrentDate} from '../../../../js/dates';
+import {contactEmail, isIphone} from '../../../../access/requestedData';
 import {Blue} from '../../../../colors/colorsApp';
+import {useDispatch} from 'react-redux';
+import {setCurriculumUSA, setStatementsVisible, setStepThreeUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
 let currentOne = null;
 let currentTwo = null;
-let currentTwoLanguages = null;
-let all = null;
+let currentTwoSchools = null;
 
 let keyOne = 'stepOne'
 let keyTwo = 'stepTwo'
-let keyIdiomas = 'stepTwoIdiomas'
+let keySchools = 'stepTwoSchools'
 
 export default ({navigation, language}) => {
+    const dispatch = useDispatch()
 
     const [jobs, setJobs] = useState([
         {
@@ -90,8 +90,8 @@ export default ({navigation, language}) => {
         currentTwo = await AsyncStorage.getItem(keyTwo) || '[]';
         currentTwo = JSON.parse(currentTwo);
 
-        currentTwoLanguages = await AsyncStorage.getItem(keyIdiomas) || '[]';
-        currentTwoLanguages = JSON.parse(currentTwoLanguages);
+        currentTwoSchools = await AsyncStorage.getItem(keySchools) || '[]';
+        currentTwoSchools = JSON.parse(currentTwoSchools);
 
         all = {...currentOne, ...currentTwo};
     }
@@ -109,6 +109,66 @@ export default ({navigation, language}) => {
     ]
 
     const {submitForm, values} = useFormikContext();
+
+    const {
+        any_experience_3,
+
+        company_uno_3,
+        address_uno_3,
+        phone_uno_3,
+        supervisor_uno_3,
+        position_uno_3,
+        average_uno_3,
+        starting_uno_3,
+        ending_uno_3,
+        reason_uno_3,
+        summary_uno_3,
+
+        company_dos_3,
+        address_dos_3,
+        phone_dos_3,
+        supervisor_dos_3,
+        position_dos_3,
+        average_dos_3,
+        starting_dos_3,
+        ending_dos_3,
+        reason_dos_3,
+        summary_dos_3,
+
+        company_tres_3,
+        address_tres_3,
+        phone_tres_3,
+        supervisor_tres_3,
+        position_tres_3,
+        average_tres_3,
+        starting_tres_3,
+        ending_tres_3,
+        reason_tres_3,
+        summary_tres_3,
+
+        company_cuatro_3,
+        address_cuatro_3,
+        phone_cuatro_3,
+        supervisor_cuatro_3,
+        position_cuatro_3,
+        average_cuatro_3,
+        starting_cuatro_3,
+        ending_cuatro_3,
+        reason_cuatro_3,
+        summary_cuatro_3,
+
+        company_cinco_3,
+        address_cinco_3,
+        phone_cinco_3,
+        supervisor_cinco_3,
+        position_cinco_3,
+        average_cinco_3,
+        starting_cinco_3,
+        ending_cinco_3,
+        reason_cinco_3,
+        summary_cinco_3
+    } = values
+
     const {orientationInfo} = useOrientation({
         'isLandscape': false,
         'name': 'portrait-primary',
@@ -161,74 +221,94 @@ export default ({navigation, language}) => {
     const {contador, experience} = filters;
     const {nombreRelacionUno_4_US, telefonoRelacionUno_4_US, ocupacionRelacionUno_4_US, nombreRelacionDos_4_US, telefonoRelacionDos_4_US, ocupacionRelacionDos_4_US} = values;
 
+    const handleSave = async () => {
+
+    }
+
     const handleValues = async () => {
-        if(nombreRelacionUno_4_US === undefined || nombreRelacionUno_4_US === '' || telefonoRelacionUno_4_US === undefined || telefonoRelacionUno_4_US === '' || ocupacionRelacionUno_4_US === undefined || ocupacionRelacionUno_4_US === '' || nombreRelacionDos_4_US === undefined || nombreRelacionDos_4_US === '' || telefonoRelacionDos_4_US === undefined || telefonoRelacionDos_4_US === '' || ocupacionRelacionDos_4_US === undefined || ocupacionRelacionDos_4_US === ''){
+        if(any_experience_3 === 'SEL' || any_experience_3 === undefined){
             Alerta()
         }
         else {
-            let obj_3 = {
-                refp_nombre1: nombreRelacionUno_4_US,
-                refp_telefono1: telefonoRelacionUno_4_US,
-                refp_ocupacion1: ocupacionRelacionUno_4_US,
-                refp_nombre2: nombreRelacionDos_4_US,
-                refp_telefono2: telefonoRelacionDos_4_US,
-                refp_ocupacion2: ocupacionRelacionDos_4_US,
-                cand_fecha_creacion: getCurrentDate(),
-                cand_origen: origen
-            }
-
-            all = {...all, ...obj_3};
-
-            console.log('all: ', all)
-            console.log('currentTwoLanguages: ', currentTwoLanguages)
-            const body = {
-                'action': 'insert_precandidato',
-                'data': all,
-                'idiomas': currentTwoLanguages.filter(x => x.idioma !== '' && x),
-                'login': login,
-                'live': live,
-                'country': 'US',
-            }
-
-            console.log('body: ', body)
-
-            const request = await fetch(urlJobs, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body)
-            });
-            const {response} = await request.json();
-
-            if(response.status === 201){
-                setFilters({...filters, error: false})
-                await AsyncStorage.removeItem(keyOne);
-                await AsyncStorage.removeItem(keyTwo);
-                await AsyncStorage.removeItem(keyIdiomas);
-                AlertaEmail()
-                navigation.navigate('Choose')
-            }
-
-            else if(response.status === 400){
-                await AsyncStorage.removeItem(keyOne);
-                await AsyncStorage.removeItem(keyTwo);
-                await AsyncStorage.removeItem(keyIdiomas);
-
-                Alert.alert(
-                    language === 1 ? 'Error al envíar su solicitud' : 'Error to send your request',
-                    language === 1 ? 'Inténtelo de nuevo más tarde.' : 'Try later, again.',
-                    [
-                        { text: 'OK'}
+            if(any_experience_3 === '0'){
+                handleSave()
+            } else {
+                if(company_uno_3 === '' || company_uno_3 === undefined || address_uno_3 === '' || address_uno_3 === undefined || phone_uno_3 === '' || phone_uno_3 === undefined || supervisor_uno_3 === '' || supervisor_uno_3 === undefined || position_uno_3 === '' || position_uno_3 === undefined || average_uno_3 === '' || average_uno_3 === undefined || starting_uno_3 === undefined || ending_uno_3 === undefined || reason_uno_3 === '' || reason_uno_3 === undefined || summary_uno_3 === '' || summary_uno_3 === undefined){
+                    Alerta()
+                } else {
+                    let curriculum = [
+                        {
+                            refl_nombre_empresa: company_uno_3,
+                            refl_direccion: address_uno_3,
+                            refl_telefono: phone_uno_3,
+                            refl_jefe_directo: supervisor_uno_3,
+                            refl_puesto: position_uno_3,
+                            refl_hrs_promedio: average_uno_3,
+                            refl_fecha_ingreso: starting_uno_3,
+                            refl_fecha_salida: ending_uno_3,
+                            refl_motivo_salida: reason_uno_3,
+                            refl_actividad: summary_uno_3
+                        },
+                        {
+                            refl_nombre_empresa: company_dos_3 ? company_dos_3 : '',
+                            refl_direccion: address_dos_3 ? address_dos_3 : '',
+                            refl_telefono: phone_dos_3 ? phone_dos_3 : '',
+                            refl_jefe_directo: supervisor_dos_3 ? supervisor_dos_3 : '',
+                            refl_puesto: position_dos_3 ? position_dos_3 : position_dos_3,
+                            refl_hrs_promedio: average_dos_3 ? average_dos_3 : '',
+                            refl_fecha_ingreso: starting_dos_3 ? starting_dos_3 : null,
+                            refl_fecha_salida: ending_dos_3 ? ending_dos_3 : null,
+                            refl_motivo_salida: reason_dos_3 ? reason_dos_3 : '',
+                            refl_actividad: summary_dos_3 ? summary_dos_3 : ''
+                        },
+                        {
+                            refl_nombre_empresa: company_tres_3 ? company_tres_3 : '',
+                            refl_direccion: address_tres_3 ? address_tres_3 : '',
+                            refl_telefono: phone_tres_3 ? phone_tres_3 : '',
+                            refl_jefe_directo: supervisor_tres_3 ? supervisor_tres_3 : '',
+                            refl_puesto: position_tres_3 ? position_tres_3 : position_tres_3,
+                            refl_hrs_promedio: average_tres_3 ? average_tres_3 : '',
+                            refl_fecha_ingreso: starting_tres_3 ? starting_tres_3 : null,
+                            refl_fecha_salida: ending_tres_3 ? ending_tres_3 : null,
+                            refl_motivo_salida: reason_tres_3 ? reason_tres_3 : '',
+                            refl_actividad: summary_tres_3 ? summary_tres_3 : ''
+                        },
+                        {
+                            refl_nombre_empresa: company_cuatro_3 ? company_cuatro_3 : '',
+                            refl_direccion: address_cuatro_3 ? address_cuatro_3 : '',
+                            refl_telefono: phone_cuatro_3 ? phone_cuatro_3 : '',
+                            refl_jefe_directo: supervisor_cuatro_3 ? supervisor_cuatro_3 : '',
+                            refl_puesto: position_cuatro_3 ? position_cuatro_3 : position_cuatro_3,
+                            refl_hrs_promedio: average_cuatro_3 ? average_cuatro_3 : '',
+                            refl_fecha_ingreso: starting_cuatro_3 ? starting_cuatro_3 : null,
+                            refl_fecha_salida: ending_cuatro_3 ? ending_cuatro_3 : null,
+                            refl_motivo_salida: reason_cuatro_3 ? reason_cuatro_3 : '',
+                            refl_actividad: summary_cuatro_3 ? summary_cuatro_3 : ''
+                        },
+                        {
+                            refl_nombre_empresa: company_cinco_3 ? company_cinco_3 : '',
+                            refl_direccion: address_cinco_3 ? address_cinco_3 : '',
+                            refl_telefono: phone_cinco_3 ? phone_cinco_3 : '',
+                            refl_jefe_directo: supervisor_cinco_3 ? supervisor_cinco_3 : '',
+                            refl_puesto: position_cinco_3 ? position_cinco_3 : position_cinco_3,
+                            refl_hrs_promedio: average_cinco_3 ? average_cinco_3 : '',
+                            refl_fecha_ingreso: starting_cinco_3 ? starting_cinco_3 : null,
+                            refl_fecha_salida: ending_cinco_3 ? ending_cinco_3 : null,
+                            refl_motivo_salida: reason_cinco_3 ? reason_cinco_3 : '',
+                            refl_actividad: summary_cinco_3 ? summary_cinco_3 : ''
+                        },
                     ]
-                )
-                navigation.navigate('Choose')
-            }
+                    const newCurriculum = curriculum.filter(x => (x.refl_nombre_empresa !== '' && x.refl_direccion !== '' && x.refl_telefono !== '' && x.refl_jefe_directo !== '' && x.refl_puesto !== '' && x.refl_hrs_promedio !== '' && x.refl_fecha_ingreso !== null && x.refl_fecha_salida !== null && x.refl_motivo_salida !== '' && x.refl_actividad !== '') && x)
+                    
+                    let obj_3 = {
+                        cand_primer_empleo: any_experience_3
+                    }
 
-            else if(response.status === 405) {
-                console.log('se ejecutó la acción 2 veces pero se guardó solo una vez')
+                    dispatch(setStepThreeUSA(obj_3))
+                    dispatch(setCurriculumUSA(newCurriculum))
+                    dispatch(setStatementsVisible(true))
+                }
             }
-            
         }
     }
 
@@ -429,9 +509,9 @@ export default ({navigation, language}) => {
                                                             fieldName={x.refl_hrs_promedio}
                                                         />
                                                         <TitleForms type={'subtitle'} title={'Starting Date'} />
-                                                        <DatePicker fieldName={x.refl_fecha_ingreso} language={'2'} required={true}/>
+                                                        <DatePicker fieldName={x.refl_fecha_ingreso} language={'2'} required={false}/>
                                                         <TitleForms type={'subtitle'} title={'Ending Date'} />
-                                                        <DatePicker fieldName={x.refl_fecha_salida} language={'2'} required={true}/>
+                                                        <DatePicker fieldName={x.refl_fecha_salida} language={'2'} required={false}/>
                                                         <TitleForms type={'subtitle'} title={'Reason for Leaving'} />
                                                         <MultiTextForm
                                                             status={true}
