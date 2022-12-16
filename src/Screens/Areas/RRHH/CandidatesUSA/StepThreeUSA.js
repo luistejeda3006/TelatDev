@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, Text, Alert, BackHandler, TouchableOpacity, Linking} from 'react-native';
 import {DatePicker, InputForm, MultiTextForm, Picker, ProgressStepActions, TitleForms} from '../../../../components';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {contactEmail, isIphone} from '../../../../access/requestedData';
 import {Blue} from '../../../../colors/colorsApp';
 import {useDispatch} from 'react-redux';
-import {setCurriculumUSA, setStatementsVisible, setStepThreeUSA} from '../../../../slices/applicationForm';
+import {setCurriculumUSA, setStatementsVisibility, setStepThreeUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
 let currentOne = null;
@@ -21,6 +21,13 @@ let keyTwo = 'stepTwo'
 let keySchools = 'stepTwoSchools'
 
 export default ({navigation, language}) => {
+    const input_company = useRef()
+    const input_address = useRef()
+    const input_telephone = useRef()
+    const input_supervisor = useRef()
+    const input_position = useRef()
+    const input_average = useRef()
+
     const dispatch = useDispatch()
 
     const [jobs, setJobs] = useState([
@@ -100,7 +107,7 @@ export default ({navigation, language}) => {
         getInfo()
     },[])
 
-    const first = {label: 'Select', value: 'SEL'};
+    const first = {label: 'PLEASE SELECT ONE', value: 'SEL'};
 
     const closeOptions = [
         first,
@@ -221,33 +228,36 @@ export default ({navigation, language}) => {
     const {contador, experience} = filters;
     const {nombreRelacionUno_4_US, telefonoRelacionUno_4_US, ocupacionRelacionUno_4_US, nombreRelacionDos_4_US, telefonoRelacionDos_4_US, ocupacionRelacionDos_4_US} = values;
 
-    const handleSave = async () => {
-
-    }
-
     const handleValues = async () => {
         if(any_experience_3 === 'SEL' || any_experience_3 === undefined){
             Alerta()
         }
         else {
             if(any_experience_3 === '0'){
-                handleSave()
+                let curriculum = [];
+                let obj_3 = {
+                    cand_primer_empleo: any_experience_3 === '1' ? '0' : '1'
+                }
+
+                dispatch(setStepThreeUSA(obj_3))
+                dispatch(setCurriculumUSA(curriculum))
+                dispatch(setStatementsVisibility(true))
             } else {
                 if(company_uno_3 === '' || company_uno_3 === undefined || address_uno_3 === '' || address_uno_3 === undefined || phone_uno_3 === '' || phone_uno_3 === undefined || supervisor_uno_3 === '' || supervisor_uno_3 === undefined || position_uno_3 === '' || position_uno_3 === undefined || average_uno_3 === '' || average_uno_3 === undefined || starting_uno_3 === undefined || ending_uno_3 === undefined || reason_uno_3 === '' || reason_uno_3 === undefined || summary_uno_3 === '' || summary_uno_3 === undefined){
                     Alerta()
                 } else {
                     let curriculum = [
                         {
-                            refl_nombre_empresa: company_uno_3,
-                            refl_direccion: address_uno_3,
-                            refl_telefono: phone_uno_3,
-                            refl_jefe_directo: supervisor_uno_3,
-                            refl_puesto: position_uno_3,
-                            refl_hrs_promedio: average_uno_3,
-                            refl_fecha_ingreso: starting_uno_3,
-                            refl_fecha_salida: ending_uno_3,
-                            refl_motivo_salida: reason_uno_3,
-                            refl_actividad: summary_uno_3
+                            refl_nombre_empresa: company_uno_3 ? company_uno_3 : '',
+                            refl_direccion: address_uno_3 ? address_uno_3 : '',
+                            refl_telefono: phone_uno_3 ? phone_uno_3 : '',
+                            refl_jefe_directo: supervisor_uno_3 ? supervisor_uno_3 : '',
+                            refl_puesto: position_uno_3 ? position_uno_3 : '',
+                            refl_hrs_promedio: average_uno_3 ? average_uno_3 : '',
+                            refl_fecha_ingreso: starting_uno_3 ? starting_uno_3 : '',
+                            refl_fecha_salida: ending_uno_3 ? ending_uno_3 : '',
+                            refl_motivo_salida: reason_uno_3 ? reason_uno_3 : '',
+                            refl_actividad: summary_uno_3 ? summary_uno_3 : ''
                         },
                         {
                             refl_nombre_empresa: company_dos_3 ? company_dos_3 : '',
@@ -306,7 +316,7 @@ export default ({navigation, language}) => {
 
                     dispatch(setStepThreeUSA(obj_3))
                     dispatch(setCurriculumUSA(newCurriculum))
-                    dispatch(setStatementsVisible(true))
+                    dispatch(setStatementsVisibility(true))
                 }
             }
         }
@@ -363,16 +373,14 @@ export default ({navigation, language}) => {
 
     const Item = () => {
         return(
-            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 35, width: 'auto', flexDirection: 'row', backgroundColor: Blue, borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center', paddingLeft: 6, paddingRight: 10}}>
-                <IonIcons name={'plus'} size={20} color={'#fff'} />
-                <Text style={tw`text-[#fff] font-bold text-sm ml-1`}>Add Experience</Text>
+            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}] flex-row`}>
+                <Text style={tw`text-[#fff] font-bold`}>Add Experience</Text>
             </TouchableOpacity>
         )
     }
 
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
@@ -400,38 +408,49 @@ export default ({navigation, language}) => {
                                             status={true}
                                             placeholder={'COMPANY NAME'}
                                             fieldName={'company_uno_3'}
+                                            ref={input_company}
+                                            onSubmitEditing={() => input_address.current.focus()}
                                         />
                                         <TitleForms type={'subtitle'} title={'Address'} />
                                         <InputForm
                                             status={true}
                                             placeholder={'COMPANY ADDRESS'}
                                             fieldName={'address_uno_3'}
+                                            ref={input_address}
+                                            onSubmitEditing={() => input_telephone.current.focus()}
                                         />
                                         <TitleForms type={'subtitle'} title={'Telephone'} />
                                         <InputForm
                                             status={true}
-                                            keyboardType='number-pad' 
+                                            keyboardType='numeric'
                                             returnKeyType={'done'}
                                             placeholder={'PHONE NUMBER'}
                                             fieldName={'phone_uno_3'}
+                                            ref={input_telephone}
+                                            onSubmitEditing={() => input_supervisor.current.focus()}
                                         />
                                         <TitleForms type={'subtitle'} title={'Supervisor Name'} />
                                         <InputForm
                                             status={true}
                                             placeholder={'SUPERVISOR'}
                                             fieldName={'supervisor_uno_3'}
+                                            ref={input_supervisor}
+                                            onSubmitEditing={() => input_position.current.focus()}
                                         />
                                         <TitleForms type={'subtitle'} title={'Title/Position Held'} />
                                         <InputForm
                                             status={true}
                                             placeholder={'TITLE/POSITION HELD'}
                                             fieldName={'position_uno_3'}
+                                            ref={input_position}
+                                            onSubmitEditing={() => input_average.current.focus()}
                                         />
                                         <TitleForms type={'subtitle'} title={'Average Hours Worked Per Week'} />
                                         <InputForm
                                             status={true}
                                             placeholder={'AVERAGE'}
                                             fieldName={'average_uno_3'}
+                                            ref={input_average}
                                         />
                                         <TitleForms type={'subtitle'} title={'Starting Date'} />
                                         <DatePicker fieldName={'starting_uno_3'} language={'2'} required={true}/>
@@ -485,7 +504,7 @@ export default ({navigation, language}) => {
                                                         <TitleForms type={'subtitle'} title={'Telephone'} />
                                                         <InputForm
                                                             status={true}
-                                                            keyboardType='number-pad' 
+                                                            keyboardType='numeric'
                                                             returnKeyType={'done'}
                                                             placeholder={'PHONE NUMBER'}
                                                             fieldName={x.refl_telefono}

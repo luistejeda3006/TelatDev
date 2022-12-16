@@ -11,8 +11,8 @@ export default (initialState = {}) => {
     const handleOrientationDidChange = (data) => {
         console.log('data: ', data)
         console.log('entra en el cambioooooo')
-        dispatch(setOrientation(data ? data : 'PORTRAIT'))
-        setOrientationInfo({...orientationInfo, initial: data});
+        /* dispatch(setOrientation(data ? data : 'PORTRAIT'))
+        setOrientationInfo({...orientationInfo, initial: data}); */
     }
 
     useEffect(() => {

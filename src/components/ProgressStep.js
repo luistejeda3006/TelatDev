@@ -1,11 +1,10 @@
 import React from  'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text} from 'react-native'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Blue} from '../colors/colorsApp'
 import {selectLanguageApp} from '../slices/varSlice';
 import {useSelector} from 'react-redux';
 import {selectError, selectStep} from '../slices/progressStepSlice';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import tw from 'twrnc'
 
 let step = null;
@@ -64,9 +63,3 @@ export default ({data, children}) => {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow:1,
-    }
-})

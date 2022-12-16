@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StatusBar, SafeAreaView, Text, TouchableOpacity, ScrollView} from 'react-native';
-import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep, Modal, RadioButton} from '../../components';
+import {View, StatusBar, SafeAreaView, Text, TouchableOpacity, ScrollView, Alert, StyleSheet, Image} from 'react-native';
+import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep, Modal, RadioButton, FooterForm} from '../../components';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
 import {useOrientation, useConnection, useNavigation} from '../../hooks';
@@ -10,10 +10,11 @@ import {useFocusEffect} from '@react-navigation/native';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep} from '../../slices/progressStepSlice';
-import {selectCurriculumUSA, selectSchoolsUSA, selectStatements, selectStatementsVisible, selectStepOneUSA, selectStepThreeUSA, selectStepTwoUSA, setStatements} from '../../slices/applicationForm';
+import {selectCurriculumUSA, selectSchoolsUSA, selectStatements, selectStatementsVisibility, selectStepOneUSA, selectStepThreeUSA, selectStepTwoUSA, selectSuccessVisibility, setStatements, setStatementsVisibility, setSuccessVisibility} from '../../slices/applicationForm';
 import tw from 'twrnc';
 import { selectOrientation } from '../../slices/orientationSlice';
-import { live, login } from '../../access/requestedData';
+import { live, login, urlJobs } from '../../access/requestedData';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let step = null;
 let data = []
@@ -21,8 +22,9 @@ export default ({navigation, route: {params: {language, country}}}) => {
     const dispatch = useDispatch()
     step = useSelector(selectStep)
     const orientation = useSelector(selectOrientation)
-    const statementsVisible = useSelector(selectStatementsVisible)
+    const statementsVisibility = useSelector(selectStatementsVisibility)
     const statements = useSelector(selectStatements)
+    const successVisibility = useSelector(selectSuccessVisibility)
     const schools = useSelector(selectSchoolsUSA)
     const curriculum = useSelector(selectCurriculumUSA)
     const stepOneInfo = useSelector(selectStepOneUSA)
@@ -64,79 +66,68 @@ export default ({navigation, route: {params: {language, country}}}) => {
         }, [])
     );
     
-    const handleSave = () => {
+    const handleSave = async () => {
         let cand_statement = !statements ? 0 : 1
         let all = {...stepOneInfo, ...stepTwoInfo}
         all = {...all, ...stepThreeInfo}
         all = {...all, cand_statement}
-        console.log('schools: ', schools)
-        console.log('curriculum: ', curriculum)
-        console.log('all: ', all)
 
         const body = {
             action: 'insert_precandidato',
             country: 'US',
             data: {
-                info: {
-                    'info_nombre': 'Rufina',
-                    'info_apellido_p': 'Reyes',
-                    'info_ssn': 58454,
-                    'info_email': 'ruffireyes@gmail.com',
-                    'info_telefono_fijo': '',
-                    'info_telefono_celular': 5618486774,
-                    'info_ciudad': 'CDMX',
-                    'info_estado': 'Venustiano Carranza',
-                    'info_calle': 'Martin del Campo',
-                    'info_cp': 15500,
-                    'infom_contacto': 'Anahi Reyes',
-                    'infom_telefono': 5656565656,
-                    'info_curp': 'RESR961209MVZYNF07',
-                    'info_doc_state_id': 448,
-                    'info_doc_expiracion': 2025,
-                    'cand_reclutamiento_desc': 'OCC',
-                    'cand_puesto_solicitado': 'PHP Developer',
-                    'cand_fecha_disponibilidad': '2022-12-19',
-                    'cand_list_disponibilidad': 2,
-                    'cand_disponibilidad_turno': 'YES',
-                    'info_convicto': 'NO',
-                    'info_convicto_details': '',
-                    'info_adjudicacion': 'NO',
-                    'info_adjudication_details': '',
-                    'curr_pkg_computo': 'OFFICE',
-                    'cand_certificaciones': '',
-                    'cand_mayor_nivel': '',
-                    'cand_primer_empleo': 1,
-                    'cand_statement': '',
-                    'eva_ingles': 'Intermedio',
-                    'eva_espanol': 'Avanzado' 
-                },
-                curriculum: [
-                    {
-                        'curr_nivel_estudio': 'Bachillerato',
-                        'curr_institucion': 'IPN',
-                        'curr_ubicacion': '',
-                        'curr_certificado': 2,
-                        'curr_titulo': 'Técnico',
-                        'curr_horario': '7-11'
-                    }
-                ],
-                referencias_laborales: [
-                    {
-                        'refl_nombre_empresa': 'Caltec',
-                        'refl_direccion': 'Dumas 30',
-                        'refl_telefono': 6545444546,
-                        'refl_puesto': 'Programador web',
-                        'refl_actividad': 'Desarrollo sistemas',
-                        'refl_hrs_promedio': '8',
-                        'refl_jefe_directo': 'Juan Ursua',
-                        'refl_fecha_ingreso': '2019-03-05',
-                        'refl_fecha_salida': '2021-08-05',
-                        'refl_motivo_salida': 'Crecimiento'
-                    }
-                ]
+                info: all,
+                curriculum: schools,
+                referencias_laborales: curriculum
             },
             live: live,
             login: login
+        }
+
+        console.log('body: ', body)
+        
+        try{
+            const request = await fetch(urlJobs, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+            const {response, status} = await request.json();
+
+            if(status === 200){
+                dispatch(setStatementsVisibility(false))
+                dispatch(setSuccessVisibility(true))
+                setTimeout(() => {
+                    dispatch(setSuccessVisibility(false))
+                    navigation.navigate('Choose')
+                }, 7000)
+            }
+
+            else if(status === 400){
+                Alert.alert(
+                    language === '1' ? 'Error al envíar su solicitud' : 'Error to send your request',
+                    language === '1' ? 'Inténtelo de nuevo más tarde.' : 'Try later, again.',
+                    [
+                        { text: 'OK'}
+                    ]
+                )
+                navigation.navigate('Choose')
+            }
+
+            else if(status === 405) {
+                console.log('se ejecutó la acción 2 veces pero se guardó solo una vez')
+            }
+        }catch(e){
+            Alert.alert(
+                language === '1' ? 'Error de Conexión' : 'Connection Failed',
+                language === '1' ? 'Por favor, Verifique su Conexión de Internet' : 'Please, Verify Internet Connection',
+                [
+                    { text: 'OK'}
+                ]
+            )
+            navigation.navigate('Choose')
         }
     }
 
@@ -234,12 +225,9 @@ export default ({navigation, route: {params: {language, country}}}) => {
                             .required(required),
                             location_uno_2: Yup.string()
                             .required(required),
-                            graduated_uno_2: Yup.string()
-                            .required(required),
-                            certificate_uno_2: Yup.string()
-                            .required(required),
-                            schedule_uno_2: Yup.string()
-                            .required(required),
+                            graduated_uno_2: Yup.string(),
+                            certificate_uno_2: Yup.string(),
+                            schedule_uno_2: Yup.string(),
 
                             type_school_dos_2: Yup.string(),
                             school_name_dos_2: Yup.string(),
@@ -360,6 +348,11 @@ export default ({navigation, route: {params: {language, country}}}) => {
                             hasConnection
                             ?
                                 <ProgressStep data={data}>
+                                    <KeyboardAwareScrollView
+                                        contentContainerStyle={styles.scrollContainer}
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
+                                    >
                                     {
                                         step === 1
                                         ?
@@ -371,10 +364,13 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                             :
                                                 <StepThreeUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                                     }
+                                    <FooterForm country={'US'}/>
+                                    </KeyboardAwareScrollView>
                                 </ProgressStep>
                             :
                                 <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
                         }
+
                     </Formik>
                 :
                     <Formik
@@ -578,6 +574,11 @@ export default ({navigation, route: {params: {language, country}}}) => {
                             hasConnection
                             ?
                                 <ProgressStep data={data}>
+                                    <KeyboardAwareScrollView
+                                        contentContainerStyle={styles.scrollContainer}
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
+                                    >
                                     {
                                         step === 1
                                         ?
@@ -593,6 +594,8 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                                 :
                                                     <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                                     }
+                                    <FooterForm />
+                                    </KeyboardAwareScrollView>
                                 </ProgressStep>
                             :
                                 <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
@@ -600,7 +603,7 @@ export default ({navigation, route: {params: {language, country}}}) => {
                 </Formik>
             }
 
-            <Modal visibility={statementsVisible} orientation={orientation}>
+            <Modal visibility={statementsVisibility} orientation={orientation}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -646,7 +649,7 @@ I certify that all the information provided by me in connection with my applicat
                         <View style={tw`h-2`}/>
                     </View>
                     <View style={tw`h-12.5 flex-row items-center justify-end`}>
-                        <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[#6C757D]`}>
+                        <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[#6C757D]`} onPress={() => dispatch(setStatementsVisibility(false))}>
                             <Text style={tw`text-[#fff] font-bold`}>Cancel</Text>
                         </TouchableOpacity>
                         <View style={tw`w-3`}/>
@@ -657,7 +660,40 @@ I certify that all the information provided by me in connection with my applicat
 
                 </ScrollView>
             </Modal>
+
+            <Modal orientation={orientation} visibility={successVisibility} handleDismiss={() => {}}>
+                <View style={tw`h-auto self-stretch justify-center items-center`}>
+                    <Image
+                        style={tw`w-70 h-20`}
+                        resizeMode='stretch'
+                        source={{uri: 'https://telat.us/assets/img/dx-logo.png'}}
+                    />
+                </View>
+                <View style={tw`h-auto self-stretch justify-center items-center py-2.5`}>
+                    <Text style={tw`text-lg text-[${Blue}] font-bold`}>Successful Registration</Text>
+                    <Text style={tw`text-sm text-[#000] mt-2`}>Thank you for your information.</Text>
+                    <Text style={tw`text-sm text-[#000]`}>Your application has been successfully sent!</Text>
+                </View>
+                <View style={tw`justify-center items-center self-stretch h-auto mt-3`}>
+                    <Image
+                        style={tw`w-25 h-25`}
+                        resizeMode='stretch'
+                        source={require('../../../assets/correct.gif')}
+                    />
+                </View>
+                <View style={tw`h-auto justify-center items-center mt-6`}>
+                    <Text style={tw`text-sm text-center text-black`}>Please be aware of your phone and email, we'll be contacting you soon to follow up with your application.</Text>
+                    <Text style={tw`text-sm text-center text-black mt-2.5`}>{'For more information contact us:\n'} <Text style={tw`font-bold`}>talent@telat-group.com</Text></Text>
+                </View>
+            </Modal>
+
             </View>
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow:1,
+    }
+})

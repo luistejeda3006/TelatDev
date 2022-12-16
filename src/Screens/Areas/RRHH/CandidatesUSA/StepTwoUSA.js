@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'react-native';
 import {InputForm, Picker, TitleForms, ProgressStepActions, MultiTextForm} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -14,6 +14,13 @@ import {setSchoolsUSA, setStepTwoUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
 export default ({navigation, language, orientation}) => {
+    const input_diploma = useRef()
+    const input_grade = useRef()
+    const input_school = useRef()
+    const input_location = useRef()
+    const input_type = useRef()
+    const input_schedule = useRef()
+
     const {isTablet} = DeviceInfo;
     const dispatch = useDispatch()
     const step = useSelector(selectStep)
@@ -27,7 +34,7 @@ export default ({navigation, language, orientation}) => {
         'initial': 'PORTRAIT'
     });
     
-    const first = {label: 'Select', value: 'SEL'};
+    const first = {label: 'PLEASE SELECT ONE', value: 'SEL'};
 
     const closeOptions = [
         first,
@@ -147,21 +154,23 @@ export default ({navigation, language, orientation}) => {
     const {pEmpleo, contador} = filters;
 
     const handleValues = async () => {
-        if(diploma_2 === '' || diploma_2 === undefined || level_2 === '' || level_2 === undefined || type_school_uno_2 === 'SEL' || type_school_uno_2 === undefined || school_name_uno_2 === '' || school_name_uno_2 === undefined || location_uno_2 === '' || location_uno_2 === undefined || graduated_uno_2 === 'SEL' || graduated_uno_2 === undefined || certificate_uno_2 === '' || certificate_uno_2 === undefined || schedule_uno_2 === '' || schedule_uno_2 === undefined || qualifications_2 === '' || qualifications_2 === undefined || english_proficiency_2 === 'SEL' || english_proficiency_2 === undefined || spanish_proficiency_2 === 'SEL' || spanish_proficiency_2 === undefined){
+        if(diploma_2 === '' || diploma_2 === undefined || level_2 === '' || level_2 === undefined || type_school_uno_2 === 'SEL' || type_school_uno_2 === undefined || school_name_uno_2 === '' || school_name_uno_2 === undefined || location_uno_2 === '' || location_uno_2 === undefined || qualifications_2 === '' || qualifications_2 === undefined || english_proficiency_2 === 'SEL' || english_proficiency_2 === undefined || spanish_proficiency_2 === 'SEL' || spanish_proficiency_2 === undefined){
             Alerta()
         } else {
             let key = 'stepTwo'
             let keySchools = 'stepTwoSchools'
             let schools = [
                 {
-                    curr_nivel_estudio: type_school_uno_2,
-                    curr_institucion: school_name_uno_2,
-                    curr_ubicacion: location_uno_2,
-                    curr_certificado: graduated_uno_2,
-                    curr_titulo: certificate_uno_2,
-                    curr_horario: schedule_uno_2,
+                    id: 1,
+                    curr_nivel_estudio: (type_school_uno_2 === 'SEL' || type_school_uno_2 === undefined) ? '' : type_school_uno_2,
+                    curr_institucion: (school_name_uno_2 === '' || school_name_uno_2 === undefined) ? '' : school_name_uno_2,
+                    curr_ubicacion: (location_uno_2 === '' || location_uno_2 === undefined) ? '' : location_uno_2,
+                    curr_certificado: (graduated_uno_2 === 'SEL' || graduated_uno_2 === undefined) ? '' : graduated_uno_2,
+                    curr_titulo: (certificate_uno_2 === '' || certificate_uno_2 === undefined) ? '' : certificate_uno_2,
+                    curr_horario: (schedule_uno_2 === '' || schedule_uno_2 === undefined) ? '' : schedule_uno_2,
                 },
                 {
+                    id: 2,
                     curr_nivel_estudio: (type_school_dos_2 === 'SEL' || type_school_dos_2 === undefined) ? '' : type_school_dos_2,
                     curr_institucion: (school_name_dos_2 === '' || school_name_dos_2 === undefined) ? '' : school_name_dos_2,
                     curr_ubicacion: (location_dos_2 === '' || location_dos_2 === undefined) ? '' : location_dos_2,
@@ -170,6 +179,7 @@ export default ({navigation, language, orientation}) => {
                     curr_horario: (schedule_dos_2 === '' || schedule_dos_2 === undefined) ? '' : schedule_dos_2,
                 },
                 {
+                    id: 3,
                     curr_nivel_estudio: (type_school_tres_2 === 'SEL' || type_school_tres_2 === undefined) ? '' : type_school_tres_2,
                     curr_institucion: (school_name_tres_2 === '' || school_name_tres_2 === undefined) ? '' : school_name_tres_2,
                     curr_ubicacion: (location_tres_2 === '' || location_tres_2 === undefined) ? '' : location_tres_2,
@@ -178,6 +188,7 @@ export default ({navigation, language, orientation}) => {
                     curr_horario: (schedule_tres_2 === '' || schedule_tres_2 === undefined) ? '' : schedule_tres_2,
                 },
                 {
+                    id: 4,
                     curr_nivel_estudio: (type_school_cuatro_2 === 'SEL' || type_school_cuatro_2 === undefined) ? '' : type_school_cuatro_2,
                     curr_institucion: (school_name_cuatro_2 === '' || school_name_cuatro_2 === undefined) ? '' : school_name_cuatro_2,
                     curr_ubicacion: (location_cuatro_2 === '' || location_cuatro_2 === undefined) ? '' : location_cuatro_2,
@@ -186,6 +197,7 @@ export default ({navigation, language, orientation}) => {
                     curr_horario: (schedule_cuatro_2 === '' || schedule_cuatro_2 === undefined) ? '' : schedule_cuatro_2,
                 },
                 {
+                    id: 5,
                     curr_nivel_estudio: (type_school_cinco_2 === 'SEL' || type_school_cinco_2 === undefined) ? '' : type_school_cinco_2,
                     curr_institucion: (school_name_cinco_2 === '' || school_name_cinco_2 === undefined) ? '' : school_name_cinco_2,
                     curr_ubicacion: (location_cinco_2 === '' || location_cinco_2 === undefined) ? '' : location_cinco_2,
@@ -195,7 +207,7 @@ export default ({navigation, language, orientation}) => {
                 },
             ]
     
-            const newSchools = schools.filter(x => (x.curr_nivel_estudio !== '' && x.curr_institucion !== '' && x.curr_ubicacion !== '' && x.curr_certificado !== '' && x.curr_titulo !== '' && x.curr_horario !== '') && x)
+            const newSchools = schools.filter(x => x.id !== 1 ? (x.curr_nivel_estudio !== '' && x.curr_institucion !== '' && x.curr_ubicacion !== '' && x.curr_certificado !== '' && x.curr_titulo !== '' && x.curr_horario !== '') && x : x)
             
             let obj_2 = {
                 cand_certificaciones: diploma_2,
@@ -270,9 +282,8 @@ export default ({navigation, language, orientation}) => {
 
     const Item = () => {
         return(
-            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={{height: 35, width: 'auto', flexDirection: 'row', backgroundColor: Blue, borderRadius: 25, borderWidth: 1, borderColor: Blue, justifyContent: 'center', alignItems: 'center', paddingLeft: 6, paddingRight: 10}}>
-                <IonIcons name={'plus'} size={20} color={'#fff'} />
-                <Text style={tw`text-[#fff] font-bold text-sm ml-1`}>Add Experience</Text>
+            <TouchableOpacity onPress={() => handleAdd(contador + 1)} style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}] flex-row`}>
+                <Text style={tw`text-[#fff] font-bold`}>Add Experience</Text>
             </TouchableOpacity>
         )
     }
@@ -292,19 +303,21 @@ export default ({navigation, language, orientation}) => {
                             <>
                                 <TitleForms type={'title'} title={'Education'}/>
                                 <Text style={tw`text-[#adadad] text-sm mb-1.5`}>(You may be required to provide proof of diploma, degree, transcripts, licenses, and certifications)</Text>
-
                                 <TitleForms type={'subtitle'} title={'Have you ever received a High School Diploma or GED? (Please specify which)'} />
                                 <InputForm
                                     status={true}
                                     placeholder={'DIPLOMA OR GED'}
                                     fieldName={'diploma_2'}
+                                    ref={input_diploma}
+                                    onSubmitEditing={() => input_grade.current.focus()}
                                 />
                                 <TitleForms type={'subtitle'} title={'If not, what is the highest level completed?'} />
                                 <InputForm
                                     status={true}
                                     placeholder={'HIGHEST GRADE LEVEL COMPLETED'}
                                     fieldName={'level_2'}
-                                />
+                                    ref={input_grade}
+                                    />
 
                                 <TitleForms type={'title'} title={'Schools'} Item={Item}/>
                                 <TitleForms type={'subtitle'} title={'Type Of School'} />
@@ -317,29 +330,36 @@ export default ({navigation, language, orientation}) => {
                                     status={true}
                                     placeholder={'SCHOOL NAME'}
                                     fieldName={'school_name_uno_2'}
+                                    ref={input_school}
+                                    onSubmitEditing={() => input_location.current.focus()}
                                 />
                                 <TitleForms type={'subtitle'} title={'Location'} />
                                 <InputForm
                                     status={true}
                                     placeholder={'LOCATION'}
                                     fieldName={'location_uno_2'}
+                                    ref={input_location}
                                 />
                                 <TitleForms type={'subtitle'} title={'Graduated'} />
                                 <Picker 
                                     fieldName={'graduated_uno_2'}
                                     items={closeOptions}
+                                    required={false}
                                 />
                                 <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
                                 <InputForm
                                     status={true}
                                     placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
                                     fieldName={'certificate_uno_2'}
+                                    ref={input_type}
+                                    onSubmitEditing={() => input_schedule.current.focus()}
                                 />
                                 <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
                                 <InputForm
                                     status={true}
                                     placeholder={'SCHEDULE'}
                                     fieldName={'schedule_uno_2'}
+                                    ref={input_schedule}
                                 />
                                 {
                                     schools.map((x,i) =>

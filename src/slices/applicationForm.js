@@ -2,12 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     statements: undefined,
-    statementsVisible: false,
+    statementsVisibility: false,
+    successVisibility: false,
     stepOneUSA: {},
     stepTwoUSA: {},
     stepThreeUSA: {},
     schoolsUSA: {},
-    curriculumUSA: {}
+    curriculumUSA: {},
 }
 
 export const navSlice = createSlice({
@@ -15,7 +16,8 @@ export const navSlice = createSlice({
     initialState,
     reducers: {
         setStatements: (state, action) => {state.statements = action.payload},
-        setStatementsVisible: (state, action) => {state.statementsVisible = action.payload},
+        setStatementsVisibility: (state, action) => {state.statementsVisibility = action.payload},
+        setSuccessVisibility: (state, action) => {state.successVisibility = action.payload},
         setStepOneUSA: (state, action) => {state.stepOneUSA = action.payload},
         setStepTwoUSA: (state, action) => {state.stepTwoUSA = action.payload},
         setStepThreeUSA: (state, action) => {state.stepThreeUSA = action.payload},
@@ -24,14 +26,14 @@ export const navSlice = createSlice({
     }
 })
 
-export const {setStatements, setStatementsVisible, setStepOneUSA, setStepTwoUSA, setStepThreeUSA, setSchoolsUSA, setCurriculumUSA} = navSlice.actions
+export const {setStatements, setStatementsVisibility, setSuccessVisibility, setStepOneUSA, setStepTwoUSA, setStepThreeUSA, setSchoolsUSA, setCurriculumUSA} = navSlice.actions
 
-export const selectStatementsVisible = (state) => state.navApplication.statementsVisible;
+export const selectStatementsVisibility = (state) => state.navApplication.statementsVisibility;
+export const selectSuccessVisibility = (state) => state.navApplication.successVisibility;
 export const selectStatements = (state) => state.navApplication.statements;
 export const selectStepOneUSA = (state) => state.navApplication.stepOneUSA;
 export const selectStepTwoUSA = (state) => state.navApplication.stepTwoUSA;
 export const selectStepThreeUSA = (state) => state.navApplication.stepThreeUSA;
 export const selectSchoolsUSA = (state) => state.navApplication.schoolsUSA;
 export const selectCurriculumUSA = (state) => state.navApplication.curriculumUSA;
-
 export default navSlice.reducer

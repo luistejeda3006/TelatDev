@@ -26,6 +26,17 @@ export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
             {
                 !error
                 ?
+                    <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}]`} onPress={handleNexts}>
+                        <Text style={tw`text-[#fff] font-bold`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
+                    </TouchableOpacity>
+                :
+                    <View style={tw`px-3 py-2 border border-[#adadad] rounded bg-[#dadada]`}>
+                        <Text style={tw`text-[#fff] font-bold`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
+                    </View>
+            }
+            {/* {
+                !error
+                ?
                     <TouchableOpacity style={tw`w-auto h-auto bg-[${Blue}] justify-center items-center rounded-2xl py-2 px-4 flex-row`} onPress={() => handleNext()}>
                         <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
                     </TouchableOpacity>
@@ -33,7 +44,7 @@ export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
                     <View style={tw`w-auto h-auto bg-[#dadada] justify-center items-center rounded-2xl py-2 px-4 flex-row`}>
                         <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
                     </View>
-            }
+            } */}
         </View>
     )
 }

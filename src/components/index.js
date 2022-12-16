@@ -33,3 +33,4 @@ export {default as FailedNetwork} from './FailedNetwork';
 
 export {default as ProgressStep} from './ProgressStep';
 export {default as ProgressStepActions} from './ProgressStepActions';
+export {default as FooterForm} from './FooterForm';

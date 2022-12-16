@@ -19,7 +19,7 @@ export default forwardRef(({value, optional = false, edit = true, ...rest}, ref)
                     value === ''
                     &&
                         <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                            <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
                         </View>
                 }
             </View>
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingRight: 10,
         width: '100%',
-        paddingLeft: 8
+        paddingLeft: 8,
+        borderRadius: 4,
     }
 })

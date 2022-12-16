@@ -42,7 +42,7 @@ export default ({navigation, language}) => {
     const input_referred_by = useRef()
     const input_desired_position = useRef()
 
-    const first = {label: 'Select', value: 'SEL'};
+    const first = {label: 'PLEASE SELECT ONE', value: 'SEL'};
 
     const closeOptions = [
         first,
@@ -57,12 +57,10 @@ export default ({navigation, language}) => {
     }, [statesData])
     
     const handleAction_uno = (index) => {
-        console.log('index de misdemeanor: ', index)
         setFilters({...filters, misdemeanor: index})
     }
     
     const handleAction_dos = (index) => {
-        console.log('index de adjudication: ', index)
         setFilters({...filters, adjudication: index})
     }
 
@@ -167,7 +165,6 @@ export default ({navigation, language}) => {
             }
 
             else if(status === 400) {
-                dispatch(setError(true))
                 Alerta()
             }
         }catch(e){

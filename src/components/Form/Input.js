@@ -51,7 +51,7 @@ export default forwardRef(({status, radius = true, fieldName, icon, isTextArea =
                 &&
                     meta.error &&
                     <View style={{height: 40, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                        <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                        <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
                     </View>
             }
         </View>
@@ -68,11 +68,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingRight: 10,
+        borderRadius: 4,
     },
     input:{
         flex: 1,
         height: 45,
         color: '#000',
-        paddingLeft: 8
+        paddingLeft: 8,
     }
 })

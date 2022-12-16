@@ -39,7 +39,7 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
     return (
         required
         ?
-            <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) ? 10 : 0}]}>
+            <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) && required ? 10 : 0}]}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
                     <Picker
                         value={field.value}
@@ -49,14 +49,15 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
                     />
                 </View>
                 {
-                    (field.value === 'SEL' || field.value === undefined) &&
-                    <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                        <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
-                    </View>
+                    (field.value === 'SEL' || field.value === undefined)
+                    &&
+                        <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
+                            <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
+                        </View>
                 }
             </View>
         :
-            <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) ? 10 : 0}]}>
+            <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) && required ? 10 : 0}]}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
                     <Picker
                         value={field.value}
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         height: 45,
+        borderRadius: 4,
         flexDirection: 'row',
         paddingRight: 10,
         paddingLeft: isIphone ? 10 : 0

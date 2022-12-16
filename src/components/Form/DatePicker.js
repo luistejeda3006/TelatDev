@@ -39,7 +39,7 @@ export default ({fieldName, language = '1', shortFormat = true, isModule = false
                     ((field.value === '' || field.value === undefined && required) || (dateLabel === '' && required))
                     &&
                         <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                            <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
                         </View>
                 }
             </TouchableOpacity>
@@ -69,5 +69,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingHorizontal: 10,
+        borderRadius: 4,
     },
 })

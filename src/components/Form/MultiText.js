@@ -39,7 +39,7 @@ export default forwardRef(({fieldName, required = false, edit = true, value ,...
                     meta.error
                     &&
                         <View style={{height: '100%', width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                            <Ionicons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                            <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
                         </View>
                 }
             </View>
@@ -60,5 +60,6 @@ const styles = StyleSheet.create({
         marginHorizontal: .1,
         paddingHorizontal: 8,
         paddingVertical: isIphone ? 12 : 0,
+        borderRadius: 4,
     }
 })

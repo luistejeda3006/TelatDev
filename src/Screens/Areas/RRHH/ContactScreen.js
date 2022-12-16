@@ -602,7 +602,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                             currentAboutUsOption === 0
                                             &&
                                                 <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                    <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                    <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                 </View>
                                         }
                                     </View>
@@ -637,7 +637,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentLevelOptionEnglish === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -656,7 +656,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentLevelOptionSpanish === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -675,7 +675,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentProgramsOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -694,7 +694,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentCloseOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -769,7 +769,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentContactOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -787,7 +787,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentScheduleOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -808,7 +808,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentCloseOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -847,7 +847,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentLevelOptionEnglish === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -865,7 +865,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentLevelOptionSpanish === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -884,7 +884,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentProgramsOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -943,7 +943,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentContactOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -961,7 +961,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                         currentScheduleOption === 0
                                                         &&
                                                             <View style={{height: 45, width: 25, justifyContent: 'center', alignItems: 'center'}}>
-                                                                <IonIcons name='alert-circle-outline' color={'#DC3644'} size={17}/>
+                                                                <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
                                                 </View>
@@ -1079,6 +1079,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: isIphone ? 10 : 1,
         width: '100%',
         flexDirection: 'row',
-        paddingRight: 10
+        paddingRight: 10,
+        borderRadius: 4,
     }
 })

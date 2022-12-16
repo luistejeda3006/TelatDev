@@ -641,7 +641,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                 <View
                     style={tw`flex-row self-stretch h-auto`}>
                     <TouchableOpacity
-                        style={tw`flex-1 h-11 bg-[#ececec] justify-center items-center flex-row rounded-md mr-1`}
+                        style={tw`flex-1 h-11 bg-[#f7f7f7] border border-[#adadad] justify-center items-center flex-row rounded mr-1`}
                         onPress={() => {
                             setCount(0)
                             setIsHide(!isHide)
@@ -654,14 +654,14 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                         }}
                     >
                         <Image
-                            style={tw`w-6 h-6 border-2 border-[#fff] rounded-3xl m-px`}
+                            style={tw`w-6 h-6 border border-[#fff] rounded-3xl m-px`}
                             resizeMode={'cover'}
                             source={require('../../../assets/language_mx.png')}
                         />
                         <Text style={tw`text-[#000] text-sm font-bold ml-1`}>México</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={tw`flex-1 h-11 bg-[#ececec] justify-center items-center flex-row rounded-md`}
+                        style={tw`flex-1 h-11 bg-[#f7f7f7] border border-[#adadad] justify-center items-center flex-row rounded`}
                         onPress={() => {
                             setCount(0)
                             setIsHide(!isHide)
@@ -671,7 +671,7 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
                         }}
                     >
                         <Image
-                            style={tw`w-6 h-6 border-2 border-[#fff] rounded-3xl m-px`}
+                            style={tw`w-6 h-6 border border-[#fff] rounded-3xl m-px`}
                             resizeMode={'cover'}
                             source={require('../../../assets/language_us.png')}
                         />
