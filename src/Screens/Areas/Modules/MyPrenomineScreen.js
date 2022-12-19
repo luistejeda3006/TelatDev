@@ -172,6 +172,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             'login': login
         }
     
+        console.log('body: ', body)
+
         const request = await fetch(urlNomina, {
             method: 'POST',
             headers: {
@@ -181,8 +183,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             body: JSON.stringify(body)
         });
     
-        const {response} = await request.json();
-        if(response.status === 200){
+        const {response, status} = await request.json();
+        if(status === 200){
             setTimeout(() => {
                 cuentaAsistencia = cuentaAsistencia + 1
                 const total = response.prenomina_info.pren_nombre.length
@@ -216,11 +218,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             }, 800)
         }
     
-        else if(response.status === 400){
+        else if(status === 400){
             setError(true)
+            setLoading(false)
         }
     
-        else if(response.status === 401){
+        else if(status === 401){
             console.log('body: ', body)
             Alert.alert(
                 language === 1 ? 'Sesión Expirada' : 'Expired Session',
@@ -235,7 +238,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
             setLoading(false)
         }
     
-        else if(response.status === 406){
+        else if(status === 406){
             Alert.alert(
                 language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                 language === 1 ? 'Acceso denegado, comuniquese con un administrador.' : 'Access denied, contact an administrator',
@@ -301,12 +304,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 getComentarios(id)
                 setInitialState({...initialState, asistencia: response.data, calendar: !calendar, incidencias: response.data.incidencias, checadas: response.checadas, editForm: ({...editForm, asistencias: response.data.asistencias, btn_editar: btn_editar, currentAsistencia: !editForm.currentAsistencia ? response.data.tp_asist : editForm.currentAsistencia})})
             }
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -356,7 +359,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                 </View>
                             </View>
                         :
-                            <View style={tw`flex-1 justify-center items-center self-stretch bg-[${color}]`}>
+                            <View style={tw`flex-1 justify-center items-center self-stretch`}>
                                 <Text style={tw`text-xl font-bold text-[${Blue}]`}>{asistencia}</Text>
                             </View>
                     }
@@ -393,11 +396,13 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
-                setInitialState({...initialState, info_resumen: response.resumen, resume: !resume})
+            console.log('body: ', body)
+
+            const {response, status} = await request.json();
+            if(status === 200){
+                setInitialState({...initialState, info_resumen: response, resume: !resume})
             }
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -470,8 +475,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                     body: JSON.stringify(body)
                 });
         
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     setInitialState({...initialState, editForm: {...editForm, comment: '', showComment: false}, calendar: false})
                     setRefresh(!refresh)
                 }
@@ -514,8 +519,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setInitialState({...initialState,editForm: {...editForm, visibleMenu: false}})
                 setRefresh(!refresh)
             }
@@ -557,8 +562,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setInitialState({...initialState, editForm: {...editForm, visibleMenu: false}})
                 setRefresh(!refresh)
             }
@@ -597,9 +602,9 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
-                setComentarios(response.comentarios)
+            const {response, status} = await request.json();
+            if(status === 200){
+                setComentarios(response)
             }
         }catch(e){
             setLoading(false)
@@ -630,8 +635,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setInitialState({...initialState, editForm: {...editForm, comment: '', showComment: false}})
                 setRefresh(!refresh)
                 setDeleteVisibility(false)
@@ -696,14 +701,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         </View>
 
                                         <View style={tw`h-auto self-stretch justify-center items-center mt-1.5`}>
-                                            <Text style={tw`text-base font-bold text-[${Blue}]`}>{info.pren_puesto}</Text>
+                                            <Text style={tw`text-base font-bold text-[${Blue}]`}>{info.pren_puesto ? info.pren_puesto : '-----'}</Text>
                                         </View>
-                    
-                                        <View style={tw`mt-1.5`}>
-                                            <View style={tw`flex-1`}>
-                                                <Text style={title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{info.alta && `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}`}</Text>
-                                            </View>
+
+                                        <View style={tw`h-auto self-stretch mt-1.5`}>
+                                            <Text style={title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
+                                            <Text style={tw`text-sm text-[#000]`}>{info.alta ? `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}` : 'N/A'}</Text>
                                         </View>
                     
                                         <View style={tw`flex-row mt-2`}>
@@ -789,7 +792,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                         <Text style={tw`font-bold text-[#000] text-lg ml-1.5`}>{language === '1' ? 'Resumen' : 'Resume'}</Text>
                                                     </TouchableOpacity>
                                                 :
-                                                    <View style={tw`flex-row h-11 flex-1 px-1.5 roundex-2xl bg-[#f7f7f7] justify-center items-center border border-[#dadada] shadow-md`}>
+                                                    <View style={tw`flex-row h-11 flex-1 px-1.5 rounded-2xl bg-[#f7f7f7] justify-center items-center border border-[#dadada] shadow-md`}>
                                                         <IonIcons name={'file-check'} size={21} color={'#000'} />
                                                         <Text style={tw`font-bold text-[#000] text-lg ml-1.5`}>{language === '1' ? 'Resumen' : 'Resume'}</Text>
                                                     </View>
@@ -811,7 +814,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             }
                                         </View>
                                         <View style={tw`h-auto self-stretch mt-2.5 flex-row`}>
-                                            <TouchableOpacity style={[picker, tw`flex-row flex-1`]} onPress={() => handleVisiblePeriodos()}>
+                                            <TouchableOpacity style={[picker, tw`flex-row flex-1`, {height: 45}]} onPress={() => handleVisiblePeriodos()}>
                                                 <View style={tw`flex-1 justify-center items-center`} >
                                                     <Text style={tw`text-lg text-[#000]`}>{currentPeriodo}</Text>
                                                 </View>
@@ -837,7 +840,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         :
                                             <View style={tw`flex-1 items-center justify-center`}>
                                                 <Image
-                                                    style={tw`w-30 h-120 mt-12.5`}
+                                                    style={tw`w-30 h-30 my-10`}
                                                     resizeMode={'stretch'}
                                                     source={require('../../../../assets/calendary.gif')}
                                                 />
@@ -958,7 +961,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             </View>
                                             <View style={tw`flex-1 self-stretch p-2.5 bg-[#fff] shadow-md rounded-2xl`}>
                                                 <View style={tw`h-auto self-stretch items-end justify-end flex-row mb-2.5`}>
-                                                    <TouchableOpacity style={[picker, tw`flex-row mb-0 flex-1 justify-center items-center`]} onPress={() => handleVisiblePeriodos()}>
+                                                    <TouchableOpacity style={[picker, tw`flex-row mb-0 flex-1 justify-center items-center`, {height: 45}]} onPress={() => handleVisiblePeriodos()}>
                                                         <View style={tw`flex-1 justify-center items-center`}>
                                                             <Text style={tw`text-[#000]`}>{currentPeriodo}</Text>
                                                         </View>
@@ -1036,14 +1039,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                 <View style={tw`flex-row`}>
                                     <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                         <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Día' : 'Day'}</Text>
-                                        <View style={[box, tw`justify-center`]}>
+                                        <View style={[box, tw`justify-center`, {height: 45}]}>
                                             <Text style={tw`text-[#000]`}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                         </View>
                                     </View>
                                     <View style={tw`w-1.5`}></View>
                                     <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                         <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Tipo Asistencia' : 'Assistance Type'}</Text>
-                                        <View style={[box, tw`justify-center`]}>
+                                        <View style={[box, tw`justify-center`, {height: 45}]}>
                                             <Text style={tw`text-[#000]`}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
                                         </View>
                                     </View>
@@ -1051,31 +1054,35 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             :
                                 orientationInfo.initial === 'PORTRAIT'
                                 ?
-                                    <View style={tw`flex-row`}>
+                                    <View style={tw`flex-row justify-center items-center`}>
                                         <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                             <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Día' : 'Day'}</Text>
-                                            <View style={[box, tw`justify-center`]}>
+                                            <View style={[box, tw`justify-center`, {height: 45}]}>
                                                 <Text style={tw`text-[#000]`}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                             </View>
                                         </View>
                                         <View style={tw`w-1.5`}></View>
-                                        <View style={{flex: !btn_editar ? asistencia.tp_asist ? asistencia.tp_asist.length > 19 ? 2 : 1 : 1 : 1, marginBottom: 3, justifyContent: 'center', alignItems: 'center'}}>
+                                        <View style={{flex: !btn_editar ? asistencia.tp_asist ? asistencia.tp_asist.length > 19 ? 2 : 1 : 1 : 1, marginBottom: 0, justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Tipo Asistencia' : 'Assistance Type'}</Text>
                                             {
                                                 btn_editar && editForm.btn_editar
                                                 ?
-                                                    <View style={[picker, tw`self-stretch px-[${isIphone ? 2 : 0}]`]}>
-                                                        <Picker
-                                                            value={asistencia.id_asist}
-                                                            onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
-                                                            items={editForm.asistencias}
-                                                            placeholder={{}}
-                                                            style={tw`text-xs`}
-                                                        />
+                                                    <View style={styles.picker}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 0, alignSelf: 'stretch'}}>
+                                                            <Picker
+                                                                value={asistencia.id_asist}
+                                                                onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
+                                                                items={editForm.asistencias}
+                                                                placeholder={{}}
+                                                                style={tw`text-xs items-center justify-center flex-1`}
+                                                            />
+                                                        </View>
                                                     </View>
                                                 :
-                                                    <View style={[box, tw`justify-center`]}>
-                                                        <Text style={tw`text-[#000]`}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                                    <View style={[styles.picker, tw`bg-[#f7f7f7] pl-0`]}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                            <Text style={tw`text-[#000]`}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                                        </View>
                                                     </View>
                                                     
                                             }
@@ -1085,7 +1092,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     <View style={tw`flex-row`}>
                                         <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                             <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Día' : 'Day'}</Text>
-                                            <View style={[box, tw`justify-center`]}>
+                                            <View style={[box, tw`justify-center`, {height: 45}]}>
                                                 <Text style={tw`text-[#000]`}>{asistencia.dia ? asistencia.dia : ''}</Text>
                                             </View>
                                         </View>
@@ -1095,18 +1102,24 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             {
                                                 btn_editar
                                                 ?
-                                                    <View style={[picker]} >
-                                                        <Picker
-                                                            value={editForm.currentAsistencia}
-                                                            onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
-                                                            items={editForm.asistencias}
-                                                            placeholder={{}}
-                                                        />
+                                                    <View style={styles.picker}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 0, alignSelf: 'stretch'}}>
+                                                            <Picker
+                                                                value={asistencia.id_asist}
+                                                                onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
+                                                                items={editForm.asistencias}
+                                                                placeholder={{}}
+                                                                style={tw`text-xs items-center justify-center flex-1`}
+                                                            />
+                                                        </View>
                                                     </View>
                                                 :
-                                                    <View style={[box, tw`justify-center`]}>
-                                                        <Text>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                                    <View style={[styles.picker, tw`bg-[#f7f7f7] pl-0`]}>
+                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                                            <Text style={tw`text-[#000]`}>{asistencia.tp_asist ? asistencia.tp_asist : ''}</Text>
+                                                        </View>
                                                     </View>
+                                                    
                                             }
                                         </View>
                                     </View>
@@ -1127,7 +1140,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             mask={[/\d/, /\d/,':', /\d/, /\d/, ' - ', /\d/, /\d/,':', /\d/, /\d/,]}
                                         />
                                     :
-                                        <View style={[box, tw`justify-center`]}>
+                                        <View style={[box, tw`justify-center`, {height: 45}]}>
                                             <Text style={tw`text-[#000]`}>{asistencia.horario ? asistencia.horario : 'N/A'}</Text>
                                         </View>
                                         
@@ -1136,7 +1149,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             <View style={tw`w-1.5`}></View>
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Horario checada' : 'Check Schedule'}</Text>
-                                <View style={[box,{justifyContent: 'center', alignItems: 'center'}]}>
+                                <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
                                     <Text style={tw`text-[#000]`}>{asistencia.checada ? asistencia.checada : 'N/A'}</Text>
                                 </View>
                             </View>
@@ -1144,14 +1157,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                         <View style={tw`flex-row`}>
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Horario comida' : 'Meal Schedule'}</Text>
-                                <View style={[box,{justifyContent: 'center', alignItems: 'center'}]}>
+                                <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
                                     <Text style={tw`text-[#000]`}>{asistencia.checadacom ? asistencia.checadacom : 'N/A'}</Text>
                                 </View>
                             </View>
                             <View style={tw`w-1.5`}></View>
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Tiempo' : 'Time'}</Text>
-                                <View style={[box,{justifyContent: 'center', alignItems: 'center'}]}>
+                                <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
                                     <Text style={tw`text-[#000]`}>{asistencia.tiempocom ? asistencia.tiempocom : 'N/A' }</Text>
                                 </View>
                             </View>
@@ -1211,11 +1224,11 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                             {
                                                 btn_editar && editForm.btn_editar
                                                 &&
-                                                    <Icon name={'trash'} size={30} color={'#DC3232'} />
+                                                    <Icon name={'trash'} size={24} color={'#DC3232'} />
                                             }
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={tw`text-['#1177E9'] text-sm text-justify`}>{x.comentario}</Text>
+                                    <Text style={tw`text-[#1177E9] text-sm text-justify`}>{x.comentario}</Text>
                                 </View>
                             )
                     }
@@ -1463,9 +1476,9 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 >
-                    <View style={tw`h-12.5 self-stretch flex-row border border-[#3283c5] bg-[rgba(50,131,197,.1)] px-[2%] rounded-2xl`}>
+                    <View style={tw`h-12.5 self-stretch flex-row border border-[#3283c5] bg-[rgba(50,131,197,.1)] px-[2%] rounded`}>
                         <TouchableWithoutFeedback onPress={() => editForm.active !== 1 && handleChangeModule(1)}>
-                            <View style={tw`flex-1 flex-row items-center justify-center rounded-tl-2xl rounded-bl-2xl`}>
+                            <View style={tw`flex-1 flex-row items-center justify-center`}>
                                 <IonIcons name={'clock-outline'} size={28} color={editForm.active === 1 ? '#3283c5' : '#C1C1C1'} />
                                 {/* <Icon name={'clock'} size={24} color={editForm.active === 1 ? '#3283c5' : '#C1C1C1'} /> */}
                                 <Text style={tw`ml-1.5 text-sm font-bold text-[${editForm.active === 1 ? '#3283c5' : '#c1c1c1'}]`}>{language === '1' ? 'HORARIOS' : 'SCHEDULES'}</Text>
@@ -1491,9 +1504,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <Text style={title}>{language === '1' ? 'Lunes - Jueves' : 'Monday - Thursday'}</Text>
                                         <MaskInput
                                             value={info.pren_horario_lun_jue}
-                                            onChangeText={(masked, unmasked) => {
-                                                setInitialState({...initialState, info: {...info, pren_horario_lun_jue: masked}})
-                                            }}
+                                            onChangeText={(masked, unmasked) => dispatch(setInfo({...info, pren_horario_lun_jue: masked}))}
                                             keyboardType='numeric'
                                             mask={[/\d/, /\d/,':', /\d/, /\d/, ' - ', /\d/, /\d/,':', /\d/, /\d/,]}
                                         />
@@ -1503,9 +1514,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <Text style={title}>{language === '1' ? 'Viernes' : 'Friday'}</Text>
                                         <MaskInput
                                             value={info.pren_horario_vie}
-                                            onChangeText={(masked, unmasked) => {
-                                                setInitialState({...initialState, info: {...info, pren_horario_vie: masked}})
-                                            }}
+                                            onChangeText={(masked, unmasked) => dispatch(setInfo({...info, pren_horario_vie: masked}))}
                                             keyboardType='numeric'
                                             mask={[/\d/, /\d/,':', /\d/, /\d/, ' - ', /\d/, /\d/,':', /\d/, /\d/,]}
                                         />
@@ -1517,9 +1526,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <Text style={title}>{language === '1' ? 'Sábado' : 'Saturday'}</Text>
                                         <MaskInput
                                             value={info.pren_horario_sab}
-                                            onChangeText={(masked, unmasked) => {
-                                                setInitialState({...initialState, info: {...info, pren_horario_sab: masked}})
-                                            }}
+                                            onChangeText={(masked, unmasked) => dispatch(setInfo({...info, pren_horario_sab: masked}))}
                                             keyboardType='numeric'
                                             mask={[/\d/, /\d/,':', /\d/, /\d/, ' - ', /\d/, /\d/,':', /\d/, /\d/,]}
                                         />
@@ -1529,9 +1536,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         <Text style={title}>{language === '1' ? 'Domingo' : 'Sunday'}</Text>
                                         <MaskInput
                                             value={info.pren_horario_dom}
-                                            onChangeText={(masked, unmasked) => {
-                                                setInitialState({...initialState, info: {...info, pren_horario_dom: masked}})
-                                            }}
+                                            onChangeText={(masked, unmasked) => dispatch(setInfo({...info, pren_horario_dom: masked}))}
                                             keyboardType='numeric'
                                             mask={[/\d/, /\d/,':', /\d/, /\d/, ' - ', /\d/, /\d/,':', /\d/, /\d/,]}
                                         />
@@ -1550,7 +1555,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         placeholder={'$0.00'}
                                         keyboardType='numeric' 
                                         value={info.pren_bono}
-                                        onChangeText={(e) => setInitialState({...initialState, info: {...info, pren_bono: e}})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono: e}))}
                                     />
                                     <Text style={title}>{language === '1' ? 'Comentario' : 'Comment'}</Text>
                                     <MultiText
@@ -1558,7 +1563,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         editable={info.btn_editar_bono_Q1}
                                         placeholder={language === '1' ? 'Ingresa tu comentario' : 'Type your comment'}
                                         value={info.pren_bono_comentario}
-                                        onChangeText={(e) => setInitialState({...initialState, info: {...info, pren_bono_comentario: e}})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono_comentario: e}))}
                                         multiline={true}
                                         numberOfLines={5}
                                     />
@@ -1573,7 +1578,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         placeholder={'$0.00'} 
                                         keyboardType='numeric' 
                                         value={info.pren_bono_permanencia} 
-                                        onChangeText={(e) => setInitialState({...initialState, info: {...info, pren_bono_permanencia: e}})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono_permanencia: e}))}
                                     />
                                     <Text style={title}>{language === '1' ? 'Comentario' : 'Comment'}</Text>
                                     <MultiText
@@ -1581,7 +1586,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         editable={info.btn_editar_bono_Q2_p}
                                         placeholder={language === '1' ? 'Ingresa tu comentario' : 'Type your comment'}
                                         value={info.pren_bono_perm_coment}
-                                        onChangeText={(e) => setInitialState({...initialState, info: ({...info, pren_bono_perm_coment: e})})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono_perm_coment: e}))}
                                         multiline={true}
                                         numberOfLines={5}
                                     />
@@ -1594,7 +1599,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         placeholder={'$0.00'} 
                                         keyboardType='numeric' 
                                         value={info.pren_bono_asistencia} 
-                                        onChangeText={(e) => setInitialState({...initialState, info: ({...info, pren_bono_asistencia: e})})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono_asistencia: e}))}
                                     />
                                     <Text style={title}>{language === '1' ? 'Comentario' : 'Comment'}</Text>
                                     <MultiText
@@ -1602,7 +1607,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         editable={info.btn_editar_bono_Q2_a}
                                         placeholder={language === '1' ? 'Ingresa tu comentario' : 'Type your comment'}
                                         value={info.pren_bono_assit_coment}
-                                        onChangeText={(e) => setInitialState({...initialState, info: ({...info, pren_bono_assit_coment: e})})}
+                                        onChangeText={(e) => dispatch(setInfo({...info, pren_bono_assit_coment: e}))}
                                         multiline={true}
                                         numberOfLines={5}
                                     />
@@ -1683,5 +1688,20 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
 const container = tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '3%'}] bg-white`
 const title = tw`text-sm text-[${Blue}]`
 const picker = tw`justify-center items-center rounded-2xl mb-2.5 h-11 px-4 bg-white shadow-md`
-const box = tw`justify-start items-center h-11 flex-row border border-[#CBCBCB] mb-2.5 rounded-2xl bg-[#f7f7f7] px-2 py-2.5 self-stretch`
+const box = tw`justify-start items-center h-11 flex-row border border-[#CBCBCB] mb-2.5 rounded bg-[#f7f7f7] px-2 py-2.5 self-stretch`
 const list = tw`h-auto self-stretch`
+
+const styles = StyleSheet.create({
+    picker: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#CBCBCB',
+        borderWidth: 1,
+        marginBottom: 6,
+        height: 45,
+        borderRadius: 4,
+        flexDirection: 'row',
+        paddingRight: 0,
+        paddingLeft: isIphone ? 10 : 0
+    },
+})

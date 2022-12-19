@@ -90,11 +90,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setTimeout(() => {
-                    dispatch(setEmpleados(response.empleados))
-                    dispatch(setTemporalEmpleado(response.empleados))
+                    dispatch(setEmpleados(response))
+                    dispatch(setTemporalEmpleado(response))
                     setLoading(false)
                 }, 800)
             }

@@ -13,7 +13,7 @@ import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 import {setSchoolsUSA, setStepTwoUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
-export default ({navigation, language, orientation}) => {
+export default ({navigation, language, handleScrollTop = () => {} , orientation}) => {
     const input_diploma = useRef()
     const input_grade = useRef()
     const input_school = useRef()
@@ -220,6 +220,7 @@ export default ({navigation, language, orientation}) => {
             dispatch(setStepTwoUSA(obj_2))
             dispatch(setSchoolsUSA(newSchools))
             dispatch(setStep(step + 1))
+            handleScrollTop()
         }
     }
 

@@ -54,7 +54,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         try{
             setInitialState({...initialState, loading: true})
             const body = {
-                'action': 'get_calendario',
+                'action': 'get_calendario_checadas',
                 'data': {
                     'id_usuario': user.data.datos_personales.id_usuario,
                     'fecha_inicio': completa
@@ -72,13 +72,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setTimeout(() => {
                     setInitialState({...initialState, dias: response.dias, checadas: response.current, loading: false})
                 }, 1000)
             }
-            else if(response.status === 401){
+            else if(status === 401){
                 Alert.alert(
                     language === 1 ? 'Sesión Expirada' : 'Expired Session',
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -91,7 +91,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 navigation.navigate('AuthLogin')
             }
     
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Acceso denegado, comuniquese con un administrador.' : 'Access denied, contact an administrator',

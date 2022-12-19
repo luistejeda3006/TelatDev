@@ -17,7 +17,7 @@ import {selectChecked, selectError, selectStep, selectVerified, setChecked, setE
 
 let age = 28;
 
-export default ({navigation, language, orientation, ...rest}) => {
+export default ({navigation, handleScrollTop = () => {}, language, orientation, ...rest}) => {
     const input_nom = useRef()
     const input_pat = useRef()
     const input_mat = useRef()
@@ -188,11 +188,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                             data = await AsyncStorage.setItem(key, JSON.stringify(obj_1));
                         }
                         dispatch(setStep(step + 1))
+                        handleScrollTop()
                     }
 
-                    else if(status === 400) {
-                        dispatch(setError(true))
-                        dispatch(setChecked(false))
+                    else if(status === 400){
                         Alerta()
                     }
                 }catch(e){
@@ -304,7 +303,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                     fieldName={'lugarNacimiento_1'}
                                     items={birthPlaceData}
                                 />
-                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/es/privacidad')}/>
+                                <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
                                 <ProgressStepActions language={language} handleNext={handleValues} />
                             </>
                         :
@@ -363,7 +362,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             />
                                         </View>
                                     </View>
-                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/es/privacidad')}/>
+                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
                                     <ProgressStepActions handleNext={handleValues} language={language}/>
                                 </View>
                             :
@@ -422,7 +421,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                                             />
                                         </View>
                                     </View>
-                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/es/privacidad')}/>
+                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
                                     <ProgressStepActions handleNext={handleValues} language={language}/>
                                 </View>
                     }

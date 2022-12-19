@@ -14,7 +14,7 @@ let inicial = null;
 let terminal = null;
 let inicialOpcional = null;
 let terminalOpcional = null;
-export default ({navigation, language, orientation, ...rest}) => {
+export default ({navigation, handleScrollTop = () => {}, language, orientation, ...rest}) => {
     const dispatch = useDispatch()
     const step = useSelector(selectStep)
     const {isTablet} = DeviceInfo;
@@ -229,6 +229,7 @@ export default ({navigation, language, orientation, ...rest}) => {
             if(esCertificado_3 !== undefined && esCertificado_3 !== 'SEL'){
                 handleData()
                 dispatch(setStep(step + 1))
+                handleScrollTop()
             }
             else {
                 Alerta();
@@ -238,8 +239,8 @@ export default ({navigation, language, orientation, ...rest}) => {
         else {
             handleData();
             dispatch(setStep(step + 1))
+            handleScrollTop()
         }
-
     }
 
     const handleValues = () => {

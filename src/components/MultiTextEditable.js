@@ -10,7 +10,7 @@ export default ({handleInputChange}) => {
         <>
             <TouchableOpacity onPress={() => richText.current?.dismissKeyboard()} style={{alignSelf: 'stretch'}}>
                 <RichToolbar
-                    style={{borderTopWidth: 1, backgroundColor: '#f7f7f7', borderTopColor: '#cbcbcb', borderRightWidth: 1, borderRightColor: '#cbcbcb', borderLeftWidth: 1, borderLeftColor: '#cbcbcb', alignSelf: 'stretch', flex: 1}}
+                    style={{borderTopWidth: 1, backgroundColor: '#f7f7f7', borderTopColor: '#cbcbcb', borderRightWidth: 1, borderRightColor: '#cbcbcb', borderLeftWidth: 1, borderLeftColor: '#cbcbcb', alignSelf: 'stretch', flex: 1, borderTopStartRadius: 4, borderTopEndRadius: 4}}
                     editor={richText}
                     selectedIconTint={Blue}
                     iconTint={'#000'}
@@ -19,8 +19,6 @@ export default ({handleInputChange}) => {
                         actions.setItalic,
                         actions.insertBulletsList,
                         actions.insertOrderedList,
-                        actions.setStrikethrough,
-                        actions.setUnderline,
                     ]}
                     iconMap={{ [actions.heading1]: ({tintColor}) => (<Text style={[{color: tintColor}]}>H1</Text>), }}
                 />
@@ -31,7 +29,7 @@ export default ({handleInputChange}) => {
                     showsVerticalScrollIndicator={true}
                     scrollEnabled={true}
                     useContainer={isIphone ? true : false}
-                    style={{flex: 1, borderColor: '#cbcbcb', borderWidth: isIphone ? 0.5 : 1, height: 'auto'}}
+                    style={{flex: 1, borderColor: '#cbcbcb', borderWidth: 1, height: 'auto', borderBottomStartRadius: 4, borderBottomEndRadius: 4}}
                     ref={richText}
                     onChange={(descriptionText) => handleInputChange(descriptionText)}
                 />

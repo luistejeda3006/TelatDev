@@ -162,7 +162,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 'live': live,
                 'login': login
             }
-            console.log('body: ', body)
 
             const request = await fetch(urlTickets, {
                 method: 'POST',
@@ -173,8 +172,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setTimeout(() => {
                     dispatch(setTickets(response.data))
                     dispatch(setPermissions(response.permisos))
@@ -216,9 +215,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
-                setArchivados(response.data)
+            const {response, status} = await request.json();
+            if(status === 200){
+                setArchivados(response)
                 if(tipo) {
                     setLoading(false)
                 }
@@ -252,8 +251,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setExpedientes(response.data)
             }
         }catch(e){
@@ -284,9 +283,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
-                console.log('response: ', response.usuarios)
+            const {response, status} = await request.json();
+            if(status === 200){
                 dispatch(formTicket({TiposTicket: response.tickets_tipo, UbicacionesTicket: response.ubicaciones, UsuariosTicket: response.usuarios, btn_users: response.btn_users}))
             }
         }catch(e){
@@ -394,10 +392,10 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     },
                     body: JSON.stringify(body),
                 });
-            
-                const {response} = await request.json();
-                if(response.status === 200){
-                    setInitialState({...initialState, idTipo: value, visibleTipo: false, ConceptosTicket: response.data, idConcepto: 'SEL'})
+
+                const {response, status} = await request.json();
+                if(status === 200){
+                    setInitialState({...initialState, idTipo: value, visibleTipo: false, ConceptosTicket: response, idConcepto: 'SEL'})
                     setLabels({...labels, tipoTicket: label, conceptoTicket: 'Seleccione una opción'})
                 }
             }
@@ -434,9 +432,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
-                    setInitialState({...initialState, idConcepto: value, visibleConcepto: false, conceptoDesc: response.data.prioridad, backgroundDesc: response.data.backgroundcolor_prioridad, colorDesc: response.data.color_prioridad, idPrioridad: response.id_prioridad})
+                const {response, status} = await request.json();
+                if(status === 200){
+                    setInitialState({...initialState, idConcepto: value, visibleConcepto: false, conceptoDesc: response.prioridad, backgroundDesc: response.backgroundcolor_prioridad, colorDesc: response.color_prioridad, idPrioridad: response.id_prioridad})
                     setLabels({...labels, conceptoTicket: label})
                 }
             } else {
@@ -494,10 +492,10 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     setLoading(false)
-                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response, reloadTickets: reloadTickets + 1})
+                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, reloadTickets: reloadTickets + 1})
                     if(response.last) dispatch(addTicket(response.last))
                     setTimeout(() => {
                         setInitialState({...initialState, visibleMensaje: false, showMensaje: false, idTipo: 'SEL', idConcepto: 'SEL', idPrioridad: '', idUbicacion: 'SEL', idUsuario: '', mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: ''})
@@ -706,7 +704,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                             ?
                                                                 <View style={tw`flex-row h-auto items-center mb-2.5`}>
                                                                     <Text style={[styles.title, tw`mb-0`]}>{'Prioridad:'}</Text>
-                                                                    <View style={tw`w-auto h-auto bg-[${backgroundDesc}] items-center justify-center ml-1.5 px-1.5 rounded-md py-1`}>
+                                                                    <View style={tw`w-auto h-auto bg-[${backgroundDesc}] items-center justify-center ml-1.5 px-1.5 rounded py-1 border border-[#dadada]`}>
                                                                         <Text style={tw`font-bold text-[${colorDesc}]`}>{conceptoDesc}</Text>
                                                                     </View>
                                                                 </View>
@@ -815,7 +813,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         height: 45,
-        borderRadius: 15,
+        borderRadius: 4,
         paddingHorizontal: isIphone ? 14 : 12
     },
     box: {

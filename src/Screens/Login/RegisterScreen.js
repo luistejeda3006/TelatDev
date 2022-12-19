@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {View, StatusBar, SafeAreaView, Text, TouchableOpacity, ScrollView, Alert, StyleSheet, Image} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep, Modal, RadioButton, FooterForm} from '../../components';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
@@ -19,6 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 let step = null;
 let data = []
 export default ({navigation, route: {params: {language, country}}}) => {
+    const refSteps = useRef()
     const dispatch = useDispatch()
     step = useSelector(selectStep)
     const orientation = useSelector(selectOrientation)
@@ -45,6 +46,10 @@ export default ({navigation, route: {params: {language, country}}}) => {
         'rotationDegrees': 0,
         'initial': 'PORTRAIT'
     });
+
+    const handleScrollTop = () => {
+        refSteps.current?.scrollToPosition(0, 0)
+    }
 
     useFocusEffect(
         useCallback(() => {
@@ -349,6 +354,7 @@ export default ({navigation, route: {params: {language, country}}}) => {
                             ?
                                 <ProgressStep data={data}>
                                     <KeyboardAwareScrollView
+                                        ref={refSteps}
                                         contentContainerStyle={styles.scrollContainer}
                                         showsVerticalScrollIndicator={false}
                                         showsHorizontalScrollIndicator={false}
@@ -356,13 +362,13 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                     {
                                         step === 1
                                         ?
-                                            <StepOneUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                            <StepOneUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                         :
                                             step === 2
                                             ?
-                                                <StepTwoUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                <StepTwoUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                             :
-                                                <StepThreeUSA navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                <StepThreeUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                     }
                                     <FooterForm country={'US'}/>
                                     </KeyboardAwareScrollView>
@@ -575,6 +581,7 @@ export default ({navigation, route: {params: {language, country}}}) => {
                             ?
                                 <ProgressStep data={data}>
                                     <KeyboardAwareScrollView
+                                        ref={refSteps}
                                         contentContainerStyle={styles.scrollContainer}
                                         showsVerticalScrollIndicator={false}
                                         showsHorizontalScrollIndicator={false}
@@ -582,17 +589,17 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                     {
                                         step === 1
                                         ?
-                                            <StepOneMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                            <StepOneMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                         :
                                             step === 2
                                             ?
-                                                <StepTwoMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                <StepTwoMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                             :
                                                 step === 3
                                                 ?
-                                                    <StepThreeMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                    <StepThreeMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                                 :
-                                                    <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                                                    <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                     }
                                     <FooterForm />
                                     </KeyboardAwareScrollView>

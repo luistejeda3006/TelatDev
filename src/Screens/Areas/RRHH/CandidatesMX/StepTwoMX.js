@@ -6,10 +6,10 @@ import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectStep, setError, setStep} from '../../../../slices/progressStepSlice';
+import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 import tw from 'twrnc'
 
-export default ({navigation, language, orientation, ...rest}) => {
+export default ({navigation, handleScrollTop = () => {}, language, orientation, ...rest}) => {
     const dispatch = useDispatch()
     const step = useSelector(selectStep)
 
@@ -190,12 +190,10 @@ export default ({navigation, language, orientation, ...rest}) => {
         if(index !== undefined && index !== 0){
             if(index === 1){
                 handleLastPart();
-                dispatch(setError(false))
             }
             else {
                 if(lugarExtranjero_2 !== undefined && lugarExtranjero_2 !== '' && tiempoExtranjero_2 !==  undefined && tiempoExtranjero_2 !== ''){
                     handleLastPart();
-                    dispatch(setError(false))
                 }
                 else {
                     Alerta();
@@ -276,6 +274,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                     data = await AsyncStorage.setItem(key, JSON.stringify(obj_2));
                 }
                 dispatch(setStep(step + 1))
+                handleScrollTop()
             }
             else {
                 Alert.alert(
@@ -304,13 +303,11 @@ export default ({navigation, language, orientation, ...rest}) => {
             if(index === 1 || index === 2 || index === 3){
                 if(index === 1){
                     handleLastPart();
-                    dispatch(setError(false))
                 }
 
                 else {
                     if(numeroDocumento_2 !== undefined && numeroDocumento_2 !== '' && emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && expiracion_2 !== 'No seleccionada' && expiracion_2 !== 'Not selected'){
                         handleLastPart();
-                        dispatch(setError(false))
                     }
                     else {
                         Alerta();
@@ -320,7 +317,6 @@ export default ({navigation, language, orientation, ...rest}) => {
             else {
                 if(emision_2 !== 'No seleccionada' && emision_2 !== 'Not selected' && numeroDocumento_2 !== undefined && numeroDocumento_2 !== ''){
                     handleLastPart();
-                    dispatch(setError(false))
                 }
 
                 else {

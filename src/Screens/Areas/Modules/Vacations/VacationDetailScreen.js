@@ -122,9 +122,9 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 },
                 body: JSON.stringify(body),
             });
-        
-            const {response} = await request.json();
-            if(response.status === 200){
+            console.log('body: ', body)
+            const {response, status} = await request.json();
+            if(status === 200){
                 const spt = response.info.antiguedad.split(' ')
                 setInitialState({...initialState, info: response.info, antiguedad: {...antiguedad, years: spt[0], months: spt[2], days: spt[4]}, periodos: response.periodos, currentPeriodo: !currentPeriodo ? response.periodos[0].label : currentPeriodo, prima_vacacional: response.prima_vacacional, solicitudes: response.solicitud})
                 setTimeout(() => {
@@ -194,8 +194,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         body: JSON.stringify(body),
                     });
                 
-                    const {response} = await request.json();
-                    if(response.status === 200){
+                    const {response, status} = await request.json();
+                    if(status === 200){
                         setInitialState({...initialState, requestVacation: initialized, tipo: '1'})
                         setVisible(!visible)
                         setRefresh(!refresh)
@@ -263,8 +263,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setInitialState({...initialState, tipo: '3'})
                 setDeleteVisibility(!deleteVisibility)
                 setActionsVisibility(true)
@@ -321,8 +321,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         body: JSON.stringify(body),
                     });
                 
-                    const {response} = await request.json();
-                    if(response.status === 200){
+                    const {response, status} = await request.json();
+                    if(status === 200){
                         setInitialState({...initialState, requestVacation: initialized, tipo: '2'})
                         setEditVisibility(!editVisibility)
                         setActionsVisibility(true)
@@ -368,8 +368,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleDetails = async (status) => {
-        setLoading(true)
         try{
+            setLoading(true)
             const body = {
                 'action': 'get_detalle_solicitud',
                 'data': {
@@ -380,6 +380,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 'live': live,
                 'login': login
             }
+            console.log('body: ', body)
     
             const request = await fetch(urlVacaciones, {
                 method: 'POST',
@@ -390,10 +391,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
+            const {response, status} = await request.json();
             
-            if(response.status === 200){
+            if(status === 200){
                 // setActions(status)
+                setLoading(false)
                 setDetailsVisibility(!detailsVisibility)
                 setInitialState({...initialState, details: ({...details, btn_aprobar: response.btn_aprobar, dias: response.dias, estatus: status, fechas: response.fechas, motivo_cancelado: response.motivo_cancelado, motivo_rechazo: response.motivo_rechazo, motivo_solicitud: response.motivo_solicitud})})
             }
@@ -438,9 +440,9 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
+            const {response, status} = await request.json();
 
-            if(response.status === 200){
+            if(status === 200){
                 setDetailsVisibility(!detailsVisibility)
                 setInitialState({...initialState, tipo: status === 1 ? '4' : '5'})
                 if(response.last){
@@ -631,7 +633,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 </View>
                             </View>
                             <View style={tw`h-auto self-stretch mt-6`}>
-                                <TouchableOpacity style={[picker, tw`flex-row flex-1 mx-1.5 shadow-md`]} onPress={() => handleVisiblePeriodos()}>
+                                <TouchableOpacity style={[picker, tw`flex-row flex-1 mx-1.5 shadow-md`, {height: 45}]} onPress={() => handleVisiblePeriodos()}>
                                     <View style={tw`flex-1 justify-center items-center`}>
                                         <Text style={tw`text-[#000]`}>{currentPeriodo}</Text>
                                     </View>
@@ -825,7 +827,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 <TextInput 
                                     editable={false}
                                     value={range}
-                                    style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7] ios:pb-1.5`]}
+                                    style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7] ios:pb-1.5`, {height: 45}]}
                                 />
                             </View>
                             <MultiText 
@@ -1035,7 +1037,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         <TextInput
                             editable={false}
                             value={range}
-                            style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7]`]}
+                            style={[picker, tw`text-center text-sm text-[#adadad] bg-[#f7f7f7]`, {height: 45}]}
                         />
                     </View>
                     <View style={tw`flex-row`}>

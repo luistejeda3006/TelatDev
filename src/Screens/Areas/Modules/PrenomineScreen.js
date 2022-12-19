@@ -73,6 +73,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 'live': live,
                 'login': login
             }
+
+            console.log('body: ', body)
     
             const request = await fetch(urlNomina, {
                 method: 'POST',
@@ -83,8 +85,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body)
             });
     
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 setTimeout(() => {
                     setLongitud(response.prenomina.length)
                     let period = response.info.periodo;

@@ -26,6 +26,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 10,
         alignSelf: 'stretch',
-        borderRadius: 20
+        borderRadius: 4
     },
 })

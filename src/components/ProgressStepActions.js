@@ -2,7 +2,6 @@ import React from 'react'
 import {View, Text, TouchableOpacity} from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {selectError, selectStep, setStep} from '../slices/progressStepSlice'
-import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Blue} from '../colors/colorsApp'
 
 import tw from 'twrnc'
@@ -26,7 +25,7 @@ export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
             {
                 !error
                 ?
-                    <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}]`} onPress={handleNexts}>
+                    <TouchableOpacity style={tw`px-3 py-2 border border-[#dadada] rounded bg-[${Blue}]`} onPress={handleNext}>
                         <Text style={tw`text-[#fff] font-bold`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
                     </TouchableOpacity>
                 :

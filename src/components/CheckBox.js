@@ -1,6 +1,7 @@
 import React from 'react'
 import {TouchableOpacity, View, Text} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { isIphone } from '../access/requestedData';
 import { Blue } from '../colors/colorsApp';
 
 //disabled allows to change the value
@@ -63,7 +64,7 @@ export default ({onChecked, checked, disabled = false, list = false, legend = ''
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handlePress()}>
-                    <Text style={{flex: 1, fontSize: fontSize, marginLeft: 6, color: color, textDecorationColor: isUnderline ? color : 'transparent', textDecorationLine: isUnderline ? 'underline' : 'none', textDecorationStyle: 'solid', fontWeight: 'bold'}}>{legend}</Text>
+                    <Text style={{flex: 1, fontSize: fontSize, marginLeft: 6, color: color, textDecorationColor: isUnderline ? color : 'transparent', textDecorationLine: isUnderline ? 'underline' : 'none', textDecorationStyle: 'solid', fontWeight: 'bold', marginTop: isIphone ? 2 : 0}}>{legend}</Text>
                 </TouchableOpacity>
             </View>
     )

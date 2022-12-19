@@ -13,7 +13,7 @@ import {selectOrientation} from '../../../../slices/orientationSlice';
 import {setStepOneUSA} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
 
-export default ({navigation, language}) => {
+export default ({navigation, handleScrollTop = () => {}, language}) => {
     const orientation = useSelector(selectOrientation)
     const [statesData, setStatesData] = useState([])
     const [hiden, setHiden] = useState(true)
@@ -162,6 +162,7 @@ export default ({navigation, language}) => {
             if(status === 200){
                 dispatch(setStepOneUSA(obj_1))
                 dispatch(setStep(step + 1))
+                handleScrollTop()
             }
 
             else if(status === 400) {
@@ -571,7 +572,7 @@ export default ({navigation, language}) => {
                                                 items={birthPlaceData}
                                             />
                                     }
-                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/en/privacity')}/>
+                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
                                     <ProgressStepActions handleNext={() => handleValues()} language={'2'} type={2}/>
                                 </>
                             :

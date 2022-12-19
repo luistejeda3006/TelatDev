@@ -128,10 +128,9 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 },
                 body: JSON.stringify(body),
             });
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 cuenta = cuenta + 1;
-                console.log('body html: ', response.html)
                 setInitialState({...initialState, detail: response.data, chat: response.chat, isTable: response.is_table, bodyHtml: response.html, Responsables: response.data.responsables, Evidencias: response.data.evidencias, calificacion: response.data.calificacion, permisos: response.permisos, motivos: response.opciones})
             }
         }catch(e){
@@ -168,12 +167,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     console.log('asignado correctamente')
                     if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                     setLoading(false)
-                    setInitialState({...initialState, visibleResponsables: false, visibleMensaje: true, showMensaje: response.response, visibleCalificacion: false})
+                    setInitialState({...initialState, visibleResponsables: false, visibleMensaje: true, showMensaje: response.text, visibleCalificacion: false})
                     setTimeout(async () => {
                         cuenta = 1;
                         setInitialState({...initialState, showMensaje: '', visibleMensaje: false, mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: '', visibleResponsables: false, edit: false, reload: reload + 1})
@@ -372,11 +371,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                         body: JSON.stringify(body),
                     });
                 
-                    const {response} = await request.json();
-                    if(response.status === 200){
+                    const {response, status} = await request.json();
+                    if(status === 200){
                         setLoading(false)
                         if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
-                        setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response, visibleResponder: false})
+                        setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleResponder: false})
                         setTimeout(() => {
                             setInitialState({...initialState, motivo: 'SEL', mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: '', showMensaje: '', visibleMensaje: false, visibleResponder: false, reload: reload + 1})
                         }, 3500)
@@ -434,11 +433,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     cuenta = 1;
                     setLoading(false)
-                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response,  mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: ''})
+                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text,  mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: ''})
                     setTimeout(() => {
                         setInitialState({...initialState, showMensaje: '', mensaje: '', imagen: '', encryptedImage: '', nombre_imagen: '', visibleMensaje: false, reload: reload + 1})
                     }, 3500)
@@ -482,11 +481,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 body: JSON.stringify(body),
             });
         
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 cuenta = 1;
                 setLoading(false)
-                setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response})
+                setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text})
                 setTimeout(() => {
                     setInitialState({...initialState, showMensaje: '', visibleMensaje: false, reload: reload + 1})
                 }, 3500)
@@ -527,11 +526,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                     setLoading(false)
-                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response, visibleAutorizar: false})
+                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleAutorizar: false})
                     setTimeout(() => {
                         setInitialState({...initialState, showMensaje: '', visibleMensaje: false, reload: reload + 1, visibleAutorizar: false, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})
                     }, 3500)
@@ -581,11 +580,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     body: JSON.stringify(body),
                 });
             
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                     setLoading(false)
-                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.response, visibleConfirmar: false})
+                    setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleConfirmar: false})
                     setTimeout(() => {
                         setInitialState({...initialState, showMensaje: '', visibleMensaje: false, reload: reload + 1, visibleConfirmar: false, imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})
                     }, 3500)
@@ -693,7 +692,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     <View style={tw`mt-2.5`}>
                                                         <Text style={title}>{'Asignado a: '}</Text>
                                                         <View style={tw`flex-row self-stretch justify-center items-center mt-1`}>
-                                                            <TouchableOpacity style={[picker, tw`flex-row flex-1 border border-[${detail.asignado ? '#CBCBCB' : '#d53f40'}] h-${detail.asignado ? detail.asignado > 33 ? 'auto' : 'auto' : 9} py-1.5`]} onPress={() => setInitialState({...initialState, visibleResponsables: true})}>
+                                                            <TouchableOpacity style={[styles.picker, tw`flex-row flex-1 border border-[${detail.asignado ? '#CBCBCB' : '#d53f40'}]`]} onPress={() => setInitialState({...initialState, visibleResponsables: true})}>
                                                                 <View style={tw`flex-1`}>
                                                                     <Text style={tw`text-sm text-[#000]`}>{detail.asignado ? detail.asignado : 'Seleccione una opción'}</Text>
                                                                 </View>
@@ -705,12 +704,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                                 edit
                                                                 &&
                                                                     <Animatable.View
-                                                                        style={tw`w-9 h-9 ml-1 bg-[${Blue}] justify-center items-center rounded-lg`}
+                                                                        style={[{width: 40, height: 40}, tw`ml-1 bg-[#DB3E2F] justify-center items-center rounded-full border border-[#dadada]`]}
                                                                         animation='bounceIn'
                                                                         duration={1000}
                                                                     >
-                                                                        <TouchableOpacity onPress={() => setInitialState({...initialState, edit: false})}>
-                                                                            <Icon name='times' size={25} color={'#fff'} />
+                                                                        <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, edit: false})}>
+                                                                            <IonIcons name='close' size={26} color={'#fff'} />
                                                                         </TouchableOpacity>
                                                                     </Animatable.View>
                                                             }
@@ -726,12 +725,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                             (active !== 2 && active !== 4) && permisos.btn_asignar && (detail.estado === 'Proceso' || detail.estado === 'Pendiente')
                                                             &&
                                                                 <Animatable.View
-                                                                    style={tw`w-9 h-9 ml-1 bg-[${Blue}] justify-center items-center rounded-lg`}
+                                                                    style={[{width: 40, height: 40}, tw`ml-1 bg-[${Blue}] justify-center items-center rounded-full border border-[#dadada]`]}
                                                                     animation='bounceIn'
                                                                     duration={1000}
                                                                 >
-                                                                    <TouchableOpacity onPress={() => setInitialState({...initialState, edit: true})}>
-                                                                        <Icon name='pencil' size={23} color={'#fff'} />
+                                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, edit: true})}>
+                                                                        <Icon name='pencil' size={20} color={'#fff'} />
                                                                     </TouchableOpacity>
                                                                 </Animatable.View>
                                                         }
@@ -1035,12 +1034,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     showsHorizontalScrollIndicator={false}
                                     showsVerticalScrollIndicator={false}
                                 >
-                                    <Title title={'Respuesta/Comentario'} tipo={2} icon={'chat-processing-outline'} itCloses={() => {
-                                        setSelected(undefined)
-                                        setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}
-                                    } vertical={false}/>
                                     <Text style={title}>{'Motivo'}</Text>
-                                    <View style={tw`justify-center items-center border border-[${motivo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] h-11.5 rounded-2xl mb-2.5 px-${isIphone ? 2 : 0}`}>
+                                    <View style={[styles.picker, tw`justify-center items-center border border-[${motivo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
                                         <Picker
                                             value={motivo}
                                             onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
@@ -1118,9 +1113,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     showsHorizontalScrollIndicator={false}
                                     showsVerticalScrollIndicator={false}
                                 >
-                                    <Title title={'Autorizar Ticket'} tipo={1} icon={'check'} itCloses={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}/>
                                     <Text style={title}>{'Autorizar'}</Text>
-                                    <View style={tw`justify-center items-center border border-[${closeOption !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] h-12.5 mb-2.5 px-${isIphone ? 2 : 0}`}>
+                                    <View style={[styles.picker, tw`justify-center items-center border border-[${closeOption !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
                                         <Picker
                                             value={closeOption}
                                             onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
@@ -1131,7 +1125,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     <Text style={title}>{'Mensaje'}</Text>
                                     <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
                                     <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
-                                    <View style={{flexDirection: 'row', marginBottom: 10}}>
+                                    <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity onPress={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
                                             <Icon name={'times'} size={22} color={'#000'} />
                                             <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
@@ -1151,7 +1145,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     showsHorizontalScrollIndicator={false}
                                     showsVerticalScrollIndicator={false}
                                 >
-                                    <Title title={'Confirmación de Seguridad'} tipo={1} icon={'unlock'} itCloses={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar, imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}/>
                                     <Text style={title}>{'Mensaje'}</Text>
                                     <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
                                     <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
@@ -1195,5 +1188,14 @@ const styles = StyleSheet.create({
     },
     div: {
         color: '#000'
+    },
+    picker: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#CBCBCB',
+        borderWidth: 1,
+        height: 45,
+        borderRadius: 4,
+        paddingHorizontal: isIphone ? 14 : 12
     },
 })
