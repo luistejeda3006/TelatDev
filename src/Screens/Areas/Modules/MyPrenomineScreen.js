@@ -681,8 +681,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch bg-white`}
-                                contentContainerStyle={{paddingTop: paddingTop}}
-                                onScroll={handleScroll}
+                                /* contentContainerStyle={{paddingTop: paddingTop}}
+                                onScroll={handleScroll} */
                             >
                                 <View style={container}>
                                     <View style={tw`h-auto self-stretch py-1.5`}>
@@ -867,8 +867,8 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}
                                     style={tw`self-stretch`}
-                                    contentContainerStyle={{paddingTop: paddingTop}}
-                                    onScroll={handleScroll}
+                                    /* contentContainerStyle={{paddingTop: paddingTop}}
+                                    onScroll={handleScroll} */
                                 >
                                     <View style={tw`flex-1 self-stretch`}>
                                         <View style={tw`flex-row py-[1.5%] mx-[${isIphone ? 2.5 : 2}]`}>

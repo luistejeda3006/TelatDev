@@ -90,15 +90,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 },
                 body: JSON.stringify(body)
             });
-
-            const {response} = await request.json();
-            if(response.status === 200){
+            console.log('body: ', body)
+            const {response, status} = await request.json();
+            if(status === 200){
                 setTimeout(() => {
                     setInitialState({...initialState, data: response})
                     setLoading(false)
                 }, 800)
             }
-            else if(response.status === 401){
+            else if(status === 401){
                 Alert.alert(
                     language === 1 ? 'Sesión Expirada' : 'Expired Session',
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -111,7 +111,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 navigation.navigate('AuthLogin')
             }
     
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Acceso denegado, comuniquese con un administrador.' : 'Access denied, contact an administrator',
@@ -264,19 +264,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         ?
                             <>
                                 <HeaderPortrait title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
-                                {
-                                    isIphone
-                                    &&
-                                        <Header />
-                                }
+                                <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
                                         !loading
                                         &&
                                             <FlatList
                                                 ref={refGaceta}
-                                                onScroll={handleScroll}
-                                                contentContainerStyle={{paddingTop: !isIphone ? !hide ? paddingTop + 175 : paddingTop + 103 : 0}}
+                                                /* onScroll={handleScroll}
+                                                contentContainerStyle={{paddingTop: !isIphone ? !hide ? paddingTop + 175 : paddingTop + 103 : 0}} */
                                                 showsVerticalScrollIndicator={false}
                                                 showsHorizontalScrollIndicator={false}
                                                 style={styles.list}
@@ -295,6 +291,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         ?
                             <>
                                 <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
+                                <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
                                         !loading
@@ -307,8 +304,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
                                                 renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
                                                 keyExtractor={item => String(item.id_gaceta)}
-                                                onScroll={handleScroll}
-                                                contentContainerStyle={{paddingTop: paddingTop + 50}}
+                                                /* onScroll={handleScroll}
+                                                contentContainerStyle={{paddingTop: paddingTop + 50}} */
                                             />
                                     }
                                 </View>

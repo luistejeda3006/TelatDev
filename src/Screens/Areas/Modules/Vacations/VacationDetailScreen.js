@@ -11,6 +11,7 @@ import {actionTemporalVacation, actionVacation} from '../../../../slices/vacatio
 import {useFocusEffect} from '@react-navigation/native';
 import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 import tw from 'twrnc';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let token = null;
 let user = null;
@@ -83,7 +84,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     const [hideReason, setHideReason] = useState(false)
     const [visiblePeriodo, setVisiblePeriodo] = useState(false)
 
-    const {id, info, prima_vacacional, id_periodo, currentPeriodo, periodos, solicitudes, requestVacation, details, dias, tipo, initialized, antiguedad} = initialState
+    const {id, info, prima_vacacional, id_periodo, currentPeriodo, periodos, solicitudes, requestVacation, details, tipo, initialized, antiguedad} = initialState
+    const {dias} = details
     const {initial, ending, labelInitial, labelEnding, motivo, fin, range} = requestVacation;
     useEffect(() => {
         if(labelInitial || labelEnding) setInitialState({...initialState, requestVacation: {...requestVacation, range: `${language === '1' ? 'Del' : 'From'} ${initial ? initial.substring(8,10) : '--'}/${initial ? initial.substring(5,7) : '--'}/${initial ? initial.substring(0,4) : '----'} ${language === '1' ? 'hasta el' : 'to'} ${ending ? ending.substring(8,10) : '--'}/${ending ? ending.substring(5,7) : '--'}/${ending ? ending.substring(0,4) : '----'}`} })
@@ -122,7 +124,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 },
                 body: JSON.stringify(body),
             });
-            console.log('body: ', body)
+
             const {response, status} = await request.json();
             if(status === 200){
                 const spt = response.info.antiguedad.split(' ')
@@ -166,8 +168,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
             if(fecha_uno <= fecha_dos){
                 try{
                     setLoading(true)
-                    console.log('inicio: ', initial)
-                    console.log('ending: ', ending)
                     const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
                     const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
                     const body = {
@@ -182,8 +182,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         'live': live,
                         'login': login
                     }
-    
-                    console.log('body:', body )
             
                     const request = await fetch(urlVacaciones, {
                         method: 'POST',
@@ -207,7 +205,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     else {
                         Alert.alert(
                             'Error',
-                            response.response,
+                            response.text,
                             [
                                 { text: 'OK'}
                             ]
@@ -276,7 +274,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
             else {
                 Alert.alert(
                     'Error',
-                    response.response,
+                    response.text,
                     [
                         { text: 'OK'}
                     ]
@@ -299,7 +297,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     setLoading(true)
                     const inicio = (initial).substring(0,4) + '-' + (initial).substring(5,7) + '-' + (initial).substring(8,10)
                     const fin = (ending).substring(0,4) + '-' + (ending).substring(5,7) + '-' + (ending).substring(8,10)
-                    console.log('inicio: ', inicio, 'ending', ending)
                     const body = {
                         'action': 'edit_solicitud_vac',
                         'data': {
@@ -334,7 +331,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     else {
                         Alert.alert(
                             'Error',
-                            response.response,
+                            response.text,
                             [
                                 { text: 'OK'}
                             ]
@@ -380,7 +377,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 'live': live,
                 'login': login
             }
-            console.log('body: ', body)
     
             const request = await fetch(urlVacaciones, {
                 method: 'POST',
@@ -390,19 +386,21 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 },
                 body: JSON.stringify(body),
             });
-        
+            
+            console.log('bodyes: ', body)
+
             const {response, status} = await request.json();
             
             if(status === 200){
                 // setActions(status)
                 setLoading(false)
                 setDetailsVisibility(!detailsVisibility)
-                setInitialState({...initialState, details: ({...details, btn_aprobar: response.btn_aprobar, dias: response.dias, estatus: status, fechas: response.fechas, motivo_cancelado: response.motivo_cancelado, motivo_rechazo: response.motivo_rechazo, motivo_solicitud: response.motivo_solicitud})})
+                setInitialState({...initialState, details: ({...details, btn_aprobar: response.btn_aprobar, dias: response.dias, estatus: response.estatus, fechas: response.fechas, motivo_cancelado: response.motivo_cancelado, motivo_rechazo: response.motivo_rechazo, motivo_solicitud: response.motivo_solicitud})})
             }
             else {
                 Alert.alert(
                     'Error',
-                    response.response,
+                    response.text,
                     [
                         { text: 'OK'}
                     ]
@@ -416,6 +414,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     }
 
     const handleAprove = async (status) => {
+        console.log('estatus: ', status)
+        let temporal = status;
         try{
             setLoading(true)
             const body = {
@@ -423,13 +423,15 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 'data': {
                     'id_usuario':id_usuario,
                     'id_vacsol':id,
-                    'status': status,
+                    'status': temporal,
                     'motivo': motivo,
                     'language': language,
                 },
                 'live': live,
                 'login': login
             }
+
+            console.log('body: ', body)
     
             const request = await fetch(urlVacaciones, {
                 method: 'POST',
@@ -444,7 +446,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
 
             if(status === 200){
                 setDetailsVisibility(!detailsVisibility)
-                setInitialState({...initialState, tipo: status === 1 ? '4' : '5'})
+                setInitialState({...initialState, tipo: temporal === 1 ? '4' : '5'})
                 if(response.last){
                     dispatch(actionVacation({id: response.last.id, empleado: response.last}))
                     dispatch(actionTemporalVacation({id: response.last.id, empleado: response.last}))
@@ -459,7 +461,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
             else {
                 Alert.alert(
                     'Error',
-                    response.response,
+                    response.text,
                     [
                         { text: 'OK'}
                     ]
@@ -484,9 +486,9 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         return(
             <View style={tw`bg-[#f7f7f7] shadow-md mx-1.5 my-2.5 rounded-xl`}>
                 <TouchableWithoutFeedback onPress={() => handleHideActions(id, fIndex)}>
-                    <View style={tw`flex-1 h-[${oculta ? 16.5 : 27.5}] mx-[${orientation === 'PORTRAIT' ? 0 : 1}] mb-1.5 justify-center items-center`}>
-                        <View style={tw`flex-row h-12.5 items-center justify-center`}>
-                            <View style={tw`w-auto ml-4 mr-1.5`}>
+                    <View style={{flex: 1, height: oculta ? 65 : 110, marginHorizontal: orientationInfo.initial === 'PORTRAIT' ? 0 : 2.5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{flexDirection: 'row', height: 50, alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{width: 'auto', marginLeft: 15, marginRight: 5}}>
                                 {
                                     status === '0'
                                     ?
@@ -495,23 +497,23 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                         <Icon name={status === '2' || status === '3' ? 'times' : 'check'} size={status === '3' ? 28 : 24} color={status === '2' || status === '3' ? '#DC3232' : '#5FA75D'} />
                                 }
                             </View>
-                            <View style={tw`flex-1 ml-2.5 py-2`}>
-                                <Text style={title}>{language === '1' ? 'Fecha seleccionada' : 'Selected Date'}</Text>
+                            <View style={{flex: 1, marginLeft: 10, paddingVertical: 8}}>
+                                <Text style={{fontSize: 13, color: Blue}}>{language === '1' ? 'Fecha seleccionada' : 'Selected Date'}</Text>
                                 <Contenedor title={`${inicio} - ${fin}`} hasBottomLine={false} down={false}/>
                             </View>
-                            <View style={tw`w-auto px-2.5`}>
-                                <Text style={title}>{language === '1' ? 'Días' : 'Days'}</Text>
+                            <View style={{width: 'auto', paddingHorizontal: 10}}>
+                                <Text style={{fontSize: 13, color: Blue}}>{language === '1' ? 'Días' : 'Days'}</Text>
                                 <Contenedor title={dias} hasBottomLine={false} down={false} leftPosition={false}/>
                             </View>
                         </View>
                         {
                             !oculta
                             &&
-                                <View style={tw`flex-row px-2.5`}>
-                                    <View style={tw`flex-1`}>
-                                        <TouchableOpacity onPress={() => handleDetails(status)} style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#74A9C4] py-1.5 px-5 rounded-xl`}>
+                                <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
+                                    <View style={{flex: 1}}>
+                                        <TouchableOpacity onPress={() => handleDetails(status)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#74A9C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                             <Icon name={'folder-open'} size={18} color={'#fff'} />
-                                            <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{status === '0' ? btn_editar && btn_delete ? language === '1' ? 'Ver' : 'View' : language === '1' ? 'Ver Detalles' : 'View Details' : language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
+                                            <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{status === '0' ? btn_editar && btn_delete ? language === '1' ? 'Ver' : 'View' : language === '1' ? 'Ver Detalles' : 'View Details' : language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     {
@@ -520,19 +522,19 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                             btn_editar
                                             &&
                                                 <>
-                                                    <View style={tw`w-1.5`}></View>
-                                                    <View style={tw`flex-1`}>
-                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#C3E5C4] py-1.5 px-5 rounded-xl`}>
+                                                    <View style={{width: 6}}></View>
+                                                    <View style={{flex: 1}}>
+                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#C3E5C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                                             <Icon name={'pencil'} size={22} color={'#000'} />
-                                                            <Text style={tw`text-sm text-[#000] ml-3 font-bold`}>{language === '1' ? 'Editar' : 'Edit'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#000', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Editar' : 'Edit'}</Text>
                                                         </TouchableOpacity>
                                                     </View>
-                                                    <View style={tw`w-1.5`}></View>
-                                                    <View style={tw`flex-1`}>
-                                                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)}
-                                                        style={tw`flex-row h-9 justify-center items-center mt-2.5 bg-[#DC4D4D] py-1.5 px-5 rounded-xl`}>
+                                                    <View style={{width: 6}}></View>
+                                                    <View style={{flex: 1}}>
+                                                        <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} 
+                                                        style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#DC4D4D', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                                             <Icon name={'trash'} size={22} color={'#fff'} />
-                                                            <Text style={tw`text-sm text-[#fff] ml-3 font-bold`}>{language === '1' ? 'Borrar' : 'Delete'}</Text>
+                                                            <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Borrar' : 'Delete'}</Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </>
@@ -542,7 +544,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     </View>
                 </TouchableWithoutFeedback>
             </View>
-            
         )
     }
 
@@ -588,8 +589,8 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 onRefresh={() => getInformation()}
                             />
                         }
-                        onScroll={handleScroll}
-                        contentContainerStyle={{paddingTop: paddingTop}}
+                        /* onScroll={handleScroll}
+                        contentContainerStyle={{paddingTop: paddingTop}} */
                     >
                         <View style={[container, tw`pb-[${isIphone ? 6 : 0}]`]}>
                             <View style={tw`h-auto self-stretch py-1.5`}>
@@ -882,11 +883,10 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 </Modal>
                 
                 <Modal orientation={orientationInfo.initial} visibility={detailsVisibility} handleDismiss={() => setDetailsVisibility(!detailsVisibility)}>
-                    <ScrollView
-                        style={tw`self-stretch`}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
+                        <KeyboardAwareScrollView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        >
                         <Title title={language === '1' ? 'DÍAS SOLICITADOS' : 'REQUESTED DAYS'} icon={'calendar'} tipo={1} itCloses={() => setDetailsVisibility(!detailsVisibility)} hasBottom={false} vertical={false}/>
                         <View style={tw`h-auto self-stretch justify-center items-center`}>
                             <View style={tw`justify-center items-start px-2 pb-2 self-stretch`}>
@@ -907,17 +907,13 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 <Text style={tw`font-bold text-base text-[#000]`}>{language === '1' ? 'Días Solicitados' : 'Requested Days'}</Text>
                             </View>
                         </View>
-                        <FlatList
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            style={list}
-                            data={details.dias}
-                            numColumns={1}
-                            renderItem={({item}) => <Dias id={item.id} dia={item.dia}/>}
-                            keyExtractor={item => String(item.id)}
-                        />
                         {
-                            details.motivo_solicitud
+                            dias
+                            &&
+                                dias.map(x => <Dias id={x.id} dia={x.dia}/>)
+                        }
+                        {
+                            details.estatus
                             ?
                                 <View style={tw`h-auto mt-2 mb-1 p-2 self-stretch bg-[${(details.estatus === '0' || details.estatus === '1') ? 'rgba(50,131,197,.1)' : 'rgba(220,50,50,.1)'}] rounded-lg`}>
                                     <View style={tw`flex-row items-center`}>
@@ -985,7 +981,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                     </View>
                                 </>
                         }
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                 </Modal>
                 
                 <Modal orientation={orientationInfo.initial} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>

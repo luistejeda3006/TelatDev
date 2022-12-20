@@ -607,11 +607,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 :
                                     <HeaderLandscape title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
                             }
-                            {
-                                isIphone
-                                &&
-                                    <SubHeader />
-                            }
+                            <SubHeader />
                             <KeyboardAwareScrollView
                                 ref={refTickets}
                                 showsVerticalScrollIndicator={false}
@@ -630,8 +626,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         }}
                                     />
                                 }
-                                contentContainerStyle={{paddingTop: !isIphone ? paddingTop + 50 : paddingTop}}
-                                onScroll={handleScroll}
+                                /* contentContainerStyle={{paddingTop: !isIphone ? paddingTop + 50 : paddingTop}}
+                                onScroll={handleScroll} */
                             >
                                 <View style={styles.container}>
                                 {
@@ -750,7 +746,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     </ScrollView>
                                                 </View>
                                             :
-                                                <Pagination data={expedientes} SearchInput={true} Item={Ticket} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : 1})} placeholder={currentFilter === 1 ? 'Quién solicitó...' : currentFilter === 2 ? 'Ubicación...' : 'No.Ticket...'} property={currentFilter === 1 ? 'nombre' : currentFilter ===  2 ? 'ubicacion' : 'no_ticket'}/>
+                                                <Pagination data={expedientes} SearchInput={true} Item={Ticket} onChangeFilter={() => setInitialState({...initialState, currentFilter: currentFilter === 1 ? 2 : currentFilter === 2 ? 3 : 1})} placeholder={currentFilter === 1 ? 'Quién solicitó...' : currentFilter === 2 ? 'Ubicación...' : 'No.Ticket...'} property={currentFilter === 1 ? 'nombre' : currentFilter ===  2 ? 'ubicacion' : 'no_ticket'} handlePage={handlePage} current={currentPage} />
                                 }
                                 {
                                     isIphone

@@ -359,7 +359,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            onScroll={handleScroll}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                             refreshControl={
                                 <RefreshControl
                                     progressBackgroundColor={'#EC5C25'}
@@ -368,7 +369,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                     onRefresh={() => getInformation()}
                                 />
                             }
-                            contentContainerStyle={{paddingTop: paddingTop}}
                         >
                             <View style={[container, {marginBottom: isIphone ? 25 : 0}]}>
                                 <View style={tw`h-auto self-stretch pt-2.5`}>

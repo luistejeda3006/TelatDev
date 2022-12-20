@@ -169,8 +169,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200) {
+            const {response, status} = await request.json();
+            if(status === 200) {
                 const body = {
                     'action': 'get_metricas',
                     'data': {
@@ -191,8 +191,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     body: JSON.stringify(body)
                 });
                 
-                const {response: respuestita} = await request.json();
-                if(respuestita.status === 200){
+                const {response: respuestita, status: statusi} = await request.json();
+                if(statusi === 200){
                     let obj = {
                         emp_numero: response.data.emp_numero,
                         foto: `https://telat.mx/intranet/upload/fotos/${response.data.emp_foto}`,
@@ -207,14 +207,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     setTimeout(() => {
                         setCurrentPeriodo(!currentPeriodo ? response.quincenas[0].label : currentPeriodo)
                         dispatch(setPeriodos(response.quincenas))
-                        console.log('response: ', response.my_money)
                         dispatch(setOperaciones(response.my_money))
                         dispatch(setAgente(obj))
-                        setInitialState({...initialState, fechas: respuestita.dates, loading: false});
+                        setInitialState({...initialState, fechas: respuestita, loading: false});
                     }, 800)
                 }
             }
-            else if(response.status === 401){
+            else if(status === 401){
                 Alert.alert(
                     language === 1 ? 'Sesión Expirada' : 'Expired Session',
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -227,7 +226,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 navigation.navigate('AuthLogin')
             }
     
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Acceso denegado, comuniquese con un administrador.' : 'Access denied, contact an administrator',
@@ -357,9 +356,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response: respuestita} = await request.json();
-            if(respuestita.status === 200){
-                setInitialState({...initialState, detalle_dia: respuestita.data, loading: false})
+            const {response, status} = await request.json();
+            if(status === 200){
+                setInitialState({...initialState, detalle_dia: response, loading: false})
                 setVisibleSummary(!visibleSummary)
                 setDate(completa)
             }
@@ -457,8 +456,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={{alignSelf: 'stretch'}}
-                                contentContainerStyle={{paddingTop: paddingTop}}
-                                onScroll={(e) => handleScroll(e)}
+                                /* contentContainerStyle={{paddingTop: paddingTop}}
+                                onScroll={(e) => handleScroll(e)} */
                             >
                                 <View style={{height: 'auto', alignSelf: 'stretch', marginTop: '3%'}}>
                                     <View style={{height: 'auto', alignItems: 'center', justifyContent: 'center'}}>
@@ -499,7 +498,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             </View>
                                         </View>
                                         <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginTop: 5}}>
-                                            <Text style={{fontSize: 14.5, fontWeight: 'bold', color: Blue}}>{agente.puesto}</Text>
+                                            <Text style={{fontSize: 14.5, fontWeight: 'bold', color: Blue}}>{agente.puesto ? agente.puesto : '-----'}</Text>
                                         </View>
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>

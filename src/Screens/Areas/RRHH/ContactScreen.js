@@ -574,8 +574,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 
                                 <View style={tw`h-auto self-stretch mb-2 ios:mb-2.5 pb-[1.8%] mt-[1.5%]`}>
@@ -1067,7 +1067,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
 
 const titleStyle = tw`text-sm text-[${Blue}] mb-1.5`
 const pickerStyle = tw`justify-center border border-[#CBCBCB] mb-2.5 h-12.5 rounded-3xl px-${isIphone ? '2.5' : 'px'} w-[99%] flex-row`
-const boxStyle = tw`h-auto justify-center items-center border border-[#CBCBCB] bg-white p-2.5 self-stretch rounded-3xl`
+const boxStyle = tw`h-auto justify-center items-center border border-[#CBCBCB] bg-white p-2.5 self-stretch rounded`
 
 const styles = StyleSheet.create({
     picker: {

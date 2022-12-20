@@ -100,8 +100,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     style={tw`self-stretch`}
-                    onScroll={handleScroll}
-                    contentContainerStyle={{paddingTop: paddingTop}}
+                    /* onScroll={handleScroll}
+                    contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
                         <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
@@ -418,8 +418,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
                                     <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5 bg-[#dadada]`}>
@@ -673,8 +673,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
                                     <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>

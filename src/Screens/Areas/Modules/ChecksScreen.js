@@ -189,13 +189,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 </View>
                             </View>
                             <View style={tw`flex-row border border-[#dadada] bg-[#f7f7f7]`}>
+                                <Mes day={language === '1' ? 'Dom' : 'Sun'}/>
                                 <Mes day={language === '1' ? 'Lun' : 'Mon'}/>
                                 <Mes day={language === '1' ? 'Mar' : 'Tue'}/>
                                 <Mes day={language === '1' ? 'Mie' : 'Wed'}/>
                                 <Mes day={language === '1' ? 'Jue' : 'Thu'}/>
                                 <Mes day={language === '1' ? 'Vie' : 'Fri'}/>
                                 <Mes day={language === '1' ? 'Sáb' : 'Sat'}/>
-                                <Mes day={language === '1' ? 'Dom' : 'Sun'}/>
                             </View>
                             <View style={tw`h-auto self-stretch border border-[#dadada] bg-white`}>
                                 <FlatList

@@ -70,7 +70,6 @@ export default ({navigation}) => {
 
     const getToken = async() => {
         let value = await AsyncStorage.getItem(notificationToken);
-        console.log('value: ', value)
         valueSendNotification = await AsyncStorage.getItem(sendNotification) || '0';
         await AsyncStorage.setItem(sendNotification, '0')
         setValueNotificationToken(value)
@@ -224,8 +223,6 @@ export default ({navigation}) => {
                     'token': valueNotificationToken
                 }
             }
-
-            console.log('body: ', body)
             
             const request = await fetch(urlApp, {
                 method: 'POST',

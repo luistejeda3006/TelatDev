@@ -75,8 +75,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-[3%]`}></View>
                             <Title title={language === '1' ? 'INFORMACIÓN MÉDICA' : 'MEDIC INFORMATION'} icon={'user'}/>
@@ -102,8 +102,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-[3%]`}></View>
                             <Title title={language === '1' ? 'INFORMACIÓN MÉDICA' : 'MEDIC INFORMATION'} icon={'user'}/>

@@ -59,8 +59,8 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
                             scrollEventThrottle={16}
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <>
                                 <View style={tw`border-b border-b-[#f7f7f7] mb-2.5 pb-[2%] mt-[3%]`}>

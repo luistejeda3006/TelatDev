@@ -309,6 +309,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     setIsLoading(false)
                 }
                 else {
+                    setLoading(false)
                     setBodyMessage({
                         header: language === '1' ? 'Correo Electrónico Inválido' : 'Invalid Email',
                         icon: true,

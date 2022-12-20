@@ -47,6 +47,7 @@ export default ({savePicture = undefined, imagen, required = false}) => {
     const handleCutPicture = () => {
         try{
             ImagePicker.openCropper({
+                compressImageQuality: 1,
                 path: uriG,
                 width: 300,
                 height: 400,

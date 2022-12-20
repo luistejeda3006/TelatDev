@@ -4,7 +4,7 @@ import { Blue } from '../colors/colorsApp'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputFilter from './InputFilter';
 
-export default ({data, Item, SearchInput = undefined, onChangeFilter, handleClean = () => {}, placeholder, property, handlePage, current = 1, changing = undefined, temporal, handleTop = () => {}}) => {
+export default ({data, Item, SearchInput = undefined, onChangeFilter, handleClean = () => {}, placeholder, property, handlePage = () => {}, current = 1, changing = undefined, temporal, handleTop = () => {}}) => {
     const [initialState, setInitialState] = useState({
         information: data,
         masterInformation: data,
@@ -123,12 +123,12 @@ export default ({data, Item, SearchInput = undefined, onChangeFilter, handleClea
                             {
                                 currentPage > 1
                                 ?
-                                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 14, borderTopStartRadius: 10, borderBottomStartRadius: 10}]} onPress={() => handleBackPage()}>
-                                        <Icon name='angle-left' size={28} color={Blue} />
+                                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 14, height: 40, width: 40}]} onPress={() => handleBackPage()}>
+                                        <Icon name='angle-left' size={20} color={Blue} />
                                     </TouchableOpacity>
                                 :
-                                    <View style={[styles.button, {paddingHorizontal: 14, borderTopStartRadius: 10, borderBottomStartRadius: 10}]}>
-                                        <Icon name='angle-left' size={28} color={'#adadad'} />
+                                    <View style={[styles.button, {paddingHorizontal: 14, height: 40, width: 40}]}>
+                                        <Icon name='angle-left' size={20} color={'#adadad'} />
                                     </View>
                             }
                             {
@@ -187,12 +187,12 @@ export default ({data, Item, SearchInput = undefined, onChangeFilter, handleClea
                             {
                                 currentPage < countPagination
                                 ?
-                                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 14, borderTopEndRadius: 10, borderBottomEndRadius: 10}]} onPress={() => handleNextPage()}>
-                                        <Icon name='angle-right' size={28} color={Blue} />
+                                    <TouchableOpacity style={[styles.button, {paddingHorizontal: 14, height: 40, width: 40}]} onPress={() => handleNextPage()}>
+                                        <Icon name='angle-right' size={20} color={Blue} />
                                     </TouchableOpacity>
                                 :
-                                    <View style={[styles.button, {paddingHorizontal: 14, borderTopEndRadius: 10, borderBottomEndRadius: 10}]}>
-                                        <Icon name='angle-right' size={28} color='#adadad' />
+                                    <View style={[styles.button, {paddingHorizontal: 14, height: 40, width: 40}]}>
+                                        <Icon name='angle-right' size={20} color='#adadad' />
                                     </View>
                             }
                         </View>

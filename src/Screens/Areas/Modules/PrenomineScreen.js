@@ -225,8 +225,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={{alignSelf: 'stretch'}}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <Title icon={'user'} tipo={1} hasBottom={false} title={language === '1' ? 'INFORMACIÓN GENERAL' : 'GENERAL INFORMATION'}/>
                             <View style={{flexDirection: 'row', marginBottom: 8}}>

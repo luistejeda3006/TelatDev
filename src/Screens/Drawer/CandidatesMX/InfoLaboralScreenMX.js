@@ -96,8 +96,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     style={tw`self-stretch`}
-                    onScroll={handleScroll}
-                    contentContainerStyle={{paddingTop: paddingTop}}
+                    /* onScroll={handleScroll}
+                    contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={{marginTop: '3%'}}></View>
                     <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>
@@ -406,8 +406,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false} 
                                 style={tw`self-stretch`}
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`mt-[3%]`} />
                                 <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>
@@ -699,8 +699,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`mt-[3%]`} />
                                 <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>

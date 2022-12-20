@@ -67,8 +67,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     style={{alignSelf: 'stretch'}}
-                    onScroll={handleScroll}
-                    contentContainerStyle={{paddingTop: paddingTop}}
+                    /* onScroll={handleScroll}
+                    contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={{marginTop: '3%'}}></View>
                     <Title title={language === '1' ? 'REFERENCIAS PERSONALES' : 'PERSONAL REFERENCES'} icon={'user'}/>

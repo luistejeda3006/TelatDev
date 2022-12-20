@@ -467,8 +467,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 body: JSON.stringify(body)
             });
 
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 const body = {
                     'action': 'get_altas_bajas',
                     'data': {
@@ -583,11 +583,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
                 //información con redux, nada más llegar acomodar y hacer que ya no cargue,  unica recarga con refresh control
 
-                setLoadingContent(false)
                 setCurrentQuincena(!currentQuincena ? respuestita.periodos[0].label : currentQuincena)
                 setCurrentArea(response.areas[0].label)
+                setLoadingContent(false)
             }
-            else if(response.status === 401){
+            else if(status === 401){
                 Alert.alert(
                     language === 1 ? 'Sesión Expirada' : 'Expired Session',
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -600,7 +600,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 navigation.navigate('AuthLogin')
             }
     
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Acceso denegado, comuniquese con un administrador.' : 'Access denied, contact an administrator',
@@ -650,8 +650,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
             const es_1 = found_1.id === '12' ? (parseInt(getCurrentDate().substring(0,4)) - 1).toString() : getCurrentDate().substring(0,4)
             const es_2 = (found_2.id === '11' || found_2.id === '12') ? (parseInt(getCurrentDate().substring(0,4)) - 1).toString() : getCurrentDate().substring(0,4)
     
-            let n_1 = response.years.map(x => String(x.year) === es_1 ? ({'id': x.id, 'name': String(x.year), 'selected': true}) : ({'id': x.id, 'name': String(x.year), 'selected': false}))
-            let n_2 = response.years.map(x => String(x.year) === es_2 ? ({'id': x.id, 'name': String(x.year), 'selected': true}) : ({'id': x.id, 'name': String(x.year), 'selected': false}))
+            let n_1 = response.map(x => String(x.year) === es_1 ? ({'id': x.id, 'name': String(x.year), 'selected': true}) : ({'id': x.id, 'name': String(x.year), 'selected': false}))
+            let n_2 = response.map(x => String(x.year) === es_2 ? ({'id': x.id, 'name': String(x.year), 'selected': true}) : ({'id': x.id, 'name': String(x.year), 'selected': false}))
             setYears(response.years)
             setYearsPickerUno(n_1)
             setYearsPickerDos(n_2)
@@ -689,8 +689,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200){
+            const {response, status} = await request.json();
+            if(status === 200){
                 const data = response.data_grafico.map(x => x.name === '--PRESA SALINILLAS' ? ({...x, name: '--SALINILLAS'}) : x.name === '--CIUDAD JUAREZ' ? ({...x, name: '--JUAREZ'}) : x)
                 setAreasGeneral({...areasGeneral, total_razon_social: response.empleados_razon_social, data_grafico: data, total: response.total, subareas: response.subareas})
                 setInitialState({...initialState, loading: false})
@@ -698,7 +698,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 setDataGraficoSubarea(nuevita)
                 setCurrentSubarea(response.subareas[0].label)
             }
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -748,13 +748,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
-            const {response} = await request.json();
-            if(response.status === 200){
-                const data = response.data_grafico.map(x => x.name === '--PRESA SALINILLAS' ? ({...x, name: '--SALINILLAS'}) : x.name === '--CIUDAD JUAREZ' ? ({...x, name: '--JUAREZ'}) : x)
+            const {response, status} = await request.json();
+            if(status === 200){
+                const data = response.map(x => x.name === '--PRESA SALINILLAS' ? ({...x, name: '--SALINILLAS'}) : x.name === '--CIUDAD JUAREZ' ? ({...x, name: '--JUAREZ'}) : x)
                 setDataGraficoSubarea(data)
                 setInitialState({...initialState, loading: false})
             }
-            else if(response.status === 406){
+            else if(status === 406){
                 Alert.alert(
                     language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                     language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -770,7 +770,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 navigation.navigate('AuthLogin')
             }
         }catch(e){
-            console.log('algo pasó con el internet que pienso')
+            console.log('algo pasó con el internet')
             setLoadingContent(false)
             setInitialState({...initialState, loading: false})
         }
@@ -803,8 +803,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
             });
             
             const {response} = await request.json();
-            if(response.hasOwnProperty('data_grafica')){
-                setDataGraficoUno(response.data_grafica)
+            if(response.length > 0){
+                setDataGraficoUno(response)
             }
             
             else {
@@ -869,8 +869,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
             });
             
             const {response} = await request.json();
-            if(response.hasOwnProperty('data_grafica')){
-                setDataGraficoDos(response.data_grafica)
+            if(response.length > 0){
+                setDataGraficoDos(response)
             }
             
             else {
@@ -1222,11 +1222,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     body: JSON.stringify(body)
                 });
                 
-                const {response} = await request.json();
-                if(response.status === 200){
+                const {response, status} = await request.json();
+                if(status === 200){
                     setInitialState({...initialState, body_1: response.body_1, body_2: response.body_2, last: title, body_horizontal: response.body_horizontal, loading: false})
                 }
-                else if(response.status === 406){
+                else if(status === 406){
                     Alert.alert(
                         language === 1 ? 'Acceso Inválido' : 'Invalid Access', 
                         language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -1287,7 +1287,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     ?
                         <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
                             <View style={{width: 'auto', justifyContent: 'center'}}>
                                 <TouchableOpacity onPress={() => handleChangeVisibility(title)}>
@@ -1300,7 +1300,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                         ?
                             <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, flexDirection: 'row', borderBottomColor: Blue, borderBottomWidth: 0.5}}>
                                 <View style={{flex: 1, justifyContent: 'center'}}>
-                                    <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                    <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                                 </View>
                                 <View style={{width: 'auto', justifyContent: 'center'}}>
                                     <TouchableOpacity onPress={() =>  handleChangeVisibility(title)}>
@@ -1310,7 +1310,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         :
                             <View style={{height: 45, flex: 1, padding: 5, justifyContent: 'center', borderLeftColor: Blue, borderLeftWidth: .5, borderRightColor: Blue, borderRightWidth: .5, borderBottomColor: Blue, borderBottomWidth: .5}}>
-                                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{title === 'F' ? '-' : title}</Text>
+                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{title === 'F' ? '-' : title}</Text>
                             </View>
         )
     }
@@ -1887,8 +1887,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 <HeaderLandscape title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>}
                             
                             <ScrollView
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={{alignSelf: 'stretch', paddingHorizontal: orientationInfo.initial === 'PORTRAIT' ? '3%' : isIphone ? '5%' : '1.5%'}}

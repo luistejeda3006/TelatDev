@@ -5,7 +5,7 @@ import {Blue} from '../colors/colorsApp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default ({navigation, title = '', screenToGoBack = undefined, enabled = false, confirmation = false, currentLanguage = '1', extraAction = undefined, titleAlert = undefined, subtitleAlert = undefined, tipo = 1, news  = undefined, SubHeader = undefined, normal = Platform.OS === 'ios' ? true : false, translateY = undefined}) => {
+export default ({navigation, title = '', screenToGoBack = undefined, enabled = false, confirmation = false, currentLanguage = '1', extraAction = undefined, titleAlert = undefined, subtitleAlert = undefined, tipo = 1, news  = undefined, SubHeader = undefined, normal = Platform.OS === 'ios' ? true : true, translateY = undefined}) => {
     const {isTablet} = DeviceInfo;
     const handleConfirm = () => {
         Alert.alert(

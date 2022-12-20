@@ -54,17 +54,7 @@ export default ({handleAddElement, information, label}) => {
                     {
                         showList
                         &&
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                                style={styles.list}
-                                data={information}
-                                numColumns={1}
-                                renderItem={({item}) => <Item name={item.name} selected={item.selected} id={item.id}/>}
-                                keyExtractor={item => String(item.id)}
-                                key={'#_'}
-                            />
-
+                            information.map(x => <Item name={x.name} selected={x.selected} id={x.id}/>)
                     }
                 </View>
                 <View style={{flex: 1, alignSelf: 'stretch', marginHorizontal: 5}}>

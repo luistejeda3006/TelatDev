@@ -646,8 +646,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         }}
                                     />
                                 }
-                                onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}}
+                                /* onScroll={handleScroll}
+                                contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`mt-[3%]`} />
                                 <View style={tw`h-auto self-stretch justify-end items-center flex-row mb-2.5`}>
@@ -827,7 +827,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                                                 {
                                                                                     item.observacion
                                                                                     ?
-                                                                                        <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1}}>
+                                                                                        <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1, paddingLeft: isIphone ? 1 : 0, paddingTop: isIphone ? 1 : 0}}>
                                                                                             <IonIcons name={!item.oculta ? 'comment' : 'close-thick'} size={!item.oculta ? 12 : 15} color={'#fff'} />
                                                                                         </TouchableOpacity>
                                                                                     :
@@ -884,7 +884,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                                         {
                                                                             item.observacion
                                                                             ?
-                                                                                <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1}}>
+                                                                                <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1, paddingLeft: isIphone ? 1 : 0, paddingTop: isIphone ? 1 : 0}}>
                                                                                     <IonIcons name={!item.oculta ? 'comment' : 'close-thick'} size={!item.oculta ? 12 : 15} color={'#fff'} />
                                                                                 </TouchableOpacity>
                                                                             :
@@ -1021,148 +1021,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                 <View style={tw`mb-[3%]`}/>
                             </ScrollView>
 
-                            <Modal orientation={orientationInfo.initial} visibility={visibleResponsables} handleDismiss={() => setInitialState({...initialState, visibleResponsables: !visibleResponsables})}>
-                                <Select data={Responsables} handleActionUno={handleActionUno} />
-                            </Modal>
-
-                            <Modal orientation={orientationInfo.initial} visibility={visibleResponder} handleDismiss={() => {
-                                setSelected(undefined)
-                                setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}
-                            }>
-                                <KeyboardAwareScrollView
-                                    contentContainerStyle={styles.scrollContainer}
-                                    showsHorizontalScrollIndicator={false}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    <Text style={title}>{'Motivo'}</Text>
-                                    <View style={[styles.picker, tw`justify-center items-center border border-[${motivo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
-                                        <Picker
-                                            value={motivo}
-                                            onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
-                                            items={motivos}
-                                            placeholder={{}}
-                                        />
-                                    </View>
-                                    <Text style={title}>{'Mensaje'}</Text>
-                                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
-                                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
-                                    {
-                                        motivo === 4
-                                        &&
-                                            <>
-                                                <Animatable.View
-                                                    animation='bounceIn'
-                                                    duration={2500}>
-                                                        <View style={tw`h-auto self-stretch justify-center items-center mb-1.5`}>
-                                                            <View style={tw`flex-row justify-center items-center`}>
-                                                                <Text style={tw`text-base text-center text-[${Blue}] font-bold`}>¡Califícanos!</Text>
-                                                                <IonIcons name={'star-half-full'} size={28} color={Blue} />
-                                                            </View>
-                                                        </View>
-                                                        <View style={tw`h-auto self-stretch flex-row justify-center items-center`}>
-                                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 1 ? setSelected(1) : {}}>
-                                                                <IonIcons name={'emoticon-angry-outline'} size={38} color={selected === 1 ? '#dd5a43' : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 2 ? setSelected(2) : {}}>
-                                                                <IonIcons name={'emoticon-sad-outline'} size={38} color={selected === 2 ? '#ff892a' : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 3 ? setSelected(3) : {}}>
-                                                                <IonIcons name={'emoticon-neutral-outline'} size={38} color={selected === 3 ? Yellow : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 4 ? setSelected(4) : {}}>
-                                                                <IonIcons name={'emoticon-happy-outline'} size={38} color={selected === 4 ? '#69aa46' : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 5 ? setSelected(5) : {}}>
-                                                                <IonIcons name={'emoticon-excited-outline'} size={38} color={selected === 5 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                        </View>     
-                                                </Animatable.View>
-                                                {
-                                                    selected
-                                                    &&
-                                                        <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
-                                                            <View style={{width: 'auto', borderBottomWidth: 1, borderBottomColor: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : Blue}}>
-                                                                <Text style={{fontSize: 15, fontWeight: 'normal', textAlign: 'center', color: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : Blue}}>{selected === 1 ? 'Muy Insatisfecho' : selected === 2 ? 'Insatisfecho' : selected === 3 ? 'Neutral' : selected === 4 ? 'Satisfecho' : 'Excelente'}</Text>
-                                                            </View>
-                                                        </View>
-                                                }
-                                            </>
-                                    }
-                                    <View style={tw`flex-row mt-${motivo === 4 ? 5 : 0}`}>
-                                        <TouchableOpacity onPress={() => {
-                                                setSelected(undefined)
-                                                setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})
-                                            }}
-                                            style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}
-                                        >
-                                            <Icon name={'times'} size={22} color={'#000'} />
-                                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
-                                        </TouchableOpacity>
-                                        <View style={{width: 6}}></View>
-                                        <TouchableOpacity onPress={() => handleAnswer()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
-                                            <Icon name={'paper-plane'} size={18} color={'#fff'} />
-                                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Envíar</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </KeyboardAwareScrollView>
-                            </Modal>
-
-                            <Modal orientation={orientationInfo.initial} visibility={visibleAutorizar} handleDismiss={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}>
-                                <KeyboardAwareScrollView
-                                    contentContainerStyle={styles.scrollContainer}
-                                    showsHorizontalScrollIndicator={false}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    <Text style={title}>{'Autorizar'}</Text>
-                                    <View style={[styles.picker, tw`justify-center items-center border border-[${closeOption !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
-                                        <Picker
-                                            value={closeOption}
-                                            onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
-                                            items={closeOptions}
-                                            placeholder={{}}
-                                        />
-                                    </View>
-                                    <Text style={title}>{'Mensaje'}</Text>
-                                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
-                                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <TouchableOpacity onPress={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
-                                            <Icon name={'times'} size={22} color={'#000'} />
-                                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
-                                        </TouchableOpacity>
-                                        <View style={{width: 6}}></View>
-                                        <TouchableOpacity onPress={() => handleAutorizar()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
-                                            <Icon name={'check'} size={20} color={'#fff'} />
-                                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Autorizar</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </KeyboardAwareScrollView>
-                            </Modal>
-
-                            <Modal orientation={orientationInfo.initial} visibility={visibleConfirmar} handleDismiss={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}>
-                                <KeyboardAwareScrollView
-                                    contentContainerStyle={styles.scrollContainer}
-                                    showsHorizontalScrollIndicator={false}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    <Text style={title}>{'Mensaje'}</Text>
-                                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
-                                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
-                                    <View style={tw`flex-row`}>
-                                        <TouchableOpacity onPress={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar, imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
-                                            <Icon name={'times'} size={22} color={'#000'} />
-                                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
-                                        </TouchableOpacity>
-                                        <View style={{width: 6}}></View>
-                                        <TouchableOpacity onPress={() => handleConfirmar()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
-                                            <Icon name={'unlock'} size={20} color={'#fff'} />
-                                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Confirmar</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </KeyboardAwareScrollView>
-                            </Modal>
-                            <ModalLoading visibility={loading}/>
-                            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
                         </View>
                         <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
                     </>
@@ -1173,6 +1031,160 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                         <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
                     </>
             }
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleResponsables} handleDismiss={() => setInitialState({...initialState, visibleResponsables: !visibleResponsables})}>
+                <Select data={Responsables} handleActionUno={handleActionUno} />
+            </Modal>
+
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleAutorizar} handleDismiss={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={tw`h-auto self-stretch pb-2 justify-center items-center`}>
+                        <Text style={tw`text-lg text-[#000] font-bold`}>Autorizar Ticket</Text>
+                    </View>
+                    <Text style={title}>{'Autorizar'}</Text>
+                    <View style={[styles.picker, tw`justify-center items-center border border-[${closeOption !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
+                        <Picker
+                            value={closeOption}
+                            onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
+                            items={closeOptions}
+                            placeholder={{}}
+                        />
+                    </View>
+                    <Text style={title}>{'Mensaje'}</Text>
+                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
+                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar, closeOption: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
+                            <Icon name={'times'} size={22} color={'#000'} />
+                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <View style={{width: 6}}></View>
+                        <TouchableOpacity onPress={() => handleAutorizar()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
+                            <Icon name={'check'} size={20} color={'#fff'} />
+                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Autorizar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAwareScrollView>
+            </Modal>
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleConfirmar} handleDismiss={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={tw`h-auto self-stretch pb-2 justify-center items-center`}>
+                        <Text style={tw`text-lg text-[#000] font-bold`}>Confirmación de Seguridad</Text>
+                    </View>
+                    <Text style={title}>{'Mensaje'}</Text>
+                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
+                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
+                    <View style={tw`flex-row`}>
+                        <TouchableOpacity onPress={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar, imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})} style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}>
+                            <Icon name={'times'} size={22} color={'#000'} />
+                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <View style={{width: 6}}></View>
+                        <TouchableOpacity onPress={() => handleConfirmar()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
+                            <Icon name={'unlock'} size={20} color={'#fff'} />
+                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Confirmar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAwareScrollView>
+            </Modal>
+
+            <ModalLoading visibility={loading}/>
+            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
+
+            <Modal orientation={orientationInfo.initial} visibility={visibleResponder} handleDismiss={() => {
+                setSelected(undefined)
+                setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}
+            }>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={tw`h-auto self-stretch pb-2 justify-center items-center`}>
+                        <Text style={tw`text-lg text-[#000] font-bold`}>Respuesta/Comentario</Text>
+                    </View>
+                    <Text style={title}>{'Motivo'}</Text>
+                    <View style={[styles.picker, tw`justify-center items-center border border-[${motivo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
+                        <Picker
+                            value={motivo}
+                            onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
+                            items={motivos}
+                            placeholder={{}}
+                        />
+                    </View>
+                    <Text style={title}>{'Mensaje'}</Text>
+                    <MultiTextEditable handleInputChange={(e) => setInitialState({...initialState, mensaje: e})}/>
+                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen}/>
+                    {
+                        motivo === 4
+                        &&
+                            <>
+                                <Animatable.View
+                                    animation='bounceIn'
+                                    duration={2500}>
+                                        <View style={tw`h-auto self-stretch justify-center items-center mb-1.5`}>
+                                            <View style={tw`flex-row justify-center items-center`}>
+                                                <Text style={tw`text-base text-center text-[${Blue}] font-bold`}>¡Califícanos!</Text>
+                                                <IonIcons name={'star-half-full'} size={28} color={Blue} />
+                                            </View>
+                                        </View>
+                                        <View style={tw`h-auto self-stretch flex-row justify-center items-center`}>
+                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 1 ? setSelected(1) : {}}>
+                                                <IonIcons name={'emoticon-angry-outline'} size={38} color={selected === 1 ? '#dd5a43' : '#777'} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 2 ? setSelected(2) : {}}>
+                                                <IonIcons name={'emoticon-sad-outline'} size={38} color={selected === 2 ? '#ff892a' : '#777'} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 3 ? setSelected(3) : {}}>
+                                                <IonIcons name={'emoticon-neutral-outline'} size={38} color={selected === 3 ? Yellow : '#777'} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 4 ? setSelected(4) : {}}>
+                                                <IonIcons name={'emoticon-happy-outline'} size={38} color={selected === 4 ? '#69aa46' : '#777'} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 5 ? setSelected(5) : {}}>
+                                                <IonIcons name={'emoticon-excited-outline'} size={38} color={selected === 5 ? Blue : '#777'} />
+                                            </TouchableOpacity>
+                                        </View>     
+                                </Animatable.View>
+                                {
+                                    selected
+                                    &&
+                                        <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+                                            <View style={{width: 'auto', borderBottomWidth: 1, borderBottomColor: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : Blue}}>
+                                                <Text style={{fontSize: 15, fontWeight: 'normal', textAlign: 'center', color: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : Blue}}>{selected === 1 ? 'Muy Insatisfecho' : selected === 2 ? 'Insatisfecho' : selected === 3 ? 'Neutral' : selected === 4 ? 'Satisfecho' : 'Excelente'}</Text>
+                                            </View>
+                                        </View>
+                                }
+                            </>
+                    }
+                    <View style={tw`flex-row mt-${motivo === 4 ? 5 : 0}`}>
+                        <TouchableOpacity onPress={() => {
+                                setSelected(undefined)
+                                setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})
+                            }}
+                            style={tw`flex-1 h-10 bg-[#f7f7f7] rounded-lg justify-center items-center flex-row`}
+                        >
+                            <Icon name={'times'} size={22} color={'#000'} />
+                            <Text style={tw`text-base font-bold text-[#000] ml-3`}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <View style={{width: 6}}></View>
+                        <TouchableOpacity onPress={() => handleAnswer()} style={tw`flex-1 h-10 bg-[${Blue}] rounded-lg justify-center items-center flex-row`}>
+                            <Icon name={'paper-plane'} size={18} color={'#fff'} />
+                            <Text style={tw`text-base font-bold text-[#fff] ml-3`}>Envíar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAwareScrollView>
+            </Modal>
         </>
     )
 }

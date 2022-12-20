@@ -186,8 +186,8 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                                                     numColumns={1}
                                                     renderItem={({item}) => <Notification id={item.id} title={item.title} body={item.body} created={item.created} sent={item.sent} dia={item.dia} numero={item.numero} oculta={item.oculta}/>}
                                                     keyExtractor={item => String(item.id)}
-                                                    onScroll={handleScroll}
-                                                    contentContainerStyle={{paddingTop: paddingTop}}
+                                                    /* onScroll={handleScroll}
+                                                    contentContainerStyle={{paddingTop: paddingTop}} */
                                                 />
                                             </>
                                         :

@@ -80,8 +80,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-[3%]`}></View>
                             <Title title={language === '1' ? 'FORMACIÓN ACADÉMICA' : 'EDUCATION'} icon={'graduation-cap'} tipo={1}/>
@@ -274,8 +274,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}}
+                            /* onScroll={handleScroll}
+                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-[3%]`} />
                             <Title title={language === '1' ? 'FORMACIÓN ACADÉMICA' : 'EDUCATION'} icon={'graduation-cap'} tipo={1}/>
