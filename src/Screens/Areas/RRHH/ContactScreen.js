@@ -41,7 +41,7 @@ let split_play = null;
 let total_play = null;
 
 export default ({navigation, route: {params: {id, language, country, id_sede}}}) => {
-    console.log('id: ', id, 'language: ', language, 'country: ', country, "id_sede: ", id_sede)
+    /* console.log('id: ', id, 'language: ', language, 'country: ', country, "id_sede: ", id_sede) */
     let filePath = null
     let encrypted = null;
     const speaking_level = useRef()
@@ -63,8 +63,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
     const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     const [successVisibility, setSuccessVisibility] = useState(false)
     const {handleInputChange, values, handleSetState, handleSubmitForm} = useForm({
-        currentCity: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 'Mexico City' : id_sede === '4' ? 'Juárez' : 'El Paso, TX.',
-        currentCityOption: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 0 : id_sede === '4' ? 1 : 2,
+        currentCity: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 'Mexico City' : id_sede === '4' ? 'Juárez' : 'El Paso, TX.',
+        currentCityOption: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 0 : id_sede === '4' ? 1 : 2,
         currentAboutUs: '',
         currentAboutUsOption: 0,
         speakingLevel: '',
@@ -421,8 +421,8 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         "experiencia_job_bool": currentClose,
                                         "experiencia_job": companies_time,
                                         "info_contacto_otro": other,
-                                        "nivel_ingles": currentLevelEnglish,
-                                        "nivel_espanol": currentLevelSpanish,
+                                        'nivel_ingles': '',
+                                        'nivel_espanol': '',
                                         "programas_computadora": programs,
                                         "info_nombre": fullName,
                                         "info_email": email,
@@ -535,9 +535,9 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
     }
 
     const handleValidateAboutUs = () => {
-        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 5 && currentLevelOptionEnglish !== 0 && currentLevelOptionSpanish !== 0 && currentContactOption !== 0 && currentScheduleOption !== 0 && currentProgramsOption !== 0 && fullName !== '' && email !== '' && telefono_1 !== '') handleValidateCompaniesUS()
+        if(currentAboutUsOption !== 0 && currentAboutUsOption !== 5 && currentContactOption !== 0 && currentScheduleOption !== 0 && currentProgramsOption !== 0 && fullName !== '' && email !== '' && telefono_1 !== '') handleValidateCompaniesUS()
         else {
-            if(currentAboutUsOption === 0 || currentLevelOptionEnglish === 0 || currentLevelOptionSpanish === 0 || currentContactOption === 0 || currentScheduleOption === 0 || programs === '' || fullName === '' || email === '' || telefono_1 === '') Alerta()
+            if(currentAboutUsOption === 0 || currentContactOption === 0 || currentScheduleOption === 0 || programs === '' || fullName === '' || email === '' || telefono_1 === '') Alerta()
             else {
                 if(other !== '') handleValidateCompaniesUS()
                 else Alerta()
@@ -589,7 +589,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                     </View>
 
                                     <Text style={titleStyle}>{language === '1' ? '¿Cómo te enteraste de nosotros?' : 'How did you find out about the job?'}</Text>
-                                    <View style={[styles.picker]} >
+                                    <View style={[styles.picker, {paddingRight: currentAboutUsOption === 0 ? 10 : 0}]} >
                                         <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                             <Picker
                                                 value={currentAboutUs}
@@ -624,7 +624,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         ?
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés conversacional?' : `What's your speaking English level?`}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentLevelOptionEnglish === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelEnglish}
@@ -643,7 +643,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés en escritura?' : `What's your writing English level?`}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentLevelOptionSpanish === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentLevelSpanish}
@@ -662,7 +662,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentProgramsOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={programs}
@@ -681,7 +681,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 </View>
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en empleos bilingües?' : '¿Do you have experience in bilingual jobs?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentCloseOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentClose}
@@ -756,7 +756,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     ref={phone_2}
                                                 />
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cómo prefieres que te contactemos?' : 'How do you prefer to be contacted?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentContactOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentContact}
@@ -774,7 +774,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     }
                                                 </View>
                                                 <Text style={titleStyle}>{language === '1' ? '¿En qué horario podemos contactarte?' : 'At what time can we reach you?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentScheduleOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentSchedule}
@@ -795,7 +795,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         :
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Tienes experiencia en Call Center o empleos de Atención a Clientes?' : 'Do you have experience in Call Center or Customer Service jobs?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentCloseOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentClose}
@@ -833,7 +833,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     &&
                                                         <View style={tw`h-2.5 self-stretch`} />
                                                 }
-                                                <Text style={titleStyle}>{language === '1' ? 'Nivel de Inglés' : 'English profiency'}</Text>
+                                                {/* <Text style={titleStyle}>{language === '1' ? 'Nivel de Inglés' : 'English profiency'}</Text>
                                                 <View style={[styles.picker]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
@@ -868,10 +868,10 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                                 <IonIcons name='asterisk' color={'#DC3644'} size={7}/>
                                                             </View>
                                                     }
-                                                </View>
+                                                </View> */}
 
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de computación?' : `What's your computer skills level?`}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentProgramsOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={programs}
@@ -930,7 +930,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     ref={phone_2}
                                                 />
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cómo prefieres que te contactemos?' : 'How do you prefer to be contacted?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentContactOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentContact}
@@ -948,7 +948,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                     }
                                                 </View>
                                                 <Text style={titleStyle}>{language === '1' ? '¿En qué horario podemos contactarte?' : 'At what time can we reach you?'}</Text>
-                                                <View style={[styles.picker]} >
+                                                <View style={[styles.picker, {paddingRight: currentScheduleOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             value={currentSchedule}

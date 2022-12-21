@@ -634,7 +634,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 </View>
                             </View>
                             <View style={tw`h-auto self-stretch mt-6`}>
-                                <TouchableOpacity style={[picker, tw`flex-row flex-1 mx-1.5 shadow-md`, {height: 45}]} onPress={() => handleVisiblePeriodos()}>
+                                <TouchableOpacity style={[picker, tw`shadow-md`, {height: 45, flexDirection: 'row', marginHorizontal: 6}]} onPress={() => handleVisiblePeriodos()}>
                                     <View style={tw`flex-1 justify-center items-center`}>
                                         <Text style={tw`text-[#000]`}>{currentPeriodo}</Text>
                                     </View>
@@ -913,11 +913,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 dias.map(x => <Dias id={x.id} dia={x.dia}/>)
                         }
                         {
-                            details.estatus
+                            details.motivo_solicitud || details.motivo_cancelado || details.motivo_rechazo
                             ?
                                 <View style={tw`h-auto mt-2 mb-1 p-2 self-stretch bg-[${(details.estatus === '0' || details.estatus === '1') ? 'rgba(50,131,197,.1)' : 'rgba(220,50,50,.1)'}] rounded-lg`}>
                                     <View style={tw`flex-row items-center`}>
-                                        <Text style={tw`text-[${(details.estatus === '0' || details.estatus === '1') ? Blue : '#DC3232'}] font-bold text-base`}>{`${language === '1' ? 'Motivo: ' : 'Reason: '}`}<Text style={tw`font-normal`}>{(details.estatus === '0' || details.estatus === '1') ? details.motivo_solicitud : details.motivo_rechazo}</Text></Text>
+                                        <Text style={tw`text-[${(details.estatus === '0' || details.estatus === '1') ? Blue : '#DC3232'}] font-bold text-base`}>{`${language === '1' ? 'Motivo: ' : 'Reason: '}`}<Text style={tw`font-normal`}>{(details.estatus === '0' || details.estatus === '1') ? details.motivo_solicitud : details.estatus === '2' ? details.motivo_rechazo : details.motivo_cancelado}</Text></Text>
                                     </View>
                                 </View>
                             :

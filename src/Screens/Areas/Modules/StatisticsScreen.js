@@ -210,7 +210,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
             {value: 8, label: 'PERIODO 8'},
         ],
         legendsIRP: [],
-        legendsGraphicIRP: [getCurrentDate().substring(0,4)],
+        legendsGraphicIRP: [],
         generalIRP: [],
         dataIRP: [],
     })
@@ -526,8 +526,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 let add_color_general = []
                 let fin = []
 
-                add_color = res.data.map(x => ({'data': x.data, color: () => x.color}))
-                add_color_general = res.data2.map((x,i,a) => ({'data': x.data, color: () => x.color, id: i}))
+                add_color_general = res.data.map((x,i,a) => ({data: x.data, color: () => x.color, id: i}))
                 const odi = [
                     {
                         'data': [null, null, null, null, null, null],
@@ -536,13 +535,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     }
                 ]
                 finGeneral = [...add_color_general, ...odi]
-
+                
                 const finito = [
                     finGeneral[add_color_general.length - 1],
                     finGeneral[add_color_general.length],
                 ]
 
-                add_color_2 = {...res.data2[res.data2.length - 1], color: () => res.data2[res.data2.length - 1].color}
+                const legendsColor = res.data.map((x,i,a) => ({id: i, year: x.year, color: x.color, visible: getCurrentDate().substring(0,4) === String(x.year) ? true : false}))
+                console.log('legendsColor: ', legendsColor)
+                add_color_2 = {...res.data[res.data.length - 1], color: () => res.data[res.data.length - 1].color}
                 fin = [...add_color, ...odi]
 
                 longitud = (res.legends_index.length) + 1
@@ -573,10 +574,10 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     areas: response.areas,
                     title: response.areas[0].label,
                     content: true,
-                    legends: res.legends,
                     legendsIRP: res.legends_index,
                     generalIRP: finGeneral,
                     dataIRP: finito,
+                    legendsGraphicIRP: legendsColor,
                     body_horizontal: response.training.body_horizontal,
                     body_horizontal_master: response.training.body_horizontal,
                 })
@@ -952,23 +953,28 @@ export default ({navigation, route: {params: {orientation}}}) => {
             //esto es para las puras leyendas de los checkbox
             const nuevos = legendsIRP.map(x => String(x.year) === String(year) ? ({...x, checked: !x.checked}) : x)
             //esto es para las leyendas de la grafica, si existe ya en el arreglo la quitamos, si no la agregamos
-            const legend = legendsGraphicIRP.find(x => String(x) === String(year))
+            const legend = legendsGraphicIRP.find(x => String(x.year) === String(year) && x.visible)
             let legends = null
             let nuevaData = []
+            let comun = []
             const search = nuevos.find(x => String(x.year) === String(year))
+            console.log('legend: ', legend)
             if(legend){
-                legends = legendsGraphicIRP.filter(x => String(x) !== String(year))
+                console.log('entra en ya exisste')
+                comun = legendsGraphicIRP.map(x => String(x.year) === String(year) ? ({...x, visible: false}) : x)
+                legends = legendsGraphicIRP.filter(x => String(x.year) !== String(year))
                 nuevaData = dataIRP.filter(x => String(x.id) !== String(search.id) && String(x.id) !== String(longitud))
             } else {
+                comun = legendsGraphicIRP.map(x => String(x.year) === String(year) ? ({...x, visible: true}) : x)
+                legends = [...legendsGraphicIRP, String(year)]
                 nuevaData = generalIRP.find(x => x.id === search.id)
                 nuevaData = [...dataIRP, nuevaData]
                 nuevaData = nuevaData.sort((a, b) => a.id > b.id)
-                legends = [...legendsGraphicIRP, String(year)]
             }
 
             const ordenadas = legends.sort()
             
-            setInitialState({...initialState, legendsIRP: nuevos, legendsGraphicIRP: ordenadas, dataIRP: nuevaData})
+            setInitialState({...initialState, legendsIRP: nuevos, legendsGraphicIRP: comun, dataIRP: nuevaData})
         }
     })
 
@@ -1716,7 +1722,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 style={tw`justify-center items-center`}
                                 data={{
                                     labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-                                    datasets: dataIRP,
+                                    datasets: [dataIRP],
                                     legend: legendsGraphicIRP // optional
                                 }}
                                 width={Dimensions.get('window').width - 50}
@@ -2259,7 +2265,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                 
                                                 <View style={tw`mb-4`}></View>
                                                 <Title title={'Índice de Rotación de Personal'} icon={'finance'} tipo={2} vertical={false}/>
-                                                <View style={tw`h-auto self-stretch mb-4`}>
+                                                <View style={tw`h-auto self-stretch mb-2.5`}>
                                                     <FlatList
                                                         showsVerticalScrollIndicator={false}
                                                         showsHorizontalScrollIndicator={false}
@@ -2274,30 +2280,51 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                                     {
                                                         content
                                                         ?
-                                                            <LineChart
-                                                                fromZero={true}
-                                                                style={tw`justify-center items-center`}
-                                                                data={{
-                                                                    labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-                                                                    datasets: dataIRP,
-                                                                    legend: legendsGraphicIRP // optional
-                                                                }}
-                                                                width={Dimensions.get('window').width}
-                                                                yLabelsOffset={30}
-                                                                height={220}
-                                                                chartConfig={{
-                                                                    decimalPlaces: 0,
-                                                                    propsForLabels: {
-                                                                        fontSize: 14,
-                                                                        fontWeight: 'bold'
-                                                                    },
-                                                                    backgroundGradientFrom: '#fff',
-                                                                    backgroundGradientTo: '#fff',
-                                                                    color: () => '#000',
-                                                                    labelColor: () => '#000',
-                                                                    
-                                                                }}
-                                                            />
+                                                            <>
+                                                                <View style={tw`h-auto self-stretch`}>
+                                                                    <FlatList
+                                                                        showsVerticalScrollIndicator={false}
+                                                                        showsHorizontalScrollIndicator={false}
+                                                                        style={list}
+                                                                        data={legendsGraphicIRP}
+                                                                        numColumns={4}
+                                                                        renderItem={({item}) => 
+                                                                            item.visible
+                                                                            ?
+                                                                                <View style={tw`flex-1 justify-center items-center h-auto flex-row py-2`}>
+                                                                                    <View style={tw`w-5 h-5 rounded-full bg-[${item.color}] border border-[#dadada]`} />
+                                                                                    <Text style={tw`ml-1.5 font-bold text-xs text-[#000]`}>{item.year}</Text>
+                                                                                </View>
+                                                                            :
+                                                                                <></>    
+                                                                        }
+                                                                        keyExtractor={item => String(item.id)}
+                                                                    />
+                                                                </View>
+                                                                <LineChart
+                                                                    fromZero={true}
+                                                                    style={tw`justify-center items-center`}
+                                                                    data={{
+                                                                        labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+                                                                        datasets: dataIRP,
+                                                                        legend: [] // optional
+                                                                    }}
+                                                                    width={Dimensions.get('window').width}
+                                                                    yLabelsOffset={30}
+                                                                    height={200}
+                                                                    chartConfig={{
+                                                                        decimalPlaces: 0,
+                                                                        propsForLabels: {
+                                                                            fontSize: 14,
+                                                                            fontWeight: 'bold'
+                                                                        },
+                                                                        backgroundGradientFrom: '#fff',
+                                                                        backgroundGradientTo: '#fff',
+                                                                        color: () => '#000',
+                                                                        labelColor: () => '#000',
+                                                                    }}
+                                                                />
+                                                            </>
                                                         :
                                                             <></>
                                                     }

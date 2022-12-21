@@ -1,6 +1,6 @@
 import {Platform} from 'react-native'
 
-export const version = Platform.OS === 'ios' ? '1.2.1' : '2.2.1'; //hasta el momento va la 1.2.0 y 2.2.0
+export const version = Platform.OS === 'ios' ? '1.2.2' : '2.2.2'; //hasta el momento va la 1.2.0 y 2.2.0
 export const siteKey = '6Lf3qkYUAAAAAOHdvDrADAxIEOHs9dCttWCgHukI';
 export const baseUrl = 'https://telat.mx/intranet/';
 export const urlApp = 'https://app.telat-group.com/api/acceso';
