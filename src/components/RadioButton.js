@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, Text, TouchableOpacity} from 'react-native'
-import { Blue } from '../colors/colorsApp';
+import {Blue} from '../colors/colorsApp';
 
 export default ({legend = 'País', checked, handleCheck, width = 0}) => {
     return(

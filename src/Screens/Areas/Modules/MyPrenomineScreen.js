@@ -162,11 +162,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         const body = {
             'action': 'get_my_prenomina',
             'data': {
-                'id_usuario': origin === 1 ? params.id_usuario : id_usuario,
+                'id_usuario': params.id_usuario,
                 'id_puesto': origin === 1 ? params.id_puesto : id_puesto,
                 'idioma': language,    
                 'id_periodo': id_periodo,
-                'id_puesto_padre': params.id_puesto
+                'id_puesto_padre': params.id_puesto,
+                'id_seleccionado': id_usuario,
             },
             'live': live,
             'login': login
@@ -306,8 +307,10 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     
             const {response, status} = await request.json();
             if(status === 200){
-                getComentarios(id)
-                setInitialState({...initialState, asistencia: response.data, calendar: !calendar, incidencias: response.data.incidencias, checadas: response.checadas, editForm: ({...editForm, asistencias: response.data.asistencias, btn_editar: btn_editar, currentAsistencia: !editForm.currentAsistencia ? response.data.tp_asist : editForm.currentAsistencia})})
+                setTimeout(() => {
+                    getComentarios(id)
+                    setInitialState({...initialState, asistencia: response.data, calendar: !calendar, incidencias: response.data.incidencias, checadas: response.checadas, editForm: ({...editForm, asistencias: response.data.asistencias, btn_editar: btn_editar, currentAsistencia: !editForm.currentAsistencia ? response.data.tp_asist : editForm.currentAsistencia})})
+                }, 500)
             }
             else if(status === 406){
                 Alert.alert(

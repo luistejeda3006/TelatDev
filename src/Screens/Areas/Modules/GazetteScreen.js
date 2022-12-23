@@ -167,7 +167,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             </ImageBackground>
                         </View>
                         <View style={{height: 'auto', alignSelf: 'stretch', padding: 8, borderTopColor: '#CBCBCB', borderTopWidth: 1}}>
-                            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{title}</Text>
+                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>{title}</Text>
                         </View>
                     </>
                 }
@@ -177,7 +177,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const Header = () => {
         return(
-            <View style={{height: !isIphone ? !hide ? 240 : 150 : 'auto', alignSelf: 'stretch'}}>
+            <View style={{height: 'auto', alignSelf: 'stretch'}}>
                 <View style={{height: 50, alignSelf: 'stretch', flexDirection: 'row', borderColor: '#3283c5', borderWidth: 1, backgroundColor: '#fff'}}>
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 1 && handleChangeModule(1)}>
@@ -208,7 +208,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
-                <View style={{height: !isIphone ? 190 : 'auto'}}>
+                <View style={{height: 'auto'}}>
                     {
                         orientationInfo.initial === 'PORTRAIT'
                         ?

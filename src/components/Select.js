@@ -30,7 +30,7 @@ export default ({data = null, dataArea = null, handleVisiblePeriodos = null, han
             {
                 search
                 &&
-                    <View style={[styles.box, {height: 50, padding: '1%', borderRadius: 25}]}>
+                    <View style={[styles.box, {height: 45, padding: '1%', borderRadius: 4}]}>
                         <View style={{width: 40, height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                             <Image 
                                 source={require('../../assets/icons/lupa.png')}
@@ -54,8 +54,9 @@ export default ({data = null, dataArea = null, handleVisiblePeriodos = null, han
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 style={styles.list}
-                data={!search ? data ? data : dataArea && dataArea : information}
+                data={information}
                 numColumns={1}
+                ItemSeparatorComponent={<View style={{height: 1, alignSelf: 'stretch', backgroundColor: '#dadada'}}></View>}
                 renderItem={({item}) => 
                     <TouchableOpacity style={{flex: 1, height: 'auto', padding: 14}} onPress={() => {
                         handleVisiblePeriodos ? handleVisiblePeriodos() : handleVisibleArea && handleVisibleArea()
@@ -66,7 +67,7 @@ export default ({data = null, dataArea = null, handleVisiblePeriodos = null, han
                         </View>
                     </TouchableOpacity>
                 }
-                keyExtractor={item => String(item.value)}
+                keyExtractor={item => String(item.label)}
             />
         </>
     )
@@ -80,9 +81,9 @@ const styles = StyleSheet.create({
     box:{
         justifyContent: 'center',
         alignItems: 'center',
-        height: 55,
+        height: 45,
         flexDirection: 'row',
-        borderColor: '#CBCBCB',
+        borderColor: '#adadad',
         borderWidth: 1,
     },
     input:{

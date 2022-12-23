@@ -1,14 +1,16 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, Image, ScrollView, StatusBar, SafeAreaView} from 'react-native';
+import {View, Text, Image, ScrollView, StatusBar, SafeAreaView, TouchableOpacity} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
 import DeviceInfo from 'react-native-device-info';
 import {useNavigation, useOrientation, useScroll} from '../../../hooks'
-import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectUserInfo} from '../../../slices/varSlice'
+import {selectUserInfo} from '../../../slices/varSlice';
+import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
 import tw from 'twrnc';
+import { Modal } from 'react-native-paper';
 
 let user = '';
 
@@ -16,6 +18,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     user = useSelector(selectUserInfo)
 
     const {handlePath} = useNavigation();
+    const [visibleQr, setVisibleQR] = useState(false)
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
 
@@ -673,11 +676,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                                 style={tw`self-stretch`}
+                                contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}
                                 /* onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
-                                    <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
+                                    <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] mt-5`}>
                                         {
                                             info.picture
                                             ?
@@ -696,6 +700,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     </View>
                                 </View>
                                 
+                                <TouchableOpacity style={tw`h-10 w-auto px-2 justify-center items-center bg-[${Blue}] rounded border border-[#dadada] flex-row mb-2`} onPress={() => setVisibleQR(!visibleQr)}>
+                                    <IonIcons name={'qrcode'} size={18} color={'#fff'} />
+                                    <Text style={tw`text-[#fff] font-bold ml-1.5`}>Mostrar Qr</Text>
+                                </TouchableOpacity>
+
                                 <Title title={language === '1' ? 'INFORMACIÓN PERSONAL' : 'PERSONAL INFORMATION'} icon={'user'}/>
                                 <View style={tw`flex-row mb-2.5 p-2`}>
                                     <View style={tw`justify-start items-start w-[100%]`}>
@@ -957,8 +966,16 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         </View>
                     :
                         <LandscapePhoneAndTablet />
-                    
             }
+            <Modal visible={visibleQr} onDismiss={() => setVisibleQR(!visibleQr)}>
+                <View style={tw`flex-1 justify-center items-center rounded bg-red-400`}>
+                    <Image
+                        style={tw`h-55 w-55`}
+                        resizeMode={'contain'}
+                        source={{uri: `https://telat.mx/intranet/upload/qrcodes/LUIS_MANUEL_TEJEDA_CANO.png`}}
+                    />
+                </View>
+            </Modal>
         </>
     );
 }

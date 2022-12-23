@@ -147,61 +147,47 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ?
                         !oculta
                         ?
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                                style={styles.list}
-                                data={empleados}
-                                numColumns={1}
-                                renderItem={({item}) =>
+                            empleados.map(x => 
                                 <View
                                     animation='bounceIn'
                                     duration={800}
                                 >
-                                    <TouchableOpacity style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}} onPress={() => navigation.navigate('Prenomine', {id_usuario: item.id_usuario, id_puesto: item.id_puesto, btn_editar: true, origin: 2})}>
+                                    <TouchableOpacity style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}} onPress={() => navigation.navigate('Prenomine', {id_usuario: x.id_usuario, id_puesto: x.id_puesto, btn_editar: true, origin: 2})}>
                                         <View style={{flexDirection: 'row', alignItems: 'center', height: 30, justifyContent: 'center', alignItems: 'center'}}>
                                             <View style={{height: 'auto', flex: 1, flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
-                                                <View style={{width: item.numero.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
-                                                    <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{item.numero}</Text>
+                                                <View style={{width: x.numero.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
+                                                    <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{x.numero}</Text>
                                                 </View>
                                                 <View style={{flex: 1, height: 30, marginLeft: 4, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderWidth: 1, borderColor: '#dadada', borderRadius: 5}}>
-                                                    <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{item.empleado}</Text>
+                                                    <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{x.empleado}</Text>
                                                 </View>
                                             </View>
                                         </View>
                                     </TouchableOpacity>
-                                </View>}
-                                keyExtractor={item => String(item.id_empleado)}
-                            />
+                                </View>
+                            )
                         :
                             <></>
                     :
-                        <FlatList
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            style={styles.list}
-                            data={empleados}
-                            numColumns={1}
-                            renderItem={({item}) =>
+                        empleados.map(x => 
                             <View
                                 animation='bounceIn'
                                 duration={800}
                             >
-                                <TouchableOpacity style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}} onPress={() => navigation.navigate('Prenomine', {id_usuario: item.id_usuario, id_puesto: item.id_puesto, btn_editar: true, origin: 2})}>
+                                <TouchableOpacity style={{height: 'auto', alignSelf: 'stretch', marginBottom: 10}} onPress={() => navigation.navigate('Prenomine', {id_usuario: x.id_usuario, id_puesto: x.id_puesto, btn_editar: true, origin: 2})}>
                                     <View style={{flexDirection: 'row', alignItems: 'center', height: 30, justifyContent: 'center', alignItems: 'center'}}>
                                         <View style={{height: 'auto', flex: 1, flexDirection: 'row', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center'}}>
-                                            <View style={{width: item.numero.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
-                                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{item.numero}</Text>
+                                            <View style={{width: x.numero.length <= 3 ? 40 : 45, height: 30, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingHorizontal: 6, borderRadius: 5}}>
+                                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#fff'}}>{x.numero}</Text>
                                             </View>
                                             <View style={{flex: 1, height: 30, marginLeft: 4, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f7f7f7', borderWidth: 1, borderColor: '#dadada', borderRadius: 5}}>
-                                                <Text style={{fontSize: 12, fontWeight: 'bold', color: '#000'}}>{item.empleado}</Text>
+                                                <Text style={{fontSize: 14, fontWeight: 'bold', color: '#000'}}>{x.empleado}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
-                            </View>}
-                            keyExtractor={item => String(item.id_empleado)}
-                        />
+                            </View>
+                        )
                 }
             </>
         )

@@ -992,7 +992,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Detalle_Gerencia = ({id, campanna, altas = null, activos = null, bajas = null, monterrey = null, insurgentes = null, salinillas = null, juarez = null, home = null, total, tipo = 1}) => {
         return(
-            <View style={tw`flex-1 h-auto mb-3.5 mx-1.5 rounded-2xl shadow-md`}>
+            <View style={tw`flex-1 h-auto mb-3.5 mx-1.5 rounded-2xl shadow-md border border-[#dadada]`}>
                 <View style={tw`h-auto bg-[#f7f7f7] p-px rounded-tl-2xl rounded-tr-2xl`}>
                     <View style={tw`flex-row items-center justify-center`}>
                         {
@@ -1717,30 +1717,51 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     {
                         content
                         ?
-                            <LineChart
-                                fromZero={true}
-                                style={tw`justify-center items-center`}
-                                data={{
-                                    labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-                                    datasets: [dataIRP],
-                                    legend: legendsGraphicIRP // optional
-                                }}
-                                width={Dimensions.get('window').width - 50}
-                                yLabelsOffset={30}
-                                height={220}
-                                chartConfig={{
-                                    decimalPlaces: 0,
-                                    propsForLabels: {
-                                        fontSize: 14,
-                                        fontWeight: 'bold'
-                                    },
-                                    backgroundGradientFrom: '#fff',
-                                    backgroundGradientTo: '#fff',
-                                    color: () => '#000',
-                                    labelColor: () => '#000',
-                                    
-                                }}
-                            />
+                            <>
+                                <View style={tw`h-auto self-stretch`}>
+                                    <FlatList
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
+                                        style={list}
+                                        data={legendsGraphicIRP}
+                                        numColumns={4}
+                                        renderItem={({item}) => 
+                                            item.visible
+                                            ?
+                                                <View style={tw`flex-1 justify-center items-center h-auto flex-row py-2`}>
+                                                    <View style={tw`w-5 h-5 rounded-full bg-[${item.color}] border border-[#dadada]`} />
+                                                    <Text style={tw`ml-1.5 font-bold text-xs text-[#000]`}>{item.year}</Text>
+                                                </View>
+                                            :
+                                                <></>    
+                                        }
+                                        keyExtractor={item => String(item.id)}
+                                    />
+                                </View>
+                                <LineChart
+                                    fromZero={true}
+                                    style={tw`justify-center items-center`}
+                                    data={{
+                                        labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+                                        datasets: dataIRP,
+                                        legend: [] // optional
+                                    }}
+                                    width={Dimensions.get('window').width - 50}
+                                    yLabelsOffset={30}
+                                    height={220}
+                                    chartConfig={{
+                                        decimalPlaces: 0,
+                                        propsForLabels: {
+                                            fontSize: 14,
+                                            fontWeight: 'bold'
+                                        },
+                                        backgroundGradientFrom: '#fff',
+                                        backgroundGradientTo: '#fff',
+                                        color: () => '#000',
+                                        labelColor: () => '#000',
+                                    }}
+                                />
+                            </>
                         :
                             <></>
                     }

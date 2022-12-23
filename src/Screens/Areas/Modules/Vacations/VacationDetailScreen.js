@@ -393,9 +393,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
             
             if(status === 200){
                 // setActions(status)
-                setLoading(false)
-                setDetailsVisibility(!detailsVisibility)
-                setInitialState({...initialState, details: ({...details, btn_aprobar: response.btn_aprobar, dias: response.dias, estatus: response.estatus, fechas: response.fechas, motivo_cancelado: response.motivo_cancelado, motivo_rechazo: response.motivo_rechazo, motivo_solicitud: response.motivo_solicitud})})
+                setTimeout(() => {
+                    setLoading(false)
+                    setDetailsVisibility(!detailsVisibility)
+                    setInitialState({...initialState, details: ({...details, btn_aprobar: response.btn_aprobar, dias: response.dias, estatus: response.estatus, fechas: response.fechas, motivo_cancelado: response.motivo_cancelado, motivo_rechazo: response.motivo_rechazo, motivo_solicitud: response.motivo_solicitud})})
+                }, 500)
             }
             else {
                 Alert.alert(

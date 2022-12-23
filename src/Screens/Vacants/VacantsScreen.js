@@ -258,13 +258,13 @@ export default ({navigation, route: {params: {language, orientation, valueNotifi
                                             ?
                                                 <Image
                                                     style={tw`w-6 h-6 border border-[#dadada] rounded-full m-[1%]`}
-                                                    resizeMode={'cover'}
+                                                    resizeMode={'contain'}
                                                     source={require('../../../assets/language_mx.png')}
                                                 />
                                             :
                                                 <Image
                                                     style={tw`w-6 h-6 border border-[#dadada] rounded-full m-[1%]`}
-                                                    resizeMode={'cover'}
+                                                    resizeMode={'contain'}
                                                     source={require('../../../assets/language_us.png')}
                                                 />    
                                         }
