@@ -2,6 +2,7 @@ import React from 'react'
 import {View, Text, Image, Linking} from 'react-native'
 import tw from 'twrnc';
 import { Blue } from '../colors/colorsApp';
+import { getCurrentDate } from '../js/dates';
 
 export default ({country = 'MX'}) => {
     return(
@@ -13,7 +14,7 @@ export default ({country = 'MX'}) => {
                     source={require('../../assets/logo_telat.png')}
                 />
                 <View style={tw`h-auto self-stretch my-3 justify-center items-center`}>
-                    <Text style={tw`font-bold text-base text-[#000]`}>Telat Group<Text style={tw`font-normal`}> © 2022</Text></Text>
+                    <Text style={tw`font-bold text-base text-[#000]`}>Telat Group<Text style={tw`font-normal`}> © {`${getCurrentDate().substring(0,4)}`}</Text></Text>
                 </View>
             </View>
             <View style={tw`h-auto self-stretch justify-center items-center mt-4 mb-6 px-4.5`}>

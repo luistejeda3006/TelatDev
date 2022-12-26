@@ -12,6 +12,12 @@ import {BettingScreen, ChecksScreen, GazetteScreen, MyMoneyScreen, MyPrenomineSc
 import {TicketsScreen, TicketsDetailScreen} from './Screens/Areas/Modules/Tickets'
 import {VacationDetailScreen, VacationScreen} from './Screens/Areas/Modules/Vacations';
 import {Screen_1, Screen_2, Screen_3, Screen_4} from './Screens/Development';
+import {DrawerGames} from './Screens/Areas/Modules/Games/Login'
+import MenuGamesScreen from './Screens/Areas/Modules/Games/Login/MenuGamesScreen';
+import { ChoosePuzzle, Puzzle } from './Screens/Areas/Modules/Games/Puzzle';
+import ChooseMemorama from './Screens/Areas/Modules/Games/Memorama/ChooseMemorama';
+import { Memorama } from './Screens/Areas/Modules/Games/Memorama';
+import Snake from './Screens/Areas/Modules/Games/Snake/Snake';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -87,6 +93,25 @@ const StackEmployee = ({route: {params}}) => {
     );
 }
 
+const StackGames = ({route: {params}, navigation, style}) => {
+    return (
+		<Stack.Navigator
+			initialRouteName={'Menu'}
+			screenOptions={{headerShown: false}}
+		>
+			<Stack.Screen name='Menu' component={MenuGamesScreen} initialParams={{language: '1', orientation: 'PORTRAIT', origin: '1'}}/>
+			<Stack.Screen name='ChoosePuzzle' component={ChoosePuzzle} initialParams={{language: params.language, orientation: params.orientation, origin: params.origin}}/>            
+			<Stack.Screen name='Puzzle' component={Puzzle} initialParams={{language: params.language, orientation: params.orientation}}/>            
+
+			<Stack.Screen name='ChooseMemorama' component={ChooseMemorama} initialParams={{language: params.language, orientation: params.orientation, origin: params.origin}}/>            
+			<Stack.Screen name='Memorama' component={Memorama} initialParams={{language: params.language, orientation: params.orientation}}/>
+
+			<Stack.Screen name='Snake' component={Snake} initialParams={{language: params.language, orientation: params.orientation, origin: params.origin}}/>
+			<Stack.Screen name='Dashboard' component={OptionsMenuScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+		</Stack.Navigator>
+    );
+}
+
 const DrawerEmployeeRoute = ({route: {params}}) => {
     return (
         <Drawer.Navigator
@@ -94,6 +119,17 @@ const DrawerEmployeeRoute = ({route: {params}}) => {
             drawerContent={(props) => <DrawerEmployees initialParams={{language: '1'}} {...props} />}
         >
             <Stack.Screen name={'Modules'} initialParams={{language: '1'}} component={StackEmployee} />
+        </Drawer.Navigator>
+    );
+}
+
+const DrawerGamesRoute = ({route: {params}}) => {
+    return (
+        <Drawer.Navigator
+			screenOptions={{headerShown: false, drawerPosition: 'left', drawerStyle: {width: '100%'}, sceneContainerStyle: {backgroundColor: 'transparent'}}}
+            drawerContent={(props) => <DrawerGames initialParams={{language: '1', orientation: 'PORTRAIT'}} {...props} />}
+        >
+            <Stack.Screen name={'Modules'} initialParams={{language: '1', orientation: 'PORTRAIT'}} component={StackGames} />
         </Drawer.Navigator>
     );
 }
@@ -112,6 +148,7 @@ export default () => {
 			<Stack.Group screenOptions={{ presentation: 'modal' }}>
 				<Stack.Screen name={'Notifications'} component={NotificationsScreen} />
 			</Stack.Group>
+			<Drawer.Screen name='Games' component={DrawerGamesRoute} />
 			<Stack.Screen name={'Development'} component={DevelopmentRoute} />
 		</Stack.Navigator>
 	</NavigationContainer>

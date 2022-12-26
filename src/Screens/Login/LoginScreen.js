@@ -31,7 +31,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const [bodyMessage, setBodyMessage] = useState({
         header: language === '1' ? 'Recuperación de Contraseña' : 'Password Recovery',
         icon: false,
-        body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos las datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
+        body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos los datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
     });
 
     const {handlePath} = useNavigation()
@@ -252,7 +252,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 setBodyMessage({
                     header: language === '1' ? 'Recuperación de Contraseña' : 'Password Recovery',
                     icon: false,
-                    body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos las datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
+                    body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos los datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
                 })
             },2500);
     
@@ -265,7 +265,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 setBodyMessage({
                     header: language === '1' ? 'Recuperación de Contraseña' : 'Password Recovery',
                     icon: false,
-                    body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos las datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
+                    body: language === '1' ? 'Introduce tu correo electrónico y te enviaremos los datos para poder restablecer tu contraseña.' : 'Enter your email and we will send you the data to reset your password',
                 })
                 setVisible(false)
             },2500);
@@ -591,14 +591,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
             <Modal visibility={visible} handleDismiss={() => setVisible(!visible)} orientation={orientationInfo.initial}>
                 <View style={tw`h-auto self-stretch`}>
-                    <View
-                        style={tw`h-auto self-stretch justify-center items-center mb-4`}>
+                    <View style={tw`h-auto self-stretch justify-center items-center mb-4`}>
                         <Text style={tw`text-black font-bold text-lg mb-2.5`}>{bodyMessage.header}</Text>
-                        {
-                            !bodyMessage.icon
-                            &&
-                            <Text style={tw`text-black text-base`}>{bodyMessage.body}</Text>
-                        }
+                        <View style={tw`h-auto self-stretch justify-center items-start`}>
+                            {
+                                !bodyMessage.icon
+                                &&
+                                    <Text style={tw`text-black text-sm text-justify`}>{bodyMessage.body}</Text>
+                            }
+                        </View>
                     </View>
                     <View style={tw`h-auto justify-start items-start self-stretch`}>
                         {

@@ -601,7 +601,7 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                                 :
                                                     <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
                                     }
-                                    <FooterForm />
+                                    <FooterForm country={language === '1' ? 'MX' : 'US'}/>
                                     </KeyboardAwareScrollView>
                                 </ProgressStep>
                             :

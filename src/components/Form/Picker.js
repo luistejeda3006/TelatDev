@@ -35,6 +35,15 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
                 break;
         }
     }
+
+    const pickerStyle = {
+        inputIOS: {
+            color: '#000',
+        },
+        inputAndroid: {
+            color: '#000',
+        },
+    };
     
     return (
         required
@@ -42,6 +51,7 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
             <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) && required ? 10 : 0}]}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
                     <Picker
+                        style={pickerStyle}
                         value={field.value}
                         onValueChange={(itemValue, itemIndex) => handleIndex(itemValue, itemIndex)}
                         items={items}
@@ -60,6 +70,7 @@ export default ({fieldName, handleAction_uno, handleAction_dos, handleAction_tre
             <View style={[styles.picker, {paddingRight: (field.value === 'SEL' || field.value === undefined) && required ? 10 : 0}]}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
                     <Picker
+                        style={pickerStyle}
                         value={field.value}
                         onValueChange={(itemValue, itemIndex) => handleIndex(itemValue, itemIndex)}
                         items={items}

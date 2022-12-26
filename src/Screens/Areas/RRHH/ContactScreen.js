@@ -560,6 +560,15 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
         )
     }
 
+    const pickerStyle = {
+        inputIOS: {
+            color: '#000',
+        },
+        inputAndroid: {
+            color: '#000',
+        },
+    };
+
     return(
         <>
             {
@@ -592,6 +601,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                     <View style={[styles.picker, {paddingRight: currentAboutUsOption === 0 ? 10 : 0}]} >
                                         <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                             <Picker
+                                                style={pickerStyle}
                                                 value={currentAboutUs}
                                                 onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
                                                 items={currentCityOption === 0 || currentCityOption === 1 ? optionsAboutMX : optionsAboutUS}
@@ -627,6 +637,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentLevelOptionEnglish === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentLevelEnglish}
                                                             onValueChange={(itemValue, itemIndex) => handleActionSeis(itemValue, itemIndex)}
                                                             items={levels}
@@ -646,6 +657,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentLevelOptionSpanish === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentLevelSpanish}
                                                             onValueChange={(itemValue, itemIndex) => handleActionSiete(itemValue, itemIndex)}
                                                             items={levels}
@@ -665,6 +677,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentProgramsOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={programs}
                                                             onValueChange={(itemValue, itemIndex) => handleActionOcho(itemValue, itemIndex)}
                                                             items={levels}
@@ -684,6 +697,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentCloseOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentClose}
                                                             onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
                                                             items={closeOptions}
@@ -759,6 +773,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentContactOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentContact}
                                                             onValueChange={(itemValue, itemIndex) => handleActionCuatro(itemValue, itemIndex)}
                                                             items={contactOptions}
@@ -777,6 +792,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentScheduleOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentSchedule}
                                                             onValueChange={(itemValue, itemIndex) => handleActionCinco(itemValue, itemIndex)}
                                                             items={scheduleOptions}
@@ -798,6 +814,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentCloseOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentClose}
                                                             onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
                                                             items={closeOptions}
@@ -874,6 +891,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentProgramsOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={programs}
                                                             onValueChange={(itemValue, itemIndex) => handleActionOcho(itemValue, itemIndex)}
                                                             items={levels}
@@ -933,6 +951,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentContactOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentContact}
                                                             onValueChange={(itemValue, itemIndex) => handleActionCuatro(itemValue, itemIndex)}
                                                             items={contactOptions}
@@ -951,6 +970,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                                 <View style={[styles.picker, {paddingRight: currentScheduleOption === 0 ? 10 : 0}]} >
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
+                                                            style={pickerStyle}
                                                             value={currentSchedule}
                                                             onValueChange={(itemValue, itemIndex) => handleActionCinco(itemValue, itemIndex)}
                                                             items={scheduleOptions}
