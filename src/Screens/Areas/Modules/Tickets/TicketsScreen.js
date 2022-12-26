@@ -590,7 +590,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     return(
         <>
-        
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
             <View style={{backgroundColor: '#fff', flex: 1}}>
