@@ -615,6 +615,15 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
         setInitialState({...initialState, Evidencias: nuevas})
     }
 
+    const pickerStyle = {
+        inputIOS: {
+            color: '#000',
+        },
+        inputAndroid: {
+            color: '#000',
+        },
+    };
+
     return(
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
@@ -1049,6 +1058,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     <Text style={title}>{'Autorizar'}</Text>
                     <View style={[styles.picker, tw`justify-center items-center border border-[${closeOption !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
                         <Picker
+                            style={pickerStyle}
                             value={closeOption}
                             onValueChange={(itemValue, itemIndex) => handleActionTres(itemValue, itemIndex)}
                             items={closeOptions}
@@ -1116,6 +1126,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                     <Text style={title}>{'Motivo'}</Text>
                     <View style={[styles.picker, tw`justify-center items-center border border-[${motivo !== 'SEL' ? '#CBCBCB' : '#E68AA6'}] mb-2.5 px-${isIphone ? 2 : 0}`]}>
                         <Picker
+                            style={pickerStyle}
                             value={motivo}
                             onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
                             items={motivos}

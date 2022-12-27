@@ -669,6 +669,15 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
         )
     }
 
+    const pickerStyle = {
+        inputIOS: {
+            color: '#000',
+        },
+        inputAndroid: {
+            color: '#000',
+        },
+    };
+
     return(
         <>
             {
@@ -1077,7 +1086,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                                 onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
                                                                 items={editForm.asistencias}
                                                                 placeholder={{}}
-                                                                style={tw`text-xs items-center justify-center flex-1`}
+                                                                style={[tw`text-xs items-center justify-center flex-1`, {pickerStyle}]}
                                                             />
                                                         </View>
                                                     </View>
@@ -1112,7 +1121,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                                 onValueChange={(itemValue, itemIndex) => handleActionDos(itemValue, itemIndex)}
                                                                 items={editForm.asistencias}
                                                                 placeholder={{}}
-                                                                style={tw`text-xs items-center justify-center flex-1`}
+                                                                style={[tw`text-xs items-center justify-center flex-1`, {pickerStyle}]}
                                                             />
                                                         </View>
                                                     </View>
