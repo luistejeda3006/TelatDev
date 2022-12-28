@@ -29,7 +29,7 @@ export default forwardRef(({required = false, edit = true, value ,...rest}, ref)
                     value === ''
                     &&
                         <View style={{height: '100%', width: 25, justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
-                            <Ionicons name='asterisk' color={'#DC3644'} size={12}/>
+                            <Ionicons name='asterisk' color={'#DC3644'} size={7}/>
                         </View>
                 }
             </View>
@@ -37,4 +37,4 @@ export default forwardRef(({required = false, edit = true, value ,...rest}, ref)
     )
 })
 
-const multiline = tw`justify-start items-start self-stretch border border-[#CBCBCB] flex-row mb-4 h-27.5 w-[99%] px-2 py-[${isIphone ? 3 : 0}] rounded`
+const multiline = tw`justify-start items-start self-stretch border border-[#CBCBCB] flex-row mb-4 h-27.5 w-[100%] px-2 py-[${isIphone ? 3 : 0}] rounded`

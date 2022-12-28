@@ -107,7 +107,7 @@ export default ({navigation}) => {
                         </View>
                     </View>
                     <View style={tw`h-auto self-stretch justify-center items-start pb-1 px-1 bg-white`}>
-                        <Text style={[{fontSize: 12}, tw`text-[#adadad]`]}>{description}</Text>
+                        <Text style={[{fontSize: 12}, tw`text-[#adadad]`]}>{description.length >= 120 ? `${description.substring(0,105)}...` : description}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
