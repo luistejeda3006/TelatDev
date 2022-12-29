@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {View, Text, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground, TouchableWithoutFeedback, StyleSheet, Alert, Image, FlatList} from 'react-native'
-import {HeaderPortrait, MultiText} from '../../components'
+import {HeaderPortrait, MultiText, RadioButton} from '../../components'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
 import {selectLanguageApp} from '../../slices/varSlice'
@@ -20,9 +20,13 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     const orientation = useSelector(selectOrientation)
     const type = useSelector(selectType)
     const flash = useSelector(selectFlash)
+    const admin = true;
+    const hasCommented = true;
 
     const [initialState, setInitialState] = useState({
         current: 1,
+        filterMain: 1,
+        filterRating: 1,
         active: false,
         selected: undefined,
         list: [
@@ -59,12 +63,108 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                 no_emp: 73,
                 name: 'Luis Manuel Tejeda Cano',
                 puesto: 'Desarrollador de Aplicaciones Móviles',
-                picture: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', 
+                picture: '' 
+            },
+        ],
+        masterData: [
+            {
+                id: 1,
+                active: 1,
+                selected: 2,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Luis Manuel Tejeda Cano',
+            },
+            {
+                id: 2,
+                active: 2,
+                selected: 3,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Joshua Hernandez Martinez',
+            },
+            {
+                id: 3,
+                active: 1,
+                selected: 4,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Andrés Camilo Andrade',
+            },
+            {
+                id: 4,
+                active: 1,
+                selected: 5,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Laura Hernandez Medina Cárdenas',
+            },
+            {
+                id: 5,
+                active: 1,
+                selected: 3,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Jesus Manuel Tejeda Cano',
+            },
+            {
+                id: 6,
+                active: 2,
+                selected: 4,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Joshua Hernandez Martinez',
+            },
+            {
+                id: 7,
+                active: 1,
+                selected: 3,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Andrés Camilo Andrade',
+            },
+            {
+                id: 8,
+                active: 2,
+                selected: 2,
+                question_1: 'Me gustó mucho la manera en la que se llevó acabo el sorteo',
+                question_2: 'Hacer más sorteos en las dinámicas, eso mótiva a las personas',
+                question_3: '',
+                name: 'Laura Hernandez Medina Cárdenas',
             },
         ],
     })
 
-    const {current, active, selected, list} = initialState
+    const [filteredData, setFilteredData] = useState([])
+
+    const {current, filterMain, filterRating, active, selected, list, masterData} = initialState
+ 
+    useEffect(() => {
+        let main = filterMain === 1 ? undefined : filterMain
+        let rating = filterRating === 1 ? undefined : filterRating
+        let finalData = null;
+        console.log('main: ', main)
+        console.log('rating: ', rating)
+        if(!main && !rating){
+            finalData = masterData;
+        } else {
+            if(!main && rating){
+                finalData = masterData.filter(x => (x.selected === rating))
+            } else if(main && !rating){
+                finalData = masterData.filter(x => ((x.active + 1) === main))
+            } else if(main && rating){
+                finalData = masterData.filter(x => ((x.active + 1) === main && x.selected === rating))
+            }
+        }
+        setFilteredData(finalData)
+    }, [filterMain, filterRating])
 
     const {handleInputChange, values, handleSetState, handleSubmitForm} = useForm({
         question_1: '',
@@ -97,18 +197,81 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
             <View style={tw`h-auto self-stretch flex-row justify-center items-center border-b border-b-[${id === list.length ? '#dadada' : '#fff'}] p-2.5 bg-white`}>
                 <View style={tw`justify-center items-center w-10 h-10 pr-2.5`}>
                     <View style={tw`bg-[#f7f7f7] justify-center items-center rounded-full`}>
-                        <Image
-                            style={tw`h-10 w-10 rounded-full border-2 border-[#dadada]`}
-                            source={{uri: picture}}
-                        />
+                        {
+                            picture
+                            ?
+                                <Image
+                                    style={tw`h-9 w-9 rounded-full border-2 border-[#dadada]`}
+                                    resizeMode={'cover'}
+                                    source={{uri: picture}}
+                                />
+                            :
+                                <Image
+                                    style={tw`h-9 w-9 rounded-full border-2 border-[#dadada]`}
+                                    resizeMode={'cover'}
+                                    source={require('../../../assets/user.png')}
+                                />
+
+                        }
                     </View>
                 </View>
                 <View style={tw`flex-1 justify-center items-start pt-px`}>
-                    <Text style={[tw`text-[#000] font-bold`, {fontSize: 16}]}>{name}</Text>
-                    <Text style={tw`text-sm text-[#adadad]`}>{puesto}</Text>
+                    <Text style={[tw`text-[#000] font-bold`, {fontSize: 15}]}>{name}</Text>
+                    <Text style={[tw`text-sm text-[#adadad]`, {fontSize: 13}]}>{puesto}</Text>
                 </View>
                 <View style={tw`w-auto justify-center items-center rounded border border-[#adadad] bg-[#f7f7f7] px-px`}>
                     <Text style={tw`text-xs text-[#adadad]`}>10:58 am</Text>
+                </View>
+            </View>
+        )
+    }
+
+    const ItemResponse = ({id = 10, name = 'Anónimo', active = active === 1 ? true : false, selected = 3, question_1 = 'Me gustó mucho la manera en la que se llevó acabo el sorteo', question_2 = 'Hacer más sorteos en las dinámicas, eso mótiva a las personas', question_3 = ''}) => {
+        let newActive = active === 1 ? true : false
+        return(
+            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5 shadow-md m-2 rounded ios:mb-${id === filteredData.length ? 7.5 : 0}`}>
+                <View style={tw`self-stretch flex-row pt-0.5 justify-center items-center`}>
+                    <View style={tw`flex-1 justify-center items-start`}>
+                        <Text style={tw`text-[#000] text-sm font-bold`}>{newActive ? 'Anónimo' : name}</Text>
+                        <Text style={[{fontSize: 12}, tw`text-[#adadad]`]}>{`La respuesta es `}<Text style={tw`font-bold`}>{`${!newActive ? 'pública' : 'anónima'}`}</Text></Text>
+                    </View>
+                    <View style={tw`h-6.5 w-6.5 justify-center items-center bg-[${newActive ? Blue : '#f7f7f7'}] rounded-full border border-[#adadad]`}>
+                        <View style={tw`flex-1 justify-center items-center`}>
+                            <IonIcons name={'incognito'} size={16} color={newActive ? '#fff' : '#777'} />
+                        </View>
+                    </View>
+                </View>
+                <View style={tw`h-auto self-stretch flex-row justify-center items-center pt-2`}>
+                    <View style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 2 ? setInitialState({...initialState, selected: 2}) : {}}>
+                        <IonIcons name={'emoticon-angry-outline'} size={38} color={selected === 2 ? '#dd5a43' : '#777'} />
+                    </View>
+                    <View style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 3 ? setInitialState({...initialState, selected: 3}) : {}}>
+                        <IonIcons name={'emoticon-sad-outline'} size={38} color={selected === 3 ? '#ff892a' : '#777'} />
+                    </View>
+                    <View style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 4 ? setInitialState({...initialState, selected: 4}) : {}}>
+                        <IonIcons name={'emoticon-neutral-outline'} size={38} color={selected === 4 ? Yellow : '#777'} />
+                    </View>
+                    <View style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 5 ? setInitialState({...initialState, selected: 5}) : {}}>
+                        <IonIcons name={'emoticon-happy-outline'} size={38} color={selected === 5 ? '#69aa46' : '#777'} />
+                    </View>
+                    <View style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 6 ? setInitialState({...initialState, selected: 6}) : {}}>
+                        <IonIcons name={'emoticon-excited-outline'} size={38} color={selected === 6 ? Blue : '#777'} />
+                    </View>
+                </View>
+
+                <View style={tw`justify-start items-center h-12 self-stretch mt-1`}>
+                    <View style={{width: 'auto', borderBottomWidth: selected ? 1 : 0, borderBottomColor: selected === 2 ? '#dd5a43' : selected === 3 ? '#ff892a' : selected === 4 ? Yellow : selected === 5 ? '#69aa46' : selected === 6 ? Blue : '#777'}}>
+                        <Text style={{fontSize: 15, fontWeight: 'normal', textAlign: 'center', color: selected === 2 ? '#dd5a43' : selected === 3 ? '#ff892a' : selected === 4 ? Yellow : selected === 5 ? '#69aa46' : selected === 6 ? Blue : '#777'}}>{selected === 1 ? 'Muy Insatisfecho' : selected === 2 ? 'Insatisfecho' : selected === 3 ? 'Neutral' : selected === 4 ? 'Satisfecho' : selected === 5 ? 'Excelente' : '------'}</Text>
+                    </View>
+                </View>
+
+                <View style={tw`h-auto self-stretch`}>
+                    <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>¿Qué te gustó de esta dinámica?</Text>
+                    <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_1}</Text>
+                    <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>¿Qué mejorarías?</Text>
+                    <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_2}</Text>
+                    <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>Comentarios</Text>
+                    <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_3 ? question_3 : '---'}</Text>
                 </View>
             </View>
         )
@@ -128,27 +291,41 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                     current === 1 || current === 3
                     ?
                         <>
-                            <View style={tw`h-12.5 self-stretch flex-row border-b border-b-[${Blue}]`}>
-                                <TouchableWithoutFeedback onPress={() => setInitialState({...initialState, current: 1})}>
-                                    <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
-                                        <IonIcons name={'bullseye-arrow'} size={28} color={current === 1 ? Blue : '#adadad'} />
+                            {
+                                admin
+                                &&
+                                    <View style={tw`h-12.5 self-stretch flex-row border-b border-b-[${Blue}]`}>
+                                        <TouchableWithoutFeedback onPress={() => setInitialState({...initialState, current: 1})}>
+                                            <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
+                                                <IonIcons name={'bullseye-arrow'} size={28} color={current === 1 ? Blue : '#adadad'} />
+                                            </View>
+                                        </TouchableWithoutFeedback>
+                                        <TouchableWithoutFeedback onPress={() => {
+                                            dispatch(setType('back'))
+                                            dispatch(setFlash('off'))
+                                            setInitialState({...initialState, current: 2})
+                                        }}>
+                                            <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
+                                                <IonIcons name={'qrcode-scan'} size={28} color={current === 2 ? Blue : '#adadad'} />
+                                            </View>
+                                        </TouchableWithoutFeedback>
+                                        <TouchableWithoutFeedback onPress={() => setInitialState({...initialState, current: 3})}>
+                                            <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
+                                                <IonIcons name={'text-box-check-outline'} size={28} color={current === 3 ? Blue : '#adadad'} />
+                                            </View>
+                                        </TouchableWithoutFeedback>
                                     </View>
-                                </TouchableWithoutFeedback>
-                                <TouchableWithoutFeedback onPress={() => {
-                                    dispatch(setType('back'))
-                                    dispatch(setFlash('off'))
-                                    setInitialState({...initialState, current: 2})
-                                }}>
-                                    <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
-                                        <IonIcons name={'qrcode-scan'} size={28} color={current === 2 ? Blue : '#adadad'} />
+                            }
+                            {
+                                current === 3
+                                &&
+                                    <View style={tw`h-8 py-1.5 justify-center items-center self-stretch border-b border-b-[#dadada] bg-[#f7f7f7]`}>
+                                        <View style={tw`flex-1 justify-center items-center flex-row`}>
+                                            <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>Total <Text style={tw`font-normal`}>escaneados: </Text></Text>
+                                            <Text style={[tw`font-bold text-[#777] text-xs android:pt-px`, {fontSize: 14}]}>{list.length}</Text>
+                                        </View>
                                     </View>
-                                </TouchableWithoutFeedback>
-                                <TouchableWithoutFeedback onPress={() => setInitialState({...initialState, current: 3})}>
-                                    <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
-                                        <IonIcons name={'text-box-check-outline'} size={28} color={current === 3 ? Blue : '#adadad'} />
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            </View>
+                            }
                             <KeyboardAwareScrollView
                                 style={tw`h-auto self-stretch`}
                                 showsVerticalScrollIndicator={false}
@@ -194,106 +371,184 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                     <Text style={[{fontSize: 14}, tw`text-[#adadad]`]}>{description}</Text>
                                                 </View>
                                             </View>
-                                            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5`}>
-                                                <View style={tw`self-stretch flex-row pt-0.5`}>
-                                                    <View style={tw`flex-1 justify-center items-start`}>
-                                                        <Text style={tw`text-[#000] text-sm font-bold`}>Dejános saber tu opinión</Text>
-                                                    </View>
-                                                    <Animatable.View
-                                                        duration={2000}	
-                                                        animation={!active ? 'tada' : undefined}
-                                                        iterationCount={'infinite'}
-                                                        style={tw`h-6.5 w-6.5 justify-center items-center bg-[${active ? Blue : '#f7f7f7'}] rounded-full border border-[#adadad]`}
-                                                    >
-                                                        <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, active: !active})}>
-                                                            <IonIcons name={'incognito'} size={16} color={active ? '#fff' : '#adadad'} />
-                                                        </TouchableOpacity>
-                                                    </Animatable.View>
-                                                </View>
-                                                <View style={tw`h-auto self-stretch justify-center items-start`}>
-                                                    <Text style={[{fontSize: 12}, tw`text-[#adadad]`]}>{`Tu respuesta es `}<Text style={tw`font-bold`}>{`${!active ? 'pública' : 'anónima'}`}</Text></Text>
-                                                </View>
-                                                <View style={tw`h-auto self-stretch flex-row justify-center items-center pt-2`}>
-                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 1 ? setInitialState({...initialState, selected: 1}) : {}}>
-                                                        <IonIcons name={'emoticon-angry-outline'} size={38} color={selected === 1 ? '#dd5a43' : '#777'} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 2 ? setInitialState({...initialState, selected: 2}) : {}}>
-                                                        <IonIcons name={'emoticon-sad-outline'} size={38} color={selected === 2 ? '#ff892a' : '#777'} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 3 ? setInitialState({...initialState, selected: 3}) : {}}>
-                                                        <IonIcons name={'emoticon-neutral-outline'} size={38} color={selected === 3 ? Yellow : '#777'} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 4 ? setInitialState({...initialState, selected: 4}) : {}}>
-                                                        <IonIcons name={'emoticon-happy-outline'} size={38} color={selected === 4 ? '#69aa46' : '#777'} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 5 ? setInitialState({...initialState, selected: 5}) : {}}>
-                                                        <IonIcons name={'emoticon-excited-outline'} size={38} color={selected === 5 ? Blue : '#777'} />
-                                                    </TouchableOpacity>
-                                                </View>
-
-                                                <View style={tw`justify-start items-center h-12 self-stretch mt-1`}>
-                                                    <View style={{width: 'auto', borderBottomWidth: selected ? 1 : 0, borderBottomColor: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : selected === 5 ? Blue : '#777'}}>
-                                                        <Text style={{fontSize: 15, fontWeight: 'normal', textAlign: 'center', color: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : selected === 5 ? Blue : '#777'}}>{selected === 1 ? 'Muy Insatisfecho' : selected === 2 ? 'Insatisfecho' : selected === 3 ? 'Neutral' : selected === 4 ? 'Satisfecho' : selected === 5 ? 'Excelente' : '------'}</Text>
-                                                    </View>
-                                                </View>
-
-                                                <View style={tw`h-auto self-stretch`}>
-                                                    <Text style={titleStyle}>¿Qué te gustó de esta dinámica?</Text>
-                                                    <MultiText
-                                                        required={true}
-                                                        value={question_1}
-                                                        onChangeText={(e) => handleInputChange(e, 'question_1')}
-                                                        placeholder={'Especifica qué fue lo que más te gusto de esta dinámica'}
-                                                        multiline={true}
-                                                        numberOfLines={3}
-                                                    />
-                                                    <View style={tw`h-1.5`}/>
-                                                    <Text style={titleStyle}>¿Qué mejorarías?</Text>
-                                                    <MultiText
-                                                        required={true}
-                                                        value={question_2}
-                                                        onChangeText={(e) => handleInputChange(e, 'question_2')}
-                                                        placeholder={'Especifica qué sería lo que mejorarías para futuras dinámicas'}
-                                                        multiline={true}
-                                                        numberOfLines={3}
-                                                    />
-                                                    <View style={tw`h-1.5`}/>
-                                                    <Text style={titleStyle}>Comentarios</Text>
-                                                    <MultiText
-                                                        required={false}
-                                                        value={question_3}
-                                                        onChangeText={(e) => handleInputChange(e, 'question_3')}
-                                                        placeholder={'Comentarios adicionales en caso de haberlos'}
-                                                        multiline={true}
-                                                        numberOfLines={3}
-                                                    />
-                                                </View>
-                                                <View style={tw`h-auto self-stretch justify-center items-end mb-[${isIphone ? 12 : 0}]`}>
-                                                    {
-                                                        selected
-                                                        ?
-                                                            <TouchableOpacity onPress={() => handleSave()} style={tw`h-auto w-auto bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
-                                                                <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
-                                                                <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
+                                            {
+                                                admin
+                                                &&
+                                                    <>
+                                                        <View style={tw`h-12.5 self-stretch flex-row justify-center items-center mt-6.5 bg-[#f9f9f9] border-t border-t-[#dadada] border-b border-b-[#dadada]`}>
+                                                            <RadioButton 
+                                                                legend={language === '1' ? 'Todos' : 'All'}
+                                                                checked={filterMain === 1 ? true : false}
+                                                                width={0}
+                                                                color={'#777'}
+                                                                handleCheck={() => filterMain !== 1 ? setInitialState({...initialState, filterMain: 1}) : {}}/>
+                                                            <RadioButton 
+                                                                legend={language === '1' ? 'Públicas' : 'Public'}
+                                                                checked={filterMain === 2 ? true : false}
+                                                                width={0}
+                                                                color={'#777'}
+                                                                handleCheck={() => filterMain !== 2 ? setInitialState({...initialState, filterMain: 2}) : {}}/>
+                                                            <RadioButton 
+                                                                legend={language === '1' ? 'Anónimos' : 'Anonymous'}
+                                                                checked={filterMain === 3 ? true : false}
+                                                                width={0}
+                                                                color={'#777'}
+                                                                handleCheck={() => filterMain !== 3 ? setInitialState({...initialState, filterMain: 3}) : {}}/>
+                                                        </View>
+                                                        <View style={tw`h-12.5 self-stretch flex-row justify-center items-center bg-[#f9f9f9] border-b border-b-[#dadada]`}>
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 1 ? setInitialState({...initialState, filterRating: 1}) : {}}>
+                                                                <Text style={tw`text-[${filterRating === 1 ? Blue : '#777'}] text-sm font-bold`}>Todos</Text>
                                                             </TouchableOpacity>
-                                                        :
-                                                            <View style={tw`h-auto w-auto bg-[#dadada] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
-                                                                <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
-                                                                <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 2 ? setInitialState({...initialState, filterRating: 2}) : {}}>
+                                                                <IonIcons name={'emoticon-angry-outline'} size={26} color={filterRating === 2 ? Blue : '#777'} />
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 3 ? setInitialState({...initialState, filterRating: 3}) : {}}>
+                                                                <IonIcons name={'emoticon-sad-outline'} size={26} color={filterRating === 3 ? Blue : '#777'} />
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 4 ? setInitialState({...initialState, filterRating: 4}) : {}}>
+                                                                <IonIcons name={'emoticon-neutral-outline'} size={26} color={filterRating === 4 ? Blue : '#777'} />
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 5 ? setInitialState({...initialState, filterRating: 5}) : {}}>
+                                                                <IonIcons name={'emoticon-happy-outline'} size={26} color={filterRating === 5 ? Blue : '#777'} />
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 6 ? setInitialState({...initialState, filterRating: 6}) : {}}>
+                                                                <IonIcons name={'emoticon-excited-outline'} size={26} color={filterRating === 6 ? Blue : '#777'} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <View style={tw`h-auto self-stretch py-2 px-3.5 border-b border-b-[#dadada] bg-[#f7f7f7] justify-center items-center`}>
+                                                            <View style={tw`flex-1 justify-center items-center flex-row`}>
+                                                                <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>Total <Text style={tw`font-normal`}>respuestas: </Text></Text>
+                                                                <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>{filteredData.length}</Text>
                                                             </View>
-                                                    }
-                                                </View>
-                                            </View>
+                                                        </View>
+                                                    </>
+                                            }
+
+                                            {
+                                                admin
+                                                &&
+                                                    filteredData.map(x => <>
+                                                            <View style={tw`h-9 self-stretch justify-center items-center px-3 android:mt-${x.id === 1 ? 2.5 : 0} ios:mt-2.5`}>
+                                                                <View style={tw`h-1 self-stretch bg-[#dadada] justify-center items-center border border-[#adadad] rounded`} />
+                                                            </View>
+                                                            <ItemResponse {...x}/>
+                                                        </>
+                                                    )
+                                            }
+
+                                            {
+                                                hasCommented && !admin
+                                                ?
+                                                    <ItemResponse />
+                                                :
+                                                    !admin
+                                                    ?
+                                                        <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5`}>
+                                                            <View style={tw`self-stretch flex-row pt-0.5`}>
+                                                                <View style={tw`flex-1 justify-center items-start`}>
+                                                                    <Text style={tw`text-[#000] text-sm font-bold`}>Dejános saber tu opinión</Text>
+                                                                </View>
+                                                                <Animatable.View
+                                                                    duration={2000}	
+                                                                    animation={!active ? 'tada' : undefined}
+                                                                    iterationCount={'infinite'}
+                                                                    style={tw`h-6.5 w-6.5 justify-center items-center bg-[${active ? Blue : '#f7f7f7'}] rounded-full border border-[#777]`}
+                                                                >
+                                                                    <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, active: !active})}>
+                                                                        <IonIcons name={'incognito'} size={16} color={active ? '#fff' : '#777'} />
+                                                                    </TouchableOpacity>
+                                                                </Animatable.View>
+                                                            </View>
+                                                            <View style={tw`h-auto self-stretch justify-center items-start`}>
+                                                                <Text style={[{fontSize: 12}, tw`text-[#adadad]`]}>{`Tu respuesta es `}<Text style={tw`font-bold`}>{`${!active ? 'pública' : 'anónima'}`}</Text></Text>
+                                                            </View>
+                                                            <View style={tw`h-auto self-stretch flex-row justify-center items-center pt-2`}>
+                                                                <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 1 ? setInitialState({...initialState, selected: 1}) : {}}>
+                                                                    <IonIcons name={'emoticon-angry-outline'} size={38} color={selected === 1 ? '#dd5a43' : '#777'} />
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 2 ? setInitialState({...initialState, selected: 2}) : {}}>
+                                                                    <IonIcons name={'emoticon-sad-outline'} size={38} color={selected === 2 ? '#ff892a' : '#777'} />
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 3 ? setInitialState({...initialState, selected: 3}) : {}}>
+                                                                    <IonIcons name={'emoticon-neutral-outline'} size={38} color={selected === 3 ? Yellow : '#777'} />
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 4 ? setInitialState({...initialState, selected: 4}) : {}}>
+                                                                    <IonIcons name={'emoticon-happy-outline'} size={38} color={selected === 4 ? '#69aa46' : '#777'} />
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={tw`flex-1 justify-center items-center p-1`} onPress={() => selected !== 5 ? setInitialState({...initialState, selected: 5}) : {}}>
+                                                                    <IonIcons name={'emoticon-excited-outline'} size={38} color={selected === 5 ? Blue : '#777'} />
+                                                                </TouchableOpacity>
+                                                            </View>
+
+                                                            <View style={tw`justify-start items-center h-12 self-stretch mt-1`}>
+                                                                <View style={{width: 'auto', borderBottomWidth: selected ? 1 : 0, borderBottomColor: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : selected === 5 ? Blue : '#777'}}>
+                                                                    <Text style={{fontSize: 15, fontWeight: 'normal', textAlign: 'center', color: selected === 1 ? '#dd5a43' : selected === 2 ? '#ff892a' : selected === 3 ? Yellow : selected === 4 ? '#69aa46' : selected === 5 ? Blue : '#777'}}>{selected === 1 ? 'Muy Insatisfecho' : selected === 2 ? 'Insatisfecho' : selected === 3 ? 'Neutral' : selected === 4 ? 'Satisfecho' : selected === 5 ? 'Excelente' : '------'}</Text>
+                                                                </View>
+                                                            </View>
+
+                                                            <View style={tw`h-auto self-stretch`}>
+                                                                <Text style={titleStyle}>¿Qué te gustó de esta dinámica?</Text>
+                                                                <MultiText
+                                                                    required={true}
+                                                                    value={question_1}
+                                                                    onChangeText={(e) => handleInputChange(e, 'question_1')}
+                                                                    placeholder={'Especifica qué fue lo que más te gusto de esta dinámica'}
+                                                                    multiline={true}
+                                                                    numberOfLines={3}
+                                                                />
+                                                                <View style={tw`h-1.5`}/>
+                                                                <Text style={titleStyle}>¿Qué mejorarías?</Text>
+                                                                <MultiText
+                                                                    required={true}
+                                                                    value={question_2}
+                                                                    onChangeText={(e) => handleInputChange(e, 'question_2')}
+                                                                    placeholder={'Especifica qué sería lo que mejorarías para futuras dinámicas'}
+                                                                    multiline={true}
+                                                                    numberOfLines={3}
+                                                                />
+                                                                <View style={tw`h-1.5`}/>
+                                                                <Text style={titleStyle}>Comentarios</Text>
+                                                                <MultiText
+                                                                    required={false}
+                                                                    value={question_3}
+                                                                    onChangeText={(e) => handleInputChange(e, 'question_3')}
+                                                                    placeholder={'Comentarios adicionales en caso de haberlos'}
+                                                                    multiline={true}
+                                                                    numberOfLines={3}
+                                                                />
+                                                            </View>
+                                                            <View style={tw`h-auto self-stretch justify-center items-end mb-[${isIphone ? 12 : 0}]`}>
+                                                                {
+                                                                    selected
+                                                                    ?
+                                                                        <TouchableOpacity onPress={() => handleSave()} style={tw`h-auto w-auto bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                            <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
+                                                                            <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
+                                                                        </TouchableOpacity>
+                                                                    :
+                                                                        <View style={tw`h-auto w-auto bg-[#dadada] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                            <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
+                                                                            <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
+                                                                        </View>
+                                                                }
+                                                            </View>
+                                                        </View>
+                                                    :
+                                                        <></>
+                                            }
+
                                         </>
                                     :
-                                        <FlatList
-                                            showsVerticalScrollIndicator={false}
-                                            showsHorizontalScrollIndicator={false}
-                                            data={list}
-                                            ItemSeparatorComponent={<View style={tw`h-px self-stretch bg-[#dadada]`} />}
-                                            renderItem={({item}) => <Item {...item}/>}
-                                            keyExtractor={item => String(item.id)}
-                                        />
+                                        <>
+                                            <FlatList
+                                                showsVerticalScrollIndicator={false}
+                                                showsHorizontalScrollIndicator={false}
+                                                data={list}
+                                                ItemSeparatorComponent={<View style={tw`h-px self-stretch bg-[#dadada]`} />}
+                                                renderItem={({item}) => <Item {...item}/>}
+                                                keyExtractor={item => String(item.id)}
+                                            />
+                                        </>
                                 }
                             </KeyboardAwareScrollView>
                         </>
@@ -351,4 +606,4 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     )
 }
 
-const titleStyle = tw`text-sm text-[${Blue}] mb-1.5`
+const titleStyle = tw`text-[#000] font-bold mb-1.5`

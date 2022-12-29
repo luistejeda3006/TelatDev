@@ -634,7 +634,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                                         ?
                                             <>
                                                 <Text style={titleStyle}>{language === '1' ? '¿Cuál es tu nivel de inglés conversacional?' : `What's your speaking English level?`}</Text>
-                                                <View style={[styles.picker, {paddingRight: currentLevelOptionEnglish === 0 ? 10 : 0}]} >
+                                                <View style={[styles.picker, {paddingRight: currentLevelOptionEnglish === 0 ? 10 : 0}]}>
                                                     <View style={tw`flex-1 justify-center items-center ios:pl-1`}>
                                                         <Picker
                                                             style={pickerStyle}
