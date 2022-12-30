@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground, TouchableWithoutFeedback, StyleSheet, Alert, Image, FlatList} from 'react-native'
-import {HeaderPortrait, MultiText, RadioButton} from '../../components'
+import {HeaderPortrait, Modal, MultiText, RadioButton} from '../../components'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
 import {selectLanguageApp} from '../../slices/varSlice'
@@ -9,19 +9,26 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import {isIphone} from '../../access/requestedData'
 import {selectOrientation} from '../../slices/orientationSlice'
-import {useForm} from '../../hooks'
+import {useForm, useSound} from '../../hooks'
 import {RNCamera} from 'react-native-camera';
 import {selectFlash, selectType, setFlash, setType} from '../../slices/cameraSlice'
 import tw from 'twrnc'
 
+let contador = 0;
 export default ({navigation, route: {params: {title, description, image, hasQR, date, rated, hasDecimal}}}) => {
     const dispatch = useDispatch()
     const language = useSelector(selectLanguageApp)
     const orientation = useSelector(selectOrientation)
     const type = useSelector(selectType)
     const flash = useSelector(selectFlash)
-    const admin = true;
-    const hasCommented = true;
+    const [admin, setAdmin] = useState(false);
+    const [hasCommented, setHasCommented] = useState(false);
+    const [visible, setVisible] = useState(false)
+    const [visibleList, setVisibleList] = useState(false)
+    const [valid, setValid] = useState(1)
+
+    const {sound: validSound} = useSound('valid.mp3')
+	const {sound: invalidSound} = useSound('invalid.mp3')
 
     const [initialState, setInitialState] = useState({
         current: 1,
@@ -150,8 +157,6 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         let main = filterMain === 1 ? undefined : filterMain
         let rating = filterRating === 1 ? undefined : filterRating
         let finalData = null;
-        console.log('main: ', main)
-        console.log('rating: ', rating)
         if(!main && !rating){
             finalData = masterData;
         } else {
@@ -159,7 +164,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                 finalData = masterData.filter(x => (x.selected === rating))
             } else if(main && !rating){
                 finalData = masterData.filter(x => ((x.active + 1) === main))
-            } else if(main && rating){
+            } else {
                 finalData = masterData.filter(x => ((x.active + 1) === main && x.selected === rating))
             }
         }
@@ -192,22 +197,22 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         )
     }
 
-    const Item = ({id, picture, name, puesto}) => {
+    const Item = ({id, picture, name, puesto, modal = false}) => {
         return(
-            <View style={tw`h-auto self-stretch flex-row justify-center items-center border-b border-b-[${id === list.length ? '#dadada' : '#fff'}] p-2.5 bg-white`}>
-                <View style={tw`justify-center items-center w-10 h-10 pr-2.5`}>
+            <View style={tw`h-auto self-stretch flex-row justify-center items-center pl-${modal ? 1 : 2.5} pr-${modal ? 0 : 2.5} pb-${modal ? 1.5 : 2.5} pt-${modal ? 2 : 2.5} bg-white`}>
+                <View style={tw`justify-center items-center w-${modal ? 9 : 13} h-${modal ? 9 : 13} pr-2.5`}>
                     <View style={tw`bg-[#f7f7f7] justify-center items-center rounded-full`}>
                         {
                             picture
                             ?
                                 <Image
-                                    style={tw`h-9 w-9 rounded-full border-2 border-[#dadada]`}
+                                    style={tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full border-2 border-[#dadada]`}
                                     resizeMode={'cover'}
                                     source={{uri: picture}}
                                 />
                             :
                                 <Image
-                                    style={tw`h-9 w-9 rounded-full border-2 border-[#dadada]`}
+                                    style={tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full border-2 border-[#dadada]`}
                                     resizeMode={'cover'}
                                     source={require('../../../assets/user.png')}
                                 />
@@ -216,20 +221,20 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                     </View>
                 </View>
                 <View style={tw`flex-1 justify-center items-start pt-px`}>
-                    <Text style={[tw`text-[#000] font-bold`, {fontSize: 15}]}>{name}</Text>
-                    <Text style={[tw`text-sm text-[#adadad]`, {fontSize: 13}]}>{puesto}</Text>
+                    <Text style={[tw`text-[#000] font-bold`, {fontSize: modal ? 12 : 15}]}>{name}</Text>
+                    <Text style={[tw`text-sm text-[#adadad]`, {fontSize: modal ? 12 : 12}]}>{puesto}</Text>
                 </View>
                 <View style={tw`w-auto justify-center items-center rounded border border-[#adadad] bg-[#f7f7f7] px-px`}>
-                    <Text style={tw`text-xs text-[#adadad]`}>10:58 am</Text>
+                    <Text style={[tw`text-[#adadad]`, {fontSize: modal ? 10 : 12}]}>10:58 am</Text>
                 </View>
             </View>
         )
     }
 
     const ItemResponse = ({id = 10, name = 'Anónimo', active = active === 1 ? true : false, selected = 3, question_1 = 'Me gustó mucho la manera en la que se llevó acabo el sorteo', question_2 = 'Hacer más sorteos en las dinámicas, eso mótiva a las personas', question_3 = ''}) => {
-        let newActive = active === 1 ? true : false
+        let newActive = active === 1 ? false : true
         return(
-            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5 shadow-md m-2 rounded ios:mb-${id === filteredData.length ? 7.5 : 0}`}>
+            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5 shadow-xl m-2 rounded ios:mb-${id === filteredData[filteredData.length - 1].id ? 7.5 : 0}`}>
                 <View style={tw`self-stretch flex-row pt-0.5 justify-center items-center`}>
                     <View style={tw`flex-1 justify-center items-start`}>
                         <Text style={tw`text-[#000] text-sm font-bold`}>{newActive ? 'Anónimo' : name}</Text>
@@ -267,14 +272,25 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
 
                 <View style={tw`h-auto self-stretch`}>
                     <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>¿Qué te gustó de esta dinámica?</Text>
-                    <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_1}</Text>
+                    <Text style={[tw`text-[#adadad] mb-2`, {fontSize: 13}]}>{question_1}</Text>
                     <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>¿Qué mejorarías?</Text>
-                    <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_2}</Text>
+                    <Text style={[tw`text-[#adadad] mb-2`, {fontSize: 13}]}>{question_2}</Text>
                     <Text style={[titleStyle, tw`text-[#000] font-bold mb-px`]}>Comentarios</Text>
                     <Text style={[tw`text-[#adadad] mb-1`, {fontSize: 13}]}>{question_3 ? question_3 : '---'}</Text>
                 </View>
             </View>
         )
+    }
+
+    const handleScan = ({data}) => {
+        console.log('e', data)
+        if(isNaN(data) && contador === 0 && !visible && data.length >= 15){
+            setVisible(true)
+            validSound.play()
+            setTimeout(() => {
+                setVisible(false)
+            }, 3500)
+        }
     }
 
     return(
@@ -358,7 +374,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                             >
                                                                 <IonIcons name={'bullhorn-outline'} size={20} color={'#fff'} />
                                                             </Animatable.View>
-                                                            <Text style={tw`text-xl font-bold text-[#fff] ml-1`}>{title}</Text>
+                                                            <Text onPress={() => setAdmin(!admin)} style={tw`text-xl font-bold text-[#fff] ml-1`}>{title}</Text>
                                                         </View>
                                                     </View>
                                                     <View style={tw`h-7 self-stretch justify-center items-end`}>
@@ -389,7 +405,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                                 color={'#777'}
                                                                 handleCheck={() => filterMain !== 2 ? setInitialState({...initialState, filterMain: 2}) : {}}/>
                                                             <RadioButton 
-                                                                legend={language === '1' ? 'Anónimos' : 'Anonymous'}
+                                                                legend={language === '1' ? 'Anónimas' : 'Anonymous'}
                                                                 checked={filterMain === 3 ? true : false}
                                                                 width={0}
                                                                 color={'#777'}
@@ -426,20 +442,32 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
 
                                             {
                                                 admin
-                                                &&
-                                                    filteredData.map(x => <>
-                                                            <View style={tw`h-9 self-stretch justify-center items-center px-3 android:mt-${x.id === 1 ? 2.5 : 0} ios:mt-2.5`}>
-                                                                <View style={tw`h-1 self-stretch bg-[#dadada] justify-center items-center border border-[#adadad] rounded`} />
-                                                            </View>
-                                                            <ItemResponse {...x}/>
-                                                        </>
-                                                    )
+                                                ?
+                                                    filteredData.length > 0
+                                                    ?
+                                                        filteredData.map(x => <>
+                                                                <View style={tw`h-3 self-stretch justify-center items-center px-3 android:mt-${x.id === filteredData[0].id ? 2.5 : 0} ios:mt-2.5`}>
+                                                                    {/* <View style={tw`h-0.5 self-stretch bg-[#dadada] justify-center items-center border border-[#adadad] rounded`} /> */}
+                                                                </View>
+                                                                <ItemResponse {...x}/>
+                                                            </>
+                                                        )
+                                                    :
+                                                        <View style={tw`flex-1 h-30 justify-center items-center mt-3`}>
+                                                            <Image 
+                                                                style={tw`h-25 w-25`}
+                                                                resizeMode={'cover'}
+                                                                source={{uri: 'https://static.vecteezy.com/system/resources/previews/004/968/520/non_2x/about-me-button-member-registration-complete-personal-data-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-etc-vector.jpg'}}
+                                                            />
+                                                        </View>
+                                                :
+                                                    <></>
                                             }
 
                                             {
                                                 hasCommented && !admin
                                                 ?
-                                                    <ItemResponse />
+                                                    <ItemResponse {...masterData[0]}/>
                                                 :
                                                     !admin
                                                     ?
@@ -521,7 +549,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                                 {
                                                                     selected
                                                                     ?
-                                                                        <TouchableOpacity onPress={() => handleSave()} style={tw`h-auto w-auto bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                        <TouchableOpacity onPress={() => setHasCommented(!hasCommented) /* handleSave() */} style={tw`h-auto w-auto bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
                                                                             <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
                                                                             <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
                                                                         </TouchableOpacity>
@@ -557,7 +585,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                             flashMode={flash}
                             type={type}
                             ratio='16:9'
-                            onBarCodeRead={active ? undefined : (e) => console.log('e: ', e)}
+                            onBarCodeRead={visible ? undefined : !visibleList ? handleScan : undefined}
                             style={[StyleSheet.absoluteFill, {backgroundColor: 'transparent', justifyContent: 'center'}]}
                         >
                             <View style={tw`h-12.5 self-stretch justify-start items-center flex-row`}>
@@ -566,39 +594,92 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 50}}>
-                                <Animatable.Image
-                                    duration={2000}	
-                                    animation={'bounceIn'}
-                                    iterationCount={'infinite'}
-                                    style={tw`h-30 w-30`}
-                                    source={require('../../../assets/photo-capture.png')}
-                                />
+                                {
+                                    visible
+                                    ?
+                                        <View style={tw`h-50 w-[100%] justify-center items-center absolute top-65 px-10`}>
+                                            <View style={tw`h-15 w-[100%] rounded-t overflow-hidden justify-center items-center flex-row bg-white`}>
+                                                <Image
+                                                    resizeMode='cover'
+                                                    style={tw`h-${valid === 1 ? 20 : 13} w-${valid === 1 ? 20 : 13} rounded-full`}
+                                                    source={{uri: valid === 1 ? 'https://cdn.dribbble.com/users/2185205/screenshots/7886140/02-lottie-tick-01-instant-2.gif' : 'https://cdn.dribbble.com/users/251873/screenshots/9388228/error-img.gif'}}
+                                                />
+                                                <View style={tw`h-[100%] self-stretch justify-center items-center mr-7`}>
+                                                    <Text style={tw`text-xl text-[#777] font-bold pl-${valid === 1 ? 1 : 3}`}>{valid === 1 ? 'Código Válido' : 'Código Inválido'}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={tw`h-22 w-[100%] rounded-b bg-white justify-center items-center flex-row border-t border-t-[#dadada]`}>
+                                                <View style={tw`w-20 justify-center items-end`}>
+                                                    <Image
+                                                        style={tw`h-16 w-16 rounded-full border-2 border-[#dadada]`}
+                                                        resizeMode={'cover'}
+                                                        source={{uri: 'https://telat.mx/intranet/upload/fotos/LUIS_JAVIER_BLANCAS_CAMARENA1.jpg'}}
+                                                    />
+                                                </View>
+                                                <View style={tw`flex-1 self-stretch justify-center items-start px-2.5`}>
+                                                    <View style={tw`justify-center items-start h-auto self-stretch`}>
+                                                        <Text style={[tw`font-bold text-[#000]`, {fontSize: 16}]}>Jose Javier Blancas</Text>
+                                                        <Text style={[tw`text-[#777]`, {fontSize: 14}]}>Soporte</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    :
+                                        <Animatable.Image
+                                            duration={2000}	
+                                            animation={'bounceIn'}
+                                            iterationCount={'infinite'}
+                                            style={tw`h-30 w-30`}
+                                            source={require('../../../assets/photo-capture.png')}
+                                        />
+                                }
                             </View>
                             <View style={tw`h-${isIphone ? 35 : 25} self-stretch justify-center items-center flex-row absolute bottom-0 right-0 left-0`}>
                                 {
                                     type === 'back'
                                     ?
                                         <View style={tw`flex-1 justify-center items-center`}>
-                                            <TouchableOpacity style={tw`w-12.5 h-12.5 justify-center items-center pt-px border border-[#fff]`} onPress={() => dispatch(setFlash(flash === 'off' ? 'torch' : 'off'))}>
+                                            <TouchableOpacity style={tw`w-12.5 h-12.5 justify-center items-center pt-px border border-[#fff] rounded`} onPress={() => dispatch(setFlash(flash === 'off' ? 'torch' : 'off'))}>
                                                 <IonIcons name={flash === 'off' ? 'flash' : 'flash-off'} size={26} color={'#fff'} />
                                             </TouchableOpacity>
                                         </View>
                                     :
                                         <View style={tw`flex-1 justify-center items-center`}>
-                                            <View style={tw`w-12.5 h-12.5 justify-center items-center pt-px border border-[#adadad]`}>
+                                            <View style={tw`w-12.5 h-12.5 justify-center items-center pt-px border border-[#adadad] rounded`}>
                                                 <IonIcons name={flash === 'off' ? 'flash' : 'flash-off'} size={26} color={'#adadad'} />
                                             </View>
                                         </View>
                                 }
                                 <View style={tw`flex-1 justify-center items-center`}>
-                                    <TouchableOpacity style={tw`w-12.5 h-12.5 justify-center items-center pb-px border border-[#fff]`} onPress={() => {
+                                    <TouchableOpacity style={tw`w-12.5 h-12.5 justify-center items-center pb-px border border-[#fff] rounded`} onPress={() => {
                                         dispatch(setType(type === 'front' ? 'back' : 'front'))
                                         dispatch(setFlash('off'))
                                     }}>
                                         <IonIcons name={'camera-retake'} size={26} color={'#fff'} />
                                     </TouchableOpacity>
                                 </View>
+                                <View style={tw`flex-1 justify-center items-center`}>
+                                    <TouchableOpacity style={tw`w-12.5 h-12.5 justify-center items-center pb-px border border-[#fff] rounded`} onPress={() => list.length > 0 ? setVisibleList(!visibleList) : {}}>
+                                        <IonIcons name={'text-box-check-outline'} size={26} color={'#fff'} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
+                            <Modal visibility={visibleList} orientation={orientation} handleDismiss={() => setVisibleList(!visibleList)}>
+                                <View style={tw`h-8 py-1.5 justify-center items-center self-stretch border border-[#dadada] bg-[#f7f7f7]`}>
+                                    <View style={tw`flex-1 justify-center items-center flex-row`}>
+                                        <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>Total <Text style={tw`font-normal`}>escaneados: </Text></Text>
+                                        <Text style={[tw`font-bold text-[#777] text-xs android:pt-px`, {fontSize: 14}]}>{list.length}</Text>
+                                    </View>
+                                </View>
+                                <FlatList
+                                    showsVerticalScrollIndicator={false}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={list}
+                                    ItemSeparatorComponent={<View style={tw`h-px self-stretch bg-[#dadada]`} />}
+                                    renderItem={({item}) => <Item modal={true} {...item}/>}
+                                    keyExtractor={item => String(item.id)}
+                                />
+                            </Modal>
                         </RNCamera>
                 }
             </View>

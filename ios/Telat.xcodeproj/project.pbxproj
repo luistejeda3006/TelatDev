@@ -13,6 +13,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		158205C1D6B462E4704C0A2A /* Pods_Telat_TelatTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20FB9620605BA2611C65E5B2 /* Pods_Telat_TelatTests.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8EA4317A295F721F00E2918F /* valid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EA43178295F721F00E2918F /* valid.mp3 */; };
+		8EA4317B295F721F00E2918F /* valid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EA43178295F721F00E2918F /* valid.mp3 */; };
+		8EA4317C295F721F00E2918F /* invalid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EA43179295F721F00E2918F /* invalid.mp3 */; };
+		8EA4317D295F721F00E2918F /* invalid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8EA43179295F721F00E2918F /* invalid.mp3 */; };
 		8EC4E3C129381BCA00DC7AF7 /* basillion.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6222A335004A1C94921731 /* basillion.ttf */; };
 		8EC5711A291EB72400DFA4EC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */; };
 		8EC5711B291EB72400DFA4EC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */; };
@@ -54,6 +58,8 @@
 		5B7EB9410499542E8C5724F5 /* Pods-Telat-TelatTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telat-TelatTests.debug.xcconfig"; path = "Target Support Files/Pods-Telat-TelatTests/Pods-Telat-TelatTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Telat/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Telat-TelatTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telat-TelatTests.release.xcconfig"; path = "Target Support Files/Pods-Telat-TelatTests/Pods-Telat-TelatTests.release.xcconfig"; sourceTree = "<group>"; };
+		8EA43178295F721F00E2918F /* valid.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = valid.mp3; sourceTree = "<group>"; };
+		8EA43179295F721F00E2918F /* invalid.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invalid.mp3; sourceTree = "<group>"; };
 		8EC4E3BD293817D200DC7AF7 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		8EC4E3BE293817D200DC7AF7 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		8EC57119291EB72400DFA4EC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -141,6 +147,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8EA43179295F721F00E2918F /* invalid.mp3 */,
+				8EA43178295F721F00E2918F /* valid.mp3 */,
 				8EF4DAB52926A0E400547B38 /* bubble.mp3 */,
 				8EF4DAB42926A0E400547B38 /* game_over.mp3 */,
 				8EF4DAB62926A0E400547B38 /* notify.mp3 */,
@@ -287,9 +295,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EF4DABC2926A0E400547B38 /* bubble.mp3 in Resources */,
+				8EA4317B295F721F00E2918F /* valid.mp3 in Resources */,
 				8EF4DABE2926A0E400547B38 /* notify.mp3 in Resources */,
 				8EF4DAB82926A0E400547B38 /* pop.mp3 in Resources */,
 				8EC5711B291EB72400DFA4EC /* GoogleService-Info.plist in Resources */,
+				8EA4317D295F721F00E2918F /* invalid.mp3 in Resources */,
 				8EF4DABA2926A0E400547B38 /* game_over.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -301,8 +311,10 @@
 				8EC4E3C129381BCA00DC7AF7 /* basillion.ttf in Resources */,
 				8EE352182925701D00F0CFB6 /* QBImagePicker.storyboard in Resources */,
 				8EF4DABD2926A0E400547B38 /* notify.mp3 in Resources */,
+				8EA4317C295F721F00E2918F /* invalid.mp3 in Resources */,
 				8EF4DABB2926A0E400547B38 /* bubble.mp3 in Resources */,
 				8EF4DAB92926A0E400547B38 /* game_over.mp3 in Resources */,
+				8EA4317A295F721F00E2918F /* valid.mp3 in Resources */,
 				8EF4DAB72926A0E400547B38 /* pop.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
