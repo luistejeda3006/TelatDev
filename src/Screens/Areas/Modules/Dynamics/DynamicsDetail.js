@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {View, Text, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground, TouchableWithoutFeedback, StyleSheet, Alert, Image, FlatList} from 'react-native'
-import {HeaderPortrait, Modal, MultiText, RadioButton} from '../../components'
-import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../colors/colorsApp'
+import {HeaderPortrait, Modal, MultiText, RadioButton} from '../../../../components'
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
-import {selectLanguageApp, selectUserInfo} from '../../slices/varSlice'
+import {selectLanguageApp, selectUserInfo} from '../../../../slices/varSlice'
 import * as Animatable from 'react-native-animatable';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {isIphone} from '../../access/requestedData'
-import {selectOrientation} from '../../slices/orientationSlice'
-import {useForm, useSound} from '../../hooks'
+import {isIphone} from '../../../../access/requestedData'
+import {selectOrientation} from '../../../../slices/orientationSlice'
+import {useForm, useNavigation, useSound} from '../../../../hooks'
 import {RNCamera} from 'react-native-camera';
-import {selectFlash, selectType, setFlash, setType} from '../../slices/cameraSlice'
+import {selectFlash, selectType, setFlash, setType} from '../../../../slices/cameraSlice'
+import {selectCurrent, setCurrent} from '../../../../slices/dynamicsSlice'
 import tw from 'twrnc'
-import { selectCurrent, setCurrent } from '../../slices/dynamicsSlice'
+import { useFocusEffect } from '@react-navigation/native'
 
 let contador = 0;
 let user = null;
@@ -24,6 +25,8 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     const refDynamics = useRef()
     const language = useSelector(selectLanguageApp)
     const orientation = useSelector(selectOrientation)
+    const {handlePath} = useNavigation()
+
     current = useSelector(selectCurrent)
     user = useSelector(selectUserInfo)
     const type = useSelector(selectType)
@@ -159,6 +162,12 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
 
     const {filterMain, filterRating, active, selected, list, masterData} = initialState
  
+    useFocusEffect(
+        useCallback(() => {
+            handlePath('Dynamics')
+        }, [])
+    );
+
     useEffect(() => {
         refDynamics.current?.scrollToPosition(0, 0)
     }, [current])
@@ -224,7 +233,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                 <Image
                                     style={tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full border-2 border-[#dadada]`}
                                     resizeMode={'cover'}
-                                    source={require('../../../assets/user.png')}
+                                    source={require('../../../../../assets/user.png')}
                                 />
 
                         }
@@ -335,7 +344,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
             {
                 current !== 2
                 &&
-                    <HeaderPortrait title={language === '1' ? 'Evaluación' : 'Assessment'} screenToGoBack={'Choose'} navigation={navigation} normal={true}/>
+                    <HeaderPortrait title={language === '1' ? 'Evaluación' : 'Assessment'} screenToGoBack={'Dynamics'} navigation={navigation} normal={true}/>
             }
             <View style={{backgroundColor: '#fff', flex: 1, alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'center'}}>
                 {
@@ -666,7 +675,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                             animation={'bounceIn'}
                                             iterationCount={'infinite'}
                                             style={tw`h-30 w-30`}
-                                            source={require('../../../assets/photo-capture.png')}
+                                            source={require('../../../../../assets/photo-capture.png')}
                                         />
                                 }
                             </View>

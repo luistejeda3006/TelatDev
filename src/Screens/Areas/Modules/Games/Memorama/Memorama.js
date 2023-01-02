@@ -8,6 +8,7 @@ import { HeaderLandscape, HeaderPortrait } from '../../../../../components';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { useNavigation, useOrientation, useSound } from '../../../../../hooks';
 import { useFocusEffect } from '@react-navigation/native';
+import { isIphone } from '../../../../../access/requestedData';
 
 const options = {
 	container: {
@@ -141,69 +142,137 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 
 	const Imagen = ({icon}) => {
 		return(
-			<Image
-				style={{width: width <= 365 ? 25 : 65, height: width <= 365 ? 25 : 65}}
-				source={
-					icon.includes('par_1.png')
-					? 
-						require('../../../../../../assets/games/memorama/par_1.png')
-					:
-						icon.includes('par_2.png')
+			isIphone
+			?
+				<Image
+					resizeMethod="scale"
+					style={{width: width <= 365 ? 25 : 65, height: width <= 365 ? 25 : 65}}
+					defaultSource={
+						icon.includes('par_1.png')
 						? 
-							require('../../../../../../assets/games/memorama/par_2.png')
+							require('../../../../../../assets/games/memorama/par_1.png')
 						:
-							icon.includes('par_3.png')
+							icon.includes('par_2.png')
 							? 
-								require('../../../../../../assets/games/memorama/par_3.png')
+								require('../../../../../../assets/games/memorama/par_2.png')
 							:
-								icon.includes('par_4.png')
+								icon.includes('par_3.png')
 								? 
-									require('../../../../../../assets/games/memorama/par_4.png')
+									require('../../../../../../assets/games/memorama/par_3.png')
 								:
-									icon.includes('par_5.png')
+									icon.includes('par_4.png')
 									? 
-										require('../../../../../../assets/games/memorama/par_5.png')
+										require('../../../../../../assets/games/memorama/par_4.png')
 									:
-										icon.includes('par_6.png')
+										icon.includes('par_5.png')
 										? 
-											require('../../../../../../assets/games/memorama/par_6.png')
+											require('../../../../../../assets/games/memorama/par_5.png')
 										:
-											icon.includes('par_7.png')
+											icon.includes('par_6.png')
 											? 
-												require('../../../../../../assets/games/memorama/par_7.png')
+												require('../../../../../../assets/games/memorama/par_6.png')
 											:
-												icon.includes('par_8.png')
+												icon.includes('par_7.png')
 												? 
-													require('../../../../../../assets/games/memorama/par_8.png')
+													require('../../../../../../assets/games/memorama/par_7.png')
 												:
-													icon.includes('par_9.png')
+													icon.includes('par_8.png')
 													? 
-														require('../../../../../../assets/games/memorama/par_9.png')
+														require('../../../../../../assets/games/memorama/par_8.png')
 													:
-														icon.includes('par_10.png')
+														icon.includes('par_9.png')
 														? 
-															require('../../../../../../assets/games/memorama/par_10.png')
+															require('../../../../../../assets/games/memorama/par_9.png')
 														:
-															icon.includes('par_11.png')
+															icon.includes('par_10.png')
 															? 
-																require('../../../../../../assets/games/memorama/par_11.png')
+																require('../../../../../../assets/games/memorama/par_10.png')
 															:
-																icon.includes('par_12.png')
+																icon.includes('par_11.png')
 																? 
-																	require('../../../../../../assets/games/memorama/par_12.png')
+																	require('../../../../../../assets/games/memorama/par_11.png')
 																:
-																	icon.includes('par_13.png')
+																	icon.includes('par_12.png')
 																	? 
-																		require('../../../../../../assets/games/memorama/par_13.png')
+																		require('../../../../../../assets/games/memorama/par_12.png')
 																	:
-																		icon.includes('par_14.png')
+																		icon.includes('par_13.png')
 																		? 
-																			require('../../../../../../assets/games/memorama/par_14.png')
+																			require('../../../../../../assets/games/memorama/par_13.png')
 																		:
-																			require('../../../../../../assets/games/memorama/par_15.png')
-				}
-				resizeMode={'cover'}
-			/>
+																			icon.includes('par_14.png')
+																			? 
+																				require('../../../../../../assets/games/memorama/par_14.png')
+																			:
+																				require('../../../../../../assets/games/memorama/par_15.png')
+					}
+					resizeMode={'cover'}
+				/>
+			:
+				<Image
+					resizeMethod="scale"
+					style={{width: width <= 365 ? 25 : 65, height: width <= 365 ? 25 : 65}}
+					source={
+						icon.includes('par_1.png')
+						? 
+							require('../../../../../../assets/games/memorama/par_1.png')
+						:
+							icon.includes('par_2.png')
+							? 
+								require('../../../../../../assets/games/memorama/par_2.png')
+							:
+								icon.includes('par_3.png')
+								? 
+									require('../../../../../../assets/games/memorama/par_3.png')
+								:
+									icon.includes('par_4.png')
+									? 
+										require('../../../../../../assets/games/memorama/par_4.png')
+									:
+										icon.includes('par_5.png')
+										? 
+											require('../../../../../../assets/games/memorama/par_5.png')
+										:
+											icon.includes('par_6.png')
+											? 
+												require('../../../../../../assets/games/memorama/par_6.png')
+											:
+												icon.includes('par_7.png')
+												? 
+													require('../../../../../../assets/games/memorama/par_7.png')
+												:
+													icon.includes('par_8.png')
+													? 
+														require('../../../../../../assets/games/memorama/par_8.png')
+													:
+														icon.includes('par_9.png')
+														? 
+															require('../../../../../../assets/games/memorama/par_9.png')
+														:
+															icon.includes('par_10.png')
+															? 
+																require('../../../../../../assets/games/memorama/par_10.png')
+															:
+																icon.includes('par_11.png')
+																? 
+																	require('../../../../../../assets/games/memorama/par_11.png')
+																:
+																	icon.includes('par_12.png')
+																	? 
+																		require('../../../../../../assets/games/memorama/par_12.png')
+																	:
+																		icon.includes('par_13.png')
+																		? 
+																			require('../../../../../../assets/games/memorama/par_13.png')
+																		:
+																			icon.includes('par_14.png')
+																			? 
+																				require('../../../../../../assets/games/memorama/par_14.png')
+																			:
+																				require('../../../../../../assets/games/memorama/par_15.png')
+					}
+					resizeMode={'cover'}
+				/>
 		)
 	}
 
@@ -236,7 +305,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 								:
 									<Image
 										style={{width: width <= 365 ? 20 : 30, height: width <= 365 ? 20 : 30}}
-										source={require('../../../../../../assets/logo.png')}
+										source={{uri: 'https://telat.mx/intranet/assets/img/logo.png'}}
 									/>
 							}
 						</TouchableOpacity>
@@ -249,7 +318,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 								:
 									<Image
 										style={{width: width <= 365 ? 20 : 30, height: width <= 365 ? 20 : 30}}
-										source={require('../../../../../../assets/logo.png')}
+										source={{uri: 'https://telat.mx/intranet/assets/img/logo.png'}}
 									/>
 							}
 						</View>
@@ -297,6 +366,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 									<View style={{flexDirection: 'row'}}>
 										<View style={{flex: 1}}></View>
 										<FlatList
+											scrollEnabled={false}
 											data={cards}
 											numColumns={rowsNumber}
 											renderItem={({item}) => <Item text={item.text} order={item.order} opened={item.opened} icon={item.icon} color={item.color} completed={item.completed}/>}

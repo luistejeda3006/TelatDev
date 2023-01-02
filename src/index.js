@@ -18,6 +18,7 @@ import { ChoosePuzzle, Puzzle } from './Screens/Areas/Modules/Games/Puzzle';
 import ChooseMemorama from './Screens/Areas/Modules/Games/Memorama/ChooseMemorama';
 import { Memorama } from './Screens/Areas/Modules/Games/Memorama';
 import Snake from './Screens/Areas/Modules/Games/Snake/Snake';
+import { Dynamics, DynamicsDetail } from './Screens/Areas/Modules/Dynamics';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -89,6 +90,9 @@ const StackEmployee = ({route: {params}}) => {
 			<Stack.Screen name='Money' component={MyMoneyScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
 
 			<Stack.Screen name='Statistics' component={StatisticsScreen} initialParams={{language: params.language, orientation: params.orientation}}/>
+
+			<Stack.Screen name='Dynamics' component={Dynamics} initialParams={{language: params.language, orientation: params.orientation}}/>
+			<Stack.Screen name='DynamicsDetail' component={DynamicsDetail} initialParams={{language: params.language, orientation: params.orientation}}/>
 		</Stack.Navigator>
     );
 }
@@ -138,7 +142,7 @@ export default () => {
   return (
 	<NavigationContainer>
 		<Stack.Navigator
-			initialRouteName={'Development'}
+			initialRouteName={'AuthLogin'}
 			screenOptions={{headerShown: false}}
 		>
 			<Stack.Screen name={'AuthLogin'} component={AuthLogin} />

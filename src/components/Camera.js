@@ -49,8 +49,9 @@ export default ({savePicture = undefined, imagen, required = false}) => {
             ImagePicker.openCropper({
                 compressImageQuality: 1,
                 path: uriG,
-                width: 1200,
+                width: 1500,
                 height: 1500,
+                enableRotationGesture: true,
                 freeStyleCropEnabled: true
               }).then(image => {
                 setUriG(image.path)

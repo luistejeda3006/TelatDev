@@ -56,7 +56,7 @@ export default ({navigation, route: {params: {orientation, language}}}) => {
 					:
 						<Image
 							style={{width: 10, height: 10}}
-							source={require('../../../../../../assets/logo.png')}
+							source={{uri: 'https://telat.mx/intranet/assets/img/logo.png'}}
 						/>
 				}
 			</View>

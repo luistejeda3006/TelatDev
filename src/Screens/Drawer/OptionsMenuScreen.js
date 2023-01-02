@@ -14,6 +14,7 @@ import {selectOrientation} from '../../slices/orientationSlice';
 import {selectDataNotification, selectLanguageApp, selectNotification, selectTokenInfo, selectUserInfo, setNotification, setVisibleSliders} from '../../slices/varSlice';
 import UpdateAvailable from '../../components/UpdateAvailable';
 import tw from 'twrnc';
+import { selectCurrent, setCurrent } from '../../slices/dynamicsSlice';
 
 let gender = null;
 let picture = null;
@@ -41,6 +42,7 @@ let id_usuario = ''
 
 let screen = '';
 let access = '';
+let current = null;
 let orientation = '';
 let info_version = null;
 let language = null;
@@ -48,6 +50,7 @@ let language = null;
 export default ({navigation}) => {
     const dispatch = useDispatch()
 
+    current = useSelector(selectCurrent)
     notification = useSelector(selectNotification)
     dataNotificationValue = useSelector(selectDataNotification)
     orientation = useSelector(selectOrientation)
@@ -57,6 +60,8 @@ export default ({navigation}) => {
     
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
+
+
 
     const {isTablet} = DeviceInfo;
     const [enabled, setEnabled] = useState(false)
@@ -136,8 +141,18 @@ export default ({navigation}) => {
                 }
                 else {
                     if(access === '1') {
-                        dispatch(setAccess('0'))
-                        navigation.navigate(screen)
+                        //aquí toda esta configuracion es para cuando esta en el qr para que solo regrese de seccion y no salga de la pantalla como tal
+                        if(screen === 'Dynamics'){
+                            if(current === 2){
+                                dispatch(setCurrent(1))
+                            } else {
+                                dispatch(setAccess('0'))
+                                navigation.navigate(screen)
+                            }
+                        } else {
+                            dispatch(setAccess('0'))
+                            navigation.navigate(screen)
+                        }
                     }
                     else {
                         Alert.alert(gender ? language === '1' ? '¡Espera!' : 'Hold on!' : 'Hold on!', gender ? language === '1' ? gender === 'M' ? '¿Segura que quieres salir?' : '¿Seguro que quieres salir?' : 'Are you sure you want to go back?' : 'Are you sure you want to go back?', 
@@ -236,7 +251,11 @@ export default ({navigation}) => {
             
             const {response, status} = await request.json();
             if(status === 200){
-                setModules(response.permisos)
+                const temporales = [
+                    ...response.permisos,
+                    {"iconName": "check", "id": "35", "index": 6, "name": "Dynamics", "screen": "Dynamics"},
+                ]
+                setModules(temporales)
                 let notify = await AsyncStorage.getItem(lastNotify) || undefined;
                 
                 if(response.notificacion){

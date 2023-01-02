@@ -62,6 +62,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 'live': live,
                 'login': login
             }
+
+            console.log('body:', body)
     
             const request = await fetch(urlNomina, {
                 method: 'POST',
