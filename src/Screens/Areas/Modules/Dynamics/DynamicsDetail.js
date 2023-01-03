@@ -176,16 +176,12 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         let main = filterMain === 1 ? undefined : filterMain
         let rating = filterRating === 1 ? undefined : filterRating
         let finalData = null;
-        if(!main && !rating){
-            finalData = masterData;
-        } else {
-            if(!main && rating){
-                finalData = masterData.filter(x => (x.selected === rating))
-            } else if(main && !rating){
-                finalData = masterData.filter(x => (x.active === (main - 1)))
-            } else {
-                finalData = masterData.filter(x => (x.active === (main - 1) && x.selected === rating))
-            }
+
+        if(!main && !rating) finalData = masterData;
+        else {
+            if(!main && rating) finalData = masterData.filter(x => (x.selected === rating))
+            else if(main && !rating) finalData = masterData.filter(x => (x.active !== (main - 1)))
+            else finalData = masterData.filter(x => (x.active !== (main - 1) && x.selected === rating))
         }
         setFilteredData(finalData)
     }, [filterMain, filterRating])
@@ -594,12 +590,12 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                                 {
                                                                     selected
                                                                     ?
-                                                                        <TouchableOpacity onPress={() => handleAnswer() /* handleSave() */} style={tw`h-auto w-auto bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                        <TouchableOpacity onPress={() => handleAnswer() /* handleSave() */} style={tw`h-auto self-stretch bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
                                                                             <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
                                                                             <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
                                                                         </TouchableOpacity>
                                                                     :
-                                                                        <View style={tw`h-auto w-auto bg-[#dadada] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                        <View style={tw`h-auto self-stretch bg-[#dadada] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
                                                                             <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
                                                                             <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
                                                                         </View>

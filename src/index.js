@@ -142,7 +142,7 @@ export default () => {
   return (
 	<NavigationContainer>
 		<Stack.Navigator
-			initialRouteName={'AuthLogin'}
+			initialRouteName={'Development'}
 			screenOptions={{headerShown: false}}
 		>
 			<Stack.Screen name={'AuthLogin'} component={AuthLogin} />

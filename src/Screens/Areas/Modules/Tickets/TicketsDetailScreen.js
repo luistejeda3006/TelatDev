@@ -120,6 +120,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 'login': login
             }
             
+            console.log('body: ', body)
+
             const request = await fetch(urlTickets, {
                 method: 'POST',
                 headers: {

@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react'
-import {View, Text, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground, FlatList, TouchableWithoutFeedback} from 'react-native'
-import {HeaderPortrait} from '../../../../components'
+import React, { useCallback, useEffect, useState } from 'react'
+import {View, Text, Image, StatusBar, SafeAreaView, ImageBackground, FlatList, TouchableWithoutFeedback} from 'react-native'
+import {HeaderPortrait, ModalLoading, NotResults} from '../../../../components'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
 import {selectLanguageApp} from '../../../../slices/varSlice'
@@ -27,7 +27,7 @@ export default ({navigation}) => {
 
     const [initialState, setInitialState] = useState({
         data: [
-            {
+            /* {
                 id: 1,
                 title: 'Día de la madre',
                 description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
@@ -56,17 +56,55 @@ export default ({navigation}) => {
                 rated: 4.5,
                 comments: 102,
                 hasQR: true,
-            },
+            }, */
         ],
+        loading: true,
     })
 
-    const {data} = initialState
+    useEffect(() => {
+        setTimeout(() => {
+            setInitialState({...initialState, loading: false, data: [
+                /* {
+                    id: 1,
+                    title: 'Día de la madre',
+                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
+                    image: 'https://i.pinimg.com/originals/7c/2f/4b/7c2f4bfbaa411a9ef5b45bd0b4214fba.jpg',
+                    date: '23/01',
+                    rated: 2.5,
+                    comments: 32,
+                    hasQR: true,
+                },
+                {
+                    id: 2,
+                    title: 'Día del niño',
+                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
+                    image: 'https://fondosmil.com/fondo/38780.jpg',
+                    date: '11/01',
+                    rated: 4.5,
+                    comments: 102,
+                    hasQR: false,
+                },
+                {
+                    id: 3,
+                    title: 'Día del niño',
+                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
+                    image: 'https://cdn.wallpapersafari.com/76/19/oTkiJr.jpg',
+                    date: '11/01',
+                    rated: 4.5,
+                    comments: 102,
+                    hasQR: true,
+                }, */
+            ]})
+        }, 2500)
+    }, [])
+
+    const {data, loading} = initialState
 
     const Item = ({id, image, title, description, date, rated, comments, hasQR}) => {
         let newRated = parseInt(rated.toFixed())
         let hasDecimal = rated.toString().includes('.')
         return(
-            <View style={tw`shadow-md`}>
+            <View style={tw`shadow-md self-stretch`}>
                 <TouchableWithoutFeedback onPress={() => {
                     dispatch(setCurrent(1))
                     navigation.navigate('DynamicsDetail', {title, image, description, date, rated, comments, hasQR, hasDecimal: hasDecimal})}
@@ -136,15 +174,27 @@ export default ({navigation}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
             <HeaderPortrait title={language === '1' ? 'Dinámicas' : 'Dynamics'} screenToGoBack={'Dashboard'} navigation={navigation} normal={true}/>
-            <View style={{backgroundColor: '#f7f7f7', flex: 1, alignSelf: 'stretch'}}>
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={data}
-                    renderItem={({item}) => <Item {...item}/>}
-                    keyExtractor={item => String(item.id)}
-                />
+            <View style={{backgroundColor: data.length > 0 ? '#f7f7f7' : '#fff', flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
+                {
+                    data.length > 0
+                    ?
+                        <FlatList
+                            style={tw`h-auto self-stretch`}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            data={data}
+                            renderItem={({item}) => <Item {...item}/>}
+                            keyExtractor={item => String(item.id)}
+                        />
+                    :
+                        !loading
+                        ?
+                            <NotResults />
+                        :
+                            <></>
+                }
             </View>
+            <ModalLoading visibility={loading}/>
         </>
     )
 }

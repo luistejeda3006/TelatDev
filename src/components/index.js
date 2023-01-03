@@ -30,6 +30,7 @@ export {default as UpdateAvailable} from './UpdateAvailable';
 export {default as HeaderLandscape} from './HeaderLandcape';
 export {default as HeaderPortrait} from './HeaderPortrait';
 export {default as FailedNetwork} from './FailedNetwork';
+export {default as NotResults} from './NotResults';
 
 export {default as ProgressStep} from './ProgressStep';
 export {default as ProgressStepActions} from './ProgressStepActions';

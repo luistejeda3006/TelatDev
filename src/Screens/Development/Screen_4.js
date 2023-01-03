@@ -1,4 +1,4 @@
-import React from 'react'
+/* import React from 'react'
 import {View, FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -100,3 +100,16 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white'
 	}
 })
+ */
+
+import React from 'react'
+import {View, Text, TouchableOpacity, Image} from 'react-native'
+import tw from 'twrnc'
+
+export default () => {
+    return(
+        <View style={tw`flex-1 justify-center items-center bg-white`}>
+            
+        </View>
+    )
+}
