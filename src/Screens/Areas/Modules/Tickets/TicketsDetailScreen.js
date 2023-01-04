@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View, Text, StyleSheet, Platform, ScrollView, FlatList, TouchableOpacity, Image, Linking, StatusBar, SafeAreaView, Alert, RefreshControl, Dimensions} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Camera, FailedNetwork, HeaderLandscape, HeaderPortrait, Message, ModalLoading, Modal, MultiText, MultiTextEditable, Select, Title, BottomNavBar} from '../../../../components'
@@ -19,6 +19,8 @@ import {actionTicket} from '../../../../slices/ticketSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectTokenInfo} from '../../../../slices/varSlice';
 import tw from 'twrnc';
+import { getCurrentDate } from '../../../../js/dates';
+import { selectOrientation } from '../../../../slices/orientationSlice';
 
 let token = null;
 
@@ -35,12 +37,15 @@ const htmlProps = {
     customHTMLElementModels: {
       table: tableModel
     }
-  };
+};
 
-export default ({navigation, route: {params: {id, id_usuario, id_puesto, active, is_table, html, cuenta, orientation}}}) => {
+export default ({navigation, route: {params: {id, id_usuario, id_puesto, active, is_table, html, cuenta}}}) => {
+    
     const dispatch = useDispatch()
     token = useSelector(selectTokenInfo)
-
+    const orientation = useSelector(selectOrientation)
+    const refDetail = useRef()
+    const spliterData = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}, {id: 13}, {id: 14}, {id: 15}, {id: 16}, {id: 17}, {id: 18}, {id: 19}, {id: 20}, {id: 21}, {id: 22}, {id: 23}, {id: 24}, {id: 25}, {id: 26}, {id: 27}, {id: 28}, {id: 29}, {id: 30}, {id: 31}, {id: 32}, {id: 33}, {id: 34}, {id: 35}]
     cuenta = cuenta;
     const language = '1';
     const {isTablet} = DeviceInfo;
@@ -48,15 +53,9 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     const {handlePath} = useNavigation()
     const [contador, setContador] = useState(0)
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
     const [selected, setSelected] = useState(undefined)
-    const {translateY, handleScroll, paddingTop} = useScroll(orientationInfo.initial)
-
+    const {translateY, handleScroll, paddingTop} = useScroll(orientation)
+    const [scrolling, setScrolling] = useState(0)
     const [loading, setLoading] = useState(false)
     const [load, setLoad] = useState(false)
     const [initialState, setInitialState] = useState({
@@ -210,41 +209,41 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    style={styles.list}
+                    style={{height: 'auto', alignSelf: 'stretch'}}
                     data={mensajes}
                     numColumns={1}
                     renderItem={({item}) =>
-                    <View style={{borderWidth: 2.5, borderColor: '#f7f7f7', flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', marginVertical: '2%', borderRadius: 14, padding: 4, paddingTop: 8, marginBottom: 10, backgroundColor: 'rgba(247,247,247,.5)'}} onPress={() => navigation.navigate('test_2')}>
+                    <View style={{borderWidth: 1.5, borderColor: '#f1f1f1', flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', marginVertical: '2%', borderRadius: 14, padding: 4, paddingTop: 8, marginBottom: 10, backgroundColor: '#fff'}} onPress={() => navigation.navigate('test_2')}>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
                                 <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                    <View style={{justifyContent: 'center', alignItems: 'center', marginRight: 5, backgroundColor: '#dcdcdc', borderRadius: 35, width: 38, height: 38}}>
+                                    <View style={{justifyContent: 'center', alignItems: 'center', marginRight: 5, backgroundColor: '#dadada', borderRadius: 35, width: 38, height: 38}}>
                                         {
                                             item.picture !== ''
                                             ?
                                                 <Image
-                                                    style={[image, {width: !isTablet() ? currentOrientation === 'PORTRAIT' ? 35 : 25 : currentOrientation === 'PORTRAIT' ? 35 : 25, height: !isTablet() ? currentOrientation === 'PORTRAIT' ? 35 : 25 : currentOrientation === 'PORTRAIT' ? 35 : 35}]}
+                                                    style={[image, {width: !isTablet() ? orientation === 'PORTRAIT' ? 35 : 25 : orientation === 'PORTRAIT' ? 35 : 25, height: !isTablet() ? orientation === 'PORTRAIT' ? 35 : 25 : orientation === 'PORTRAIT' ? 35 : 35}]}
                                                     resizeMode={'cover'}
                                                     source={{uri: `${item.picture}`}}
                                                 />
                                             :
                                                 <Image
-                                                    style={[image, {width: !isTablet() ? currentOrientation === 'PORTRAIT' ? 35 : 25 : currentOrientation === 'PORTRAIT' ? 35 : 25, height: !isTablet() ? currentOrientation === 'PORTRAIT' ? 35 : 25 : currentOrientation === 'PORTRAIT' ? 35 : 35}]}
+                                                    style={[image, {width: !isTablet() ? orientation === 'PORTRAIT' ? 35 : 25 : orientation === 'PORTRAIT' ? 35 : 25, height: !isTablet() ? orientation === 'PORTRAIT' ? 35 : 25 : orientation === 'PORTRAIT' ? 35 : 35}]}
                                                     resizeMode={'cover'}
                                                     source={require('../../../../../assets/user.png')}
                                                 />
                                         }
                                     </View>
                                     <View style={{flex: 1, alignSelf:'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                        <Text style={{fontSize: 14, fontWeight: 'bold', color: Blue}}>{item.usuario}</Text>
+                                        <Text style={{fontSize: 15, fontWeight: 'bold', color: Blue}}>{item.usuario}</Text>
                                     </View>
                                     <View style={{width: 'auto', height: '100%', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                        <IonIcons name={'clock-outline'} size={18} color={Blue} />
-                                        <Text style={{color: Blue, fontSize: 12, marginLeft: 3}}>{item.hora}</Text>
+                                        <IonIcons name={'clock-outline'} size={15} color={Blue} />
+                                        <Text style={{color: Blue, fontSize: 10, marginLeft: 2}}>{item.hora}</Text>
                                     </View>
                                 </View>
                                 <View style={{height: item.title ? 'auto' : 0, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <Text style={{fontSize: 15.5, color: Blue}}>{item.title}</Text>
+                                    <Text style={{fontSize: 14, color: Blue}}>{item.title}</Text>
                                 </View>
                                 {
                                     item.has_filtro
@@ -255,10 +254,10 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                 {
                                                     item.filtro_autorizacion === 1
                                                     ?
-                                                        <IonIcons name={'clock'} size={24} color={Orange} />
+                                                        <IonIcons name={'clock'} size={22} color={Orange} />
                                                     :
                                                         <View style={{width: 20, height: 20, backgroundColor: item.filtro_autorizacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check' : 'close'} size={item.filtro_autorizacion === 2 ? 16 : 18} color={'#fff'} />
+                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check' : 'close'} size={item.filtro_autorizacion === 2 ? 14 : 16} color={'#fff'} />
                                                         </View>
                                                 }
                                             </View>
@@ -270,24 +269,24 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                         {
                                                             item.filtro_confirmacion === 1
                                                             ?
-                                                                <IonIcons name={'clock'} size={24} color={Orange} />
+                                                                <IonIcons name={'clock'} size={22} color={Orange} />
                                                             :
                                                                 <View style={{width: 20, height: 20, backgroundColor: item.filtro_confirmacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check' : 'close'} size={item.filtro_confirmacion === 2 ? 16 : 18} color={'#fff'} />
+                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check' : 'close'} size={item.filtro_confirmacion === 2 ? 14 : 16} color={'#fff'} />
                                                                 </View>
                                                         }
                                                     </View>
                                             }
                                         </View>
                                 }
-                                <ScrollView style={{height: 'auto', paddingVertical: 10}}>
+                                <ScrollView style={{height: 'auto', paddingTop: 10, paddingBottom: 3}}>
                                     {
                                         item.id === 0 && is_table
                                         ?
                                             <HTML source={{ html }} {...htmlProps} contentWidth={Dimensions.get('screen').width}/>
                                         :
                                             <HTMLView
-                                                value={'<div style="color: black">' + item.body + '</div>'}
+                                                value={'<div style="color: black">' + item.body.trim() + '</div>'}
                                                 stylesheet={styles}
                                             />
                                     }
@@ -301,7 +300,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                 <TouchableOpacity onPress={async () => await Linking.openURL(item.url)} style={{flexDirection: 'row', alignItems: 'center'}}>
                                                     <View style={{height: 'auto', width: 'auto', justifyContent: 'center', alignItems: 'center'}} >
                                                         <View style={{height: 'auto', width: 'auto', borderWidth: 1, borderColor: '#dadada'}}>
-                                                            <IonIcons name={item.url.includes('.pdf') ? 'file-pdf' : (item.url.includes('.docx') || item.url.includes('.doc')) ? 'file-word' : 'file-excel'} size={32} color={item.url.includes('.pdf') ? '#d53f40' : (item.url.includes('.docx') || item.url.includes('.doc')) ? '#185abd' : '#107c41'} />
+                                                            <IonIcons name={item.url.includes('.pdf') ? 'file-pdf-box' : (item.url.includes('.docx') || item.url.includes('.doc')) ? 'file-word' : 'file-excel'} size={32} color={item.url.includes('.pdf') ? '#d53f40' : (item.url.includes('.docx') || item.url.includes('.doc')) ? '#185abd' : '#107c41'} />
                                                         </View>
                                                     </View>
                                                     <View style={{flex: 1}}>
@@ -375,6 +374,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 
                     const {response, status} = await request.json();
                     if(status === 200){
+                        setScrolling(scrolling + 1)
                         setLoading(false)
                         if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                         setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleResponder: false})
@@ -530,6 +530,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
             
                 const {response, status} = await request.json();
                 if(status === 200){
+                    setScrolling(scrolling + 1)
                     if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                     setLoading(false)
                     setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleAutorizar: false})
@@ -584,6 +585,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
             
                 const {response, status} = await request.json();
                 if(status === 200){
+                    setScrolling(scrolling + 1)
                     if(response.last) dispatch(actionTicket({id: response.last.id, ticket: response.last}))
                     setLoading(false)
                     setInitialState({...initialState, visibleMensaje: true, showMensaje: response.text, visibleConfirmar: false})
@@ -626,6 +628,20 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
         },
     };
 
+    const Spliter = ({color = Blue}) => {
+        return(
+            <View style={tw`flex-row justify-center items-center mx-${color === Blue ? 0 : 4}`}>
+                <View style={tw`h-4 w-4 rounded-full bg-[${color}] absolute left-[-6]`}></View>
+                <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
+                    {
+                        spliterData.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
+                    }
+                </View>
+                <View style={tw`h-4 w-4 rounded-full bg-[${color}] absolute right-[-6]`}></View>
+            </View>
+        )
+    }
+
     return(
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
@@ -633,79 +649,102 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
             {
                 hasConnection
                 ?
-                    <>
-                        {
-                            orientationInfo.initial === 'PORTRAIT'
-                            ?
-                                <HeaderPortrait title={'Detalles de Ticket'} screenToGoBack={'Tickets'} navigation={navigation} visible={true} translateY={translateY}/>
-                            :
-                                <HeaderLandscape title={'Detalle de Ticket'} screenToGoBack={'Tickets'} navigation={navigation} visible={true} translateY={translateY}/>
-                        }
-                        <View style={container}>
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                                style={tw`self-stretch`}
-                                refreshControl={
-                                    <RefreshControl
-                                        progressBackgroundColor={'#EC5C25'}
-                                        colors={['#fff']}
-                                        refreshing={false}
-                                        onRefresh={() => {
-                                            cuenta = 0;
-                                            getTicketDetail()
-                                        }}
-                                    />
-                                }
-                                /* onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}} */
-                            >
-                                <View style={tw`mt-[3%]`} />
-                                <View style={tw`h-auto self-stretch justify-end items-center flex-row mb-2.5`}>
-                                    <Text style={tw`text-base font-bold text-[#000]`}>No. Ticket: <Text style={tw`text-[${Orange}]`}>{detail?.no_ticket ? detail.no_ticket : '-'}</Text></Text>
-                                    <View style={tw`w-0.5 h-[100%] bg-[#dadada] mx-2`}></View>
-                                    <View style={tw`bg-[${detail.backgroundColorEstado ? detail.backgroundColorEstado : '#fff'}] p-1 rounded`}>
-                                        <Text style={tw`text-[#fff] font-bold`}>{detail?.estado ? detail.estado : '-'}</Text>   
+                    <View style={tw`flex-1 justify-center items-center bg-white`}>
+                        <ScrollView
+                            ref={refDetail}
+                            onContentSizeChange={() => scrolling !== 0 ? refDetail.current.scrollToEnd({ animated: true }) : {}}
+                            refreshControl={
+                                <RefreshControl
+                                    style={tw`bg-[${Blue}]`}
+                                    progressBackgroundColor={'#EC5C25'}
+                                    colors={['#fff']}
+                                    tintColor={'#fff'}
+                                    refreshing={false}
+                                    onRefresh={() => {
+                                        cuenta = 0;
+                                        getTicketDetail()
+                                    }}
+                                />
+                            }
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={tw`justify-center items-center`}
+                            style={tw`self-stretch bg-[#f1f1f1]`}>
+                                <View style={tw`h-70 self-stretch justify-start items-center bg-[${Blue}]`}>
+                                    <View style={tw`h-16 self-stretch justify-center items-center`}>
+                                        <TouchableOpacity style={tw`rounded-full justify-center items-center bg-[rgba(255,255,255,0.4)] w-14 h-14`} onPress={() => navigation.navigate('Tickets')}>
+                                            <IonIcons name='close' size={23} color={'#fff'} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={tw`h-15 self-stretch justify-center items-center`}>
+                                        <Text style={tw`text-white font-bold text-2xl`}>Detalle de Ticket</Text>
                                     </View>
                                 </View>
-                                <Title title={'Detalles'} icon={'asterisk'} tipo={1} hasBottom={false} isButton={true} areHiden={areLegendsHiden} handleAction={() => setInitialState({...initialState, areLegendsHiden: !areLegendsHiden})} except={true}/>
-                                {
-                                    !areLegendsHiden
-                                    ?
-                                        <>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5 flex-row`}>
-                                                <View style={tw`flex-1`}>
-                                                    <Text style={title}>{'Tipo de ticket'}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.tipo ? detail.tipo : '-'}</Text>
+                                <View style={[tw`flex-1 self-stretch justify-center items-center mx-[5%] relative top-[-38] z-10 bg-white`, {borderRadius: 22}]}>
+                                    <View style={[tw`justify-center items-center h-auto self-stretch`, {borderRadius: 22}]}>
+                                        <View style={tw`h-auto self-stretch flex-row px-5 pt-3 justify-end items-center`}>
+                                            <View style={tw`h-auto self-stretch justify-center items-end`}>
+                                                <Text style={tw`text-xs font-bold text-[#000]`}>No. Ticket: <Text style={tw`text-[${Orange}]`}>{detail?.no_ticket ? detail.no_ticket : '-'}</Text></Text>
+                                            </View>
+                                            <View style={tw`w-px h-5 bg-[#dadada] mx-2`} />
+                                            <View style={tw`bg-[${detail.backgroundColorEstado ? detail.backgroundColorEstado : '#fff'}] py-px px-1 rounded`}>
+                                                <Text style={tw`text-[#fff] font-bold text-xs`}>{detail?.estado ? detail.estado : '-'}</Text>   
+                                            </View>
+                                        </View>
+                                        <View style={[tw`h-auto self-stretch justify-start items-center mt-5 mb-3 px-4`, {borderRadius: 22}]}>
+                                            <View style={tw`flex-row self-stretch mb-3`}>
+                                                {
+                                                    detail.foto_solicitado !== ''
+                                                    ?
+                                                        <Image
+                                                            style={tw`h-12 w-12 rounded-full border-2 border-[#dadada]`}
+                                                            resizeMode={'cover'}
+                                                            source={{uri: detail.foto_solicitado}}
+                                                        />
+                                                    :
+                                                        <Image
+                                                            style={tw`h-12 w-12 rounded-full border-2 border-[#dadada]`}
+                                                            resizeMode={'cover'}
+                                                            source={require('../../../../../assets/user.png')}
+                                                        />
+                                                }
+                                                <View style={tw`ml-4 flex-1 justify-center items-start`}>
+                                                    <Text style={tw`text-[#adadad] text-sm`}>Solicitado por:</Text>
+                                                    <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.solicitado ? detail.solicitado : '-'}</Text>
                                                 </View>
-                                                <View style={tw`flex-1`}>
-                                                    <Text style={title}>{'Concepto'}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.concepto ? detail.concepto : '-'}</Text>
+                                                <View style={tw`h-12 w-14 justify-center items-end pl-px`}>
+                                                    <View style={tw`w-auto h-auto p-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : Blue}] rounded`}>
+                                                        <Text style={tw`font-bold text-[#fff] text-sm`}>{detail?.prioridad ? detail.prioridad : '-'}</Text>
+                                                    </View>
                                                 </View>
                                             </View>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5 flex-row`}>
-                                                <View style={tw`flex-1`}>
-                                                    <Text style={title}>{'Prioridad'}</Text>
-                                                    <Text style={tw`font-bold text-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : '#fff'}] text-sm`}>{detail?.prioridad ? detail.prioridad : '-'}</Text>
-                                                </View>
-                                                <View style={tw`flex-1`}>
-                                                    <Text style={title}>{'Creado'}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.creado ? detail.creado : '-'}</Text>
-                                                </View>
-                                            </View>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5`}>
-                                                <Text style={title}>{'Solicitado por: '}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{detail?.solicitado ? detail.solicitado : '-'}</Text>
-                                            </View>
+                                            <Spliter />
+                                        </View>
+                                        <View style={tw`flex-row self-stretch mb-3 px-4 justify-center items-center`}>
+                                            {
+                                                detail.foto_asignado !== ''
+                                                ?
+                                                    <Image
+                                                        style={tw`h-12 w-12 rounded-full border-2 border-[#dadada]`}
+                                                        resizeMode={'cover'}
+                                                        source={{uri: detail.foto_asignado}}
+                                                    />
+                                                :
+                                                    <Image
+                                                        style={tw`h-12 w-12 rounded-full border-2 border-[#dadada]`}
+                                                        resizeMode={'cover'}
+                                                        source={require('../../../../../assets/user.png')}
+                                                    />
+                                            }
                                             {
                                                 (!detail.asignado || edit) && permisos.btn_asignar
                                                 ?
-                                                    <View style={tw`mt-2.5`}>
-                                                        <Text style={title}>{'Asignado a: '}</Text>
+                                                    <View style={tw`self-stretch flex-1 ml-4`}>
+                                                        <Text style={tw`text-[#adadad] text-sm`}>{'Asignado a: '}</Text>
                                                         <View style={tw`flex-row self-stretch justify-center items-center mt-1`}>
-                                                            <TouchableOpacity style={[styles.picker, tw`flex-row flex-1 border border-[${detail.asignado ? '#CBCBCB' : '#d53f40'}]`]} onPress={() => setInitialState({...initialState, visibleResponsables: true})}>
+                                                            <TouchableOpacity style={[styles.picker, tw`pl-1 h-7 flex-row flex-1 border border-[${detail.asignado ? '#CBCBCB' : '#d53f40'}] self-stretch`]} onPress={() => setInitialState({...initialState, visibleResponsables: true})}>
                                                                 <View style={tw`flex-1`}>
-                                                                    <Text style={tw`text-sm text-[#000]`}>{detail.asignado ? detail.asignado : 'Seleccione una opción'}</Text>
+                                                                    <Text style={tw`text-xs text-[#000]`}>{detail.asignado ? `${detail.asignado.length > 33 ? detail.asignado.substring(0,33) + '...' : detail.asignado}` : 'Seleccione una opción'}</Text>
                                                                 </View>
                                                                 <View style={tw`w-auto`}>
                                                                     <Icon name='caret-down' size={16} color={detail.asignado ? '#CBCBCB' : '#d53f40'} />
@@ -715,126 +754,201 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                                 edit
                                                                 &&
                                                                     <Animatable.View
-                                                                        style={[{width: 40, height: 40}, tw`ml-1 bg-[#DB3E2F] justify-center items-center rounded-full border border-[#dadada]`]}
+                                                                        style={[{width: 28, height: 28}, tw`ml-1 bg-[#DB3E2F] justify-center items-center rounded-full border border-[#dadada]`]}
                                                                         animation='bounceIn'
                                                                         duration={1000}
                                                                     >
-                                                                        <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, edit: false})}>
-                                                                            <IonIcons name='close' size={26} color={'#fff'} />
+                                                                        <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => {
+                                                                            setScrolling(0)
+                                                                            setInitialState({...initialState, edit: false})
+                                                                        }}>
+                                                                            <IonIcons name='close-thick' size={14} color={'#fff'} />
                                                                         </TouchableOpacity>
                                                                     </Animatable.View>
                                                             }
                                                         </View>
                                                     </View>
                                                 :
-                                                    <View style={tw`flex-row self-stretch justify-center items-center mt-2.5`}>
-                                                        <View style={tw`h-auto flex-1 justify-center`}>
-                                                            <Text style={title}>{'Asignado a: '}</Text>
-                                                            <Text style={tw`text-sm text-[#000]`}>{detail?.asignado ? detail.asignado : '-'}</Text>
+                                                    <View style={tw`flex-row self-stretch justify-center items-center flex-1 ml-4`}>
+                                                        <View style={tw`flex-1 justify-center items-start`}>
+                                                            <Text style={tw`text-[#adadad] text-sm`}>Asignado a:</Text>
+                                                            <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.asignado ? detail.asignado : '-'}</Text>
                                                         </View>
                                                         {
                                                             (active !== 2 && active !== 4) && permisos.btn_asignar && (detail.estado === 'Proceso' || detail.estado === 'Pendiente')
                                                             &&
                                                                 <Animatable.View
-                                                                    style={[{width: 40, height: 40}, tw`ml-1 bg-[${Blue}] justify-center items-center rounded-full border border-[#dadada]`]}
+                                                                    style={[{width: 28, height: 28}, tw`ml-1 bg-[${Blue}] justify-center items-center rounded-full border border-[#dadada]`]}
                                                                     animation='bounceIn'
                                                                     duration={1000}
                                                                 >
                                                                     <TouchableOpacity style={tw`flex-1 justify-center items-center`} onPress={() => setInitialState({...initialState, edit: true})}>
-                                                                        <Icon name='pencil' size={20} color={'#fff'} />
+                                                                        <Icon name='pencil' size={14} color={'#fff'} />
                                                                     </TouchableOpacity>
                                                                 </Animatable.View>
                                                         }
                                                     </View>
                                             }
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5 flex-row`}>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'Asignado: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.fecha_asignado ? detail.fecha_asignado : '-'}</Text>
-                                                </View>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'Terminado: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.fecha_terminado ? detail.fecha_terminado : '-'}</Text>
-                                                </View>
+                                        </View>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mb-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Tipo de Ticket:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tipo ? detail.tipo : '-'}</Text>
                                             </View>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5 flex-row`}>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'Cerrado: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.fecha_cierre ? detail.fecha_cierre : '-'}</Text>
-                                                </View>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'Archivado: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.fecha_archivado ? detail.fecha_archivado : '-'}</Text>
-                                                </View>
+                                            <View style={tw`w-2`}/>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Concepto:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.concepto ? detail.concepto : '-'}</Text>
                                             </View>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5 flex-row`}>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'T. Atención: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '-'}</Text>
-                                                </View>
-                                                <View style={tw`h-auto flex-1 justify-center`}>
-                                                    <Text style={title}>{'T. Resolución: '}</Text>
-                                                    <Text style={tw`text-sm text-[#000]`}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '-'}</Text>
-                                                </View>
+                                        </View>
+                                        <Spliter color={'#f1f1f1'}/>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Creado:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.creado ? detail.creado : '-'}</Text>
                                             </View>
-                                            <View style={tw`h-auto self-stretch justify-center mt-2.5`}>
-                                                <Text style={title}>{'Detalle: '}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{detail.detalle ? detail.detalle : '-'}</Text>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Asignado:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_asignado ? detail.fecha_asignado : '-'}</Text>
                                             </View>
-                                        </>
-                                    :
-                                        active === 4
-                                        &&
-                                            <View style={tw`mt-4`} />
-                                }
-                                {
-                                    active === 4
-                                    &&
-                                        <>
-                                            <View style={tw`mt-${areLegendsHiden ? 0 : 4} mb-1.5`} />
-                                            <Title title={'Evidencias'} icon={'paperclip'} tipo={1} hasBottom={false} isButton={true} areHiden={areEvidencesHiden} handleAction={() => setInitialState({...initialState, areEvidencesHiden: !areEvidencesHiden})}/>
-                                        </>
-                                }
-                                {
-                                    !areEvidencesHiden && active === 4
-                                    ?
-                                        <>
-                                            {
-                                                Evidencias.length > 0
-                                                &&
-                                                    <FlatList
-                                                        showsVerticalScrollIndicator={false}
-                                                        showsHorizontalScrollIndicator={false}
-                                                        style={styles.list}
-                                                        data={Evidencias}
-                                                        numColumns={1}
-                                                        renderItem={({item}) => (
-                                                            !item.url.includes('.jpg') && !item.url.includes('.png') && !item.url.includes('.jpeg') 
-                                                            ?
-                                                                <View style={tw`h-auto self-stretch flex-row justify-center items-center my-2`}>
-                                                                    {
-                                                                        <View style={tw`flex-1 justify-center items-center`}>
-                                                                            <View style={tw`flex-row`}>
-                                                                                <View style={tw`h-auto w-auto justify-center items-center`}>
-                                                                                    <View style={tw`h-auto w-auto border border-[#dadada]`}>
-                                                                                        <IonIcons name={item.url.includes('.pdf') ? 'file-pdf' : (item.url.includes('.docx') || item.url.includes('.doc')) ? 'file-word' : 'file-excel'} size={35} color={item.url.includes('.pdf') ? '#d53f40' : (item.url.includes('.docx') || item.url.includes('.doc')) ? '#185abd' : '#107c41'} />
+                                        </View>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Terminado:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_terminado ? detail.fecha_terminado : '-'}</Text>
+                                            </View>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Cerrado:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_cierre ? detail.fecha_cierre : '-'}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Archivado:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_archivado ? detail.fecha_archivado : '-'}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>T. Atención:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '-'}</Text>
+                                            </View>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>T. Resolución:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '-'}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 my-2.5`}>
+                                            <View style={tw`flex-1 justify-start items-start h-auto`}>
+                                                <Text style={tw`text-[#adadad] text-sm`}>Detalle:</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail.detalle ? detail.detalle : '-'}</Text>
+                                            </View>
+                                        </View>
+                                        {
+                                            active === 4
+                                            &&
+                                                <>
+                                                    <Spliter color={'#f1f1f1'}/>
+                                                    <Title title={'Evidencias'} icon={'paperclip'} tipo={1} hasBottom={false} isButton={true} areHiden={areEvidencesHiden} handleAction={() => setInitialState({...initialState, areEvidencesHiden: !areEvidencesHiden})}/>
+                                                </>
+                                        }
+                                        {
+                                            !areEvidencesHiden && active === 4
+                                            ?
+                                                <View style={{height: 'auto', alignSelf: 'stretch', marginHorizontal: 16}}>
+                                                    {
+                                                        Evidencias.length > 0
+                                                        &&
+                                                            <FlatList
+                                                                showsVerticalScrollIndicator={false}
+                                                                showsHorizontalScrollIndicator={false}
+                                                                style={{height: 'auto', alignSelf: 'stretch'}}
+                                                                data={Evidencias}
+                                                                numColumns={1}
+                                                                renderItem={({item}) => (
+                                                                    !item.url.includes('.jpg') && !item.url.includes('.png') && !item.url.includes('.jpeg') 
+                                                                    ?
+                                                                        <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 8}}>
+                                                                            {
+                                                                                <View style={tw`flex-1 justify-center items-center`}>
+                                                                                    <View style={tw`flex-row`}>
+                                                                                        <View style={tw`h-auto w-auto justify-center items-center`}>
+                                                                                            <View style={tw`h-auto w-auto border border-[#dadada]`}>
+                                                                                                <IonIcons name={item.url.includes('.pdf') ? 'file-pdf-box' : (item.url.includes('.docx') || item.url.includes('.doc')) ? 'file-word' : 'file-excel'} size={35} color={item.url.includes('.pdf') ? '#d53f40' : (item.url.includes('.docx') || item.url.includes('.doc')) ? '#185abd' : '#107c41'} />
+                                                                                            </View>
+                                                                                        </View>
+                                                                                        {
+                                                                                            !item.oculta 
+                                                                                            ?
+                                                                                                <TouchableOpacity style={tw`flex-row flex-1`} onPress={async () => await Linking.openURL(item.url)}>
+                                                                                                    <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
+                                                                                                        <Text style={[tw`text-sm text-[${Blue}]`, {textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}]}>{item.nombre}</Text>
+                                                                                                    </View>
+                                                                                                </TouchableOpacity>
+                                                                                            :
+                                                                                                <View style={tw`flex-row flex-1`}>
+                                                                                                    <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
+                                                                                                        <Text style={tw`text-sm text-[${Blue}]`}>{item.observacion}</Text>
+                                                                                                    </View>
+                                                                                                </View>
+                                                                                        }
+                                                                                        {
+                                                                                            item.observacion
+                                                                                            ?
+                                                                                                <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1, paddingLeft: isIphone ? 1 : 0, paddingTop: isIphone ? 1 : 0}}>
+                                                                                                    <IonIcons name={!item.oculta ? 'comment' : 'close-thick'} size={!item.oculta ? 12 : 15} color={'#fff'} />
+                                                                                                </TouchableOpacity>
+                                                                                            :
+                                                                                                <></>
+                                                                                        }
+                                                                                        <TouchableOpacity style={tw`w-9 h-9 justify-center items-center`} onPress={() => {
+                                                                                            Alert.alert(
+                                                                                                'Eliminar Evidencia',
+                                                                                                '¿Esta seguro que deseas eliminar la evidencia?',
+                                                                                                [
+                                                                                                    {
+                                                                                                        text: 'Cancelar',
+                                                                                                        style: 'cancel'
+                                                                                                    },
+                                                                                                    { 
+                                                                                                        text: 'Sí, estoy seguro', 
+                                                                                                        onPress: () => handleDeleteEvidencia(item.id)
+                                                                                                    }
+                                                                                                ]
+                                                                                            )
+                                                                                        }}>
+                                                                                            <Icon name={'trash'} size={25} color={'#d53f40'} />
+                                                                                        </TouchableOpacity>
                                                                                     </View>
                                                                                 </View>
+                                                                            }
+                                                                        </View>
+                                                                    :
+                                                                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginVertical: 8}}>
+                                                                            <View style={{flexDirection: 'row'}}>
+                                                                                <View style={{width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'center'}}>
+                                                                                    <Image
+                                                                                        style={tw`self-center h-7.5 w-7.5`}
+                                                                                        source={require('../../../../../assets/image.png')}
+                                                                                    />
+                                                                                </View>
+
                                                                                 {
                                                                                     !item.oculta 
                                                                                     ?
-                                                                                        <TouchableOpacity style={tw`flex-row flex-1`} onPress={async () => await Linking.openURL(item.url)}>
-                                                                                            <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
-                                                                                                <Text style={[tw`text-sm text-[${Blue}]`, {textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}]}>{item.nombre}</Text>
+                                                                                        <TouchableOpacity style={{flexDirection: 'row', flex: 1}} onPress={async () => await Linking.openURL(item.url)}>
+                                                                                            <View style={{flex: 1, marginHorizontal: 12, marginLeft: 16, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                                                                                <Text style={{fontSize: 13, color: Blue, textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}}>{item.nombre}</Text>
                                                                                             </View>
                                                                                         </TouchableOpacity>
                                                                                     :
-                                                                                        <View style={tw`flex-row flex-1`}>
-                                                                                            <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
-                                                                                                <Text style={tw`text-sm text-[${Blue}]`}>{item.observacion}</Text>
+                                                                                        <View style={{flexDirection: 'row', flex: 1}}>
+                                                                                            <View style={{flex: 1, marginHorizontal: 12, marginLeft: 16, justifyContent: 'center', alignItems: 'flex-start'}}>
+                                                                                                <Text style={{fontSize: 14, color: Blue}}>{item.observacion}</Text>
                                                                                             </View>
                                                                                         </View>
                                                                                 }
+
                                                                                 {
                                                                                     item.observacion
                                                                                     ?
@@ -864,191 +978,131 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                                                 </TouchableOpacity>
                                                                             </View>
                                                                         </View>
-                                                                    }
-                                                                </View>
-                                                            :
-                                                                <View style={tw`flex-1 justify-center items-center my-2`}>
-                                                                    <View style={tw`flex-row`}>
-                                                                        <View style={tw`w-auto h-auto justify-center items-center`}>
-                                                                            <Image
-                                                                                style={tw`self-center h-7.5 w-7.5`}
-                                                                                source={require('../../../../../assets/image.png')}
-                                                                            />
-                                                                        </View>
-
-                                                                        {
-                                                                            !item.oculta 
-                                                                            ?
-                                                                                <TouchableOpacity style={tw`flex-row flex-1`} onPress={async () => await Linking.openURL(item.url)}>
-                                                                                    <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
-                                                                                        <Text style={{fontSize: 13, color: Blue, textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}}>{item.nombre}</Text>
-                                                                                    </View>
-                                                                                </TouchableOpacity>
-                                                                            :
-                                                                                <View style={tw`flex-row flex-1`}>
-                                                                                    <View style={tw`flex-1 mx-3 ml-4 justify-center items-start`}>
-                                                                                        <Text style={tw`text-sm text-[${Blue}]`}>{item.observacion}</Text>
-                                                                                    </View>
-                                                                                </View>
-                                                                        }
-
-                                                                        {
-                                                                            item.observacion
-                                                                            ?
-                                                                                <TouchableOpacity onPress={() => handleHide(item.id)} style={{position: 'absolute', bottom: 18, left: 22, width: 24, height: 24, borderRadius: 15, backgroundColor: Blue, justifyContent: 'center', alignItems: 'center', borderColor: '#cbcbcb', borderWidth: 1, paddingLeft: isIphone ? 1 : 0, paddingTop: isIphone ? 1 : 0}}>
-                                                                                    <IonIcons name={!item.oculta ? 'comment' : 'close-thick'} size={!item.oculta ? 12 : 15} color={'#fff'} />
-                                                                                </TouchableOpacity>
-                                                                            :
-                                                                                <></>
-                                                                        }
-                                                                        <TouchableOpacity style={tw`w-9 h-9 justify-center items-center`} onPress={() => {
-                                                                            Alert.alert(
-                                                                                'Eliminar Evidencia',
-                                                                                '¿Esta seguro que deseas eliminar la evidencia?',
-                                                                                [
-                                                                                    {
-                                                                                        text: 'Cancelar',
-                                                                                        style: 'cancel'
-                                                                                    },
-                                                                                    { 
-                                                                                        text: 'Sí, estoy seguro', 
-                                                                                        onPress: () => handleDeleteEvidencia(item.id)
-                                                                                    }
-                                                                                ]
-                                                                            )
-                                                                        }}>
-                                                                            <Icon name={'trash'} size={25} color={'#d53f40'} />
-                                                                        </TouchableOpacity>
+                                                                )}
+                                                                keyExtractor={item => String(item.id)}
+                                                            />
+                                                    }
+                                                    <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen} />
+                                                    <MultiText
+                                                        placeholder={'Ingresa tu mensaje...'}
+                                                        value={mensaje}
+                                                        onChangeText={(e) => setInitialState({...initialState, mensaje: e})}
+                                                        multiline={true}
+                                                        numberOfLines={5}
+                                                        fontSize={16}
+                                                    />
+                                                    <TouchableOpacity
+                                                        style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 mt-4 mb-5`}
+                                                        onPress={() => handleSaveEvidencia()}
+                                                    >
+                                                        <IonIcons name={'content-save'} size={24} color={'#fff'} />
+                                                        <Text style={tw`text-[#fff] font-bold text-base ml-1.5`}>Guardar</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            :
+                                                <></>
+                                        }
+                                        {
+                                            chat.length > 0
+                                            &&
+                                                <Spliter color={'#f1f1f1'}/>
+                                        }
+                                        <FlatList
+                                            showsVerticalScrollIndicator={false}
+                                            showsHorizontalScrollIndicator={false}
+                                            contentContainerStyle={{paddingHorizontal: 10}}
+                                            style={{height: 'auto', alignSelf: 'stretch'}}
+                                            data={chat}
+                                            numColumns={1}
+                                            renderItem={({item}) => <Chat mensajes={item.mensajes} fecha={item.fecha}/>}
+                                            keyExtractor={item => String(item.id)}
+                                        />
+                                        {
+                                        permisos.btn_ver_calificacion
+                                        &&
+                                            calificacion.numero
+                                            &&
+                                                <>
+                                                    <Spliter color={'#f1f1f1'}/>
+                                                    <View style={tw`mt-5 mb-10`}>
+                                                        <View style={tw`h-auto self-stretch justify-center items-center`}>
+                                                            <View style={tw`flex-row justify-center items-center`}>
+                                                                <Text style={tw`text-base text-center text-[${Blue}] font-bold`}>Calificación</Text>
+                                                                <IonIcons name={'star-half-full'} size={28} color={Blue} />
+                                                            </View>
+                                                        </View>
+                                                        <View style={tw`h-auto self-stretch justify-center items-center px-1.5`}>
+                                                            <View style={tw`h-auto justify-center items-center my-1.5`}>
+                                                                <IonIcons name={calificacion.numero === 1 ? 'emoticon-angry-outline' : calificacion.numero === 2 ? 'emoticon-sad-outline' : calificacion.numero === 3 ? 'emoticon-neutral-outline' : calificacion.numero === 4 ? 'emoticon-happy-outline' : 'emoticon-excited-outline'} size={38} color={calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue} />
+                                                                <View style={tw`justify-center items-center mt-2.5`}>
+                                                                    <View style={tw`w-auto border-b border-b-[${calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue}]`}>
+                                                                        <Text style={tw`text-base font-normal text-center text-[${calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue}]`}>{calificacion.numero === 1 ? 'Muy Insatisfecho' : calificacion.numero === 2 ? 'Insatisfecho' : calificacion.numero === 3 ? 'Neutral' : calificacion.numero === 4 ? 'Satisfecho' : 'Excelente'}</Text>
                                                                     </View>
                                                                 </View>
-                                                        )}
-                                                        keyExtractor={item => String(item.id)}
-                                                    />
-                                            }
-                                            <Camera savePicture={(nombre_imagen, encryptedImage, imagen) => setInitialState({...initialState, nombre_imagen: nombre_imagen, encryptedImage: encryptedImage, imagen: imagen})} reload={reload} imagen={imagen} />
-                                            <MultiText
-                                                placeholder={'Ingresa tu mensaje...'}
-                                                value={mensaje}
-                                                onChangeText={(e) => setInitialState({...initialState, mensaje: e})}
-                                                multiline={true}
-                                                numberOfLines={5}
-                                                fontSize={16}
-                                            />
-                                            <TouchableOpacity
-                                                style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 mt-4 mb-5`}
-                                                onPress={() => handleSaveEvidencia()}
-                                            >
-                                                <IonIcons name={'content-save'} size={24} color={'#fff'} />
-                                                <Text style={tw`text-[#fff] font-bold text-base ml-1.5`}>Guardar</Text>
-                                            </TouchableOpacity>
-                                        </>
-                                    :
-                                        areLegendsHiden
-                                        &&
-                                            <View style={tw`mb-5`} />
-                                }
-                                {
-                                    !areLegendsHiden && areEvidencesHiden
-                                    &&
-                                        <View style={tw`mt-[3%]`}/>
-                                }
-                                <FlatList
-                                    showsVerticalScrollIndicator={false}
-                                    showsHorizontalScrollIndicator={false}
-                                    style={styles.list}
-                                    data={chat}
-                                    numColumns={1}
-                                    renderItem={({item}) => <Chat mensajes={item.mensajes} fecha={item.fecha}/>}
-                                    keyExtractor={item => String(item.id)}
-                                />
-                                {
-                                    !calificacion.numero
-                                    ?
-                                        <View style={tw`mb-4`}/>
-                                    :
-                                        <></>
-                                }
-                                {
-                                    permisos.btn_responder
-                                    &&
-                                        <TouchableOpacity
-                                            style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 my-2.5`}
-                                            onPress={() => setInitialState({...initialState, visibleResponder: !visibleResponder})}
-                                        >
-                                            <IonIcons name={'keyboard-return'} size={22} color={'#fff'} />
-                                            <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Responder</Text>
-                                        </TouchableOpacity>
-                                }
-                                {
-                                    permisos.btn_autorizar
-                                    &&
-                                        <TouchableOpacity
-                                            style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 my-2.5`}
-                                            onPress={() => {
-                                                setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}
-                                            }
-                                        >
-                                            <Icon name={'check'} size={24} color={'#fff'} />
-                                            <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Autorizar</Text>
-                                        </TouchableOpacity>
-                                }
-                                {
-                                    permisos.btn_confirmar
-                                    &&
-                                        <TouchableOpacity
-                                            style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 my-2.5`}
-                                            onPress={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}
-                                        >
-                                            <Icon name={'unlock'} size={24} color={'#fff'} />
-                                            <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Confirmación de Seguridad</Text>
-                                        </TouchableOpacity>
-                                }
-                                    
-                                {
-                                    permisos.btn_ver_calificacion
-                                    &&
-                                        calificacion.numero
-                                        &&
-                                            <View style={tw`my-5`}>
-                                                <View style={tw`h-auto self-stretch justify-center items-center`}>
-                                                    <View style={tw`flex-row justify-center items-center`}>
-                                                        <Text style={tw`text-base text-center text-[${Blue}] font-bold`}>Calificación</Text>
-                                                        <IonIcons name={'star-half-full'} size={28} color={Blue} />
-                                                    </View>
-                                                </View>
-                                                <View style={tw`h-auto self-stretch justify-center items-center px-1.5`}>
-                                                    <View style={tw`h-auto justify-center items-center my-1.5`}>
-                                                        <IonIcons name={calificacion.numero === 1 ? 'emoticon-angry-outline' : calificacion.numero === 2 ? 'emoticon-sad-outline' : calificacion.numero === 3 ? 'emoticon-neutral-outline' : calificacion.numero === 4 ? 'emoticon-happy-outline' : 'emoticon-excited-outline'} size={38} color={calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue} />
-                                                        <View style={tw`justify-center items-center mt-2.5`}>
-                                                            <View style={tw`w-auto border-b border-b-[${calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue}]`}>
-                                                                <Text style={tw`text-base font-normal text-center text-[${calificacion.numero === 1 ? '#dd5a43' : calificacion.numero === 2 ? '#ff892a' : calificacion.numero === 3 ? Yellow : calificacion.numero === 4 ? '#69aa46' : Blue}]`}>{calificacion.numero === 1 ? 'Muy Insatisfecho' : calificacion.numero === 2 ? 'Insatisfecho' : calificacion.numero === 3 ? 'Neutral' : calificacion.numero === 4 ? 'Satisfecho' : 'Excelente'}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
-                                                </View>
-                                            </View>
-                                }
-                                
-                                <View style={tw`mb-[3%]`}/>
-                            </ScrollView>
+                                                </>
+                                    }
+                                    </View>
+                                </View>
+                                <View style={tw`h-70 self-stretch justify-end items-center bg-[#f1f1f1] absolute bottom-0 w-[100%] px-[5%]`}>
+                                    {
+                                        permisos.btn_responder
+                                        &&
+                                            <TouchableOpacity 
+                                                onPress={() => setInitialState({...initialState, visibleResponder: !visibleResponder})}
+                                                style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch w-[100%] items-center justify-center absolute top-35 right-5`}>
+                                                <IonIcons name={'keyboard-return'} size={22} color={'#fff'} />
+                                                <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Responder</Text>
+                                            </TouchableOpacity>
+                                    }
+                                    {
+                                        permisos.btn_autorizar
+                                        &&
+                                            <TouchableOpacity 
+                                                onPress={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}
+                                                style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch w-[100%] items-center justify-center absolute top-35 right-5`}>
+                                                <Icon name={'check'} size={22} color={'#fff'} />
+                                                <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Autorizar</Text>
+                                            </TouchableOpacity>
+                                    }
+                                    {
+                                        permisos.btn_confirmar
+                                        &&
+                                            <TouchableOpacity 
+                                                onPress={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}
+                                                style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch w-[100%] items-center justify-center absolute top-35 right-5`}>
+                                                <Icon name={'unlock'} size={22} color={'#fff'} />
+                                                <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Confirmación de Seguridad</Text>
+                                            </TouchableOpacity>
+                                    }
 
-                        </View>
-                        <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
-                    </>
+                                    <View style={tw`flex-row h-10 rounded-lg self-stretch w-[100%] items-center justify-center absolute bottom-${!permisos.btn_responder && !permisos.btn_autorizar && !permisos.btn_confirmar ? 15 : 10} right-5`}>
+                                        <Image
+                                            style={tw`h-8 w-8`}
+                                            resizeMode={'contain'}
+                                            source={require('../../../../../assets/logo_telat.png')}
+                                        />
+                                        <Text style={tw`font-bold text-base text-[#000] ml-2`}>Telat Group<Text style={tw`font-normal`}> © {`${getCurrentDate().substring(0,4)}`}</Text></Text>
+                                    </View>
+                                </View>
+                        </ScrollView>
+                    </View>
                 :
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
-			            <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                        <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
+                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
                     </>
             }
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleResponsables} handleDismiss={() => setInitialState({...initialState, visibleResponsables: !visibleResponsables})}>
+            <Modal orientation={orientation} visibility={visibleResponsables} handleDismiss={() => setInitialState({...initialState, visibleResponsables: !visibleResponsables})}>
                 <Select data={Responsables} handleActionUno={handleActionUno} />
             </Modal>
 
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleAutorizar} handleDismiss={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}>
+            <Modal orientation={orientation} visibility={visibleAutorizar} handleDismiss={() => setInitialState({...initialState, visibleAutorizar: !visibleAutorizar})}>
                 <KeyboardAwareScrollView
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
@@ -1084,7 +1138,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                 </KeyboardAwareScrollView>
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleConfirmar} handleDismiss={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}>
+            <Modal orientation={orientation} visibility={visibleConfirmar} handleDismiss={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}>
                 <KeyboardAwareScrollView
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
@@ -1111,9 +1165,9 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
             </Modal>
 
             <ModalLoading visibility={loading}/>
-            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
+            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientation}/>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleResponder} handleDismiss={() => {
+            <Modal orientation={orientation} visibility={visibleResponder} handleDismiss={() => {
                 setSelected(undefined)
                 setInitialState({...initialState, visibleResponder: !visibleResponder, motivo: 'SEL', imagen: '', encryptedImage: '', nombre_imagen: '', mensaje: ''})}
             }>
@@ -1221,6 +1275,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         height: 45,
         borderRadius: 4,
-        paddingHorizontal: isIphone ? 14 : 12
+        paddingRight: isIphone ? 14 : 12,
+        paddingLeft: isIphone ? 14 : 12,
     },
 })

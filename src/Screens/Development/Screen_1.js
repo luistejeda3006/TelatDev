@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {View, ScrollView, Text, StatusBar, SafeAreaView, Image, FlatList, StyleSheet, TouchableOpacity} from 'react-native'
+import {View, ScrollView, Text, StatusBar, SafeAreaView, Image, FlatList, StyleSheet, RefreshControl, TouchableOpacity} from 'react-native'
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../colors/colorsApp'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,11 +9,12 @@ import tw from 'twrnc'
 import { useSelector } from 'react-redux';
 import { selectOrientation } from '../../slices/orientationSlice';
 import { isIphone } from '../../access/requestedData';
+import { getCurrentDate } from '../../js/dates';
 
 export default ({is_table = false}) => {
     const {isTablet} = DeviceInfo;
     const orientation = useSelector(selectOrientation)
-    const spliter = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}, {id: 13}, {id: 14}, {id: 15}, {id: 16}, {id: 17}, {id: 18}, {id: 19}, {id: 20}, {id: 21}, {id: 22}, {id: 23}, {id: 24}, {id: 25}, {id: 26}, {id: 27}, {id: 28}, {id: 29}, {id: 30}, {id: 31}, {id: 32}, {id: 33}, {id: 34}, {id: 35}]
+    const spliterData = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}, {id: 13}, {id: 14}, {id: 15}, {id: 16}, {id: 17}, {id: 18}, {id: 19}, {id: 20}, {id: 21}, {id: 22}, {id: 23}, {id: 24}, {id: 25}, {id: 26}, {id: 27}, {id: 28}, {id: 29}, {id: 30}, {id: 31}, {id: 32}, {id: 33}, {id: 34}, {id: 35}]
     const [initialState, setInitialState] = useState({
         chat: [
             {
@@ -133,11 +134,11 @@ export default ({is_table = false}) => {
                     data={mensajes}
                     numColumns={1}
                     renderItem={({item}) =>
-                    <View style={{borderWidth: 2.5, borderColor: '#f7f7f7', flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', marginVertical: '2%', borderRadius: 14, padding: 4, paddingTop: 8, marginBottom: 10, backgroundColor: 'rgba(247,247,247,.5)'}} onPress={() => navigation.navigate('test_2')}>
+                    <View style={{borderWidth: 1.5, borderColor: '#f1f1f1', flex: 1, justifyContent: 'center', alignItems: 'center', height: 'auto', marginVertical: '2%', borderRadius: 14, padding: 4, paddingTop: 8, marginBottom: 10, backgroundColor: '#fff'}} onPress={() => navigation.navigate('test_2')}>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
                                 <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                    <View style={{justifyContent: 'center', alignItems: 'center', marginRight: 5, backgroundColor: '#dcdcdc', borderRadius: 35, width: 38, height: 38}}>
+                                    <View style={{justifyContent: 'center', alignItems: 'center', marginRight: 5, backgroundColor: '#dadada', borderRadius: 35, width: 38, height: 38}}>
                                         {
                                             item.picture !== ''
                                             ?
@@ -155,15 +156,15 @@ export default ({is_table = false}) => {
                                         }
                                     </View>
                                     <View style={{flex: 1, alignSelf:'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                        <Text style={{fontSize: 14, fontWeight: 'bold', color: Blue}}>{item.usuario}</Text>
+                                        <Text style={{fontSize: 15, fontWeight: 'bold', color: Blue}}>{item.usuario}</Text>
                                     </View>
                                     <View style={{width: 'auto', height: '100%', borderRadius: 8, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                                        <IonIcons name={'clock-outline'} size={18} color={Blue} />
-                                        <Text style={{color: Blue, fontSize: 12, marginLeft: 3}}>{item.hora}</Text>
+                                        <IonIcons name={'clock-outline'} size={15} color={Blue} />
+                                        <Text style={{color: Blue, fontSize: 10, marginLeft: 2}}>{item.hora}</Text>
                                     </View>
                                 </View>
                                 <View style={{height: item.title ? 'auto' : 0, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <Text style={{fontSize: 15.5, color: Blue}}>{item.title}</Text>
+                                    <Text style={{fontSize: 14, color: Blue}}>{item.title}</Text>
                                 </View>
                                 {
                                     item.has_filtro
@@ -174,10 +175,10 @@ export default ({is_table = false}) => {
                                                 {
                                                     item.filtro_autorizacion === 1
                                                     ?
-                                                        <IonIcons name={'clock'} size={24} color={Orange} />
+                                                        <IonIcons name={'clock'} size={22} color={Orange} />
                                                     :
                                                         <View style={{width: 20, height: 20, backgroundColor: item.filtro_autorizacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check' : 'close'} size={item.filtro_autorizacion === 2 ? 16 : 18} color={'#fff'} />
+                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check' : 'close'} size={item.filtro_autorizacion === 2 ? 14 : 16} color={'#fff'} />
                                                         </View>
                                                 }
                                             </View>
@@ -189,24 +190,24 @@ export default ({is_table = false}) => {
                                                         {
                                                             item.filtro_confirmacion === 1
                                                             ?
-                                                                <IonIcons name={'clock'} size={24} color={Orange} />
+                                                                <IonIcons name={'clock'} size={22} color={Orange} />
                                                             :
                                                                 <View style={{width: 20, height: 20, backgroundColor: item.filtro_confirmacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check' : 'close'} size={item.filtro_confirmacion === 2 ? 16 : 18} color={'#fff'} />
+                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check' : 'close'} size={item.filtro_confirmacion === 2 ? 14 : 16} color={'#fff'} />
                                                                 </View>
                                                         }
                                                     </View>
                                             }
                                         </View>
                                 }
-                                <ScrollView style={{height: 'auto', paddingVertical: 10}}>
+                                <ScrollView style={{height: 'auto', paddingTop: 10}}>
                                     {
                                         item.id === 0 && is_table
                                         ?
                                             <HTML source={{ html }} {...htmlProps} contentWidth={Dimensions.get('screen').width}/>
                                         :
                                             <HTMLView
-                                                value={'<div style="color: black">' + item.body + '</div>'}
+                                                value={'<div style="color: black">' + item.body.trim() + '</div>'}
                                                 stylesheet={styles}
                                             />
                                     }
@@ -260,12 +261,34 @@ export default ({is_table = false}) => {
         )
     }
 
+    const Spliter = ({color = Blue}) => {
+        return(
+            <View style={tw`flex-row justify-center items-center mx-${color === Blue ? 0 : 4}`}>
+                <View style={tw`h-4 w-4 rounded-full bg-[${color}] absolute left-[-6]`}></View>
+                <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
+                    {
+                        spliterData.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
+                    }
+                </View>
+                <View style={tw`h-4 w-4 rounded-full bg-[${color}] absolute right-[-6]`}></View>
+            </View>
+        )
+    }
+
     return(
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             <View style={tw`flex-1 justify-center items-center bg-white`}>
                 <ScrollView
+                    refreshControl={<RefreshControl
+                        style={tw`bg-[${Blue}]`}
+                        progressBackgroundColor={Blue}
+                        colors={['#fff']}
+                        tintColor={'#fff'}
+                        refreshing={false}
+                        onRefresh={() => {}}
+                    />}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={tw`justify-center items-center`}
@@ -277,10 +300,10 @@ export default ({is_table = false}) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={tw`h-15 self-stretch justify-center items-center`}>
-                                <Text style={tw`text-white font-bold text-2xl`}>Ticket Detail</Text>
+                                <Text style={tw`text-white font-bold text-2xl`}>Detalle de Ticket</Text>
                             </View>
                         </View>
-                        <View style={[tw`flex-1 self-stretch justify-center items-center mx-[5%] relative top-[-38] bg-white`, {borderRadius: 22}]}>
+                        <View style={[tw`flex-1 self-stretch justify-center items-center mx-[5%] relative top-[-38] z-10 bg-white`, {borderRadius: 22}]}>
                             <View style={[tw`justify-center items-center h-auto self-stretch`, {borderRadius: 22}]}>
                                 <View style={tw`h-auto self-stretch flex-row px-5 pt-3 justify-end items-center`}>
                                     <View style={tw`h-auto self-stretch justify-center items-end`}>
@@ -308,15 +331,7 @@ export default ({is_table = false}) => {
                                             </View>
                                         </View>
                                     </View>
-                                    <View style={tw`flex-row justify-center items-center`}>
-                                        <View style={tw`h-4 w-4 rounded-full bg-[${Blue}] absolute left-[-6]`}></View>
-                                        <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
-                                            {
-                                                spliter.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
-                                            }
-                                        </View>
-                                        <View style={tw`h-4 w-4 rounded-full bg-[${Blue}] absolute right-[-6]`}></View>
-                                    </View>
+                                    <Spliter />
                                 </View>
                                 <View style={tw`flex-row self-stretch mb-3 px-4`}>
                                     <Image
@@ -329,15 +344,6 @@ export default ({is_table = false}) => {
                                         <Text style={tw`text-[#000] font-bold text-sm`}>Jose Javier Andrade</Text>
                                     </View>
                                 </View>
-                                {/* <View style={tw`flex-row justify-center items-center mx-4`}>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute left-[-6]`}></View>
-                                    <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
-                                        {
-                                            spliter.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
-                                        }
-                                    </View>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute right-[-6]`}></View>
-                                </View> */}
                                 <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mb-2.5`}>
                                     <View style={tw`flex-1 justify-start items-start h-auto`}>
                                         <Text style={tw`text-[#adadad] text-sm`}>Tipo de Ticket:</Text>
@@ -348,15 +354,7 @@ export default ({is_table = false}) => {
                                         <Text style={tw`text-[#000] font-bold text-sm`}>Actualización Incidencias Prenómina</Text>
                                     </View>
                                 </View>
-                                <View style={tw`flex-row justify-center items-center mx-4`}>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute left-[-6]`}></View>
-                                    <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
-                                        {
-                                            spliter.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
-                                        }
-                                    </View>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute right-[-6]`}></View>
-                                </View>
+                                <Spliter color={'#f1f1f1'}/>
                                 <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
                                     <View style={tw`flex-1 justify-start items-start h-auto`}>
                                         <Text style={tw`text-[#adadad] text-sm`}>Creado:</Text>
@@ -399,15 +397,11 @@ export default ({is_table = false}) => {
                                         <Text style={tw`text-[#000] font-bold text-sm`}>---</Text>
                                     </View>
                                 </View>
-                                <View style={tw`flex-row justify-center items-center mx-4 mb-2.5`}>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute left-[-6]`}></View>
-                                    <View style={tw`h-2 self-stretch justify-center items-center flex-row`}>
-                                        {
-                                            spliter.map(x => x.id <= 35 && <View style={tw`w-0.5 h-0.5 rounded-full bg-[#adadad] mx-1`} />)
-                                        }
-                                    </View>
-                                    <View style={tw`h-4 w-4 rounded-full bg-[#f1f1f1] absolute right-[-6]`}></View>
-                                </View>
+                                {
+                                    chat.length > 0
+                                    &&
+                                        <Spliter color={'#f1f1f1'}/>
+                                }
                                 <FlatList
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}
@@ -419,13 +413,19 @@ export default ({is_table = false}) => {
                                     keyExtractor={item => String(item.id)}
                                 />
                             </View>
-                            <View style={tw`h-auto self-stretch justify-center items-center`}>
-                                <TouchableOpacity
-                                    style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch items-center justify-center py-1.5 my-2.5 absolute bottom-[-25] w-[100%]`}
-                                    onPress={() => {}}                            >
-                                    <IonIcons name={'keyboard-return'} size={22} color={'#fff'} />
-                                    <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Responder</Text>
-                                </TouchableOpacity>
+                        </View>
+                        <View style={tw`h-70 self-stretch justify-end items-center bg-[#f1f1f1] absolute bottom-0 w-[100%] px-[5%]`}>
+                            <TouchableOpacity style={tw`flex-row h-10 bg-[${Blue}] rounded-lg self-stretch w-[100%] items-center justify-center absolute top-35 right-5`}>
+                                <IonIcons name={'keyboard-return'} size={22} color={'#fff'} />
+                                <Text style={tw`text-[#fff] font-bold text-sm ml-1.5`}>Responder</Text>
+                            </TouchableOpacity>
+                            <View style={tw`flex-row h-10 rounded-lg self-stretch w-[100%] items-center justify-center absolute bottom-10 right-5`}>
+                                <Image
+                                    style={tw`h-8 w-8`}
+                                    resizeMode={'contain'}
+                                    source={require('../../../assets/logo_telat.png')}
+                                />
+                                <Text style={tw`font-bold text-base text-[#000] ml-2`}>Telat Group<Text style={tw`font-normal`}> © {`${getCurrentDate().substring(0,4)}`}</Text></Text>
                             </View>
                         </View>
                 </ScrollView>

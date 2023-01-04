@@ -4,7 +4,7 @@ import Modal from './Modal'
 
 export default ({title = '', tipo = 1, orientation, visible}) => {
     return(
-        <Modal orientation={orientation} visibility={visible} except={true}>
+        <Modal orientation={orientation} visibility={visible} except={false}>
             <View style={{justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', height: 180}}>
                 {
                     tipo === 1 
