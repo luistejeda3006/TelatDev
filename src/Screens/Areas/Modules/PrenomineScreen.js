@@ -10,6 +10,7 @@ import {handleHideNomina, selectNominas, setNominas} from '../../../slices/nomin
 import * as Animatable from 'react-native-animatable';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc'
 
 let cuenta = 0;
 let token = null;
@@ -214,7 +215,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             /* onScroll={handleScroll}
                             contentContainerStyle={{paddingTop: paddingTop}} */
                         >
+                            <View style={tw`mt-3`}/>
                             <Title icon={'user'} tipo={1} hasBottom={false} title={language === '1' ? 'INFORMACIÓN GENERAL' : 'GENERAL INFORMATION'}/>
+                            <View style={tw`mb-1`}/>
                             <View style={{flexDirection: 'row', marginBottom: 8}}>
                                 <View style={{flex: 1, marginLeft: 5}}>
                                     <Text style={styles.title}>{language === '1' ? 'Responsable' : 'Resposible'}</Text>

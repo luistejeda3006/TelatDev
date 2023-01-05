@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, FlatList, Alert, Platform, Image, TouchableWithoutFeedback} from 'react-native';
-import {BottomNavBar, Calendar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components';
+import {BottomNavBar, Calendar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading, NotResults} from '../../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {formatDate, getCurrentDate, getLastDayMonth} from '../../../js/dates';
 import {isIphone, live, login, urlGaceta} from '../../../access/requestedData';
@@ -14,6 +14,7 @@ import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '..
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import tw from 'twrnc'
 
 let token = null;
 let user = null;
@@ -52,6 +53,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         }, [])
     );
 
+    const [gaceta, setGaceta] = useState([])
     const [initialState, setInitialState] = useState({
         data: [],
         urlModal: '',
@@ -62,25 +64,30 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         ending: false,
         labelEnding: '',
         visible: false,
-        hide: false
+        hide: false,
+        current: 2,
+        mes: parseInt(getCurrentDate().substring(5,7)),
+        año: getCurrentDate().substring(0,4),
+        completa: false,
     })
 
-    const {active, initial, ending, data, hide, labelInitial, labelEnding} = initialState;
+    const {active, initial, ending, data, hide, current, mes, año, completa, labelInitial, labelEnding} = initialState;
     
     const getGaceta = async () => {
         try{
             setLoading(true)
             const body = {
-                'action': 'get_gaceta',
+                'action': 'get_gaceta_mes',
                 'data': {
-                    'fecha_inicio': initial,
-                    'fecha_fin': ending,
+                    'fecha': completa,
                     'idioma': tipo === 'MX' ? language : '2',
                     'id_usuario': id_usuario
                 },
                 'live': live,
                 'login': login
             }
+            
+            console.log('body: ', body)
 
             const request = await fetch(urlGaceta, {
                 method: 'POST',
@@ -90,7 +97,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 },
                 body: JSON.stringify(body)
             });
-            console.log('body: ', body)
+
             const {response, status} = await request.json();
             if(status === 200){
                 setTimeout(() => {
@@ -135,7 +142,18 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     useEffect(() => {
         getGaceta()
-    },[initial, ending])
+    },[completa, hasConnection])
+
+    useEffect(() => {
+        let temporal = active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones
+        setGaceta(temporal)
+    }, [active, data])
+
+    useEffect(() => {
+        setTimeout(() => {
+            setReload(false)
+        },1000)
+    },[reload])
 
     const handleChangeModule = (id) => {
         refGaceta.current?.scrollToOffset({ animated: true, offset: 0 })
@@ -143,11 +161,19 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         setInitialState({...initialState, active: id})
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            setReload(false)
-        },1000)
-    },[reload])
+    const handleChangeMonth = useCallback((type) => {
+        let finMes = type === '+' ? mes === 12 ? 1 : (mes + 1) : mes === 1 ? 12 : (mes - 1)
+        let finAño = type === '+' ? finMes === 1 ? (parseInt(año) + 1) : año : finMes === 12 ? (parseInt(año) - 1) : año
+        let completita = `${finAño}-${finMes < 10 ? `0${finMes}` : finMes}`
+        setInitialState({...initialState, mes: finMes, año: finAño, completa: completita})
+    })
+
+    const handleChangeYear = useCallback((type) => {
+        let finAño = type === '+' ? (parseInt(año) + 1) : (parseInt(año) - 1)
+        let completita = `${finAño}-${mes < 10 ? `0${mes}` : mes}`
+        setInitialState({...initialState, mes: mes, año: finAño, completa: completita})
+    })
+
 
     const Card = ({title, picture, w, h}) => {
         return(
@@ -178,29 +204,29 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const Header = () => {
         return(
             <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                <View style={{height: 50, alignSelf: 'stretch', flexDirection: 'row', borderColor: '#3283c5', borderWidth: 1, backgroundColor: '#fff'}}>
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                <View style={{height: 50, alignSelf: 'stretch', flexDirection: 'row', borderColor: '#3283c5', borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: 'rgba(50,131,197,.1)'}}>
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 1 && handleChangeModule(1)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
                                 <IonIcons name='alert' size={28} color={active === 1 ? '#3283c5' : '#c1c1c1'} />
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 2 && handleChangeModule(2)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
                                 <IonIcons name='information' size={28} color={active === 2 ? '#3283c5' : '#c1c1c1'} />
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 3 && handleChangeModule(3)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
                                 <IonIcons name={'bullseye-arrow'} size={28} color={active === 3 ? '#3283c5' : '#c1c1c1'} />
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(50,131,197,.1)'}}>
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 4 && handleChangeModule(4)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
                                 <IonIcons name='trophy' size={28} color={active === 4 ? '#3283c5' : '#c1c1c1'} />
@@ -213,36 +239,49 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         orientationInfo.initial === 'PORTRAIT'
                         ?
                             <>
-                                <TouchableOpacity style={{alignSelf: 'stretch'}} onPress={() => setInitialState({...initialState, hide: !hide, show_end: false})}>
-                                    <View style={{height: 'auto', alignSelf: 'stretch', paddingTop: '3%', paddingHorizontal: '3%', borderBottomColor: '#adadad', borderBottomWidth: 1, paddingBottom: '3%', backgroundColor: '#fff'}}>
-                                        <View style={{flexDirection: 'row'}}>
-                                            <View style={{width: 50, justifyContent: 'center', alignItems: 'center'}}>
-                                                <IonIcons name={'newspaper'} size={28} color='transparent' />
-                                            </View>
-                                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 8}}>
-                                                <Text style={{fontWeight: 'bold', color: '#383838', fontSize: 20}}>{active === 1 ? language === '1' ? 'Importante' : 'Important' : active === 2 ? language === '1' ? 'Informativo' : 'Informative' : active === 3 ? language === '1' ? 'Dinámicas' : 'Dinamics' : language === '1' ? 'Promociones' : 'Promotions'}</Text>
-                                            </View>
-                                            <View style={{width: 50, justifyContent: 'center', alignItems: 'center'}}>
-                                            {
-                                                hide
-                                                ?
-                                                    <Icon name={'chevron-down'} size={16} color={'#383838'} />
-                                                :
-                                                    <Icon name={'chevron-up'} size={16} color={'#383838'} />
-                                            }
-                                            </View>
-                                        </View>
-                                    </View>
+                                <View style={tw`bg-[#fff]`}>
                                     {
                                         !hide
                                         &&
-                                            <View style={{flexDirection: 'row', alignSelf: 'stretch', height: 65, paddingHorizontal: '3%', backgroundColor: '#fff', paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#adadad'}}>
-                                                <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, initial: value, labelInitial: label})} language={language} />
-                                                <View style={{width: 6}}></View>
-                                                <Calendar dateLabel={labelEnding} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, ending: value, labelEnding: label})} language={language} />
+                                            <View style={tw`h-14 self-stretch flex-row border-b border-b-[#adadad] bg-white border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
+                                                <View style={tw`flex-1 flex-row justify-start items-center`}>
+                                                    <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
+                                                        <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
+                                                    </TouchableOpacity>
+                                                    <Text style={{color: '#adadad'}}> | </Text>
+                                                    <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto pl-2 pr-1.5 justify-center items-center`}>
+                                                        <Text style={tw`font-bold text-lg text-[${current === 2 ? Blue : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={tw`h-[100%] w-auto justify-center items-center flex-row`}>
+                                                    {
+                                                        initialState.loading
+                                                        ?
+                                                            <>
+                                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
+                                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
+                                                                </View>
+                                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
+                                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
+                                                                </View>
+                                                            </>
+                                                        :
+                                                            <>
+                                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
+                                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
+                                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
+                                                                </TouchableOpacity>
+                                                            </>
+                                                    }
+                                                </View>
                                             </View>
                                     }
-                                </TouchableOpacity>
+                                    <View style={tw`h-auto self-stretch justify-center items-center border-b border-b-[${Blue}] bg-[${Blue}] `}>
+                                        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 13}}>{active === 1 ? language === '1' ? 'Importante' : 'Important' : active === 2 ? language === '1' ? 'Informativo' : 'Informative' : active === 3 ? language === '1' ? 'Dinámicas' : 'Dinamics' : language === '1' ? 'Promociones' : 'Promotions'}</Text>
+                                    </View>
+                                </View>
                             </>
                         :
                             <></>
@@ -267,19 +306,26 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
-                                        !loading
+                                        gaceta
                                         &&
-                                            <FlatList
-                                                ref={refGaceta}
-                                                /* onScroll={handleScroll}
-                                                contentContainerStyle={{paddingTop: !isIphone ? !hide ? paddingTop + 175 : paddingTop + 103 : 0}} */
-                                                showsVerticalScrollIndicator={false}
-                                                showsHorizontalScrollIndicator={false}
-                                                style={styles.list}
-                                                data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
-                                                renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
-                                                keyExtractor={item => String(item.id_gaceta)}
-                                            />
+                                            gaceta.length > 0
+                                            ?
+                                                <FlatList
+                                                    ref={refGaceta}
+                                                    showsVerticalScrollIndicator={false}
+                                                    showsHorizontalScrollIndicator={false}
+                                                    style={styles.list}
+                                                    data={gaceta}
+                                                    renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
+                                                    keyExtractor={item => String(item.id_gaceta)}
+                                                    key={'_G'}
+                                                />
+                                            :
+                                                !loading
+                                                ?
+                                                    <NotResults />
+                                                :
+                                                    <></>
                                     }
                                 </View>
                                 <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={2}/>
@@ -304,8 +350,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
                                                 renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
                                                 keyExtractor={item => String(item.id_gaceta)}
-                                                /* onScroll={handleScroll}
-                                                contentContainerStyle={{paddingTop: paddingTop + 50}} */
+                                                key={'_GH'}
                                             />
                                     }
                                 </View>

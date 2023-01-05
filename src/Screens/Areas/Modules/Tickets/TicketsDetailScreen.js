@@ -54,6 +54,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     const [contador, setContador] = useState(0)
     const {hasConnection, askForConnection} = useConnection();
     const [selected, setSelected] = useState(undefined)
+    const [visibleTable, setVisibleTable] = useState(false)
     const {translateY, handleScroll, paddingTop} = useScroll(orientation)
     const [scrolling, setScrolling] = useState(0)
     const [loading, setLoading] = useState(false)
@@ -283,7 +284,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     {
                                         item.id === 0 && is_table
                                         ?
-                                            <HTML source={{ html }} {...htmlProps} contentWidth={Dimensions.get('screen').width}/>
+                                            <TouchableOpacity style={tw`h-8 self-stretch justify-start items-center flex-row`} onPress={() => setVisibleTable(!visibleTable)}>
+                                                <View style={tw`flex-row justify-center items-center`}>
+                                                    <IonIcons name={'table-eye'} size={22} color={Blue} />
+                                                    <Text style={[tw`text-[${Blue}] ml-1.5`, {textDecorationColor: Blue, textDecorationLine: 'underline', textDecorationStyle: 'solid'}]}>Visualizar tabla</Text>
+                                                </View>
+                                            </TouchableOpacity>
                                         :
                                             <HTMLView
                                                 value={'<div style="color: black">' + item.body.trim() + '</div>'}
@@ -684,11 +690,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                     <View style={[tw`justify-center items-center h-auto self-stretch`, {borderRadius: 22}]}>
                                         <View style={tw`h-auto self-stretch flex-row px-5 pt-3 justify-end items-center`}>
                                             <View style={tw`h-auto self-stretch justify-center items-end`}>
-                                                <Text style={tw`text-xs font-bold text-[#000]`}>No. Ticket: <Text style={tw`text-[${Orange}]`}>{detail?.no_ticket ? detail.no_ticket : '-'}</Text></Text>
+                                                <Text style={tw`text-xs font-bold text-[#000]`}>No. Ticket: <Text style={tw`text-[${Orange}]`}>{detail?.no_ticket ? detail.no_ticket : '---'}</Text></Text>
                                             </View>
                                             <View style={tw`w-px h-5 bg-[#dadada] mx-2`} />
                                             <View style={tw`bg-[${detail.backgroundColorEstado ? detail.backgroundColorEstado : '#fff'}] py-px px-1 rounded`}>
-                                                <Text style={tw`text-[#fff] font-bold text-xs`}>{detail?.estado ? detail.estado : '-'}</Text>   
+                                                <Text style={tw`text-[#fff] font-bold text-xs`}>{detail?.estado ? detail.estado : '---'}</Text>   
                                             </View>
                                         </View>
                                         <View style={[tw`h-auto self-stretch justify-start items-center mt-5 mb-3 px-4`, {borderRadius: 22}]}>
@@ -710,11 +716,11 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                 }
                                                 <View style={tw`ml-4 flex-1 justify-center items-start`}>
                                                     <Text style={tw`text-[#adadad] text-sm`}>Solicitado por:</Text>
-                                                    <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.solicitado ? detail.solicitado : '-'}</Text>
+                                                    <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.solicitado ? detail.solicitado : '---'}</Text>
                                                 </View>
                                                 <View style={tw`h-12 w-14 justify-center items-end pl-px`}>
-                                                    <View style={tw`w-auto h-auto p-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : Blue}] rounded`}>
-                                                        <Text style={tw`font-bold text-[#fff] text-sm`}>{detail?.prioridad ? detail.prioridad : '-'}</Text>
+                                                    <View style={tw`w-auto h-auto p-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : '#fff'}] rounded`}>
+                                                        <Text style={tw`font-bold text-[#fff] text-sm`}>{detail?.prioridad ? detail.prioridad : '---'}</Text>
                                                     </View>
                                                 </View>
                                             </View>
@@ -772,7 +778,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     <View style={tw`flex-row self-stretch justify-center items-center flex-1 ml-4`}>
                                                         <View style={tw`flex-1 justify-center items-start`}>
                                                             <Text style={tw`text-[#adadad] text-sm`}>Asignado a:</Text>
-                                                            <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.asignado ? detail.asignado : '-'}</Text>
+                                                            <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.asignado ? detail.asignado : '---'}</Text>
                                                         </View>
                                                         {
                                                             (active !== 2 && active !== 4) && permisos.btn_asignar && (detail.estado === 'Proceso' || detail.estado === 'Pendiente')
@@ -793,55 +799,55 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mb-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Tipo de Ticket:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tipo ? detail.tipo : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tipo ? detail.tipo : '---'}</Text>
                                             </View>
                                             <View style={tw`w-2`}/>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Concepto:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.concepto ? detail.concepto : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.concepto ? detail.concepto : '---'}</Text>
                                             </View>
                                         </View>
                                         <Spliter color={'#f1f1f1'}/>
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Creado:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.creado ? detail.creado : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.creado ? detail.creado : '---'}</Text>
                                             </View>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Asignado:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_asignado ? detail.fecha_asignado : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_asignado ? detail.fecha_asignado : '---'}</Text>
                                             </View>
                                         </View>
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Terminado:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_terminado ? detail.fecha_terminado : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_terminado ? detail.fecha_terminado : '---'}</Text>
                                             </View>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Cerrado:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_cierre ? detail.fecha_cierre : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_cierre ? detail.fecha_cierre : '---'}</Text>
                                             </View>
                                         </View>
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Archivado:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_archivado ? detail.fecha_archivado : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.fecha_archivado ? detail.fecha_archivado : '---'}</Text>
                                             </View>
                                         </View>
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 mt-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>T. Atención:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_atencion ? detail.tiempo_atencion : '---'}</Text>
                                             </View>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>T. Resolución:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.tiempo_resolucion ? detail.tiempo_resolucion : '---'}</Text>
                                             </View>
                                         </View>
                                         <View style={tw`h-auto self-stretch justify-center items-start flex-row mx-4 my-2.5`}>
                                             <View style={tw`flex-1 justify-start items-start h-auto`}>
                                                 <Text style={tw`text-[#adadad] text-sm`}>Detalle:</Text>
-                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail.detalle ? detail.detalle : '-'}</Text>
+                                                <Text style={tw`text-[#000] font-bold text-sm`}>{detail.detalle ? detail.detalle : '---'}</Text>
                                             </View>
                                         </View>
                                         {
@@ -1136,6 +1142,12 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                         </TouchableOpacity>
                     </View>
                 </KeyboardAwareScrollView>
+            </Modal>
+
+            <Modal orientation={orientation} visibility={visibleTable} handleDismiss={() => setVisibleTable(!visibleTable)}>
+                <ScrollView style={{height: 'auto', alignSelf: 'stretch'}}>
+                    <HTML source={{ html }} {...htmlProps} contentWidth={Dimensions.get('screen').width}/>
+                </ScrollView>
             </Modal>
 
             <Modal orientation={orientation} visibility={visibleConfirmar} handleDismiss={() => setInitialState({...initialState, visibleConfirmar: !visibleConfirmar})}>

@@ -10,7 +10,7 @@ export default ({handleInputChange}) => {
         <>
             <TouchableOpacity onPress={() => richText.current?.dismissKeyboard()} style={{alignSelf: 'stretch'}}>
                 <RichToolbar
-                    style={{borderTopWidth: 1, backgroundColor: '#f7f7f7', borderTopColor: '#cbcbcb', borderRightWidth: 1, borderRightColor: '#cbcbcb', borderLeftWidth: 1, borderLeftColor: '#cbcbcb', alignSelf: 'stretch', flex: 1, borderTopStartRadius: 4, borderTopEndRadius: 4}}
+                    style={{borderTopWidth: 1, backgroundColor: '#f7f7f7', borderTopColor: '#cbcbcb', borderRightWidth: 1, borderRightColor: '#cbcbcb', borderLeftWidth: 1, borderLeftColor: '#cbcbcb', width: '99.5%', flex: 1, borderTopStartRadius: 4, borderTopEndRadius: 4}}
                     editor={richText}
                     selectedIconTint={Blue}
                     iconTint={'#000'}
@@ -23,7 +23,7 @@ export default ({handleInputChange}) => {
                     iconMap={{ [actions.heading1]: ({tintColor}) => (<Text style={[{color: tintColor}]}>H1</Text>), }}
                 />
             </TouchableOpacity>
-            <View style={{height: 200, maxHeight: 200, alignSelf: 'stretch', borderWidth: isIphone ? 0 : 1, borderColor: isIphone ? 'transparent' : '#cbcbcb'}}>
+            <View style={{height: 200, maxHeight: 200, width: '99.5%', borderWidth: isIphone ? 0 : 1, borderColor: isIphone ? 'transparent' : '#cbcbcb'}}>
                 <RichEditor
                     autoCapitalize='on'
                     showsVerticalScrollIndicator={true}

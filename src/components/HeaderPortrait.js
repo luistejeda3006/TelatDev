@@ -156,7 +156,7 @@ export default ({navigation, title = '', screenToGoBack = undefined, enabled = f
                     <View style={{width: 65, height: '100%', alignItems: 'center', justifyContent: 'center'}}>
                         <Image
                             style={{width: 43, height: 38}}
-                            resizeMode={'cover'}
+                            resizeMode={'contain'}
                             source={require('../../assets/logo_telat.png')}
                         />
                     </View>

@@ -690,7 +690,9 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 body: JSON.stringify(body)
             });
             
+            
             const {response, status} = await request.json();
+            console.log('response: ', response)
             if(status === 200){
                 const data = response.data_grafico.map(x => x.name === '--PRESA SALINILLAS' ? ({...x, name: '--SALINILLAS'}) : x.name === '--CIUDAD JUAREZ' ? ({...x, name: '--JUAREZ'}) : x)
                 setAreasGeneral({...areasGeneral, total_razon_social: response.empleados_razon_social, data_grafico: data, total: response.total, subareas: response.subareas})
@@ -992,8 +994,8 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const Detalle_Gerencia = ({id, campanna, altas = null, activos = null, bajas = null, monterrey = null, insurgentes = null, salinillas = null, juarez = null, home = null, total, tipo = 1}) => {
         return(
-            <View style={tw`flex-1 h-auto mb-3.5 mx-1.5 rounded-2xl shadow-md border border-[#dadada]`}>
-                <View style={tw`h-auto bg-[#f7f7f7] p-px rounded-tl-2xl rounded-tr-2xl`}>
+            <View style={tw`flex-1 h-auto mb-3.5 mx-1.5 shadow-md border border-[#adadad] rounded-2xl overflow-hidden`}>
+                <View style={tw`h-auto p-px bg-white`}>
                     <View style={tw`flex-row items-center justify-center`}>
                         {
                             tipo === 1
@@ -1030,7 +1032,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             </View>
                         </View>
                     :
-                        <View style={tw`h-auto self-stretch rounded-bl-2xl rounded-br-2xl flex-row`}>
+                        <View style={tw`h-auto self-stretch flex-row`}>
                             <View style={tw`flex-1 bg-[${Blue}] h-6 justify-center items-center rounded-bl-2xl`}>
                                 <Text style={[{fontSize: 10}, tw`font-bold text-[#fff]`]}>{altas}</Text>
                             </View>
@@ -2523,11 +2525,11 @@ export default ({navigation, route: {params: {orientation}}}) => {
             </Modal>
 
             <Modal orientation={orientationInfo.initial} visibility={visibleArea} handleDismiss={handleVisibleArea}> 
-                <Select dataArea={areas} handleVisibleArea={handleVisibleArea} handleActionDos={handleActionDos} />
+                <Select data={areas} handleVisibleArea={handleVisibleArea} handleActionDos={handleActionDos} />
             </Modal>
 
             <Modal orientation={orientationInfo.initial} visibility={visibleSubarea} handleDismiss={handleVisibleSubarea}>
-                <Select dataArea={subareas} handleVisibleArea={handleVisibleSubarea} handleActionDos={handleActionTres} />
+                <Select data={subareas} handleVisibleArea={handleVisibleSubarea} handleActionDos={handleActionTres} />
             </Modal>
 
             {

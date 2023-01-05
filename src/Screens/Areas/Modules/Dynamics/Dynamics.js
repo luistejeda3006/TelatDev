@@ -27,7 +27,7 @@ export default ({navigation}) => {
 
     const [initialState, setInitialState] = useState({
         data: [
-            /* {
+            {
                 id: 1,
                 title: 'Día de la madre',
                 description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
@@ -56,47 +56,10 @@ export default ({navigation}) => {
                 rated: 4.5,
                 comments: 102,
                 hasQR: true,
-            }, */
+            },
         ],
         loading: true,
     })
-
-    useEffect(() => {
-        setTimeout(() => {
-            setInitialState({...initialState, loading: false, data: [
-                /* {
-                    id: 1,
-                    title: 'Día de la madre',
-                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara. Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
-                    image: 'https://i.pinimg.com/originals/7c/2f/4b/7c2f4bfbaa411a9ef5b45bd0b4214fba.jpg',
-                    date: '23/01',
-                    rated: 2.5,
-                    comments: 32,
-                    hasQR: true,
-                },
-                {
-                    id: 2,
-                    title: 'Día del niño',
-                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
-                    image: 'https://fondosmil.com/fondo/38780.jpg',
-                    date: '11/01',
-                    rated: 4.5,
-                    comments: 102,
-                    hasQR: false,
-                },
-                {
-                    id: 3,
-                    title: 'Día del niño',
-                    description: 'Se llevará acabo un donativo de juguetes para niños de un orfanato en Santa Clara.',
-                    image: 'https://cdn.wallpapersafari.com/76/19/oTkiJr.jpg',
-                    date: '11/01',
-                    rated: 4.5,
-                    comments: 102,
-                    hasQR: true,
-                }, */
-            ]})
-        }, 2500)
-    }, [])
 
     const {data, loading} = initialState
 
@@ -194,7 +157,7 @@ export default ({navigation}) => {
                             <></>
                 }
             </View>
-            <ModalLoading visibility={loading}/>
+            {/* <ModalLoading visibility={loading}/> */}
         </>
     )
 }

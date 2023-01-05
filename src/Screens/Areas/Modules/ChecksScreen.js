@@ -154,15 +154,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ?
                         <>
                             <HeaderPortrait title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
-                            <View style={tw`w-[100%] h-auto bg-[#383838]`}>
-                                <View style={tw`h-14 self-stretch flex-row`}>
+                            <View style={tw`w-[100%] h-auto`}>
+                                <View style={tw`h-14 self-stretch flex-row border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
                                     <View style={tw`flex-1 flex-row justify-start items-center`}>
-                                        <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-auto px-1.5 justify-center items-center`}>
-                                            <Text style={tw`font-bold text-lg text-[${current === 1 ? '#fff' : '#adadad'}]`}>{`${año}`}</Text>
+                                        <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
+                                            <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
                                         </TouchableOpacity>
-                                        <Text style={{color: 'white'}}> | </Text>
-                                        <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto px-1.5 justify-center items-center`}>
-                                            <Text style={tw`font-bold text-lg text-[${current === 2 ? '#fff' : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
+                                        <Text style={{color: Blue}}> | </Text>
+                                        <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto pl-2 pr-1.5 justify-center items-center`}>
+                                            <Text style={tw`font-bold text-lg text-[${current === 2 ? Blue : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={tw`h-[100%] w-auto justify-center items-center flex-row`}>
@@ -171,26 +171,26 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             ?
                                                 <>
                                                     <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
-                                                        <IonIcons name={'chevron-left'} size={26} color={'#fff'} />
+                                                        <IonIcons name={'chevron-left'} size={26} color={Blue} />
                                                     </View>
                                                     <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
-                                                        <IonIcons name={'chevron-right'} size={26} color={'#fff'} />
+                                                        <IonIcons name={'chevron-right'} size={26} color={Blue} />
                                                     </View>
                                                 </>
                                             :
                                                 <>
                                                     <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
-                                                        <IonIcons name={'chevron-left'} size={26} color={'#fff'} />
+                                                        <IonIcons name={'chevron-left'} size={26} color={Blue} />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
-                                                        <IonIcons name={'chevron-right'} size={26} color={'#fff'} />
+                                                        <IonIcons name={'chevron-right'} size={26} color={Blue} />
                                                     </TouchableOpacity>
                                                 </>
                                         }
                                     </View>
                                 </View>
                             </View>
-                            <View style={tw`flex-row border border-[#dadada] bg-[#f7f7f7]`}>
+                            <View style={tw`flex-row border-b border-b-[#dadada] bg-[#f7f7f7]`}>
                                 <Mes day={language === '1' ? 'Dom' : 'Sun'}/>
                                 <Mes day={language === '1' ? 'Lun' : 'Mon'}/>
                                 <Mes day={language === '1' ? 'Mar' : 'Tue'}/>
@@ -199,8 +199,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <Mes day={language === '1' ? 'Vie' : 'Fri'}/>
                                 <Mes day={language === '1' ? 'Sáb' : 'Sat'}/>
                             </View>
-                            <View style={tw`h-auto self-stretch border border-[#dadada] bg-white`}>
+                            <View style={tw`h-auto self-stretch border-b border-b-[#dadada] bg-white`}>
                                 <FlatList
+                                    scrollEnabled={false}
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}
                                     style={tw`h-auto self-stretch bg-white`}
