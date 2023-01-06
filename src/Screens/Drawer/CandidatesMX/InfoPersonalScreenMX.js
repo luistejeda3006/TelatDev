@@ -39,7 +39,8 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     useEffect(() => {
         let obj = {
-            picture: user.data.datos_personales.foto ? `https://telat.mx/intranet/upload/fotos/${user.data.datos_personales.foto}` : '',
+            picture: user.data.datos_personales.foto_url ? user.data.datos_personales.foto_url : '',
+            qr: user.data.datos_personales.qr ? user.data.datos_personales.qr : '',
             name: user.data.datos_personales.nombre_completo,
             birth_date: user.data.datos_personales.fecha_nacimiento,
             age: user.data.datos_personales.edad,
@@ -107,23 +108,23 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
-                        <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
-                        {
-                            info.picture
-                            ?
-                                <Image
-                                    style={imageStyle}
-                                    resizeMode={'cover'}
-                                    source={{uri: `${info.picture}`}}
-                                />
-                            :
-                                <Image
-                                    style={imageStyle}
-                                    resizeMode={'cover'}
-                                    source={require('../../../../assets/user.png')}
-                                />
-                        }
-                    </View>
+                        <View style={tw`w-53 h-53 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
+                            {
+                                info.picture
+                                ?
+                                    <Image
+                                        style={tw`w-49 h-49 rounded-full`}
+                                        resizeMode={'cover'}
+                                        source={{uri: `${info.picture}`}}
+                                    />
+                                :
+                                    <Image
+                                        style={tw`w-48 h-48 rounded-full`}
+                                        resizeMode={'cover'}
+                                        source={require('../../../../assets/user.png')}
+                                    />
+                            }
+                        </View>
                     </View>
                     <Title title={language === '1' ? 'INFORMACIÓN PERSONAL' : 'PERSONAL INFORMATION'} icon={'user'}/>
                     <View style={tw`flex-row mb-4`}>
@@ -425,22 +426,22 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 contentContainerStyle={{paddingTop: paddingTop}} */
                             >
                                 <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
-                                    <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] my-5 bg-[#dadada]`}>
+                                    <View style={tw`w-53 h-53 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
                                         {
-                                                info.picture
-                                                ?
-                                                    <Image
-                                                        style={imageStyle}
-                                                        resizeMode={'cover'}
-                                                        source={{uri: `${info.picture}`}}
-                                                    />
-                                                :
-                                                    <Image
-                                                        style={imageStyle}
-                                                        resizeMode={'cover'}
-                                                        source={require('../../../../assets/user.png')}
-                                                    />
-                                            }
+                                            info.picture
+                                            ?
+                                                <Image
+                                                    style={tw`w-49 h-49 rounded-full`}
+                                                    resizeMode={'cover'}
+                                                    source={{uri: `${info.picture}`}}
+                                                />
+                                            :
+                                                <Image
+                                                    style={tw`w-48 h-48 rounded-full`}
+                                                    resizeMode={'cover'}
+                                                    source={require('../../../../assets/user.png')}
+                                                />
+                                        }
                                     </View>
                                 </View>
 
@@ -680,19 +681,19 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 /* onScroll={handleScroll}
                                 contentContainerStyle={{paddingTop: paddingTop}} */
                             >
-                                <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
-                                    <View style={tw`w-47.5 h-47.5 rounded-full justify-center items-center border-8 border-[#dadada] mt-5`}>
+                                <View style={tw`flex-2 items-center justify-center mb-2 mt-[3%]`}>
+                                    <View style={tw`w-49 h-49 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
                                         {
                                             info.picture
                                             ?
                                                 <Image
-                                                    style={imageStyle}
+                                                    style={tw`w-45 h-45 rounded-full`}
                                                     resizeMode={'cover'}
                                                     source={{uri: `${info.picture}`}}
                                                 />
                                             :
                                                 <Image
-                                                    style={imageStyle}
+                                                    style={tw`w-45 h-45 rounded-full`}
                                                     resizeMode={'cover'}
                                                     source={require('../../../../assets/user.png')}
                                                 />
@@ -972,7 +973,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     <Image
                         style={tw`h-55 w-55`}
                         resizeMode={'contain'}
-                        source={{uri: `https://telat.mx/intranet/upload/qrcodes/LUIS_MANUEL_TEJEDA_CANO.png`}}
+                        source={{uri: info.qr}}
                     />
                 </View>
             </Modal>

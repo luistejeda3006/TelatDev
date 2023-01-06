@@ -257,8 +257,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     ?
                                                         <IonIcons name={'clock'} size={22} color={Orange} />
                                                     :
-                                                        <View style={{width: 20, height: 20, backgroundColor: item.filtro_autorizacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check' : 'close'} size={item.filtro_autorizacion === 2 ? 14 : 16} color={'#fff'} />
+                                                        <View style={{width: 20, height: 20, backgroundColor: item.filtro_autorizacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? item.filtro_autorizacion === 2 ? 0 : 1 : 0}}>
+                                                            <IonIcons name={item.filtro_autorizacion === 2 ? 'check-bold' : 'close-thick'} size={item.filtro_autorizacion === 2 ? 14 : 16} color={'#fff'} />
                                                         </View>
                                                 }
                                             </View>
@@ -272,8 +272,8 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                             ?
                                                                 <IonIcons name={'clock'} size={22} color={Orange} />
                                                             :
-                                                                <View style={{width: 20, height: 20, backgroundColor: item.filtro_confirmacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center'}}>
-                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check' : 'close'} size={item.filtro_confirmacion === 2 ? 14 : 16} color={'#fff'} />
+                                                                <View style={{width: 20, height: 20, backgroundColor: item.filtro_confirmacion === 2 ? '#629b58' : '#cf513d', borderRadius: 15, justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? item.filtro_autorizacion === 2 ? 0 : 1 : 0}}>
+                                                                    <IonIcons name={item.filtro_confirmacion === 2 ? 'check-bold' : 'close-thick'} size={item.filtro_confirmacion === 2 ? 14 : 16} color={'#fff'} />
                                                                 </View>
                                                         }
                                                     </View>

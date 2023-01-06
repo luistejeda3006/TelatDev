@@ -2,9 +2,14 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import { isTablet } from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useSelector } from 'react-redux';
+import { selectOrientation } from '../slices/orientationSlice';
+import { selectLanguageApp } from '../slices/varSlice';
 
-export default ({askForConnection, reloading = null,  language, orientation}) => {
-    const lg = String(language)
+export default ({askForConnection, reloading = null}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     return (
         orientation === 'PORTRAIT'
         ?
@@ -17,19 +22,19 @@ export default ({askForConnection, reloading = null,  language, orientation}) =>
                     />
                 </View>
                 <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'center', paddingHorizontal: 10}}>
-                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000', textAlign: 'center'}}>{lg === '1' ? 'No hay conexión a Internet' : 'There is no internet connection'}</Text>
-                    <Text style={{fontSize: 17, fontWeight: '100', color: '#373737', textAlign: 'center'}}>{lg === '1' ? 'Prueba estos pasos para volver a conectarte:' : 'Try these steps to reconnect'}</Text>
+                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000', textAlign: 'center'}}>{language === '1' ? 'No hay conexión a Internet' : 'There is no internet connection'}</Text>
+                    <Text style={{fontSize: 17, fontWeight: '100', color: '#373737', textAlign: 'center'}}>{language === '1' ? 'Prueba estos pasos para volver a conectarte:' : 'Try these steps to reconnect'}</Text>
                     {
                         !isTablet()
                         ?
                             <View style={{height: 'auto', justifyContent: 'center', alignItems: 'flex-start', alignSelf: 'stretch', padding: 18}}>
                                 <View style={{flexDirection: 'row'}}>
                                     <Icon name={'check-circle'} size={24} color='#373737' />
-                                    <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
+                                    <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
                                 </View>
                                 <View style={{flexDirection: 'row', marginTop: 10}}>
                                     <Icon name={'check-circle'} size={24} color='#373737' />
-                                    <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
+                                    <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
                                 </View>
                             </View>
                         :
@@ -38,11 +43,11 @@ export default ({askForConnection, reloading = null,  language, orientation}) =>
                                     <View style={{alignSelf: 'stretch', height: 'auto', justifyContent: 'center', alignItems: 'flex-start', padding: 18}}>
                                         <View style={{flexDirection: 'row'}}>
                                             <Icon name={'check-circle'} size={24} color='#373737' />
-                                            <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
+                                            <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
                                         </View>
                                         <View style={{flexDirection: 'row', marginTop: 10}}>
                                             <Icon name={'check-circle'} size={24} color='#373737' />
-                                            <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
+                                            <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
                                         </View>
                                     </View>
                                 <View style={{flex:1}}></View>
@@ -54,7 +59,7 @@ export default ({askForConnection, reloading = null,  language, orientation}) =>
                         askForConnection()
                         reloading && reloading()
                     }}>
-                        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1177E9', textAlign: 'center'}}>{lg === '1' ? 'Volver a cargar la página' : 'Reload the page'}</Text>
+                        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1177E9', textAlign: 'center'}}>{language === '1' ? 'Volver a cargar la página' : 'Reload the page'}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -68,18 +73,18 @@ export default ({askForConnection, reloading = null,  language, orientation}) =>
                     />
                 </View>
                 <View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10}}>
-                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000', textAlign: 'center'}}>{lg === '1' ? 'No hay conexión a Internet' : 'There is no internet connection'}</Text>
-                    <Text style={{fontSize: 17, fontWeight: '100', color: '#373737', textAlign: 'center'}}>{lg === '1' ? 'Prueba estos pasos para volver a conectarte:' : 'Try these steps to reconnect'}</Text>
+                    <Text style={{fontSize: 22, fontWeight: 'bold', color: '#000', textAlign: 'center'}}>{language === '1' ? 'No hay conexión a Internet' : 'There is no internet connection'}</Text>
+                    <Text style={{fontSize: 17, fontWeight: '100', color: '#373737', textAlign: 'center'}}>{language === '1' ? 'Prueba estos pasos para volver a conectarte:' : 'Try these steps to reconnect'}</Text>
                     <View style={{flexDirection: 'row'}}>
                         <View style={{flex:1}}></View>
                         <View style={{alignSelf: 'stretch', height: 'auto', justifyContent: 'center', alignItems: 'flex-start', padding: 18}}>
                             <View style={{flexDirection: 'row'}}>
                                 <Icon name={'check-circle'} size={24} color='#373737' />
-                                <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
+                                <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Comprueba el módem y el router' : 'Check the modem and router'}</Text>
                             </View>
                             <View style={{flexDirection: 'row', marginTop: 10}}>
                                 <Icon name={'check-circle'} size={24} color='#373737' />
-                                <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{lg === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
+                                <Text style={{marginLeft: 8, fontSize: 16, color: '#000'}}>{language === '1' ? 'Vuelve a conectarte al wifi' : 'Reconnect to Wi-Fi'}</Text>
                             </View>
                         </View>
                         <View style={{flex:1}}></View>
@@ -90,7 +95,7 @@ export default ({askForConnection, reloading = null,  language, orientation}) =>
                         askForConnection()
                         reloading && reloading()
                     }}>
-                        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1177E9', textAlign: 'center'}}>{lg === '1' ? 'Volver a cargar la página' : 'Reload the page'}</Text>
+                        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1177E9', textAlign: 'center'}}>{language === '1' ? 'Volver a cargar la página' : 'Reload the page'}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

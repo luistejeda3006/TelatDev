@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, TextIn
 import {barStyle, Blue, SafeAreaBackground} from '../../colors/colorsApp'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
-import {useForm, useNavigation, useOrientation} from '../../hooks'
+import {useForm, useNavigation} from '../../hooks'
 import {live, login, urlApp} from '../../access/requestedData';
 import encript from '../../access/encript';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,15 +11,20 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Modal, ModalLoading} from '../../components';
 import {Button} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectLanguageApp} from '../../slices/varSlice';
+import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
-import { completeHandlerIOS } from 'react-native-fs';
 
 let contador = 0;
 let sendNotification = 'sendNotification'
 let dataNotification = 'dataNotification'
 let isLogged = 'isLogged'
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+    
     const input_user = useRef()
     const input_pass = useRef()
     const [isLoading, setIsLoading] = useState(false)
@@ -42,18 +47,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         enabled: true,
         bloqueo: 1,
     })
-    
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     const getIsLogged = async () => {
         let isOn = await AsyncStorage.getItem(isLogged) || '0';
         if(isOn === '1'){
-            navigation.navigate('Logged', {language: language, orientation: orientationInfo.initial})
+            navigation.navigate('Logged', {language: language, orientation: orientation})
         }
     }
 
@@ -145,7 +143,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 handleSubmitForm();
                                 setInitialState({...initialState, enabled: false, hide: true})
                                 contador = contador + 1;
-                                navigation.navigate('Logged', {language: language, orientation: orientationInfo.initial})
+                                navigation.navigate('Logged', {language: language, orientation: orientation})
                             }, 3000)
                         }
                         else {
@@ -338,7 +336,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     return (
         <>
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     <>
                         <StatusBar barStyle={barStyle} />
@@ -494,7 +492,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 </View>
                             </View>
                             <View style={tw`flex-1 justify-center items-center`}>
-                                <View style={tw`h-auto justify-center items-center px-${isTablet() ? orientationInfo.initial === 'PORTRAIT' ? 30 : 37.5 : 12.5}`}>
+                                <View style={tw`h-auto justify-center items-center px-${isTablet() ? orientation === 'PORTRAIT' ? 30 : 37.5 : 12.5}`}>
                                     <View style={tw`h-auto w-[50%] pt-4.5 justify-center items-center px-3.5 bg-[rgba(255,255,255,0.4)] rounded-3xl border border-[#f1f1f1]`}>
                                         <View style={tw`shadow-xl justify-center bg-white w-[100%] items-center flex-row rounded-3xl mb-4`}>
                                             <TextInput
@@ -589,7 +587,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     </View>
             }
 
-            <Modal visibility={visible} handleDismiss={() => setVisible(!visible)} orientation={orientationInfo.initial}>
+            <Modal visibility={visible} handleDismiss={() => setVisible(!visible)} orientation={orientation}>
                 <View style={tw`h-auto self-stretch`}>
                     <View style={tw`h-auto self-stretch justify-center items-center mb-4`}>
                         <Text style={tw`text-black font-bold text-lg mb-2.5`}>{bodyMessage.header}</Text>

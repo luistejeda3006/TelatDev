@@ -214,7 +214,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
 
     const Item = ({id, picture, name, puesto, modal = false}) => {
         return(
-            <View style={tw`h-auto self-stretch flex-row justify-center items-center pl-${modal ? 1 : 2.5} pr-${modal ? 0 : 2.5} pb-${modal ? 1.5 : 2.5} pt-${modal ? 2 : 2.5} bg-white`}>
+            <View style={tw`h-auto self-stretch flex-row justify-center items-center pl-${modal ? 1 : 2.5} pr-${modal ? 0 : 2.5} pb-${modal ? 1 : 2} pt-${modal ? 1.5 : 2} bg-white`}>
                 <View style={tw`justify-center items-center w-${modal ? 9 : 13} h-${modal ? 9 : 13} pr-2.5`}>
                     <View style={tw`bg-[#f7f7f7] justify-center items-center rounded-full`}>
                         {
@@ -237,7 +237,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                 </View>
                 <View style={tw`flex-1 justify-center items-start pt-px`}>
                     <Text style={[tw`text-[#000] font-bold`, {fontSize: modal ? 12 : 15}]}>{name}</Text>
-                    <Text style={[tw`text-sm text-[#adadad]`, {fontSize: modal ? 12 : 12}]}>{puesto}</Text>
+                    <Text style={[tw`text-sm text-[#adadad] mt-${modal ? 0 : 1}`, {fontSize: modal ? 12 : 14}]}>{puesto}</Text>
                 </View>
                 <View style={tw`w-auto justify-center items-center rounded border border-[#adadad] bg-[#f7f7f7] px-px`}>
                     <Text style={[tw`text-[#adadad]`, {fontSize: modal ? 10 : 12}]}>10:58 am</Text>
@@ -315,22 +315,24 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     }
 
     const handleAnswer = () => {
-        const temporal = {
-            active: active ? 1 : 2,
-            selected: selected + 1,
-            question_1: question_1.trim(),
-            question_2: question_2.trim(),
-            question_3: question_3.trim(),
-            name: 'Luis Manuel Tejeda Cano'/* user.data.datos_personales.nombre_completo */,
-        }
+        if(question_1 && question_2 && selected){
+            const temporal = {
+                active: active ? 1 : 2,
+                selected: selected + 1,
+                question_1: question_1.trim(),
+                question_2: question_2.trim(),
+                question_3: question_3.trim(),
+                name: 'Luis Manuel Tejeda Cano'/* user.data.datos_personales.nombre_completo */,
+            }
 
-        console.log('body: ', temporal)
-        
-        //aquí se tiene que hacer todo el proceso para guardar
+            console.log('body: ', temporal)
+            
+            //aquí se tiene que hacer todo el proceso para guardar
 
-        //Mientras hacemos el proceso estatico
-        setHasCommented(!hasCommented)
-        setInitialState({...initialState, masterData: [{id: 1, ...temporal}]})
+            //Mientras hacemos el proceso estatico
+            setHasCommented(!hasCommented)
+            setInitialState({...initialState, masterData: [{id: 1, ...temporal}]})
+        } else Alerta()
     }
 
     return(
@@ -587,19 +589,10 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                                                 />
                                                             </View>
                                                             <View style={tw`h-auto self-stretch justify-center items-end mb-[${isIphone ? 12 : 0}]`}>
-                                                                {
-                                                                    selected
-                                                                    ?
-                                                                        <TouchableOpacity onPress={() => handleAnswer() /* handleSave() */} style={tw`h-auto self-stretch bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
-                                                                            <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
-                                                                            <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
-                                                                        </TouchableOpacity>
-                                                                    :
-                                                                        <View style={tw`h-auto self-stretch bg-[#dadada] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
-                                                                            <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
-                                                                            <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
-                                                                        </View>
-                                                                }
+                                                                <TouchableOpacity onPress={() => handleAnswer() /* handleSave() */} style={tw`h-auto self-stretch bg-[${Blue}] rounded border border-[#adadad] justify-center items-center pl-2.5 pr-2 py-2 mt-3 flex-row`}>
+                                                                    <Text style={tw`font-bold text-[#fff] mr-1.5`}>Envíar</Text>
+                                                                    <IonIcons name={'chat-question-outline'} size={20} color={'#fff'} />
+                                                                </TouchableOpacity>
                                                             </View>
                                                         </View>
                                                     :

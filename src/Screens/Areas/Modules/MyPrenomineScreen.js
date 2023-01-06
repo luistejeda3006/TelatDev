@@ -1254,14 +1254,15 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                         checadas
                         &&
                             checadas.map(x =>
-                                <View style={tw`h-auto self-stretch mt-1.5 mx-0.5 mb-1.5`} key={x.id}>
-                                    <View style={tw`flex-row p-1.5 bg-[#FEE188] rounded-lg shadow-md`}>
-                                        <View style={tw`justify-center items-center`}>
-                                            <View style={tw`bg-[#00B800] w-3.5 h-3.5 rounded-lg`}/>
-                                        </View>
-                                        <View style={tw`flex-1 justify-center items-center`}>
-                                            <Text style={tw`text-base font-bold text-[#000]`}>{x.hora}</Text>
-                                        </View>
+                                <View style={tw`h-7 self-stretch bg-[#fEE188] mx-2.5 mt-2.5 mb-2 px-px mt-2.5 mb-1.5 px-px flex-row rounded-3xl shadow-md`} key={x.id}>
+                                    <View style={tw`h-7 w-7 justify-center items-center`}>
+                                        <View style={tw`bg-[#00B800] rounded-full w-4 h-4`}/>
+                                    </View>
+                                    <View style={tw`flex-1 justify-center items-center`}>
+                                        <Text style={tw`text-base font-bold text-[#000]`}>{x.hora}</Text>
+                                    </View>
+                                    <View style={tw`h-7 w-7 justify-center items-center`}>
+                                        <View style={tw`rounded-full w-4 h-4`} />
                                     </View>
                                 </View>
                             )

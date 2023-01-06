@@ -1,9 +1,12 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { useSelector } from 'react-redux';
+import { selectOrientation } from '../slices/orientationSlice';
 
-export default ({screen = '', value, index, total, orientation, ...rest}) => {
-    /* console.log('total index', total, index, (total === index) ? 'es el' : 'no es el') */
+export default ({screen = '', value, index, total, ...rest}) => {
+    const orientation = useSelector(selectOrientation)
+    
     return (
         <>
             <Animatable.View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingLeft: orientation === 'PORTRAIT' ? (index % 2) === 1 ? 20 : 20 : 10, paddingRight: orientation === 'PORTRAIT' ? (index % 2) === 0 ? 20 : 20 : 0, paddingBottom: orientation === 'PORTRAIT' ? total === index || !index || ((total - 1) === index && (total % 2) === 0) ? 40 : 20 : 20, paddingTop: orientation === 'PORTRAIT' ? (index === 1 || index === 2) ? 40 : 20 : 20}} animation='bounceIn' duration={1500}>

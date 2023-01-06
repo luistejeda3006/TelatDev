@@ -145,6 +145,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     },[completa, hasConnection])
 
     useEffect(() => {
+        refGaceta.current?.scrollToOffset({ animated: true, offset: 0 })
         let temporal = active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones
         setGaceta(temporal)
     }, [active, data])
@@ -308,7 +309,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     {
                                         gaceta
                                         &&
-                                            gaceta.length > 0
+                                            gaceta.length > 0 && !loading
                                             ?
                                                 <FlatList
                                                     ref={refGaceta}
@@ -340,18 +341,26 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
-                                        !loading
+                                        gaceta
                                         &&
-                                            <FlatList
-                                                ref={refGaceta}
-                                                showsVerticalScrollIndicator={false}
-                                                showsHorizontalScrollIndicator={false}
-                                                style={styles.list}
-                                                data={active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones}
-                                                renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
-                                                keyExtractor={item => String(item.id_gaceta)}
-                                                key={'_GH'}
-                                            />
+                                            gaceta.length > 0 && !loading
+                                            ?
+                                                <FlatList
+                                                    ref={refGaceta}
+                                                    showsVerticalScrollIndicator={false}
+                                                    showsHorizontalScrollIndicator={false}
+                                                    style={styles.list}
+                                                    data={gaceta}
+                                                    renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
+                                                    keyExtractor={item => String(item.id_gaceta)}
+                                                    key={'_G'}
+                                                />
+                                            :
+                                                !loading
+                                                ?
+                                                    <NotResults />
+                                                :
+                                                    <></>
                                     }
                                 </View>
                             </>

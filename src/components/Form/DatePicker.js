@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { useField } from 'formik'
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import DatePicker from 'react-native-date-picker'
-import {formatDate} from '../../js/dates'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux'
+import {selectLanguageApp} from '../../slices/varSlice'
 
 let initialDate = new Date()
-export default ({fieldName, language = '1', shortFormat = true, isModule = false, required = false, label = ''}) => {
+export default ({fieldName, shortFormat = true, isModule = false, required = false, label = ''}) => {
+    const language = useSelector(selectLanguageApp)
     const [field, helpers, meta] = useField(fieldName);
     const { value, setValue } = meta
     const [dateLabel, setDateLabel] = useState(label)

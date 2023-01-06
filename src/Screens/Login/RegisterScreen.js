@@ -3,7 +3,7 @@ import {View, StatusBar, SafeAreaView, Text, TouchableOpacity, ScrollView, Alert
 import {HeaderLandscape, HeaderPortrait, FailedNetwork, ProgressStep, Modal, RadioButton, FooterForm} from '../../components';
 import {StepOneMX, StepTwoMX, StepThreeMX, StepFourMX} from '../Areas/RRHH/CandidatesMX';
 import {StepOneUSA, StepTwoUSA, StepThreeUSA} from '../Areas/RRHH/CandidatesUSA';
-import {useOrientation, useConnection, useNavigation} from '../../hooks';
+import {useConnection, useNavigation} from '../../hooks';
 import {Formik} from 'formik';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
@@ -11,18 +11,22 @@ import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep} from '../../slices/progressStepSlice';
 import {selectCurriculumUSA, selectSchoolsUSA, selectStatements, selectStatementsVisibility, selectStepOneUSA, selectStepThreeUSA, selectStepTwoUSA, selectSuccessVisibility, setStatements, setStatementsVisibility, setSuccessVisibility} from '../../slices/applicationForm';
+import {selectOrientation} from '../../slices/orientationSlice';
+import {live, login, urlJobs} from '../../access/requestedData';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {selectLanguageApp} from '../../slices/varSlice';
 import tw from 'twrnc';
-import { selectOrientation } from '../../slices/orientationSlice';
-import { live, login, urlJobs } from '../../access/requestedData';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let step = null;
 let data = []
-export default ({navigation, route: {params: {language, country}}}) => {
+export default ({navigation, route: {params: {country}}}) => {
     const refSteps = useRef()
     const dispatch = useDispatch()
     step = useSelector(selectStep)
+
     const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
+
     const statementsVisibility = useSelector(selectStatementsVisibility)
     const statements = useSelector(selectStatements)
     const successVisibility = useSelector(selectSuccessVisibility)
@@ -40,12 +44,6 @@ export default ({navigation, route: {params: {language, country}}}) => {
 
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     const handleScrollTop = () => {
         refSteps.current?.scrollToPosition(0, 0)
@@ -142,7 +140,7 @@ export default ({navigation, route: {params: {language, country}}}) => {
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             <View style={tw`flex-1 bg-[#fff]`}>
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     <HeaderPortrait title={country === 'US' ? 'Job Application' : language === '1' ? 'Solicitud de Empleo' : 'Job Application'} navigation={navigation} screenToGoBack={'Choose'} visible={true} confirmation={true} currentLanguage={country === 'US' ? '2' : '1'} normal={true}/>
                 :
@@ -362,19 +360,19 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                     {
                                         step === 1
                                         ?
-                                            <StepOneUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                            <StepOneUSA navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                         :
                                             step === 2
                                             ?
-                                                <StepTwoUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                                <StepTwoUSA navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                             :
-                                                <StepThreeUSA navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                                <StepThreeUSA navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                     }
                                     <FooterForm country={'US'}/>
                                     </KeyboardAwareScrollView>
                                 </ProgressStep>
                             :
-                                <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                                <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                         }
 
                     </Formik>
@@ -589,23 +587,23 @@ export default ({navigation, route: {params: {language, country}}}) => {
                                     {
                                         step === 1
                                         ?
-                                            <StepOneMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                            <StepOneMX navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                         :
                                             step === 2
                                             ?
-                                                <StepTwoMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                                <StepTwoMX navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                             :
                                                 step === 3
                                                 ?
-                                                    <StepThreeMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                                    <StepThreeMX navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                                 :
-                                                    <StepFourMX navigation={navigation} language={language} orientation={orientationInfo.initial} handleScrollTop={handleScrollTop}/>
+                                                    <StepFourMX navigation={navigation} language={language} orientation={orientation} handleScrollTop={handleScrollTop}/>
                                     }
                                     <FooterForm country={language === '1' ? 'MX' : 'US'}/>
                                     </KeyboardAwareScrollView>
                                 </ProgressStep>
                             :
-                                <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                                <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                         }
                 </Formik>
             }

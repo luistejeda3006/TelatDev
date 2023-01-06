@@ -34,7 +34,7 @@ let screen = ''
 let visibleSliders = true;
 let info_version = null;
 
-export default ({navigation, route: {params: {orientation, language_}}}) => {
+export default ({navigation}) => {
     const dispatch = useDispatch()
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
@@ -265,8 +265,14 @@ export default ({navigation, route: {params: {orientation, language_}}}) => {
     
     const handleLanguage = async (language) => {
         data = null;
-        if(language === '2') setLanguage('1')
-        else setLanguage('2')
+        if(language === '2') {
+            dispatch(setLanguageApp('1'))
+            setLanguage('1')
+        }
+        else {
+            dispatch(setLanguageApp('2'))
+            setLanguage('2')
+        }
 
         data = await AsyncStorage.getItem(key) || '';
 

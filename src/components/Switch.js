@@ -18,8 +18,8 @@ export default ({title, value = false, isButton = true, handleSwitch}) => {
                             {
                                 value === true || value === '1'
                                 ?
-                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingBottom: 2, borderTopStartRadius: 10, borderBottomStartRadius: 10}}>
-                                        <Icon name={'check'} size={18} color={'#fff'} />
+                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingBottom: 2, borderTopStartRadius: 10, borderBottomStartRadius: 10, paddingTop: 1.5}}>
+                                        <Icon name={'check'} size={15} color={'#fff'} />
                                     </View>
                                 :
                                     <Text style={{fontSize: 12, fontWeight: 'bold', color: value === true || value === '1' ? Blue : '#AAA'}}>OFF</Text>
@@ -31,8 +31,8 @@ export default ({title, value = false, isButton = true, handleSwitch}) => {
                                 ?
                                     <Text style={{fontSize: 12, fontWeight: 'bold', color: value === true || value === '1' ? Blue : '#AAA'}}>ON</Text>
                                 :
-                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: '#AAA', paddingBottom: 2, borderTopEndRadius: 10, borderBottomEndRadius: 10}}>
-                                        <Icon name={'times'} size={18} color={'#fff'} />
+                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: '#AAA', paddingBottom: 2, borderTopEndRadius: 10, borderBottomEndRadius: 10, paddingTop: 1}}>
+                                        <Icon name={'times'} size={15} color={'#fff'} />
                                     </View>
                             }
                         </View>
@@ -43,8 +43,8 @@ export default ({title, value = false, isButton = true, handleSwitch}) => {
                             {
                                 value === true || value === '1'
                                 ?
-                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingBottom: 2, borderTopStartRadius: 10, borderBottomStartRadius: 10}}>
-                                        <Icon name={'check'} size={18} color={'#fff'} />
+                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: Blue, paddingBottom: 2, borderTopStartRadius: 10, borderBottomStartRadius: 10, paddingTop: 1.5}}>
+                                        <Icon name={'check'} size={15} color={'#fff'} />
                                     </View>
                                 :
                                     <Text style={{fontSize: 12, fontWeight: 'bold', color: value === true || value === '1' ? Blue : '#AAA'}}>OFF</Text>
@@ -56,8 +56,8 @@ export default ({title, value = false, isButton = true, handleSwitch}) => {
                                 ?
                                     <Text style={{fontSize: 12, fontWeight: 'bold', color: value === true || value === '1' ? Blue : '#AAA'}}>ON</Text>
                                 :
-                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: '#AAA', paddingBottom: 2, borderTopEndRadius: 10, borderBottomEndRadius: 10}}>
-                                        <Icon name={'times'} size={18} color={'#fff'} />
+                                    <View style={{width: 36, height: 21, justifyContent: 'center', alignItems: 'center', backgroundColor: '#AAA', paddingBottom: 2, borderTopEndRadius: 10, borderBottomEndRadius: 10, paddingTop: 1}}>
+                                        <Icon name={'times'} size={15} color={'#fff'} />
                                     </View>
                             }
                         </View>

@@ -1,6 +1,5 @@
-import {View, Text, TouchableOpacity} from 'react-native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 import {AuthLogin, ChooseScreen, LoginScreen, RegisterScreen, WelcomeScreen} from './Screens/Login'
 import {CurriculumScreenMX, InfoLaboralScreenMX, InfoMedicaScreenMX, InfoPersonalScreenMX, RefPersonalesScreenMX} from './Screens/Drawer/CandidatesMX'
 import {CurriculumScreenUSA, InfoPersonalScreenUSA, RefPersonalesScreenUSA, EmployeeScreenUSA} from './Screens/Drawer/CandidatesUSA'
@@ -14,11 +13,11 @@ import {VacationDetailScreen, VacationScreen} from './Screens/Areas/Modules/Vaca
 import {Screen_1, Screen_2, Screen_3, Screen_4} from './Screens/Development';
 import {DrawerGames} from './Screens/Areas/Modules/Games/Login'
 import MenuGamesScreen from './Screens/Areas/Modules/Games/Login/MenuGamesScreen';
-import { ChoosePuzzle, Puzzle } from './Screens/Areas/Modules/Games/Puzzle';
+import {ChoosePuzzle, Puzzle} from './Screens/Areas/Modules/Games/Puzzle';
 import ChooseMemorama from './Screens/Areas/Modules/Games/Memorama/ChooseMemorama';
-import { Memorama } from './Screens/Areas/Modules/Games/Memorama';
+import {Memorama} from './Screens/Areas/Modules/Games/Memorama';
 import Snake from './Screens/Areas/Modules/Games/Snake/Snake';
-import { Dynamics, DynamicsDetail } from './Screens/Areas/Modules/Dynamics';
+import {Dynamics, DynamicsDetail} from './Screens/Areas/Modules/Dynamics';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();

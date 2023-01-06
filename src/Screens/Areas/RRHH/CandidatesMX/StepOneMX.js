@@ -436,7 +436,6 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
                     onMessage={e => onMessage(e)}
                 />
             </View>
-            <Politics language={language} orientation={orientationInfo.initial} visibility={visibility}  handleDismiss={() => setFilters({...filters, visibility: !visibility})}/>
         </>
     )
 }

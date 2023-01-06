@@ -1,8 +1,12 @@
 import React from 'react'
 import {View, Text, Image} from 'react-native'
+import { useSelector } from 'react-redux'
+import { selectOrientation } from '../slices/orientationSlice'
 import Modal from './Modal'
 
-export default ({title = '', tipo = 1, orientation, visible}) => {
+export default ({title = '', tipo = 1, visible}) => {
+    const orientation = useSelector(selectOrientation)
+
     return(
         <Modal orientation={orientation} visibility={visible} except={false}>
             <View style={{justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', height: 180}}>

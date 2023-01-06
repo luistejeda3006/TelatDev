@@ -5,7 +5,7 @@ import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFS from 'react-native-fs';
 
-export default ({savePicture = undefined, imagen, required = false}) => {
+export default ({savePicture = undefined, imagen}) => {
     const [uriG, setUriG] = useState('');
 
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)

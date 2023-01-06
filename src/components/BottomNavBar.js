@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 import {View, Image, TouchableOpacity} from 'react-native'
 import {isIphone} from '../access/requestedData'
 import {useSelector} from 'react-redux';
-import {selectNotification} from '../slices/varSlice';
+import {selectLanguageApp, selectNotification} from '../slices/varSlice';
+import { selectOrientation } from '../slices/orientationSlice';
 
 let notification = false;
 
-export default ({navigation, language, orientation, notify = undefined, screen = undefined}) => {
+export default ({navigation, screen = undefined}) => {
     notification = useSelector(selectNotification)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
     
     return(
         <View style={{height: isIphone ? 70 : 50, alignSelf: 'stretch', backgroundColor: '#383838', flexDirection: 'row'}}>

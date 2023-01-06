@@ -20,12 +20,6 @@ export default ({navigation, route: {params}}) => {
     const [language, setLanguage] = useState()
     orientation = useSelector(selectOrientation)
     const [contador, setContador] = useState(0);
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
     const [info, setInfo] = useState({})
     
@@ -77,7 +71,7 @@ export default ({navigation, route: {params}}) => {
     useFocusEffect(
         useCallback(() => {
             setTimeout(() => {
-                navigation.navigate('Dashboard', {language: language, orientation: orientationInfo.initial});
+                navigation.navigate('Dashboard', {language: language, orientation: orientation});
             }, (contador === 1 || contador === 0) ? 100 : 1) //AQUI ERAN 4000 en el primero
         }, [])
     );

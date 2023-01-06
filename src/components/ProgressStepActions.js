@@ -5,8 +5,10 @@ import {selectError, selectStep, setStep} from '../slices/progressStepSlice'
 import {Blue} from '../colors/colorsApp'
 
 import tw from 'twrnc'
+import { selectLanguageApp } from '../slices/varSlice'
 
-export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
+export default ({handleNext = () => {}, finalStep = false}) => {
+    const language = useSelector(selectLanguageApp)
     const dispatch = useDispatch()
     const error = useSelector(selectError)
     const step = useSelector(selectStep)
@@ -33,17 +35,6 @@ export default ({language = '1', handleNext = () => {}, finalStep = false}) => {
                         <Text style={tw`text-[#fff] font-bold`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
                     </View>
             }
-            {/* {
-                !error
-                ?
-                    <TouchableOpacity style={tw`w-auto h-auto bg-[${Blue}] justify-center items-center rounded-2xl py-2 px-4 flex-row`} onPress={() => handleNext()}>
-                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
-                    </TouchableOpacity>
-                :
-                    <View style={tw`w-auto h-auto bg-[#dadada] justify-center items-center rounded-2xl py-2 px-4 flex-row`}>
-                        <Text style={tw`text-base text-[#fff] font-bold android:pb-0.5`}>{language === '1' ? !finalStep ? 'Siguiente' : 'Finalizar' : !finalStep ? 'Next' : 'Finish'}</Text>
-                    </View>
-            } */}
         </View>
     )
 }

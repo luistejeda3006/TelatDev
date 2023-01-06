@@ -1,10 +1,13 @@
 import {useState} from 'react'
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import DatePicker from 'react-native-date-picker'
+import {useSelector} from 'react-redux'
 import {formatDate} from '../../js/dates'
+import {selectLanguageApp} from '../../slices/varSlice'
 
 let initialDate = new Date()
-export default ({dateLabel = '', language = '1', getValue = () => {}, shortFormat = true, isModule = false, marginBottom = true,}) => {
+export default ({dateLabel = '', getValue = () => {}, shortFormat = true, isModule = false, marginBottom = true,}) => {
+    const language = useSelector(selectLanguageApp)
     const [date, setDate] = useState(initialDate)
     const [open, setOpen] = useState(false)
 
@@ -36,6 +39,8 @@ export default ({dateLabel = '', language = '1', getValue = () => {}, shortForma
                 title={null}
                 open={open}
                 date={date}
+                confirmText={language === '1' ? 'Confirmar' : 'Confirm'}
+                cancelText={language === '1' ? 'Cancelar' : 'Cancel'}
                 onConfirm={handleDate}
                 onCancel={() => {
                 setOpen(false)

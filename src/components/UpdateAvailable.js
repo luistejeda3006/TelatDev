@@ -3,10 +3,11 @@ import {Text, StyleSheet, View, Image, TouchableOpacity, Linking} from 'react-na
 import { Modal } from 'react-native-paper';
 import { isIphone } from '../access/requestedData';
 import * as Animatable from 'react-native-animatable';
+import { useSelector } from 'react-redux';
+import { selectLanguageApp } from '../slices/varSlice';
 
-export default ({visibility, language = '1', id_ios = 'us/app/telat/id6443436901', id_android = 'com.telatapp&hl=es_MX&gl=US', handleDismiss}) => {
-
-	let idioma = String(language);
+export default ({visibility, id_ios = 'us/app/telat/id6443436901', id_android = 'com.telatapp&hl=es_MX&gl=US', handleDismiss}) => {
+	const language = useSelector(selectLanguageApp)
 
     return (
         <Modal visible={visibility} onDismiss={handleDismiss} contentContainerStyle={[styles.center]}>
@@ -35,13 +36,13 @@ export default ({visibility, language = '1', id_ios = 'us/app/telat/id6443436901
 								duration={2000}
 								style={{height: '50%', alignSelf: 'stretch', justifyContent: 'center'}}
 							>
-								<Text style={{fontSize: 13, fontWeight: 'normal', color: '#fff'}}>{idioma === '1' ? 'Actualización Disponible' : 'Update Available'}</Text>
+								<Text style={{fontSize: 13, fontWeight: 'normal', color: '#fff'}}>{language === '1' ? 'Actualización Disponible' : 'Update Available'}</Text>
 							</Animatable.View>
 							<Animatable.View
 								animation='slideInLeft'
 								duration={2250}
 								style={{height: '50%', alignSelf: 'stretch', justifyContent: 'flex-start'}}>
-								<Text style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>{idioma === '1' ? `Consíguela en ${isIphone ? 'App Store' : 'Google Play'}` : `Get it on ${isIphone ? 'App Store' : 'Google Play'}`}</Text>
+								<Text style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>{language === '1' ? `Consíguela en ${isIphone ? 'App Store' : 'Google Play'}` : `Get it on ${isIphone ? 'App Store' : 'Google Play'}`}</Text>
 							</Animatable.View>
 						</View>
 					</Animatable.View>
