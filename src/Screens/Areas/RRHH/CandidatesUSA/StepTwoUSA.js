@@ -3,7 +3,6 @@ import {StyleSheet, View, Alert, Text, TouchableOpacity, BackHandler} from 'reac
 import {InputForm, Picker, TitleForms, ProgressStepActions, MultiTextForm} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
-import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Blue} from '../../../../colors/colorsApp';
@@ -11,9 +10,12 @@ import {isIphone} from '../../../../access/requestedData';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 import {setSchoolsUSA, setStepTwoUSA} from '../../../../slices/applicationForm';
+import {selectOrientation} from '../../../../slices/orientationSlice';
 import tw from 'twrnc'
 
-export default ({navigation, language, handleScrollTop = () => {} , orientation}) => {
+export default ({navigation, handleScrollTop = () => {}}) => {
+    const orientation = useSelector(selectOrientation)
+
     const input_diploma = useRef()
     const input_grade = useRef()
     const input_school = useRef()
@@ -26,13 +28,6 @@ export default ({navigation, language, handleScrollTop = () => {} , orientation}
     const step = useSelector(selectStep)
 
     const {submitForm, values} = useFormikContext();
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
     const first = {label: 'PLEASE SELECT ONE', value: 'SEL'};
 
@@ -257,7 +252,7 @@ export default ({navigation, language, handleScrollTop = () => {} , orientation}
         );
     
         return () => backHandler.remove();
-    }, [language]);
+    }, []);
 
     const handleAdd = (current) => {
         if(current <= 5){
@@ -297,163 +292,148 @@ export default ({navigation, language, handleScrollTop = () => {} , orientation}
             
             <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
-                        !isTablet()
-                        ?
-                            <>
-                                <TitleForms type={'title'} title={'Education'}/>
-                                <Text style={tw`text-[#adadad] text-sm mb-1.5`}>(You may be required to provide proof of diploma, degree, transcripts, licenses, and certifications)</Text>
-                                <TitleForms type={'subtitle'} title={'Have you ever received a High School Diploma or GED? (Please specify which)'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'DIPLOMA OR GED'}
-                                    fieldName={'diploma_2'}
-                                    ref={input_diploma}
-                                    onSubmitEditing={() => input_grade.current.focus()}
+                        <>
+                            <TitleForms type={'title'} title={'Education'}/>
+                            <Text style={tw`text-[#adadad] text-sm mb-1.5`}>(You may be required to provide proof of diploma, degree, transcripts, licenses, and certifications)</Text>
+                            <TitleForms type={'subtitle'} title={'Have you ever received a High School Diploma or GED? (Please specify which)'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'DIPLOMA OR GED'}
+                                fieldName={'diploma_2'}
+                                ref={input_diploma}
+                                onSubmitEditing={() => input_grade.current.focus()}
+                            />
+                            <TitleForms type={'subtitle'} title={'If not, what is the highest level completed?'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'HIGHEST GRADE LEVEL COMPLETED'}
+                                fieldName={'level_2'}
+                                ref={input_grade}
                                 />
-                                <TitleForms type={'subtitle'} title={'If not, what is the highest level completed?'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'HIGHEST GRADE LEVEL COMPLETED'}
-                                    fieldName={'level_2'}
-                                    ref={input_grade}
-                                    />
 
-                                <TitleForms type={'title'} title={'Schools'} Item={Item}/>
-                                <TitleForms type={'subtitle'} title={'Type Of School'} />
-                                <Picker 
-                                    fieldName={'type_school_uno_2'}
-                                    items={schoolOptions}
-                                />
-                                <TitleForms type={'subtitle'} title={'School Name'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'SCHOOL NAME'}
-                                    fieldName={'school_name_uno_2'}
-                                    ref={input_school}
-                                    onSubmitEditing={() => input_location.current.focus()}
-                                />
-                                <TitleForms type={'subtitle'} title={'Location'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'LOCATION'}
-                                    fieldName={'location_uno_2'}
-                                    ref={input_location}
-                                />
-                                <TitleForms type={'subtitle'} title={'Graduated'} />
-                                <Picker 
-                                    fieldName={'graduated_uno_2'}
-                                    items={closeOptions}
-                                    required={false}
-                                />
-                                <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
-                                    fieldName={'certificate_uno_2'}
-                                    ref={input_type}
-                                    onSubmitEditing={() => input_schedule.current.focus()}
-                                />
-                                <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
-                                <InputForm
-                                    status={true}
-                                    placeholder={'SCHEDULE'}
-                                    fieldName={'schedule_uno_2'}
-                                    ref={input_schedule}
-                                />
-                                {
-                                    schools.map((x,i) =>
-                                        x.visible
-                                        &&
-                                            <>
-                                                <View style={{flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20, marginBottom: 4}} key={x.id}>
-                                                    <View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                                        <Text style={tw`text-base text-[${Blue}] font-bold`}>{`School (Optional)`}</Text>
-                                                    </View>
-                                                    <View style={{width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'flex-end', borderTopEndRadius: 20, borderBottomEndRadius: 20,}}>
-                                                        <TouchableOpacity onPress={() => handleHide(x.id)} style={{height: 32, width: 32, backgroundColor: 'rgba(219,62,47,.1)', borderRadius: 25, borderWidth: 1, borderColor: '#DB3E2F', justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? 1 : 0}}>
-                                                            <IonIcons name={'trash-can'} size={22} color={'#DB3E2F'} />
-                                                        </TouchableOpacity>
-                                                    </View>
+                            <TitleForms type={'title'} title={'Schools'} Item={Item}/>
+                            <TitleForms type={'subtitle'} title={'Type Of School'} />
+                            <Picker 
+                                fieldName={'type_school_uno_2'}
+                                items={schoolOptions}
+                            />
+                            <TitleForms type={'subtitle'} title={'School Name'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'SCHOOL NAME'}
+                                fieldName={'school_name_uno_2'}
+                                ref={input_school}
+                                onSubmitEditing={() => input_location.current.focus()}
+                            />
+                            <TitleForms type={'subtitle'} title={'Location'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'LOCATION'}
+                                fieldName={'location_uno_2'}
+                                ref={input_location}
+                            />
+                            <TitleForms type={'subtitle'} title={'Graduated'} />
+                            <Picker 
+                                fieldName={'graduated_uno_2'}
+                                items={closeOptions}
+                                required={false}
+                            />
+                            <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
+                                fieldName={'certificate_uno_2'}
+                                ref={input_type}
+                                onSubmitEditing={() => input_schedule.current.focus()}
+                            />
+                            <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
+                            <InputForm
+                                status={true}
+                                placeholder={'SCHEDULE'}
+                                fieldName={'schedule_uno_2'}
+                                ref={input_schedule}
+                            />
+                            {
+                                schools.map((x,i) =>
+                                    x.visible
+                                    &&
+                                        <>
+                                            <View style={{flexDirection: 'row', borderTopStartRadius: 20, borderBottomStartRadius: 20, marginBottom: 4}} key={x.id}>
+                                                <View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start'}}>
+                                                    <Text style={tw`text-base text-[${Blue}] font-bold`}>{`School (Optional)`}</Text>
                                                 </View>
-                                                <TitleForms type={'subtitle'} title={'Type Of School'} />
-                                                <Picker
-                                                    fieldName={x.curr_nivel_estudio}
-                                                    items={schoolOptions}
-                                                    required={false}
-                                                />
-                                                <TitleForms type={'subtitle'} title={'School Name'} />
-                                                <InputForm
-                                                    status={true}
-                                                    fieldName={x.curr_institucion}
-                                                    placeholder={'SCHOOL NAME'}
-                                                />
-                                                <TitleForms type={'subtitle'} title={'Location'} />
-                                                <InputForm
-                                                    status={true} 
-                                                    fieldName={x.curr_ubicacion}
-                                                    placeholder={'LOCATION'}
-                                                />
-                                                <TitleForms type={'subtitle'} title={'Graduated'} />
-                                                <Picker
-                                                    fieldName={x.curr_titulo}
-                                                    items={closeOptions}
-                                                    required={false}
-                                                />
-                                                <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
-                                                <InputForm
-                                                    status={true}
-                                                    fieldName={x.curr_certificado}
-                                                    placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
-                                                />
-                                                <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
-                                                <InputForm
-                                                    status={true}
-                                                    fieldName={x.curr_horario}
-                                                    placeholder={'SCHEDULE'}
-                                                />
-                                            </>
-                                    )
-                                }
-                                <TitleForms type={'title'} title={'Special Training / Skills / Qualification'}/>
-                                <TitleForms type={'subtitle'} title={'List all job related training or skills you process and office/computer equipment you can use, including types of software and hardware.'} />
-                                <MultiTextForm
-                                    status={true}
-                                    placeholder={'SPECIAL TRAINING / SKILLS / QUALIFICATION'}
-                                    fieldName={'qualifications_2'}
-                                    isTextArea={true}
-                                    required={true}
-                                />
-                                
-                                <TitleForms type={'title'} title={'Assessment Scores'}/>
-                                <TitleForms type={'subtitle'} title={'English Proficiency'} />
-                                <Picker
-                                    fieldName={'english_proficiency_2'}
-                                    items={proficiencyOptions}
-                                />
-                                <TitleForms type={'subtitle'} title={'Spanish Proficiency'} />
-                                <Picker
-                                    fieldName={'spanish_proficiency_2'}
-                                    items={proficiencyOptions}
-                                />
-                                <ProgressStepActions language={'2'} handleNext={handleValues} type={2}/>
-                            </>
-                        :
-                            <>
-                                <Text>Por definirse</Text>
-                            </>
+                                                <View style={{width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'flex-end', borderTopEndRadius: 20, borderBottomEndRadius: 20,}}>
+                                                    <TouchableOpacity onPress={() => handleHide(x.id)} style={{height: 32, width: 32, backgroundColor: 'rgba(219,62,47,.1)', borderRadius: 25, borderWidth: 1, borderColor: '#DB3E2F', justifyContent: 'center', alignItems: 'center', paddingLeft: isIphone ? 1 : 0}}>
+                                                        <IonIcons name={'trash-can'} size={22} color={'#DB3E2F'} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                            <TitleForms type={'subtitle'} title={'Type Of School'} />
+                                            <Picker
+                                                fieldName={x.curr_nivel_estudio}
+                                                items={schoolOptions}
+                                                required={false}
+                                            />
+                                            <TitleForms type={'subtitle'} title={'School Name'} />
+                                            <InputForm
+                                                status={true}
+                                                fieldName={x.curr_institucion}
+                                                placeholder={'SCHOOL NAME'}
+                                            />
+                                            <TitleForms type={'subtitle'} title={'Location'} />
+                                            <InputForm
+                                                status={true} 
+                                                fieldName={x.curr_ubicacion}
+                                                placeholder={'LOCATION'}
+                                            />
+                                            <TitleForms type={'subtitle'} title={'Graduated'} />
+                                            <Picker
+                                                fieldName={x.curr_titulo}
+                                                items={closeOptions}
+                                                required={false}
+                                            />
+                                            <TitleForms type={'subtitle'} title={'Type Of Degree Or Certificate'} />
+                                            <InputForm
+                                                status={true}
+                                                fieldName={x.curr_certificado}
+                                                placeholder={'TYPE OF DEGREE OR CERTIFICATE'}
+                                            />
+                                            <TitleForms type={'subtitle'} title={'Provide Schedule (If Current Student)'} />
+                                            <InputForm
+                                                status={true}
+                                                fieldName={x.curr_horario}
+                                                placeholder={'SCHEDULE'}
+                                            />
+                                        </>
+                                )
+                            }
+                            <TitleForms type={'title'} title={'Special Training / Skills / Qualification'}/>
+                            <TitleForms type={'subtitle'} title={'List all job related training or skills you process and office/computer equipment you can use, including types of software and hardware.'} />
+                            <MultiTextForm
+                                status={true}
+                                placeholder={'SPECIAL TRAINING / SKILLS / QUALIFICATION'}
+                                fieldName={'qualifications_2'}
+                                isTextArea={true}
+                                required={true}
+                            />
+                            
+                            <TitleForms type={'title'} title={'Assessment Scores'}/>
+                            <TitleForms type={'subtitle'} title={'English Proficiency'} />
+                            <Picker
+                                fieldName={'english_proficiency_2'}
+                                items={proficiencyOptions}
+                            />
+                            <TitleForms type={'subtitle'} title={'Spanish Proficiency'} />
+                            <Picker
+                                fieldName={'spanish_proficiency_2'}
+                                items={proficiencyOptions}
+                            />
+                            <ProgressStepActions language={'2'} handleNext={handleValues} type={2}/>
+                        </>
                     :
-                        !isTablet()
-                        ?
-                            <>
-                                <Text>Por definirse</Text>
-                            </>
-                        :
-                            //horizontal tablet
-                            <>
-                                <Text>Por definirse</Text>
-                            </>
+                        <></>
                 }
             </View>
         </KeyboardAwareScrollView>

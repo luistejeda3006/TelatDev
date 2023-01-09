@@ -1,26 +1,29 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, Alert, BackHandler} from 'react-native';
 import {InputForm, ProgressStepActions, TitleForms} from '../../../../components';
-import {ProgressStep} from 'react-native-progress-steps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Blue} from '../../../../colors/colorsApp';
 import {live, login, urlJobs, origen} from '../../../../access/requestedData';
 import {getCurrentDate} from '../../../../js/dates';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../../../../slices/orientationSlice';
+import {selectLanguageApp} from '../../../../slices/varSlice';
+import { selectStepOneMX, selectStepThreeMX, selectStepTwoMX } from '../../../../slices/applicationForm';
 
-let currentOne = null;
-let currentTwo = null;
-let currentThree = null;
-
-let keyOne = 'stepOne'
-let keyTwo = 'stepTwo'
-let keyThree = 'stepThree'
-
+let stepOneInfo = null;
+let stepTwoInfo = null;
+let stepThreeInfo = null;
 let all = null;
 
-export default ({navigation, language, orientation, ...rest}) => {
+export default ({navigation}) => {
+    stepOneInfo = useSelector(selectStepOneMX)
+    stepTwoInfo = useSelector(selectStepTwoMX)
+    stepThreeInfo = useSelector(selectStepThreeMX)
+
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
+
     const input_nombre_uno = useRef()
     const input_ocupacion_uno = useRef()
     const input_relacion_uno = useRef()
@@ -31,12 +34,6 @@ export default ({navigation, language, orientation, ...rest}) => {
     const input_telefono_dos = useRef()
 
     const {submitForm, values} = useFormikContext();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     const [filters, setFilters] = useState({
         error: true,
@@ -44,24 +41,6 @@ export default ({navigation, language, orientation, ...rest}) => {
 
     const {error} = filters;
     const {nombreRelacion_1, ocupacionRelacion_1, relacion_1, telefonoRelacion_1, nombreRelacion_2, ocupacionRelacion_2, relacion_2, telefonoRelacion_2} = values;
-    
-    const getData = async () => {
-        currentOne = await AsyncStorage.getItem(keyOne) || '[]';
-        currentOne = JSON.parse(currentOne);
-
-        currentTwo = await AsyncStorage.getItem(keyTwo) || '[]';
-        currentTwo = JSON.parse(currentTwo);
-
-        currentThree = await AsyncStorage.getItem(keyThree) || '[]';
-        currentThree = JSON.parse(currentThree);
-
-        all = {...currentOne, ...currentTwo};
-        all = {...all, ...currentThree};
-    }
-
-    useEffect(() => {
-        getData()
-    })
 
     const Alerta = () => {
         return (
@@ -94,7 +73,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                     cand_origen: origen
                 }
 
-                all = {...all, ...obj_4};
+                all = {...stepOneInfo, ...stepTwoInfo, ...stepThreeInfo, ...obj_4}
+
                 const body = {
                     'action': 'insert_precandidato',
                     'country': 'MX',
@@ -103,8 +83,6 @@ export default ({navigation, language, orientation, ...rest}) => {
                     'live': live,
                 }
 
-                /* console.log('body: ', body)
-                console.log('all: ', all) */
                 try{
                     const request = await fetch(urlJobs, {
                         method: 'POST',
@@ -113,8 +91,8 @@ export default ({navigation, language, orientation, ...rest}) => {
                         },
                         body: JSON.stringify(body)
                     });
-                    const {response, status} = await request.json();
 
+                    const {response, status} = await request.json();
                     if(status === 200){
                         setFilters({...filters, error: false, appointment: false})
                         Alert.alert(
@@ -124,17 +102,10 @@ export default ({navigation, language, orientation, ...rest}) => {
                                 { text: 'OK'}
                             ]
                         )
-                        await AsyncStorage.removeItem(keyOne);
-                        await AsyncStorage.removeItem(keyTwo);
-                        await AsyncStorage.removeItem(keyThree);
                         navigation.navigate('Choose')
                     }
 
                     else if(status === 400){
-                        await AsyncStorage.removeItem(keyOne);
-                        await AsyncStorage.removeItem(keyTwo);
-                        await AsyncStorage.removeItem(keyThree);
-
                         Alert.alert(
                             language === '1' ? 'Error al envíar su solicitud' : 'Error to send your request',
                             language === '1' ? 'Inténtelo de nuevo más tarde.' : 'Try later, again.',
@@ -202,7 +173,7 @@ export default ({navigation, language, orientation, ...rest}) => {
         >
             <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <>
                             <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
@@ -239,64 +210,7 @@ export default ({navigation, language, orientation, ...rest}) => {
                             <ProgressStepActions handleNext={handleValues} language={language} finalStep={true}/>
                         </>
                     :
-                        <>
-                            <TitleForms type={'title'} title={language === '1' ? 'Referencias Personales (No Familiares)' : 'Personal References (non-family members)'}/>
-                            <View style={styles.container}>
-                                <View style={styles.header}>
-                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.1' : 'Reference Number 1'} </Text>
-                                </View>
-                                <View style={styles.body}>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_1'} ref={input_nombre_uno} onSubmitEditing={() => input_ocupacion_uno.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_1'} ref={input_ocupacion_uno} onSubmitEditing={() => input_relacion_uno.current.focus()}/>
-                                        </View>
-                                    </View>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_1'} ref={input_relacion_uno} onSubmitEditing={() => input_telefono_uno.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_1'} ref={input_telefono_uno} onSubmitEditing={() => input_nombre_dos.current.focus()}/>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={[styles.container, {marginBottom: 15}]}>
-                                <View style={styles.header}>
-                                    <Text style={styles.title}> {language === '1' ? 'Referencia No.2' : 'Reference Number 2'} </Text>
-                                </View>
-                                <View style={styles.body}>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre' : 'Name'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Nombre completo' : 'Full name'} fieldName={'nombreRelacion_2'} ref={input_nombre_dos} onSubmitEditing={() => input_ocupacion_dos.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Ocupación' : 'Occupation'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Específica ocupación' : 'Especify occupation'} fieldName={'ocupacionRelacion_2'} ref={input_ocupacion_dos} onSubmitEditing={() => input_relacion_dos.current.focus()}/>
-                                        </View>
-                                    </View>
-                                    <View style={{flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center'}}>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? '¿Cómo los conoces?' : 'How do you know them?'}/>
-                                            <InputForm status={true} placeholder={language === '1' ? 'Específica la relación' : 'Especify how do you know them'} fieldName={'relacion_2'} ref={input_relacion_dos} onSubmitEditing={() => input_telefono_dos.current.focus()}/>
-                                        </View>
-                                        <View style={{flex: 1, marginRight: '3%'}}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Número telefónico' : 'Phone number'}/>
-                                            <InputForm keyboardType='number-pad' returnKeyType={'done'} maxLength={10} status={true} placeholder={language === '1' ? 'Número telefónico' : 'Phone number'} fieldName={'telefonoRelacion_2'} ref={input_telefono_dos} />
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                            <ProgressStepActions handleNext={handleValues} language={language} finalStep={true}/>
-                        </>
+                        <></>
                 }
             </View>
         </KeyboardAwareScrollView>

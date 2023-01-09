@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {DeviceEventEmitter} from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setOrientation } from '../slices/orientationSlice';
+import {useDispatch} from 'react-redux';
+import {setOrientation} from '../slices/orientationSlice';
 import Orientation from 'react-native-orientation';
 
 export default (initialState = {}) => {

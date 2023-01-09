@@ -1,16 +1,20 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useCallback} from 'react'
 import {View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, StatusBar, SafeAreaView} from 'react-native'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../../colors/colorsApp'
-import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
-import { HeaderLandscape, HeaderPortrait } from '../../../../../components';
-import { useOrientation, useNavigation, useScroll } from '../../../../../hooks';
+import {HeaderLandscape, HeaderPortrait} from '../../../../../components';
+import {useNavigation} from '../../../../../hooks';
 import {puzzle_utilities} from './Systems'
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../../../../../slices/orientationSlice';
+import {selectLanguageApp} from '../../../../../slices/varSlice';
 
-export default ({navigation, route: {params: {origin, language, orientation}}}) => {
-	const [contador, setContador] = useState(0)
+export default ({navigation, route: {params: {origin}}}) => {
+	const orientation = useSelector(selectOrientation)
+	const language = useSelector(selectLanguageApp)
+
 	const [initialState, setInitialState] = useState({
 		opc_1: puzzle_utilities.opc_1,
 		opc_2: puzzle_utilities.opc_2,
@@ -29,16 +33,6 @@ export default ({navigation, route: {params: {origin, language, orientation}}}) 
             handlePath('Menu')
         }, [])
     );
-
-	const {orientationInfo} = useOrientation({
-		'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
-
-	const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
-
 
 	const ChooseItem = ({text, order}) => {
 		return(
@@ -123,20 +117,18 @@ export default ({navigation, route: {params: {origin, language, orientation}}}) 
 			<StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
 			<SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground}} />
 			{
-				orientationInfo.initial === 'PORTRAIT'
+				orientation === 'PORTRAIT'
 				?
-					<HeaderPortrait title={'Seleccionar Nivel'} screenToGoBack={'Menu'} navigation={navigation} visible={true} translateY={translateY}/>
+					<HeaderPortrait title={'Seleccionar Nivel'} screenToGoBack={'Menu'} navigation={navigation} visible={true} />
 				:
-					<HeaderLandscape title={'Seleccionar Nivel'} screenToGoBack={'Menu'} navigation={navigation} visible={true} translateY={translateY}/>
+					<HeaderLandscape title={'Seleccionar Nivel'} screenToGoBack={'Menu'} navigation={navigation} visible={true} />
 			}
 			<ScrollView
 				style={{flex: 1, backgroundColor: '#fff'}}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
-				onScroll={handleScroll}
-				contentContainerStyle={{paddingTop: paddingTop}}
 			>
-					<View style={[styles.selectionContainer, {padding: orientationInfo.initial === 'PORTRAIT' ? '3%' : '1.5%'}]}>
+					<View style={[styles.selectionContainer, {padding: orientation === 'PORTRAIT' ? '3%' : '1.5%'}]}>
 						<View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'flex-start', marginBottom: 15}}>
 							<View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
 								<IonIcons name={'information-outline'} color={Blue} size={32}/>

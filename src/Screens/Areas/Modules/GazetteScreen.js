@@ -1,19 +1,18 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, FlatList, Alert, Platform, Image, TouchableWithoutFeedback} from 'react-native';
-import {BottomNavBar, Calendar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading, NotResults} from '../../../components';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {formatDate, getCurrentDate, getLastDayMonth} from '../../../js/dates';
-import {isIphone, live, login, urlGaceta} from '../../../access/requestedData';
+import {StyleSheet, View, Text, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, FlatList, Alert, Image, TouchableWithoutFeedback} from 'react-native';
+import {BottomNavBar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading, NotResults} from '../../../components';
+import {getCurrentDate} from '../../../js/dates';
+import {live, login, urlGaceta} from '../../../access/requestedData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../hooks';
+import {useConnection, useNavigation} from '../../../hooks';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 import {BallIndicator} from 'react-native-indicators';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc'
 
 let token = null;
@@ -23,24 +22,18 @@ let tipo = null;
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     const dispatch = useDispatch()
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
     const refGaceta = useRef()
     const [loading, setLoading] = useState(false)
     const [reload, setReload] = useState(true)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(() => {
         id_usuario = user.data.datos_personales.id_usuario
@@ -237,56 +230,46 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 </View>
                 <View style={{height: 'auto'}}>
                     {
-                        orientationInfo.initial === 'PORTRAIT'
-                        ?
-                            <>
-                                <View style={tw`bg-[#fff]`}>
-                                    {
-                                        !hide
-                                        &&
-                                            <View style={tw`h-14 self-stretch flex-row border-b border-b-[#adadad] bg-white border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
-                                                <View style={tw`flex-1 flex-row justify-start items-center`}>
-                                                    <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
-                                                        <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
-                                                    </TouchableOpacity>
-                                                    <Text style={{color: '#adadad'}}> | </Text>
-                                                    <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto pl-2 pr-1.5 justify-center items-center`}>
-                                                        <Text style={tw`font-bold text-lg text-[${current === 2 ? Blue : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                <View style={tw`h-[100%] w-auto justify-center items-center flex-row`}>
-                                                    {
-                                                        initialState.loading
-                                                        ?
-                                                            <>
-                                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
-                                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
-                                                                </View>
-                                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
-                                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
-                                                                </View>
-                                                            </>
-                                                        :
-                                                            <>
-                                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
-                                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
-                                                                </TouchableOpacity>
-                                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
-                                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
-                                                                </TouchableOpacity>
-                                                            </>
-                                                    }
-                                                </View>
-                                            </View>
-                                    }
-                                    <View style={tw`h-auto self-stretch justify-center items-center border-b border-b-[${Blue}] bg-[${Blue}] `}>
-                                        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 13}}>{active === 1 ? language === '1' ? 'Importante' : 'Important' : active === 2 ? language === '1' ? 'Informativo' : 'Informative' : active === 3 ? language === '1' ? 'Dinámicas' : 'Dinamics' : language === '1' ? 'Promociones' : 'Promotions'}</Text>
-                                    </View>
+                        !hide
+                        &&
+                            <View style={tw`h-14 self-stretch flex-row border-b border-b-[#adadad] bg-white border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
+                                <View style={tw`flex-1 flex-row justify-start items-center`}>
+                                    <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
+                                        <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
+                                    </TouchableOpacity>
+                                    <Text style={{color: '#adadad'}}> | </Text>
+                                    <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto pl-2 pr-1.5 justify-center items-center`}>
+                                        <Text style={tw`font-bold text-lg text-[${current === 2 ? Blue : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
+                                    </TouchableOpacity>
                                 </View>
-                            </>
-                        :
-                            <></>
+                                <View style={tw`h-[100%] w-auto justify-center items-center flex-row`}>
+                                    {
+                                        initialState.loading
+                                        ?
+                                            <>
+                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
+                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
+                                                </View>
+                                                <View style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
+                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
+                                                </View>
+                                            </>
+                                        :
+                                            <>
+                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('-') : handleChangeYear('-')}>
+                                                    <IonIcons name={'chevron-left'} size={26} color={Blue} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={tw`w-12.5 h-14 justify-center items-center`} onPress={() => current === 2 ? handleChangeMonth('+') : handleChangeYear('+')}>
+                                                    <IonIcons name={'chevron-right'} size={26} color={Blue} />
+                                                </TouchableOpacity>
+                                            </>
+                                    }
+                                </View>
+                            </View>
                     }
+                    <View style={tw`h-auto self-stretch justify-center items-center border-b border-b-[${Blue}] bg-[${Blue}] py-0.5`}>
+                        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 13}}>{active === 1 ? language === '1' ? 'Importante' : 'Important' : active === 2 ? language === '1' ? 'Informativo' : 'Informative' : active === 3 ? language === '1' ? 'Dinámicas' : 'Dinamics' : language === '1' ? 'Promociones' : 'Promotions'}</Text>
+                    </View>
                 </View>
             </View>
         )
@@ -298,12 +281,12 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             <View style={{flex: 1, backgroundColor: '#fff', paddingBottom: 0}}>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         hasConnection
                         ?
                             <>
-                                <HeaderPortrait title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
+                                <HeaderPortrait title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} SubHeader={Header}/>
                                 <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
@@ -329,15 +312,15 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     <></>
                                     }
                                 </View>
-                                <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={2}/>
+                                {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation} screen={2}/> */}
                             </>
                         :
-                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                     :
                         hasConnection
                         ?
                             <>
-                                <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={Header}/>
+                                <HeaderLandscape title={language === '1' ? 'Gaceta' : 'Gazzete'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} SubHeader={Header}/>
                                 <Header />
                                 <View style={[styles.container, {padding: 0}]}>
                                     {
@@ -365,7 +348,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 </View>
                             </>
                         :
-                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                 }
             </View>
             <ModalLoading visibility={loading}/>

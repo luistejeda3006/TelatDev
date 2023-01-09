@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState} from 'react'
 import {StatusBar, SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Text, FlatList, Image, TouchableOpacity, TouchableNativeFeedback, ScrollView, Alert} from 'react-native'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground } from '../../../../../colors/colorsApp';
+import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground} from '../../../../../colors/colorsApp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useOrientation } from '../../../../../hooks';
-import { useSelector } from 'react-redux';
-import { selectOrientation } from '../../../../../slices/orientationSlice';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../../../../../slices/orientationSlice';
+import {isIphone} from '../../../../../access/requestedData';
+import {selectLanguageApp} from '../../../../../slices/varSlice';
 
 const Option = 'Option'
 const Personaje = 'Personaje'
 
 export default (props) => {
     const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
 
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
-
-    const language = '1'
     const Imagen = ({id, selected, tipo}) => {
 		return(
 			<Image
@@ -182,7 +181,6 @@ export default (props) => {
     }
 
     const handleUnlock = (id) => {
-        //seria un metodo de la api para actualizar el estado, mientras estarà temporal
         const nuevos = torneos.map(x => x.id === id ? ({...x, suscribed: true}) : x)
         setInitialState({...initialState, torneos: nuevos})
     }

@@ -1,20 +1,17 @@
 import React, { useState } from 'react'
-import {View, TouchableOpacity, Text, Platform, Image} from 'react-native'
+import {View, TouchableOpacity, Text, Image} from 'react-native'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFS from 'react-native-fs';
+import {isIphone} from '../access/requestedData';
 
 export default ({savePicture = undefined, imagen}) => {
     const [uriG, setUriG] = useState('');
 
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [initialState, setInitialState] = useState({
-        tipoAccion: 1,
         imagen: imagen
     })
-
-    const {tipoAccion} = initialState
 
     const handleSelectImage = () => {
         setInitialState({...initialState, imagen: ''})

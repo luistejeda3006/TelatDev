@@ -1,17 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
-import {useNavigation, useOrientation, useScroll} from '../../../hooks'
+import {useNavigation} from '../../../hooks'
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let data = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
+
     data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const [info, setInfo] = useState({})
@@ -21,15 +25,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             handlePath('Dashboard')
         }, [])
     );
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(() => {
         let obj = {
@@ -66,22 +61,20 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
-                    <HeaderPortrait title={language === '1' ? 'Currículum' : 'Resume'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderPortrait title={language === '1' ? 'Currículum' : 'Resume'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                 :
-                    <HeaderLandscape title={language === '1' ? 'Currículum' : 'Resume'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderLandscape title={language === '1' ? 'Currículum' : 'Resume'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
             }
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
-                    <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}]`}>
+                    <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            /* onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-[3%]`}></View>
                             <Title title={language === '1' ? 'FORMACIÓN ACADÉMICA' : 'EDUCATION'} icon={'graduation-cap'} tipo={1}/>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import {View, Text, FlatList, StatusBar, SafeAreaView, Image, Alert, TouchableOpacity, ScrollView} from 'react-native'
 import {FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components'
-import {useConnection, useNavigation, useOrientation} from '../../../hooks';
+import {useConnection, useNavigation} from '../../../hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isIphone, live, login, urlNomina} from '../../../access/requestedData';
 import {getCurrentDate} from '../../../js/dates';
@@ -9,7 +9,8 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../c
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let keyUserInfo = 'userInfo';
@@ -17,19 +18,14 @@ let keyTokenInfo = 'tokenInfo';
 let token = null;
 let user = null;
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
     const {handlePath} = useNavigation();
     const {hasConnection, askForConnection} = useConnection();
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     useFocusEffect(
         useCallback(() => {
@@ -150,7 +146,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             {
                 hasConnection
                 ? 
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <>
                             <HeaderPortrait title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
@@ -389,7 +385,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                     </>
             }
             <ModalLoading visibility={initialState.loading}/>

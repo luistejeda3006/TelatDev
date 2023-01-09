@@ -1,5 +1,5 @@
 import React, {forwardRef} from 'react'
-import {StyleSheet, View, TextInput} from 'react-native'
+import {View, TextInput} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {isIphone} from '../access/requestedData';
 import tw from 'twrnc'

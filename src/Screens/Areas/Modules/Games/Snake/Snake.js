@@ -1,20 +1,22 @@
-import React, {Component, useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {AppRegistry, StyleSheet, Text, View, SafeAreaView, StatusBar, TouchableOpacity, TouchableNativeFeedback, Image} from 'react-native';
-import {GameEngine, dispatch} from 'react-native-game-engine';
+import {GameEngine} from 'react-native-game-engine';
 import { barStyle, barStyleBackground, Blue, SafeAreaBackground } from '../../../../../colors/colorsApp';
 import {Constants, Food, Head, Systems, Tail} from './resources'
 import * as Animatable from 'react-native-animatable';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import DeviceInfo from 'react-native-device-info';
 import {HeaderPortrait, HeaderLandscape, Modal} from '../../../../../components'
-import { useNavigation, useOrientation, useSound } from '../../../../../hooks';
-import { useFocusEffect } from '@react-navigation/native';
+import {useNavigation, useSound} from '../../../../../hooks';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectLanguageApp} from '../../../../../slices/varSlice';
+import {selectOrientation} from '../../../../../slices/orientationSlice';
 
 let engine = null;
 let move = 'move-right'
-export default ({navigation, route: {params: {orientation, language, enTorneo = '0'}}}) => {
-	const {isTablet} = DeviceInfo;
-	const [contador, setContador] = useState(0)
+export default ({navigation, route: {params: {enTorneo = '0'}}}) => {
+	const orientation = useSelector(selectOrientation)
+	const language = useSelector(selectLanguageApp)
 	const [initialState, setInitialState] = useState({
 		boardSize: Constants.GRID_SIZE * Constants.CELL_SIZE,
 		state: {
@@ -30,13 +32,6 @@ export default ({navigation, route: {params: {orientation, language, enTorneo = 
 
 	const {sound: openSound} = useSound('bubble.mp3')
 	const {sound: gameOverSound} = useSound('game_over.mp3')
-
-	const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
 
 	const {handlePath} = useNavigation()
 	
@@ -99,7 +94,7 @@ export default ({navigation, route: {params: {orientation, language, enTorneo = 
 			<SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
 			<View style={styles.container}>
 				{
-					orientationInfo.initial === 'PORTRAIT'
+					orientation === 'PORTRAIT'
 					?
 						<>
 						
@@ -509,7 +504,7 @@ export default ({navigation, route: {params: {orientation, language, enTorneo = 
 						</>
 				}
 			</View>
-			<Modal orientation={orientationInfo.initial} visibility={scoreVisible} handleDismiss={() => setInitialState({...initialState, scoreVisible: !scoreVisible})}>
+			<Modal orientation={orientation} visibility={scoreVisible} handleDismiss={() => setInitialState({...initialState, scoreVisible: !scoreVisible})}>
 				<View style={{height: 'auto', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', marginBottom: 5, flexDirection: 'row'}}>
 					<View style={{width: 'auto'}}>
 						<IonIcons size={40} color={'transparent'} name={'close'}/>

@@ -1,5 +1,5 @@
-import { useDispatch } from 'react-redux';
-import { setAccess, setScreen } from '../slices/navigationSlice';
+import {useDispatch} from 'react-redux';
+import {setAccess, setScreen} from '../slices/navigationSlice';
 
 export default () => {
     const dispatch = useDispatch()

@@ -2,21 +2,24 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, Image, ScrollView, StatusBar, SafeAreaView, TouchableOpacity} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
 import DeviceInfo from 'react-native-device-info';
-import {useNavigation, useOrientation, useScroll} from '../../../hooks'
+import {useNavigation} from '../../../hooks'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
+import {Modal} from 'react-native-paper';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
-import { Modal } from 'react-native-paper';
 
 let user = '';
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
-    user = useSelector(selectUserInfo)
+export default ({navigation}) => {
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
 
+    user = useSelector(selectUserInfo)
     const {handlePath} = useNavigation();
     const [visibleQr, setVisibleQR] = useState(false)
     const {isTablet} = DeviceInfo;
@@ -27,15 +30,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             handlePath('Dashboard')
         }, [])
     );
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(() => {
         let obj = {
@@ -104,8 +98,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     style={tw`self-stretch`}
-                    /* onScroll={handleScroll}
-                    contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={tw`flex-2 items-center justify-center mb-5 mt-[3%]`}>
                         <View style={tw`w-53 h-53 rounded-full justify-center items-center border-8 border-[#dadada] my-5`}>
@@ -406,16 +398,16 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
-                    <HeaderPortrait title={language === '1' ? 'Datos Personales' : 'Personal Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderPortrait title={language === '1' ? 'Datos Personales' : 'Personal Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                 :
-                    <HeaderLandscape title={language === '1' ? 'Datos Personales' : 'Personal Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderLandscape title={language === '1' ? 'Datos Personales' : 'Personal Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
             }
             {
                 isTablet()
                 ?
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                             <ScrollView 
@@ -670,7 +662,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     :
                         <LandscapePhoneAndTablet />
                 :
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                             <ScrollView 

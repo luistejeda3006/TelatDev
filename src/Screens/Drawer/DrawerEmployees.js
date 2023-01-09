@@ -1,19 +1,18 @@
 import React,{useEffect, useState} from 'react';
-import {View, Image, Alert, ImageBackground, StatusBar, ScrollView, Text, Platform, TouchableWithoutFeedback} from 'react-native';
+import {View, Image, Alert, ImageBackground, StatusBar, ScrollView, Text, TouchableWithoutFeedback} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNotification, useOrientation} from '../../hooks'
 import {DrawerItem} from '../../components'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, Orange} from '../../colors/colorsApp'
 import {useSelector} from 'react-redux';
 import {selectOrientation} from '../../slices/orientationSlice';
 import {selectLanguageApp} from '../../slices/varSlice';
+import {isIphone} from '../../access/requestedData';
 import tw from 'twrnc';
 
 let currentLanguage = null;
 let isLogged = 'isLogged'
 let puesto = ''
-let thereAre = 'thereAre';
 let orientation = null;
 
 export default (props) => {
@@ -22,29 +21,11 @@ export default (props) => {
 
     const sendNotification = 'sendNotification'
     const dataNotification = 'dataNotification'
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [info, setInfo] = useState({})
-    const [contador, setContador] = useState(0)
-    const [notificacion, setNotificacion] = useState(false)
-    const {arrived} = useNotification()
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     useEffect(() => {
         props.navigation.closeDrawer()
     },[orientation])
-
-    useEffect(() => {
-        setTimeout(async () => {
-            let exists = await AsyncStorage.getItem(thereAre) || undefined;
-            if(exists === '1') setNotificacion(true)
-            else setNotificacion(false)
-        }, 1500)
-    }, [arrived])
 
     useEffect(async () => {
         let data = null;
@@ -75,7 +56,7 @@ export default (props) => {
         setInfo(obj)
         
         return undefined
-    },[contador])
+    },[])
 
     const handleAlert = () => {
         Alert.alert(

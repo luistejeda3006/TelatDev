@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react'
 import {View, Text, StyleSheet, Platform, ScrollView, TouchableWithoutFeedback, TouchableOpacity, StatusBar, SafeAreaView, PermissionsAndroid, Alert, RefreshControl} from 'react-native'
 import {HeaderPortrait, HeaderLandscape, FailedNetwork, Pagination, Modal, Select, Message, Camera, ModalLoading, MultiTextEditable, BottomNavBar, Calendar, NotResults} from '../../../../components'
-import {useConnection, useOrientation, useNavigation, useScroll} from '../../../../hooks'
+import {useConnection, useNavigation} from '../../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp'
@@ -11,7 +11,8 @@ import {isIphone, live, login, urlTickets} from '../../../../access/requestedDat
 import {useDispatch, useSelector} from 'react-redux';
 import {selectPermissions, selectTickets, setTickets, setPermissions, addTicket, formTicket, selectForm} from '../../../../slices/ticketSlice';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import {selectOrientation} from '../../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let id_usuario = '';
@@ -23,12 +24,14 @@ let tickets = []
 let permissions = {}
 let form = {}
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     const refTickets = useRef()
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
     tickets = useSelector(selectTickets)
-    console.log('tickets; ', tickets.length)
     permissions = useSelector(selectPermissions)
     form = useSelector(selectForm)
 
@@ -37,13 +40,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
-    const {translateY, paddingTop, handleSnap, handleScroll} = useScroll(orientationInfo.initial)
     const [archivados, setArchivados] = useState([])
     const [expedientes, setExpedientes] = useState([])
     const [loading, setLoading] = useState(false)
@@ -322,7 +318,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const Ticket = ({no_ticket, id, fecha, fecha_archivado, nombre, tipo, concepto, prioridad, prioridadBackgroundColor, ubicacion, estado, backgroundColorEstado, asignado, color_fondo, rango, is_table, html}) => {
         return(
-            <TouchableOpacity style={{borderWidth: 2, borderColor: '#dadada', flex: 1, justifyContent: 'center', alignItems: 'center', height: 165, marginBottom: '4%', backgroundColor: color_fondo, borderRadius: 12}} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientationInfo.initial})}>
+            <TouchableOpacity style={{borderWidth: 2, borderColor: '#dadada', flex: 1, justifyContent: 'center', alignItems: 'center', height: 165, marginBottom: '4%', backgroundColor: color_fondo, borderRadius: 12}} onPress={() => navigation.navigate('TicketsDetail', {id: id, id_usuario: id_usuario, id_puesto: id_puesto, active: active, is_table: is_table, html: html, cuenta: 0, orientation: orientation})}>
                 <View style={{flexDirection: 'row', borderBottomWidth: 2, borderBottomColor: '#dadada'}}>
                     <View style={{borderTopLeftRadius: 12, padding: 4, borderRightWidth: 2, borderRightColor: '#dadada', width: 'auto', height: 'auto', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10, backgroundColor: Blue}}>
                         <Text style={{fontWeight: 'bold', fontSize: 11, color: '#fff', textAlign: 'center'}}>{no_ticket}</Text>
@@ -350,11 +346,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 {
                     active !== 1
                     ?
-                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
+                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientation === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
                             <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                     :
-                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientationInfo.initial === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
+                        <View style={{height: 35, alignSelf: 'stretch', justifyContent: concepto.length >= 35 && orientation === 'PORTRAIT' ? 'center' : 'flex-end', alignItems: 'flex-start'}}>
                             <Text style={{fontSize: 13, color: '#000', paddingHorizontal: 6, fontWeight: 'bold'}}>{active === 1 ? 'Asignado a: ' : 'Fecha Archivado: '}<Text style={{fontWeight: 'normal'}}>{active === 1 ? asignado : fecha_archivado}</Text></Text>
                         </View>
                 }
@@ -599,13 +595,13 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ?
                         <>
                             {
-                                orientationInfo.initial === 'PORTRAIT'
+                                orientation === 'PORTRAIT'
                                 ?
                                     <>
-                                        <HeaderPortrait title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
+                                        <HeaderPortrait title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} SubHeader={SubHeader}/>
                                     </>
                                 :
-                                    <HeaderLandscape title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY} SubHeader={SubHeader}/>
+                                    <HeaderLandscape title={'Tickets'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} SubHeader={SubHeader}/>
                             }
                             <SubHeader />
                             {
@@ -795,29 +791,29 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 
                             <ModalLoading visibility={loading}/>
                                 
-                            <Modal orientation={orientationInfo.initial} visibility={visibleTipo} handleDismiss={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
+                            <Modal orientation={orientation} visibility={visibleTipo} handleDismiss={() => setInitialState({...initialState, visibleTipo: !visibleTipo})}>
                                 <Select data={form.TiposTicket} handleActionUno={handleActionUno} />
                             </Modal>
                             
-                            <Modal orientation={orientationInfo.initial} visibility={visibleConcepto} handleDismiss={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
+                            <Modal orientation={orientation} visibility={visibleConcepto} handleDismiss={() => setInitialState({...initialState, visibleConcepto: !visibleConcepto})}>
                                 <Select data={ConceptosTicket} handleActionUno={handleActionDos} />
                             </Modal>
                 
-                            <Modal orientation={orientationInfo.initial} visibility={visibleUbicacion} handleDismiss={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
+                            <Modal orientation={orientation} visibility={visibleUbicacion} handleDismiss={() => setInitialState({...initialState, visibleUbicacion: !visibleUbicacion})}>
                                 <Select data={form.UbicacionesTicket} handleActionUno={handleActionTres} />
                             </Modal>
                 
-                            <Modal orientation={orientationInfo.initial} visibility={visibleUsuarios} handleDismiss={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
+                            <Modal orientation={orientation} visibility={visibleUsuarios} handleDismiss={() => setInitialState({...initialState, visibleUsuarios: !visibleUsuarios})}>
                                 <Select data={form.UsuariosTicket} handleActionUno={handleActionCuatro} search={true}/>
                             </Modal>
                 
-                            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientationInfo.initial}/>
+                            <Message tipo={1} visible={visibleMensaje} title={showMensaje} orientation={orientation}/>
                         </>
                     :
-                    <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                    <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
                 }
             </View>
-            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+            {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
         </>
     )
 }

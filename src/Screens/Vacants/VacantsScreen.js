@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {TouchableOpacity, View, Text, FlatList, Image, Keyboard, StatusBar, SafeAreaView, ScrollView, TouchableWithoutFeedback} from 'react-native';
-import {HeaderPortrait, HeaderLandscape, FailedNetwork, InputFilter, RadioButton, NotResults} from '../../components';
-import DeviceInfo from 'react-native-device-info';
+import {HeaderPortrait, FailedNetwork, InputFilter, RadioButton, NotResults} from '../../components';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useOrientation, useConnection, useNavigation} from '../../hooks';
-import {isIphone, live, login, urlJobs} from '../../access/requestedData';
+import {useConnection, useNavigation} from '../../hooks';
+import {live, login, urlJobs} from '../../access/requestedData';
 import {BallIndicator} from 'react-native-indicators';
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
@@ -21,9 +20,6 @@ export default ({navigation, route: {params: {valueNotificationToken}}}) => {
 
     const [random, setRandom] = useState(1)
     const [section, setSection] = useState(1)
-    const [filterUno, setFilterUno] = useState(true)
-    const [filterDos, setFilterDos] = useState(false)
-    const [filterTres, setFilterTres] = useState(false)
 
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
@@ -36,7 +32,6 @@ export default ({navigation, route: {params: {valueNotificationToken}}}) => {
         }, [])
     );
     
-    const {isTablet} = DeviceInfo;
     const [filter, setFilter] = useState('');
     const [currentFilter, setCurrentFilter] = useState({
         position: language === '1' ? 'Puesto...' : 'Position...',
@@ -46,12 +41,6 @@ export default ({navigation, route: {params: {valueNotificationToken}}}) => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(0)
     const [visible, setVisible] = useState(false)
-
-    const [masterDataMX, setMasterDataMX] = useState([]);
-    const [masterDataUSA, setMasterDataUSA] = useState([]);
-
-    const [filteredDataMX, setFilteredDataMX] = useState([]);
-    const [filteredDataUSA, setFilteredDataUSA] = useState([]);
 
     const [data, setData] = useState([])
     const [masterData, setMasterData] = useState([])

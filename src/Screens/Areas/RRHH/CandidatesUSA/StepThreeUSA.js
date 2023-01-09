@@ -1,15 +1,15 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, Text, Alert, BackHandler, TouchableOpacity, Linking} from 'react-native';
+import {View, Text, Alert, BackHandler, TouchableOpacity, Linking} from 'react-native';
 import {DatePicker, InputForm, MultiTextForm, Picker, ProgressStepActions, TitleForms} from '../../../../components';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {contactEmail, isIphone} from '../../../../access/requestedData';
 import {Blue} from '../../../../colors/colorsApp';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setCurriculumUSA, setStatementsVisibility, setStepThreeUSA} from '../../../../slices/applicationForm';
+import {selectOrientation} from '../../../../slices/orientationSlice';
 import tw from 'twrnc'
 
 let currentOne = null;
@@ -20,7 +20,9 @@ let keyOne = 'stepOne'
 let keyTwo = 'stepTwo'
 let keySchools = 'stepTwoSchools'
 
-export default ({navigation, language}) => {
+export default ({navigation}) => {
+    const orientation = useSelector(selectOrientation)
+
     const input_company = useRef()
     const input_address = useRef()
     const input_telephone = useRef()
@@ -90,7 +92,7 @@ export default ({navigation, language}) => {
         
     ])
 
-    const getInfo = async () => {
+    /* const getInfo = async () => {
         currentOne = await AsyncStorage.getItem(keyOne) || '[]';
         currentOne = JSON.parse(currentOne);
 
@@ -105,7 +107,7 @@ export default ({navigation, language}) => {
 
     useEffect(() => {
         getInfo()
-    },[])
+    },[]) */
 
     const first = {label: 'PLEASE SELECT ONE', value: 'SEL'};
 
@@ -175,15 +177,7 @@ export default ({navigation, language}) => {
         reason_cinco_3,
         summary_cinco_3
     } = values
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
-
     const [filters, setFilters] = useState({
         error: true,
         experience: 0,
@@ -343,7 +337,7 @@ export default ({navigation, language}) => {
         );
     
         return () => backHandler.remove();
-    }, [language]);
+    }, []);
 
     const handleAction_uno = (index) => {
         setFilters({...filters, experience: index})
@@ -385,7 +379,7 @@ export default ({navigation, language}) => {
             showsHorizontalScrollIndicator={false}>
             <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <>
                             <TitleForms type={'title'} title={'Experience'}/>
@@ -557,49 +551,9 @@ export default ({navigation, language}) => {
                             <ProgressStepActions language={'2'} handleNext={handleValues} finalStep={true}/>
                         </>
                     :
-                        <>
-                            <Text>Por definirse el horizontal</Text>
-                        </>
-                        
+                        <></>
                 }
             </View>
         </KeyboardAwareScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow:1,
-    },
-    container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#c1c1c1',
-        marginTop: 20,
-        borderRadius: 15
-	},
-	header: {
-		flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-		alignSelf: 'stretch',
-        backgroundColor: Blue,
-        borderBottomWidth: 1,
-        borderColor: '#c1c1c1',
-        padding: 10,
-        borderTopStartRadius: 15,
-        borderTopEndRadius: 15
-	},
-	body:{
-		flex: 3,
-		padding: 15,
-        alignSelf: 'stretch',
-	},
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#fff'
-    }
-})

@@ -3,7 +3,7 @@ import {FlatList, View, StatusBar, SafeAreaView, BackHandler, Alert, RefreshCont
 import {Card, FailedNetwork, BottomNavBar} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
-import {useConnection, useNotification, useOrientation, useScroll, useSound} from '../../hooks';
+import {useConnection, useNotification, useSound} from '../../hooks';
 import {isIphone, live, login, urlApp, urlJobs, version } from '../../access/requestedData';
 import {BallIndicator} from 'react-native-indicators';
 import PushNotification from 'react-native-push-notification';
@@ -13,8 +13,8 @@ import {selectAccess, selectScreen, setAccess} from '../../slices/navigationSlic
 import {selectOrientation} from '../../slices/orientationSlice';
 import {selectDataNotification, selectLanguageApp, selectNotification, selectTokenInfo, selectUserInfo, setNotification, setVisibleSliders} from '../../slices/varSlice';
 import UpdateAvailable from '../../components/UpdateAvailable';
+import {selectCurrent, setCurrent} from '../../slices/dynamicsSlice';
 import tw from 'twrnc';
-import { selectCurrent, setCurrent } from '../../slices/dynamicsSlice';
 
 let gender = null;
 let picture = null;
@@ -26,15 +26,11 @@ let keyUserInfo = 'userInfo';
 let lastNotify = 'lastNotify';
 let keyTokenInfo = 'tokenInfo';
 let notificationToken = 'notificationToken';
-let valueNotificationToken = ''
 let sendNotification = 'sendNotification'
 let valueSendNotification = ''
-let pendingNotify = 'pendingNotify'
-let thereAre = 'thereAre';
 let show = undefined;
 let cuenta = 0;
 
-let dataNotification = 'dataNotification'
 let dataNotificationValue = ''
 let isLogged = 'isLogged'
 let change = 'change'; // 1 hay cambios 2 no hay cambios
@@ -43,9 +39,7 @@ let id_usuario = ''
 let screen = '';
 let access = '';
 let current = null;
-let orientation = '';
 let info_version = null;
-let language = null;
 
 export default ({navigation}) => {
     const dispatch = useDispatch()
@@ -53,20 +47,18 @@ export default ({navigation}) => {
     current = useSelector(selectCurrent)
     notification = useSelector(selectNotification)
     dataNotificationValue = useSelector(selectDataNotification)
-    orientation = useSelector(selectOrientation)
-    language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
     user = useSelector(selectUserInfo)
     token = useSelector(selectTokenInfo)
     
     screen = useSelector(selectScreen)
     access = useSelector(selectAccess)
 
-
-
     const {isTablet} = DeviceInfo;
     const [enabled, setEnabled] = useState(false)
     const [modules, setModules] = useState([])
-    /* const [notification, setNotificacion] = useState(false) */
+    
     const [loading, setLoading] = useState(true)
     const [valueNotificationToken, setValueNotificationToken] = useState('')
     const {hasConnection, askForConnection} = useConnection();
@@ -87,13 +79,6 @@ export default ({navigation}) => {
     useEffect(() => {
         dispatch(setVisibleSliders(false))
     },[])
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
     const reloading = () => {
         setLoading(true)

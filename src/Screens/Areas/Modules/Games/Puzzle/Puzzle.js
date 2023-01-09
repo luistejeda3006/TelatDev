@@ -1,12 +1,15 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useCallback} from 'react'
 import {View, Text, StyleSheet, FlatList, TouchableWithoutFeedback, ImageBackground, TouchableOpacity, StatusBar, SafeAreaView} from 'react-native'
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
-import { HeaderPortrait, HeaderLandscape } from '../../../../../components';
+import {Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import {HeaderPortrait, HeaderLandscape} from '../../../../../components';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { barStyle, barStyleBackground, Blue, SafeAreaBackground } from '../../../../../colors/colorsApp';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../../colors/colorsApp';
 import * as Animatable from 'react-native-animatable';
-import { useNavigation, useOrientation, useSound } from '../../../../../hooks';
-import { useFocusEffect } from '@react-navigation/native';
+import {useNavigation, useSound} from '../../../../../hooks';
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../../../../../slices/orientationSlice';
+import {selectLanguageApp} from '../../../../../slices/varSlice';
 
 const options = {
 	container: {
@@ -26,7 +29,9 @@ const options = {
 	},
 };
 
-export default ({navigation, route: {params: {nivel, puntos, meta, orientation, enTorneo}}}) => {
+export default ({navigation, route: {params: {nivel, puntos, meta, enTorneo}}}) => {
+	const orientation = useSelector(selectOrientation)
+	const language = useSelector(selectLanguageApp)
 	const [time, setTime] = useState('')
 	const [reload, setReload] = useState(0)
     const [initialState, setInitialState] = useState({
@@ -55,13 +60,6 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 	})
 
 	const {elementos, goal, isStopWatchStart, resetStopWatch, won} = initialState
-
-	const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
 
 	const {handlePath} = useNavigation()
 
@@ -107,7 +105,7 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 				!won
 				?
 					<TouchableWithoutFeedback onPress={() => handleMove(text, order)}>
-						<View style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientationInfo.initial === 'PORTRAIT' ? 69 : 55, height: orientationInfo.initial === 'PORTRAIT' ? 69 : 55}]}>
+						<View style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientation === 'PORTRAIT' ? 69 : 55, height: orientation === 'PORTRAIT' ? 69 : 55}]}>
 							<Text style={[styles.itemText, {color: '#000'}]}>{text}</Text>
 						</View>
 					</TouchableWithoutFeedback>
@@ -116,7 +114,7 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 						<Animatable.View
 							animation={won ? 'bounceOut' : 'bounceIn'}
 							duration={won ? 1000 : 2000}
-							style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientationInfo.initial === 'PORTRAIT' ? 69 : 55, height: orientationInfo.initial === 'PORTRAIT' ? 69 : 55}]}>
+							style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientation === 'PORTRAIT' ? 69 : 55, height: orientation === 'PORTRAIT' ? 69 : 55}]}>
 							<Text style={[styles.itemText, {color: '#000'}]}>{text}</Text>
 						</Animatable.View>
 					</View>
@@ -124,14 +122,14 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 				!won
 				?
 					<View
-						style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientationInfo.initial === 'PORTRAIT' ? 69 : 55, height: orientationInfo.initial === 'PORTRAIT' ? 69 : 55}]}>
+						style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientation === 'PORTRAIT' ? 69 : 55, height: orientation === 'PORTRAIT' ? 69 : 55}]}>
 						<Text style={[styles.itemText, {color: '#000'}]}>{text}</Text>
 					</View>
 				:
 					<Animatable.View
 						animation={won ? 'bounceOut' : 'bounceIn'}
 						duration={1000}
-						style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientationInfo.initial === 'PORTRAIT' ? 69 : 55, height: orientationInfo.initial === 'PORTRAIT' ? 69 : 55}]}>
+						style={[styles.item, {backgroundColor: text ? '#fff' : '#eee', borderWidth: 2, width: orientation === 'PORTRAIT' ? 69 : 55, height: orientation === 'PORTRAIT' ? 69 : 55}]}>
 						<Text style={[styles.itemText, {color: '#000'}]}>{text}</Text>
 					</Animatable.View>
 		)
@@ -176,7 +174,7 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 			<StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
 			<SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground}} />
 			{
-				orientationInfo.initial === 'PORTRAIT'
+				orientation === 'PORTRAIT'
 				?
 					<HeaderPortrait title={'Puzzle'} screenToGoBack={enTorneo === '1' ? 'Menu_' : 'ChoosePuzzle'} navigation={navigation} visible={true} confirmation={true} titleAlert={'Saliendo del juego'} subtitleAlert={'¿Seguro que deseas abandonar la partida?'} normal={true}/>
 				:
@@ -184,7 +182,7 @@ export default ({navigation, route: {params: {nivel, puntos, meta, orientation, 
 			}
 			<View style={styles.gameContainer}>
 				{
-					orientationInfo.initial === 'PORTRAIT'
+					orientation === 'PORTRAIT'
 					?
 						<>
 							<View style={{flex: 1, padding: '3%', alignSelf: 'stretch', justifyContent: 'flex-start', alignItems: 'flex-start'}}>

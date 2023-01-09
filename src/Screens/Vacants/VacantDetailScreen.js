@@ -1,22 +1,22 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {StyleSheet, View, Text, StatusBar, SafeAreaView, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import {HeaderLandscape, HeaderPortrait} from '../../components';
-import {useNavigation, useOrientation, useScroll} from '../../hooks';
+import {useNavigation} from '../../hooks';
 import HTMLView from 'react-native-htmlview'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../colors/colorsApp';
 import {isIphone} from '../../access/requestedData';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectLanguageApp} from '../../slices/varSlice';
+import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
 
-export default ({navigation, route: {params: {language, orientation, id, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer, country, id_sede}}}) => {
+export default ({navigation, route: {params: {id, nombre, ubicacion, sueldo, descripcion: header, beneficios: body, requisitos: footer, country, id_sede}}}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     const {handlePath} = useNavigation()
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
 
     const [initialState, setInitialState] = useState({
         ide: id,
@@ -33,7 +33,6 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
     })
 
     const {ide, countri, lg, sede, name, location, salary, description, benefits, requeriments} = initialState
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useFocusEffect(
         useCallback(() => {
@@ -48,11 +47,11 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
                     <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                     <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
                     {
-                        orientationInfo.initial === 'PORTRAIT'
+                        orientation === 'PORTRAIT'
                         ?
-                            <HeaderPortrait title={lg === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderPortrait title={lg === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true}/>
                         :
-                            <HeaderLandscape title={lg === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderLandscape title={lg === '1' ? 'Detalles de la Vacante' : 'Job Opening Details'} screenToGoBack={'Vacants'} navigation={navigation} visible={true}/>
                     }
                     <View style={tw`self-stretch flex-1 px-[3%] bg-[#fff]`}>
                         <ScrollView
@@ -94,7 +93,7 @@ export default ({navigation, route: {params: {language, orientation, id, nombre,
                                         stylesheet={styles}
                                     />
                                 </View>
-                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {id: ide, language: lg, orientation: orientationInfo.initial, country: countri, id_sede: sede})}>
+                                <TouchableWithoutFeedback onPress={() => navigation.navigate('Contact', {id: ide, language: lg, orientation: orientation, country: countri, id_sede: sede})}>
                                     <View style={tw`bg-[${Blue}] h-11 justify-center items-center rounded-3xl my-2.5 self-stretch mb-${isIphone ? 6 : 4} flex-row shadow-md`}>
                                         <IonIcons name={'account-check'} size={24} color={'#fff'}/>
                                         <Text style={tw`text-white font-bold text-lg ml-2.5`}>{lg === '1' ? 'Postularme' : 'Apply'}</Text>

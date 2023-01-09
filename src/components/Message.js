@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Text, Image} from 'react-native'
-import { useSelector } from 'react-redux'
-import { selectOrientation } from '../slices/orientationSlice'
+import {useSelector} from 'react-redux'
+import {selectOrientation} from '../slices/orientationSlice'
 import Modal from './Modal'
 
 export default ({title = '', tipo = 1, visible}) => {

@@ -1,8 +1,8 @@
 import React from 'react'
 import {View, Text, Image, Linking} from 'react-native'
 import tw from 'twrnc';
-import { Blue } from '../colors/colorsApp';
-import { getCurrentDate } from '../js/dates';
+import {Blue} from '../colors/colorsApp';
+import {getCurrentDate} from '../js/dates';
 
 export default ({country = 'MX'}) => {
     return(

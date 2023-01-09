@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, Dimensions, SafeAreaView, StatusBar, Alert, RefreshControl, Platform} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, FlatList, Dimensions, SafeAreaView, StatusBar, Alert} from 'react-native';
 import {HeaderPortrait, ModalLoading, Modal, MultiSelect, FailedNetwork, HeaderLandscape, Select, Title, RadioButton, CheckBox, BottomNavBar} from '../../../components';
 import {getCurrentDate} from '../../../js/dates'
 import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../hooks';
+import {useConnection, useNavigation} from '../../../hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LineChart, BarChart, PieChart} from 'react-native-chart-kit';
@@ -12,7 +12,8 @@ import {isIphone, live, login, urlReportes} from '../../../access/requestedData'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let keyUserInfo = 'userInfo';
@@ -24,12 +25,13 @@ let id_usuario = null;
 let cuenta = 0;
 let longitud = 0;
 
-export default ({navigation, route: {params: {orientation}}}) => {
+export default ({navigation}) => {
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
     const {isTablet} = DeviceInfo;
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     
     const [contador, setContador] = useState(0);
     const [loadingContent, setLoadingContent] = useState(true)
@@ -44,14 +46,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     
     const getUserInfo = () => {
         id_usuario = user.data.datos_personales.id_usuario
@@ -265,8 +259,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
     } = initialState
 
     const {total_razon_social, data_grafico, total, subareas, id_subarea} = areasGeneral;
-
-    const language = '1';
 
     const handleVisiblePeriodos = () => {
         setVisiblePeriodo(!visiblePeriodo)
@@ -847,7 +839,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
 
     useEffect(() => {
         getComparativasUno()
-    },[month, yearUno, orientationInfo.initial, hasConnection])
+    },[month, yearUno, orientation, hasConnection])
 
     const getComparativasDos = async () => {
         try{
@@ -1567,7 +1559,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                             keyExtractor={item => String(item.id)}
                         />
                     :
-                        orientationInfo.initial === 'PORTRAIT'
+                        orientation === 'PORTRAIT'
                         ?
                             <FlatList
                                 key={'_$_'}
@@ -1909,23 +1901,21 @@ export default ({navigation, route: {params: {orientation}}}) => {
                     hasConnection
                     ?
                         <>
-                            {orientationInfo.initial === 'PORTRAIT'
+                            {orientation === 'PORTRAIT'
                             ?
-                                <HeaderPortrait title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                                <HeaderPortrait title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                             :
-                                <HeaderLandscape title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>}
+                                <HeaderLandscape title={'Reportes Estadísticos'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />}
                             
                             <ScrollView
-                                /* onScroll={handleScroll}
-                                contentContainerStyle={{paddingTop: paddingTop}} */
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                style={{alignSelf: 'stretch', paddingHorizontal: orientationInfo.initial === 'PORTRAIT' ? '3%' : isIphone ? '5%' : '1.5%'}}
+                                style={{alignSelf: 'stretch', paddingHorizontal: orientation === 'PORTRAIT' ? '3%' : isIphone ? '5%' : '1.5%'}}
                             >
                                 {
                                     !isTablet()
                                     ?
-                                        orientationInfo.initial === 'PORTRAIT'
+                                        orientation === 'PORTRAIT'
                                         ?
                                             <>
                                                 <View style={{marginTop: '3%'}}></View>
@@ -2459,13 +2449,13 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 }
                                 <View style={{marginBottom: 25}}></View>
                             </ScrollView>
-                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                            {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
                         </>
                     :
-                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>}
+                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>}
             </View>
 
-            <Modal visibility={altas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, altas: !altas})}>
+            <Modal visibility={altas} orientation={orientation} handleDismiss={() => setInitialState({...initialState, altas: !altas})}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -2506,7 +2496,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 </ScrollView>
             </Modal>
 
-            <Modal visibility={bajas} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, bajas: !bajas})}>
+            <Modal visibility={bajas} orientation={orientation} handleDismiss={() => setInitialState({...initialState, bajas: !bajas})}>
                 <FlatList
                     key={'$__'}
                     ListHeaderComponent={<Header />}
@@ -2520,15 +2510,15 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos} >
+            <Modal orientation={orientation} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos} >
                 <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleArea} handleDismiss={handleVisibleArea}> 
+            <Modal orientation={orientation} visibility={visibleArea} handleDismiss={handleVisibleArea}> 
                 <Select data={areas} handleVisibleArea={handleVisibleArea} handleActionDos={handleActionDos} />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleSubarea} handleDismiss={handleVisibleSubarea}>
+            <Modal orientation={orientation} visibility={visibleSubarea} handleDismiss={handleVisibleSubarea}>
                 <Select data={subareas} handleVisibleArea={handleVisibleSubarea} handleActionDos={handleActionTres} />
             </Modal>
 

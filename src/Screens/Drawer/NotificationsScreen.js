@@ -2,23 +2,25 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, FlatList, StatusBar, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, FailedNetwork, BottomNavBar} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../hooks'
+import {useConnection, useNavigation} from '../../hooks'
 import {BallIndicator} from 'react-native-indicators';
 import {isIphone, live, login, urlApp} from '../../access/requestedData';
 import messaging from '@react-native-firebase/messaging'
 import {barStyle, barStyleBackground, Orange, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectTokenInfo, setNotification} from '../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, setNotification} from '../../slices/varSlice';
+import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let token = null;
 let lastNotify = 'lastNotify';
-let pendingNotify = 'pendingNotify';
-let lastNotifyCand = 'lastNotifyCand';
 
-export default ({navigation, route: {params: {language, orientation, origin = 1}}}) => {
+export default ({navigation, route: {params: {origin = 1}}}) => {
     const dispatch = useDispatch()
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     const {handlePath} = useNavigation()
     const {askForConnection, hasConnection} = useConnection()
     token = useSelector(selectTokenInfo)
@@ -74,15 +76,6 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
     useEffect(() => {
         getNotificaciones()
     },[hasConnection])
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     const reloading = () => {
         setLoading(true)
@@ -162,11 +155,11 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                         ?
                             <>
                                 {
-                                    orientationInfo.initial === 'PORTRAIT'
+                                    orientation === 'PORTRAIT'
                                     ?
-                                        <HeaderPortrait title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
+                                        <HeaderPortrait title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} />
                                     :
-                                        <HeaderLandscape title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} translateY={translateY}/>
+                                        <HeaderLandscape title={language === '1' ? 'Notificaciones' : 'Notifications'} screenToGoBack={origin === 1 ? 'Dashboard' : 'Choose'} navigation={navigation} visible={true} />
                                 }
                                 {
                                     loading
@@ -200,14 +193,14 @@ export default ({navigation, route: {params: {language, orientation, origin = 1}
                                                 <Text style={tw`mt-4 text-lg text-[#adadad]`}>{language === '1' ? 'No hay notificaciones por mostrar' : 'No notifications to display'}</Text>
                                             </View>
                                 }
-                                {
+                                {/* {
                                     origin === 1
                                     &&
-                                        <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial} screen={4}/>
-                                }
+                                        <BottomNavBar navigation={navigation} language={language} orientation={orientation} screen={4}/>
+                                } */}
                             </>
                         :
-                            <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                            <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
                     }
                 </>
                 

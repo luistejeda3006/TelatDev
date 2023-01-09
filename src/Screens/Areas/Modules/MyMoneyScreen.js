@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, StyleSheet,Text, Image, TouchableOpacity, ScrollView, StatusBar, SafeAreaView, Alert, TouchableWithoutFeedback, FlatList, Platform} from 'react-native';
+import {View, StyleSheet,Text, Image, TouchableOpacity, ScrollView, StatusBar, SafeAreaView, Alert, TouchableWithoutFeedback, FlatList} from 'react-native';
 import {FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading, Modal, Select, BottomNavBar, Title} from '../../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useOrientation, useConnection, useNavigation, useScroll} from '../../../hooks';
+import {useConnection, useNavigation} from '../../../hooks';
 import {isIphone, live, login, urlMoney} from '../../../access/requestedData';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,33 +10,33 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '..
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectAgente, selectOperaciones, selectPeriodos, setAgente, setOperaciones, setPeriodos} from '../../../slices/moneySlice';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc'
 
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 let token = null;
 let user = null;
-let data = null;
 let id_usuario = null;
 let cuenta = 0;
 let agente = {}
 let periodos = []
 let operaciones = {}
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     const dispatch = useDispatch()
     agente = useSelector(selectAgente)
     periodos = useSelector(selectPeriodos)
     operaciones = useSelector(selectOperaciones)
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
-    const [contador, setContador] = useState(0);
     const [visiblePeriodo, setVisiblePeriodo] = useState(false)
     const [visibleSummary, setVisibleSummary] = useState(false)
     const [date, setDate] = useState(false)
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [currentPeriodo, setCurrentPeriodo] = useState('')
     const [initialState, setInitialState] = useState({
         loading: false,
@@ -122,13 +122,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
     
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(async () => {
         id_usuario = user.data.datos_personales.id_usuario
@@ -445,11 +438,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     ?
                         <>
                             {
-                                orientationInfo.initial === 'PORTRAIT'
+                                orientation === 'PORTRAIT'
                                 ?
-                                    <HeaderPortrait title={'My Money'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                                    <HeaderPortrait title={'My Money'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                                 :
-                                    <HeaderLandscape title={'My Money'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                                    <HeaderLandscape title={'My Money'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                             }
                             
                             <ScrollView
@@ -503,29 +496,29 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Area'}</Text>
-                                                <Text style={{color: '#000'}}>{agente.area}</Text>
+                                                <Text style={{color: '#000'}}>{agente.area ? agente.area : '---'}</Text>
                                             </View>
                                         </View>
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Sub-area'}</Text>
-                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.subarea}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.subarea ? agente.subarea : '---'}</Text>
                                             </View>
 
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Campaign'}</Text>
-                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.campanna}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.campanna ? agente.campanna : '---'}</Text>
                                             </View>
                                         </View>
 
                                         <View style={{flexDirection: 'row', marginTop: 7}}>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Extension'}</Text>
-                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.extension}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.extension ? agente.extension : '---'}</Text>
                                             </View>
                                             <View style={{flex: 1}}>
                                                 <Text style={styles.title}>{'Location'}</Text>
-                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.ubicacion}</Text>
+                                                <Text style={{fontSize: 14, color: '#000'}}>{agente.ubicacion ? agente.ubicacion : '---'}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -562,16 +555,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         },
                                         shadowOpacity: 0.34,
                                         shadowRadius: 6.27, borderRadius: 15, marginHorizontal: isIphone ? '5%' : '3%'}}>
-                                            {/* <View style={{height: 'auto', alignSelf: 'stretch', paddingHorizontal: 8, paddingBottom: 8, borderBottomColor: Blue, borderBottomWidth: 1, marginTop: 10}}>
-                                                <View style={{flexDirection: 'row'}}>
-                                                    <View style={{width: 'auto', justifyContent: 'center'}}>
-                                                        <IonIcons name={'currency-usd'} size={24} color={Yellow} />
-                                                    </View>
-                                                    <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
-                                                        <Text style={{fontWeight: 'bold', color: Blue, fontSize: 18}}>{'My Money Details'}</Text>
-                                                    </View>
-                                                </View>
-                                            </View> */}
                                             <Title icon={'user'} tipo={1} hasBottom={false} title={'My Money Details'}/>
                                             <Header title={'Operations'} id={1} hide={header_uno} first={true}/>
                                             {
@@ -636,29 +619,29 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                     showsHorizontalScrollIndicator={false}
                                                     style={styles.list}
                                                     data={fechas}
-                                                    numColumns={orientationInfo.initial === 'PORTRAIT' ? 3 : 5}
+                                                    numColumns={orientation === 'PORTRAIT' ? 3 : 5}
                                                     renderItem={({item}) => <Quincenas id={item.id} title={item.title} background={item.background} color={item.color} dia={item.dia} fecha={item.fecha} btn={item.btn} completa={item.completa}/>}
                                                     keyExtractor={item => String(item.id)}
-                                                    key={orientationInfo.initial === 'PORTRAIT' ? '_1' : '_2'}
+                                                    key={orientation === 'PORTRAIT' ? '_1' : '_2'}
                                                 />
                                             </View>
                                         </View>
                                 }
                             </ScrollView>
-                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                            {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
                         </>
                     :
-                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                 }
             </View>
             
             <ModalLoading visibility={loading}/>
             
-            <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
+            <Modal orientation={orientation} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
                 <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleSummary} handleDismiss={() => setVisibleSummary(!visibleSummary)}>
+            <Modal orientation={orientation} visibility={visibleSummary} handleDismiss={() => setVisibleSummary(!visibleSummary)}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}

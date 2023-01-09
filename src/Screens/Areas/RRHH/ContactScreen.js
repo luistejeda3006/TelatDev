@@ -1,6 +1,6 @@
 import React, {useRef, useState, useEffect, useCallback} from 'react'
 import {View, Text, TouchableWithoutFeedback, PermissionsAndroid, Platform, Image, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, StatusBar} from 'react-native'
-import {useConnection, useOrientation, useNavigation, useForm, useScroll} from '../../../hooks'
+import {useConnection, useNavigation, useForm} from '../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp'
@@ -11,8 +11,11 @@ import {isIphone, live, login, urlJobs} from '../../../access/requestedData';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import * as Animatable from 'react-native-animatable';
 import RNFetchBlob from 'rn-fetch-blob'
+import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectLanguageApp} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc'
-import { useFocusEffect } from '@react-navigation/native';
 
 let cuenta = 0;
 
@@ -33,34 +36,19 @@ let segundos = null;
 let minutos = null;
 let milisegundos = null;
 let split = null;
-let total = null;
 
-let segundos_play = null;
-let milisegundos_play = null;
-let split_play = null;
-let total_play = null;
+export default ({navigation, route: {params: {id, country, id_sede}}}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
-export default ({navigation, route: {params: {id, language, country, id_sede}}}) => {
-    /* console.log('id: ', id, 'language: ', language, 'country: ', country, "id_sede: ", id_sede) */
     let filePath = null
     let encrypted = null;
-    const speaking_level = useRef()
-    const writing_level  = useRef()
-    const handle_programs  = useRef()
     const full_name  = useRef()
     const correo  = useRef()
     const phone_1  = useRef()
     const phone_2  = useRef()
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     const [successVisibility, setSuccessVisibility] = useState(false)
     const {handleInputChange, values, handleSetState, handleSubmitForm} = useForm({
         currentCity: (id_sede === '1' || id_sede === '2' || id_sede === '3') ? 'Mexico City' : id_sede === '4' ? 'Juárez' : 'El Paso, TX.',
@@ -577,7 +565,7 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} translateY={translateY}/>
+                        <HeaderPortrait title={language === '1' ? 'Formulario de Contacto' : 'Contact Form'} screenToGoBack={'VacantDetail'} navigation={navigation} visible={true} confirmation={true} currentLanguage={language} />
                         <View style={tw`flex-1 justify-center items-center px-[${isIphone ? '5%' : '4%'}] bg-white`}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -1063,11 +1051,11 @@ export default ({navigation, route: {params: {id, language, country, id_sede}}})
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                        <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                     </>
             }
             
-            <Modal orientation={orientationInfo.initial} visibility={successVisibility} handleDismiss={() => setSuccessVisibility(!successVisibility)}>
+            <Modal orientation={orientation} visibility={successVisibility} handleDismiss={() => setSuccessVisibility(!successVisibility)}>
                 <View style={tw`justify-center items-center self-stretch h-auto mt-3`}>
                     <Image
                         style={tw`w-25 h-25`}

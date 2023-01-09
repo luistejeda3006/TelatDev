@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native'
-import { Blue } from '../colors/colorsApp'
+import {Blue} from '../colors/colorsApp'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default ({title, value = false, isButton = true, handleSwitch}) => {

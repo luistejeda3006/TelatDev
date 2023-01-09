@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, StyleSheet, View, Image, TouchableOpacity, Linking} from 'react-native'
-import { Modal } from 'react-native-paper';
-import { isIphone } from '../access/requestedData';
+import {Modal} from 'react-native-paper';
+import {isIphone} from '../access/requestedData';
 import * as Animatable from 'react-native-animatable';
-import { useSelector } from 'react-redux';
-import { selectLanguageApp } from '../slices/varSlice';
+import {useSelector} from 'react-redux';
+import {selectLanguageApp} from '../slices/varSlice';
 
 export default ({visibility, id_ios = 'us/app/telat/id6443436901', id_android = 'com.telatapp&hl=es_MX&gl=US', handleDismiss}) => {
 	const language = useSelector(selectLanguageApp)

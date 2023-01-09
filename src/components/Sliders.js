@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import * as Animatable from 'react-native-animatable';
 import {View, Image, ScrollView, Dimensions, Text, ImageBackground, TouchableOpacity, SafeAreaView} from  'react-native'
 import {isIphone} from '../access/requestedData'
-import { Blue, Orange } from '../colors/colorsApp'
+import {Blue, Orange} from '../colors/colorsApp'
 const {width} = Dimensions.get('window')
 const height = width * 0.6
 let slide = undefined;

@@ -3,37 +3,31 @@ import {StyleSheet, View, Text, TouchableOpacity, StatusBar, SafeAreaView, Touch
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../colors/colorsApp'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Title, BottomNavBar, FailedNetwork, HeaderLandscape, HeaderPortrait, ModalLoading} from '../../../components'
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../hooks'
+import {useConnection, useNavigation} from '../../../hooks'
 import {isIphone, live, login, urlNomina} from '../../../access/requestedData';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleHideNomina, selectNominas, setNominas} from '../../../slices/nominaSlice';
 import * as Animatable from 'react-native-animatable';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc'
 
 let cuenta = 0;
 let token = null;
 let user = null;
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     const dispatch = useDispatch()
-
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
-
     data = useSelector(selectNominas)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
 
     const [longitud, setLongitud] = useState(0)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-    const {handleScroll, translateY, paddingTop} = useScroll(orientationInfo.initial)
 
     const [initialState, setInitialState] = useState({
         info: {},
@@ -201,19 +195,17 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                 <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
                     {
-                        orientationInfo.initial === 'PORTRAIT'
+                        orientation === 'PORTRAIT'
                         ?
-                            <HeaderPortrait title={language === '1' ? 'Pre-nómina' : 'Pre-nomine'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderPortrait title={language === '1' ? 'Pre-nómina' : 'Pre-nomine'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                         :
-                            <HeaderLandscape title={language === '1' ? 'Pre-nómina' : 'Pre-nomine'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderLandscape title={language === '1' ? 'Pre-nómina' : 'Pre-nomine'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                     }
                     <View style={styles.container}>
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={{alignSelf: 'stretch'}}
-                            /* onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}} */
                         >
                             <View style={tw`mt-3`}/>
                             <Title icon={'user'} tipo={1} hasBottom={false} title={language === '1' ? 'INFORMACIÓN GENERAL' : 'GENERAL INFORMATION'}/>
@@ -252,21 +244,21 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         </ScrollView>
                     </View>
                     <ModalLoading visibility={loading}/>
-                    <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                    {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
             </View>
         :
-            orientationInfo.initial === 'PORTRAIT'
+            orientation === 'PORTRAIT'
             ?
                 <>
                     <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                     <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
-                    <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                    <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                 </>
             :
                 <>
                     <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                     <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
-                    <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                    <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                 </>
     )
 }

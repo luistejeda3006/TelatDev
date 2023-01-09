@@ -71,9 +71,7 @@ export default ({navigation, route: {params: {country}}}) => {
     
     const handleSave = async () => {
         let cand_statement = !statements ? 0 : 1
-        let all = {...stepOneInfo, ...stepTwoInfo}
-        all = {...all, ...stepThreeInfo}
-        all = {...all, cand_statement}
+        let all = {...stepOneInfo, ...stepTwoInfo, ...stepThreeInfo, ...cand_statement}
 
         const body = {
             action: 'insert_precandidato',

@@ -1,11 +1,11 @@
-import React, {useState, useRef} from 'react'
-import {View, Text, Platform, TouchableOpacity} from 'react-native'
+import React, {useRef} from 'react'
+import {View, Text, TouchableOpacity} from 'react-native'
 import {actions, RichEditor, RichToolbar} from "react-native-pell-rich-editor";
-import { Blue } from '../colors/colorsApp';
+import {isIphone} from '../access/requestedData';
+import {Blue} from '../colors/colorsApp';
 
 export default ({handleInputChange}) => {
     const richText = useRef();
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     return(
         <>
             <TouchableOpacity onPress={() => richText.current?.dismissKeyboard()} style={{alignSelf: 'stretch'}}>

@@ -7,11 +7,15 @@ import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../c
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
+import { selectOrientation } from '../../../slices/orientationSlice';
 
 let data = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
@@ -28,14 +32,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
         setInfo(obj)
     },[])
 
-    const status = true;
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
-
     const Contenedor = ({title, leftPosition = true, hasBottomLine = true}) => {
         return (
             <View style={{alignSelf: 'stretch', borderColor: '#CBCBCB', alignItems: leftPosition ? 'flex-start' : 'flex-end', justifyContent: 'center', marginBottom: hasBottomLine ? 7 : 0, marginLeft: hasBottomLine ? 7 : 0}}>
@@ -49,7 +45,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     <HeaderPortrait title={'Personal References'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                 :
@@ -72,7 +68,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>{`Reference ${x.id}`}</Text>
                                     </View>
                                     {
-                                        orientationInfo.initial === 'PORTRAIT'
+                                        orientation === 'PORTRAIT'
                                         ?
                                             <>
                                                 <View style={{borderColor: Blue, borderWidth: 1, alignSelf:'stretch', borderBottomStartRadius: 15, borderBottomEndRadius: 15}}>

@@ -3,9 +3,8 @@ import {View, Text, TouchableOpacity} from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {selectError, selectStep, setStep} from '../slices/progressStepSlice'
 import {Blue} from '../colors/colorsApp'
-
+import {selectLanguageApp} from '../slices/varSlice'
 import tw from 'twrnc'
-import { selectLanguageApp } from '../slices/varSlice'
 
 export default ({handleNext = () => {}, finalStep = false}) => {
     const language = useSelector(selectLanguageApp)

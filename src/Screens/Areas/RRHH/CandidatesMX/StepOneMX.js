@@ -1,27 +1,29 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, Alert, Linking, BackHandler, StyleSheet} from 'react-native';
-import {InputForm, Politics, Picker, TitleForms, CheckBox, DatePicker, ProgressStepActions} from '../../../../components';
+import {InputForm, Picker, TitleForms, CheckBox, DatePicker, ProgressStepActions} from '../../../../components';
 import generateCurp from '../../../../js/generateCurp'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
-import {ProgressStep} from 'react-native-progress-steps';
 import DeviceInfo from 'react-native-device-info';
 import {baseUrl, live, login, siteKey, urlJobs} from '../../../../access/requestedData';
-import {useOrientation, useConnection} from '../../../../hooks';
+import {useConnection} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import {Blue} from '../../../../colors/colorsApp';
-import tw from 'twrnc'
 import {useDispatch, useSelector} from 'react-redux';
 import {selectChecked, selectError, selectStep, selectVerified, setChecked, setError, setStep, setVerified} from '../../../../slices/progressStepSlice';
+import {selectOrientation} from '../../../../slices/orientationSlice';
+import {selectLanguageApp} from '../../../../slices/varSlice';
+import tw from 'twrnc'
+import { setStateOption, setStepOneMX } from '../../../../slices/applicationForm';
 
-let age = 28;
-
-export default ({navigation, handleScrollTop = () => {}, language, orientation, ...rest}) => {
+export default ({navigation, handleScrollTop = () => {}}) => {
+    const dispatch = useDispatch()
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
     const input_nom = useRef()
     const input_pat = useRef()
     const input_mat = useRef()
-    const dispatch = useDispatch()
     const step = useSelector(selectStep)
     const error = useSelector(selectError)
     const verified = useSelector(selectVerified)
@@ -32,12 +34,6 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
     const NE = {label: language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD', value: 'NE'};
     const {isTablet} = DeviceInfo;
     const [statesData, setStatesData] = useState([])
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
     const {hasConnection} = useConnection();
 
@@ -178,7 +174,7 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
             
                     const {response, status} = await request.json();
                     if(status === 200){
-                        data = await AsyncStorage.getItem(key) || '';
+                        /* data = await AsyncStorage.getItem(key) || '';
                         if(data) {
                             await AsyncStorage.removeItem(keyState).then( () => AsyncStorage.setItem(keyState, stateSend.label));
                             await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
@@ -186,7 +182,9 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
                         else {
                             data = await AsyncStorage.setItem(keyState, stateSend.label);
                             data = await AsyncStorage.setItem(key, JSON.stringify(obj_1));
-                        }
+                        } */
+                        dispatch(setStateOption(stateSend.label))
+                        dispatch(setStepOneMX(obj_1))
                         dispatch(setStep(step + 1))
                         handleScrollTop()
                     }
@@ -264,7 +262,7 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
             >
                 <View style={tw`self-stretch px-4.5`}>
                     {
-                        orientationInfo.initial === 'PORTRAIT'
+                        orientation === 'PORTRAIT'
                         ?
                             <>
                                 <TitleForms type={'title'} title={language === '1' ? 'Información Básica' : 'Basic Information'}/>
@@ -307,123 +305,7 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
                                 <ProgressStepActions language={language} handleNext={handleValues} />
                             </>
                         :
-                            isTablet()
-                            ?
-                                <View style={tw`flex-1 self-stretch`}>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Información Básica' : 'Basic Information'}/>
-                                    <View style={tw`flex-row self-stretch items-center`}>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={language === '1' ? 'Nombre(s)' : 'Name(s)'}
-                                                fieldName={'nombres_1'}
-                                                ref={input_nom}
-                                                onSubmitEditing={() => input_pat.current.focus()}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={language === '1' ? 'Apellido paterno' : 'Last name'}
-                                                fieldName={'apellidoPaterno_1'}
-                                                ref={input_pat}
-                                                onSubmitEditing={() => input_mat.current.focus()}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
-                                            <InputForm 
-                                                status={true} 
-                                                placeholder={language === '1' ? 'Apellido materno' : 'Second last name'}
-                                                fieldName={'apellidoMaterno_1'}
-                                                ref={input_mat}
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={tw`flex-row self-stretch items-center`}>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                            <DatePicker label={fechaNacimiento_1 ? `${fechaNacimiento_1.substring(8,10)}-${fechaNacimiento_1.substring(5,7)}-${fechaNacimiento_1.substring(0,4)}` : ''} fieldName={'fechaNacimiento_1'} language={language} />
-                                        </View>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
-                                            <Picker
-                                                fieldName={'genero_1'}
-                                                items={genderData}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
-                                            <Picker 
-                                                fieldName={'lugarNacimiento_1'}
-                                                items={birthPlaceData}
-                                            />
-                                        </View>
-                                    </View>
-                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
-                                    <ProgressStepActions handleNext={handleValues} language={language}/>
-                                </View>
-                            :
-                                <View style={tw`flex-1 self-stretch`}>
-                                    <TitleForms type={'title'} title={language === '1' ? 'Información Básica' : 'Basic Information'}/>
-                                    <View style={tw`flex-row self-stretch items-center`}>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Nombre(s)' : 'Name(s)'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={language === '1' ? 'Nombre(s)' : 'Name(s)'}
-                                                fieldName={'nombres_1'}
-                                                ref={input_nom}
-                                                onSubmitEditing={() => input_pat.current.focus()}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido paterno' : 'Last name'} />
-                                            <InputForm
-                                                status={true}
-                                                placeholder={language === '1' ? 'Apellido paterno' : 'Last name'}
-                                                fieldName={'apellidoPaterno_1'}
-                                                ref={input_pat}
-                                                onSubmitEditing={() => input_mat.current.focus()}
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={tw`flex-row self-stretch items-center`}>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Apellido materno' : 'Second last name'} />
-                                            <InputForm 
-                                                status={true} 
-                                                placeholder={language === '1' ? 'Apellido materno' : 'Second last name'}
-                                                fieldName={'apellidoMaterno_1'}
-                                                ref={input_mat}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Fecha de nacimiento' : 'Date of birth'} />
-                                            <DatePicker label={fechaNacimiento_1 ? `${fechaNacimiento_1.substring(8,10)}-${fechaNacimiento_1.substring(5,7)}-${fechaNacimiento_1.substring(0,4)}` : ''} fieldName={'fechaNacimiento_1'} language={language} />
-                                        </View>
-                                    </View>
-                                    <View style={tw`flex-row self-stretch items-center`}>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Género' : 'Gender'} />
-                                            <Picker
-                                                fieldName={'genero_1'}
-                                                items={genderData}
-                                            />
-                                        </View>
-                                        <View style={tw`flex-1 mr-[3%]`}>
-                                            <TitleForms type={'subtitle'} title={language === '1' ? 'Lugar de nacimiento' : 'Place of birth'} />
-                                            <Picker 
-                                                fieldName={'lugarNacimiento_1'}
-                                                items={birthPlaceData}
-                                            />
-                                        </View>
-                                    </View>
-                                    <CheckBox onChecked={() => handleChecked()} checked={checked} legend={language === '1' ? 'He leído y acepto la Política de Privacidad' : 'I’ve read and accepted the Privacy Policy'} color={Blue} isUnderline={true} fontSize={15} unique={true} handlePress={async () => await Linking.openURL('https://telat-group.com/aviso-de-privacidad')}/>
-                                    <ProgressStepActions handleNext={handleValues} language={language}/>
-                                </View>
+                            <></>
                     }
                 </View>
             </KeyboardAwareScrollView>

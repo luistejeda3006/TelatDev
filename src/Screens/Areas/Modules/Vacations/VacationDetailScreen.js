@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react'
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, TextInput, Image, Alert, SafeAreaView, StatusBar, Platform, RefreshControl, TouchableWithoutFeedback} from 'react-native'
+import {View, Text, ScrollView, TouchableOpacity, FlatList, TextInput, Image, Alert, SafeAreaView, StatusBar, Platform, RefreshControl, TouchableWithoutFeedback} from 'react-native'
 import {HeaderLandscape, HeaderPortrait, Modal, Select, MultiText, ModalLoading, FailedNetwork, Title, BottomNavBar, Calendar} from '../../../../components'
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../../hooks'
+import {useConnection, useNavigation} from '../../../../hooks'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp';
@@ -10,17 +10,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import {actionTemporalVacation, actionVacation} from '../../../../slices/vacationSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {selectOrientation} from '../../../../slices/orientationSlice';
 import tw from 'twrnc';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let token = null;
 let user = null;
 
-let language = ''
-
-export default ({navigation, route: {params: {orientation, id_usuario, id_empleado, solicitud_pendiente}}}) => {
+export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud_pendiente}}}) => {
     const dispatch = useDispatch()
-    language = useSelector(selectLanguageApp)
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
 
@@ -29,13 +29,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
     const [contador, setContador] = useState(0)
     const {handlePath} = useNavigation();
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
     
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [loading, setLoading] = useState(true)
@@ -488,7 +481,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
         return(
             <View style={tw`bg-[#f7f7f7] shadow-md mx-1.5 my-2.5 rounded-xl`}>
                 <TouchableWithoutFeedback onPress={() => handleHideActions(id, fIndex)}>
-                    <View style={{flex: 1, height: oculta ? 65 : 110, marginHorizontal: orientationInfo.initial === 'PORTRAIT' ? 0 : 2.5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{flex: 1, height: oculta ? 65 : 110, marginHorizontal: orientation === 'PORTRAIT' ? 0 : 2.5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flexDirection: 'row', height: 50, alignItems: 'center', justifyContent: 'center'}}>
                             <View style={{width: 'auto', marginLeft: 15, marginRight: 5}}>
                                 {
@@ -573,11 +566,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                 <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
-                        <HeaderPortrait title={language === '1' ? 'Detalle de Vacaciones' : 'Vacation Detail'} screenToGoBack={'Vacation'} navigation={navigation} visible={true} translateY={translateY}/>
+                        <HeaderPortrait title={language === '1' ? 'Detalle de Vacaciones' : 'Vacation Detail'} screenToGoBack={'Vacation'} navigation={navigation} visible={true} />
                     :
-                        <HeaderLandscape title={language === '1' ? 'Detalle de Vacaciones' : 'Vacation Detail'} screenToGoBack={'Vacation'} navigation={navigation} visible={true} translateY={translateY}/>
+                        <HeaderLandscape title={language === '1' ? 'Detalle de Vacaciones' : 'Vacation Detail'} screenToGoBack={'Vacation'} navigation={navigation} visible={true} />
                 }
                     <ScrollView 
                         showsVerticalScrollIndicator={false}
@@ -591,8 +584,6 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                 onRefresh={() => getInformation()}
                             />
                         }
-                        /* onScroll={handleScroll}
-                        contentContainerStyle={{paddingTop: paddingTop}} */
                     >
                         <View style={[container, tw`pb-[${isIphone ? 6 : 0}]`]}>
                             <View style={tw`h-auto self-stretch py-1.5`}>
@@ -665,7 +656,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                                         </View>
                                     </View>
                                     {
-                                        orientationInfo.initial === 'PORTRAIT'
+                                        orientation === 'PORTRAIT'
                                         ?
                                             <View style={tw`h-auto self-stretch flex-row mt-1.5`}>
                                                 <View style={tw`flex-1 justify-center items-center`}>
@@ -806,11 +797,11 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                         </View>
                 </ScrollView>
 
-                <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
+                <Modal orientation={orientation} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
                     <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
                 </Modal>
 
-                <Modal orientation={orientationInfo.initial} visibility={visible} handleDismiss={() => setVisible(!visible)}>
+                <Modal orientation={orientation} visibility={visible} handleDismiss={() => setVisible(!visible)}>
                     <ScrollView
                         style={tw`self-stretch`}
                         showsVerticalScrollIndicator={false}
@@ -884,7 +875,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     </ScrollView>
                 </Modal>
                 
-                <Modal orientation={orientationInfo.initial} visibility={detailsVisibility} handleDismiss={() => setDetailsVisibility(!detailsVisibility)}>
+                <Modal orientation={orientation} visibility={detailsVisibility} handleDismiss={() => setDetailsVisibility(!detailsVisibility)}>
                         <KeyboardAwareScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
@@ -986,7 +977,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     </KeyboardAwareScrollView>
                 </Modal>
                 
-                <Modal orientation={orientationInfo.initial} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>
+                <Modal orientation={orientation} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>
                     <View style={tw`justify-center items-center self-stretch h-50`}>
                         <Image
                             style={tw`w-35 h-35`}
@@ -1011,7 +1002,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     </View>
                 </Modal>
 
-                <Modal orientation={orientationInfo.initial} visibility={actionsVisibility} handleDismiss={() => setActionsVisibility(!actionsVisibility)}>
+                <Modal orientation={orientation} visibility={actionsVisibility} handleDismiss={() => setActionsVisibility(!actionsVisibility)}>
                     <View style={tw`justify-center items-center self-stretch h-50`}>
                         <Image
                             style={tw`w-35 h-35`}
@@ -1024,7 +1015,7 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                     </View>
                 </Modal>
 
-                <Modal orientation={orientationInfo.initial} visibility={editVisibility} handleDismiss={() => setEditVisibility(!editVisibility)}>
+                <Modal orientation={orientation} visibility={editVisibility} handleDismiss={() => setEditVisibility(!editVisibility)}>
                     <Title title={language === '1' ? 'EDITAR VACACIONES' : 'EDIT VACATION'} icon={'calendar'} tipo={1} vertical={false} itCloses={() => setEditVisibility(!editVisibility)}/>
                     <View style={tw`flex-row self-stretch h-16.5 pt-2`}>
                         <Calendar dateLabel={labelInitial} isModule={true} shortFormat={false} getValue={(value, label) => setInitialState({...initialState, requestVacation: {...requestVacation, initial: value, labelInitial: label}})} language={language} />
@@ -1056,13 +1047,13 @@ export default ({navigation, route: {params: {orientation, id_usuario, id_emplea
                 </Modal>
                 
                 <ModalLoading visibility={loading} />
-                <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
             </View>
         :
             <>
                 <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
 			    <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
             </>
     )
 }

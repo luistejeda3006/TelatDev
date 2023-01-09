@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import tw from 'twrnc'
-//este componente se tiene que hacer reutilizable
+
 export default ({handleAddElement, information, label}) => {
     const [showList, setShowList] = useState(false);
 
@@ -23,7 +23,7 @@ export default ({handleAddElement, information, label}) => {
         )
     }
 
-    const Labels = ({name, selected, id}) => {
+    const Labels = ({name, id}) => {
         return(
             <View style={{flex: 1, borderColor: '#dadada', height: 40, backgroundColor: '#f7f7f7', borderWidth: 1, flexDirection: 'row', paddingLeft: 4, margin: 1.5, borderRadius: 8}}>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

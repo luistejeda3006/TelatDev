@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import {Text, Image, View, TouchableOpacity, TouchableNativeFeedback, StyleSheet, ImageBackground, StatusBar, SafeAreaView, FlatList, ScrollView} from 'react-native'
-import DeviceInfo from 'react-native-device-info';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, LightBlue, Orange, SafeAreaBackground} from '../../../../../colors/colorsApp';
 import {useNavigation} from '../../../../../hooks';
@@ -10,10 +9,12 @@ import {puzzle_utilities} from '../Puzzle/Systems';
 import {BottomNavBar, Modal} from '../../../../../components';
 import {useSelector} from 'react-redux';
 import {selectOrientation} from '../../../../../slices/orientationSlice';
+import {selectLanguageApp} from '../../../../../slices/varSlice';
 
-export default ({navigation, route: {params: {origin = 1, language}}}) => {
+export default ({navigation, route: {params: {origin = 1}}}) => {
 	const orientation = useSelector(selectOrientation)
-	const {isTablet} = DeviceInfo;
+	const language = useSelector(selectLanguageApp)
+
 	const [section, setSection] = useState(1)
 	const [contador, setContador] = useState(0)
 	const [animated, setAnimated] = useState(true)

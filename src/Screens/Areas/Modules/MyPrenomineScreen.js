@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, TouchableOpacity, FlatList, StyleSheet, Alert, SafeAreaView, StatusBar, ScrollView, TouchableWithoutFeedback, Platform, Image, useWindowDimensions} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StyleSheet, Alert, SafeAreaView, StatusBar, ScrollView, TouchableWithoutFeedback, Image, useWindowDimensions} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, Modal, ModalLoading, Select, FailedNetwork, CheckBox, Switch, MultiText, Input, MaskInput, Title, BottomNavBar} from '../../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Picker from 'react-native-picker-select';
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../hooks';
+import {useConnection, useNavigation} from '../../../hooks';
 import DeviceInfo from 'react-native-device-info';
 import {urlNomina, live, login, isIphone} from '../../../access/requestedData';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,7 +14,8 @@ import {selectBonos, selectFechas, selectHasBono, selectInfo, selectMensual, sel
 import useKeyboardHeight from 'react-native-use-keyboard-height'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let keyUserInfo = 'userInfo';
@@ -35,10 +36,11 @@ let mensual = null;
 let quincena = null;
 
 
-export default ({navigation, route: {params: {language, orientation, id_puesto, id_usuario, btn_editar = false, origin = 1}}}) => {
-
+export default ({navigation, route: {params: {id_puesto, id_usuario, btn_editar = false, origin = 1}}}) => {
     token = useSelector(selectTokenInfo)
     data = useSelector(selectUserInfo)
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
 
     const [contentBottom, setContentBottom] = useState(0);
     const [keyboardActive, setKeyboardActive] = useState(false)
@@ -74,21 +76,12 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     const [loading, setLoading] = useState(origin === 1 ? false : true)
     const [idEdit, setIdEdit] = useState(0)
     const [idDelete, setIdDelete] = useState(0)
-    const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [comentarios, setComentarios] = useState([])
     const [id_periodo, setIdPeriodo] = useState(false)
     const [currentPeriodo, setCurrentPeriodo] = useState('')
     const [error, setError] = useState(false)
     const {handlePath} = useNavigation()
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {translateY, paddingTop, handleScroll} = useScroll(orientationInfo.initial);
 
     useFocusEffect(
         useCallback(() => {
@@ -681,14 +674,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
     return(
         <>
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     hasConnection
                     ?
                         <View style={tw`flex-1 bg-white`}>
                             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }}/>
-                            <HeaderPortrait title={language === '1' ? 'Mi Pre-nómina' : 'My Pre-payroll'} screenToGoBack={origin === 1 ? 'Dashboard' : 'GeneralPrenomine'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderPortrait title={language === '1' ? 'Mi Pre-nómina' : 'My Pre-payroll'} screenToGoBack={origin === 1 ? 'Dashboard' : 'GeneralPrenomine'} navigation={navigation} visible={true} />
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
@@ -718,30 +711,30 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
 
                                         <View style={tw`h-auto self-stretch mt-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Fecha de Ingreso' : 'Date of Admission'}</Text>
-                                            <Text style={tw`text-sm text-[#000]`}>{info.alta ? `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}` : 'N/A'}</Text>
+                                            <Text style={tw`text-sm text-[#000]`}>{info.alta ? `${info.alta.substring(8,10)}-${info.alta.substring(5,7)}-${info.alta.substring(0,4)}` : '---'}</Text>
                                         </View>
                     
                                         <View style={tw`flex-row mt-2`}>
                                             <View style={tw`flex-1`}>
                                                 <Text style={title}>{language === '1' ? 'Horario Lunes - Jueves' : 'Schedule Monday - Thuesday'}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
+                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : '---'}</Text>
                                             </View>
                     
                                             <View style={tw`flex-1`}>
                                                 <Text style={title}>{language === '1' ? 'Horario Viernes' : 'Schedule Friday'}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
+                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_vie ? info.pren_horario_vie : '---'}</Text>
                                             </View>
                                         </View>
 
                                         <View style={tw`flex-row mt-2`}>
                                             <View style={tw`flex-1`}>
                                                 <Text style={title}>{language === '1' ? 'Horario Sábado' : 'Schedule Saturday'}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
+                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_sab ? info.pren_horario_sab : '---'}</Text>
                                             </View>
                     
                                             <View style={tw`flex-1`}>
                                                 <Text style={title}>{language === '1' ? 'Horario Domingo' : 'Schedule Sunday'}</Text>
-                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
+                                                <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_dom ? info.pren_horario_dom : '---'}</Text>
                                             </View>
                                         </View>
 
@@ -861,19 +854,19 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     </View>
                                 </View>
                             </ScrollView>
-                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                            {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
                         </View>
                     :
                         <>
                             <StatusBar barStyle='light-content' />
                             <SafeAreaView style={{ flex: 0, backgroundColor: '#FDA412' }} />
-                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                         </>
                 :
                     hasConnection
                     ?
                         <View style={tw`flex-1 bg-white`}>
-                            <HeaderLandscape title={'Mi Pre-nómina'} screenToGoBack={origin === 1 ? 'Dashboard' : 'GeneralPrenomine'} navigation={navigation} visible={true} translateY={translateY}/>
+                            <HeaderLandscape title={'Mi Pre-nómina'} screenToGoBack={origin === 1 ? 'Dashboard' : 'GeneralPrenomine'} navigation={navigation} visible={true} />
                             <View style={container}>
                                 <ScrollView
                                     showsVerticalScrollIndicator={false}
@@ -923,24 +916,24 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                                     <View style={tw`flex-row mt-1.5`}>
                                                         <View style={tw`flex-1`}>
                                                             <Text style={title}>{language === '1' ? 'Horario Lunes - Jueves' : 'Schedule Monday - Thuesday'}</Text>
-                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : 'N/A'}</Text>
+                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_lun_jue ? info.pren_horario_lun_jue : '---'}</Text>
                                                         </View>
                                 
                                                         <View style={tw`flex-1`}>
                                                             <Text style={title}>{language === '1' ? 'Horario Viernes' : 'Schedule Friday'}</Text>
-                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_vie ? info.pren_horario_vie : 'N/A'}</Text>
+                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_vie ? info.pren_horario_vie : '---'}</Text>
                                                         </View>
                                                     </View>
 
                                                     <View style={tw`flex-row mt-1.5`}>
                                                         <View style={tw`flex-1`}>
                                                             <Text style={title}>{language === '1' ? 'Horario Sábado' : 'Schedule Saturday'}</Text>
-                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_sab ? info.pren_horario_sab : 'N/A'}</Text>
+                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_sab ? info.pren_horario_sab : '---'}</Text>
                                                         </View>
                                 
                                                         <View style={tw`flex-1`}>
                                                             <Text style={title}>{language === '1' ? 'Horario Domingo' : 'Schedule Sunday'}</Text>
-                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_dom ? info.pren_horario_dom : 'N/A'}</Text>
+                                                            <Text style={tw`text-sm text-[#000]`}>{info.pren_horario_dom ? info.pren_horario_dom : '---'}</Text>
                                                         </View>
                                                     </View>
                                                     {
@@ -1010,18 +1003,18 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     </View>
                                 </ScrollView>
                             </View>
-                            <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                            {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
                         </View>
                     :
                         <>
                             <StatusBar barStyle='light-content' />
                             <SafeAreaView style={{ flex: 0, backgroundColor: '#FDA412' }} />
-                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientationInfo.initial}/>
+                            <FailedNetwork askForConnection={askForConnection} language={language} orientation={orientation}/>
                         </>
             }
             
 
-            <Modal visibility={calendar} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, calendar: !calendar})}>
+            <Modal visibility={calendar} orientation={orientation} handleDismiss={() => setInitialState({...initialState, calendar: !calendar})}>
                 <KeyboardAwareScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -1046,7 +1039,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                     </View>
                     <View style={tw`h-auto self-stretch`}>
                         {
-                            orientationInfo.initial === 'PORTRAIT' && isTablet() || orientationInfo.initial === 'LANDSCAPE' && isTablet()
+                            orientation === 'PORTRAIT' && isTablet() || orientation === 'LANDSCAPE' && isTablet()
                             ?
                                 <View style={tw`flex-row`}>
                                     <View style={tw`flex-1 mt-1 justify-center items-center`}>
@@ -1064,7 +1057,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     </View>
                                 </View>
                             :
-                                orientationInfo.initial === 'PORTRAIT'
+                                orientation === 'PORTRAIT'
                                 ?
                                     <View style={tw`flex-row justify-center items-center`}>
                                         <View style={tw`flex-1 mt-1 justify-center items-center`}>
@@ -1153,7 +1146,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                         />
                                     :
                                         <View style={[box, tw`justify-center`, {height: 45}]}>
-                                            <Text style={tw`text-[#000]`}>{asistencia.horario ? asistencia.horario : 'N/A'}</Text>
+                                            <Text style={tw`text-[#000]`}>{asistencia.horario ? asistencia.horario : '---'}</Text>
                                         </View>
                                         
                                 }
@@ -1162,7 +1155,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Horario checada' : 'Check Schedule'}</Text>
                                 <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
-                                    <Text style={tw`text-[#000]`}>{asistencia.checada ? asistencia.checada : 'N/A'}</Text>
+                                    <Text style={tw`text-[#000]`}>{asistencia.checada ? asistencia.checada : '---'}</Text>
                                 </View>
                             </View>
                         </View>
@@ -1170,14 +1163,14 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Horario comida' : 'Meal Schedule'}</Text>
                                 <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
-                                    <Text style={tw`text-[#000]`}>{asistencia.checadacom ? asistencia.checadacom : 'N/A'}</Text>
+                                    <Text style={tw`text-[#000]`}>{asistencia.checadacom ? asistencia.checadacom : '---'}</Text>
                                 </View>
                             </View>
                             <View style={tw`w-1.5`}></View>
                             <View style={tw`flex-1 mt-1 justify-center items-center`}>
                                 <Text style={[title, tw`mb-1`]}>{language === '1' ? 'Tiempo' : 'Time'}</Text>
                                 <View style={[box,{justifyContent: 'center', alignItems: 'center', height: 45}]}>
-                                    <Text style={tw`text-[#000]`}>{asistencia.tiempocom ? asistencia.tiempocom : 'N/A' }</Text>
+                                    <Text style={tw`text-[#000]`}>{asistencia.tiempocom ? asistencia.tiempocom : '---' }</Text>
                                 </View>
                             </View>
                         </View>
@@ -1282,7 +1275,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 </KeyboardAwareScrollView>
             </Modal>
 
-            <Modal visibility={resume} orientation={orientationInfo.initial} handleDismiss={() => setInitialState({...initialState, resume: !resume})}>
+            <Modal visibility={resume} orientation={orientation} handleDismiss={() => setInitialState({...initialState, resume: !resume})}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -1300,85 +1293,85 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                     </View>
                     <View style={tw`h-auto`}>
                         {
-                            orientationInfo.initial === 'PORTRAIT'
+                            orientation === 'PORTRAIT'
                             ?
                                 <>
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Asistencias' : 'Assistance'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.A === '---' ? '-' : info_resumen.A}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Descansos' : 'Breaks'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.D === '---' ? '-' : info_resumen.D}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Faltas' : 'Absence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.F === '---' ? '-' : info_resumen.F}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Faltas Justificadas' : 'Justified Absence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.FJ === '---' ? '-' : info_resumen.FJ}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Día Festivo' : 'Holiday'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.DF === '---' ? '-' : info_resumen.DF}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Día Festivo Trabajado' : 'Holiday Worked'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.DFT === '---' ? '-' : info_resumen.DFT}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Incapacidad' : 'Inability'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.I === '---' ? '-' : info_resumen.I}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Permiso Sin Goce' : 'Permission Without Enjoyment'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.PSG === '---' ? '-' : info_resumen.PSG}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Permiso Con Goce' : 'Permission With Joy'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.PCG === '---' ? '-' : info_resumen.PCG}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Vacaciones' : 'Vacations'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.V === '---' ? '-' : info_resumen.V}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Trabajo en Casa' : 'Home Office'}</Text>
-                                            <Text>{info_resumen.HO === 'N/A' ? '-' : info_resumen.HO}</Text>
+                                            <Text>{info_resumen.HO === '---' ? '-' : info_resumen.HO}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Incidencias' : 'Incidence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.incidencias === '---' ? '-' : info_resumen.incidencias}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2 px-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={title}>{language === '1' ? 'Retardos' : 'Time Delay'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.retardos === '---' ? '-' : info_resumen.retardos}</Text>
                                         </View>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Viernes Salida a las 4pm' : 'Leave Early on Friday'}</Text>
@@ -1391,75 +1384,75 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Asistencias' : 'Assistance'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.A === 'N/A' ? '-' : info_resumen.A}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.A === '---' ? '-' : info_resumen.A}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Descansos' : 'Breaks'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.D === 'N/A' ? '-' : info_resumen.D}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.D === '---' ? '-' : info_resumen.D}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={[title]}>{language === '1' ? 'Faltas' : 'Absence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.F === 'N/A' ? '-' : info_resumen.F}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.F === '---' ? '-' : info_resumen.F}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Faltas Justificadas' : 'Justified Absence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.FJ === 'N/A' ? '-' : info_resumen.FJ}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.FJ === '---' ? '-' : info_resumen.FJ}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={[title]}>{language === '1' ? 'Día Festivo' : 'Holiday'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.DF === 'N/A' ? '-' : info_resumen.DF}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.DF === '---' ? '-' : info_resumen.DF}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Día Festivo Trabajado' : 'Holiday Worked'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.DFT === 'N/A' ? '-' : info_resumen.DFT}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.DFT === '---' ? '-' : info_resumen.DFT}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={[title]}>{language === '1' ? 'Incapacidad' : 'Inability'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.I === 'N/A' ? '-' : info_resumen.I}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.I === '---' ? '-' : info_resumen.I}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={title}>{language === '1' ? 'Permiso Sin Goce' : 'Permission Without Enjoyment'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.PSG === 'N/A' ? '-' : info_resumen.PSG}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.PSG === '---' ? '-' : info_resumen.PSG}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={[title]}>{language === '1' ? 'Permiso Con Goce' : 'Permission With Joy'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.PCG === 'N/A' ? '-' : info_resumen.PCG}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.PCG === '---' ? '-' : info_resumen.PCG}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={title}>{language === '1' ? 'Vacaciones' : 'Vacations'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.V === 'N/A' ? '-' : info_resumen.V}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.V === '---' ? '-' : info_resumen.V}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={[title]}>{language === '1' ? 'Trabajo en Casa' : 'Home Office'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.HO === 'N/A' ? '-' : info_resumen.HO}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.HO === '---' ? '-' : info_resumen.HO}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
                                             <Text style={[title]}>{language === '1' ? 'Incidencias' : 'Incidence'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.incidencias === 'N/A' ? '-' : info_resumen.incidencias}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.incidencias === '---' ? '-' : info_resumen.incidencias}</Text>
                                         </View>
                                     </View>
 
                                     <View style={tw`flex-row self-stretch justify-start items-start p-2 px-2`}>
                                         <View style={tw`flex-1`}>
                                             <Text style={title}>{language === '1' ? 'Retardos' : 'Time Delay'}</Text>
-                                            <Text style={tw`text-[#000]`}>{info_resumen.retardos === 'N/A' ? '-' : info_resumen.retardos}</Text>
+                                            <Text style={tw`text-[#000]`}>{info_resumen.retardos === '---' ? '-' : info_resumen.retardos}</Text>
                                         </View>
                                         <View style={tw`w-1`}></View>
                                         <View style={tw`flex-1 ml-1.5`}>
@@ -1476,15 +1469,15 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 </ScrollView>
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
+            <Modal orientation={orientation} visibility={visiblePeriodo} handleDismiss={handleVisiblePeriodos}>
                 <Select data={periodos} handleVisiblePeriodos={handleVisiblePeriodos} handleActionUno={handleActionUno} />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={visibleAsistencia} handleDismiss={() => setVisibleAsistencia(!visibleAsistencia)}>
+            <Modal orientation={orientation} visibility={visibleAsistencia} handleDismiss={() => setVisibleAsistencia(!visibleAsistencia)}>
                 <Select data={editForm.asistencias} handleVisiblePeriodos={() => setVisibleAsistencia(!visibleAsistencia)} handleActionDos={handleActionDos} />
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={editForm.visibleMenu} handleDismiss={() => setInitialState({...initialState, editForm: {...editForm, visibleMenu: false}})}>
+            <Modal orientation={orientation} visibility={editForm.visibleMenu} handleDismiss={() => setInitialState({...initialState, editForm: {...editForm, visibleMenu: false}})}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -1669,7 +1662,7 @@ export default ({navigation, route: {params: {language, orientation, id_puesto, 
                 </ScrollView>
             </Modal>
 
-            <Modal orientation={orientationInfo.initial} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>
+            <Modal orientation={orientation} visibility={deleteVisibility} handleDismiss={() => setDeleteVisibility(!deleteVisibility)}>
                 <View style={tw`justify-center items-center self-stretch h-45`}>
                     <Image
                         style={tw`w-45 h-45`}

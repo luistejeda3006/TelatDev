@@ -3,19 +3,25 @@ import {StyleSheet, View, Alert, BackHandler} from 'react-native';
 import {InputForm, Picker, TitleForms, DatePicker, ProgressStepActions} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
-import {useOrientation} from '../../../../hooks';
 import {useFormikContext} from 'formik';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {diffBetweenDates} from '../../../../js/dates'
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep, setStep} from '../../../../slices/progressStepSlice';
+import {selectLanguageApp} from '../../../../slices/varSlice';
+import {selectOrientation} from '../../../../slices/orientationSlice';
+import { setStepThreeMX } from '../../../../slices/applicationForm';
 
 let inicial = null;
 let terminal = null;
 let inicialOpcional = null;
 let terminalOpcional = null;
-export default ({navigation, handleScrollTop = () => {}, language, orientation, ...rest}) => {
+
+export default ({navigation, handleScrollTop = () => {}}) => {
     const dispatch = useDispatch()
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     const step = useSelector(selectStep)
     const {isTablet} = DeviceInfo;
     const {submitForm, values} = useFormikContext();
@@ -42,13 +48,6 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
     const input_motivo_salida_opcional = useRef()
     const input_jefe_directo_opcional = useRef()
     const input_telefono_contacto_opcional = useRef()
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
     
     const first = {label: language === '1' ? 'Seleccionar' : 'Select', value: 'SEL'};
 
@@ -211,7 +210,7 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
         inicialOpcional = null;
         terminalOpcional = null;
 
-        let data = null;
+        /* let data = null;
         let key = 'stepThree'
 
         data = await AsyncStorage.getItem(key) || '[]';
@@ -220,8 +219,9 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
         }
         else {
             data = await AsyncStorage.setItem(key, JSON.stringify(obj_3));
-        }
-        
+        } */
+
+        dispatch(setStepThreeMX(obj_3))
     }
 
     const handleValidateSchoolLevel = () => {
@@ -346,7 +346,7 @@ export default ({navigation, handleScrollTop = () => {}, language, orientation, 
         >
             <View style={{alignSelf: 'stretch', paddingHorizontal: 18}}>
                 {
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         !isTablet()
                         ?

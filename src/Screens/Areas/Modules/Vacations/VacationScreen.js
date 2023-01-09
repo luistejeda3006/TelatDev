@@ -1,17 +1,17 @@
 import React, {useState, useEffect, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, Image, Text, Keyboard, StatusBar, SafeAreaView, Platform, RefreshControl} from 'react-native'
-import {TouchableOpacity } from 'react-native-gesture-handler'
+import {StyleSheet, View, ScrollView, Image, Text, Keyboard, StatusBar, SafeAreaView, Platform, RefreshControl, TouchableOpacity} from 'react-native'
 import {HeaderPortrait, HeaderLandscape, ModalLoading, FailedNetwork, Title, BottomNavBar, Pagination} from '../../../../components'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp';
-import {useConnection, useNavigation, useOrientation, useScroll} from '../../../../hooks';
+import {useConnection, useNavigation} from '../../../../hooks';
 import {isIphone, live, login, urlVacaciones} from '../../../../access/requestedData';
 import {hideEmpleado, hideEmpleadoTemporal, selectEmpleados, selectTemporalEmpleados, setEmpleados, setTemporalEmpleado} from '../../../../slices/vacationSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {selectLanguageApp, selectTokenInfo, selectUserInfo} from '../../../../slices/varSlice';
 import tw from 'twrnc';
+import { selectOrientation } from '../../../../slices/orientationSlice';
 
 let id_usuario = '';
 let id_puesto = '';
@@ -21,13 +21,12 @@ let cuenta = 0;
 let filtro = ''
 let empleados = null;
 let temporalEmpleados = null;
-let language = ''
 
-export default ({navigation, route: {params: {orientation}}}) => {
+export default ({navigation}) => {
     token = useSelector(selectTokenInfo)
     user = useSelector(selectUserInfo)
-    language = useSelector(selectLanguageApp)
-    
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
     empleados = useSelector(selectEmpleados)
     temporalEmpleados = useSelector(selectTemporalEmpleados)
     const dispatch = useDispatch()
@@ -38,13 +37,6 @@ export default ({navigation, route: {params: {orientation}}}) => {
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const {handlePath} = useNavigation();
     const {hasConnection, askForConnection} = useConnection();
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-    const {handleScroll, translateY, paddingTop} = useScroll(orientationInfo.initial)
 
     useFocusEffect(
         useCallback(() => {
@@ -195,7 +187,7 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 </View>
                             </View>
                             {
-                                orientationInfo.initial === 'PORTRAIT'
+                                orientation === 'PORTRAIT'
                                 ?
                                     <>
                                         <View style={{height: 'auto', alignSelf: 'stretch', flexDirection: 'row', marginTop: 5}}>
@@ -349,18 +341,16 @@ export default ({navigation, route: {params: {orientation}}}) => {
                 ?
                     <>
                         {
-                            orientationInfo.initial === 'PORTRAIT'
+                            orientation === 'PORTRAIT'
                             ?
-                                <HeaderPortrait title={language === '1' ? 'Vacaciones' : 'Vacation'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                                <HeaderPortrait title={language === '1' ? 'Vacaciones' : 'Vacation'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                             :
-                                <HeaderLandscape title={language === '1' ? 'Vacaciones' : 'Vacation'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                                <HeaderLandscape title={language === '1' ? 'Vacaciones' : 'Vacation'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                         }
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                             style={tw`self-stretch`}
-                            /* onScroll={handleScroll}
-                            contentContainerStyle={{paddingTop: paddingTop}} */
                             refreshControl={
                                 <RefreshControl
                                     progressBackgroundColor={'#EC5C25'}
@@ -454,14 +444,14 @@ export default ({navigation, route: {params: {orientation}}}) => {
                                 }
                             </View>
                         </ScrollView>
-                        <BottomNavBar navigation={navigation} language={language} orientation={orientationInfo.initial}/>
+                        {/* <BottomNavBar navigation={navigation} language={language} orientation={orientation}/> */}
                         <ModalLoading visibility={loading}/>
                     </>
                 :
                     <>
                         <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
                         <SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground }} />
-                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientationInfo.initial}/>
+                        <FailedNetwork askForConnection={askForConnection} reloading={reloading} language={language} orientation={orientation}/>
                     </>
             }
             </View>

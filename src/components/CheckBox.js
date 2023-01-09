@@ -1,8 +1,8 @@
 import React from 'react'
 import {TouchableOpacity, View, Text} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { isIphone } from '../access/requestedData';
-import { Blue } from '../colors/colorsApp';
+import {isIphone} from '../access/requestedData';
+import {Blue} from '../colors/colorsApp';
 
 //disabled allows to change the value
 //list only change width and height to show prettier lists

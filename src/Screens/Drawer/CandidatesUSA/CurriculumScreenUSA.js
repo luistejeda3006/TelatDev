@@ -2,17 +2,21 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderPortrait, HeaderLandscape, Title} from '../../../components';
 import DeviceInfo from 'react-native-device-info';
-import {useNavigation, useOrientation} from '../../../hooks'
+import {useNavigation} from '../../../hooks'
 import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let data = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
@@ -23,13 +27,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             handlePath('Dashboard')
         }, [])
     );
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
 
     useEffect(() => {
         let obj = {
@@ -176,7 +173,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     <HeaderPortrait title={'Resume'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                 :
@@ -187,7 +184,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                 ?
                     <LandscapePhoneAndTablet />
                 :
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <View style={styles.container}>
                             <ScrollView

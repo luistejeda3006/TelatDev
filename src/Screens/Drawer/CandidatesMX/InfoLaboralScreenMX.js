@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, Title} from '../../../components';
-import {useNavigation, useOrientation, useScroll} from '../../../hooks'
+import {useNavigation} from '../../../hooks'
 import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,17 +9,21 @@ import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/
 import {isIphone} from '../../../access/requestedData';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
+import {selectOrientation} from '../../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let data = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
     data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
     const [contador, setContador] = useState(0)
+    const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
+
     const [antiguedad, setAntiguedad] = useState({
         years: 0,
         months: 1,
@@ -31,15 +35,6 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             handlePath('Dashboard')
         }, [])
     );
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': 'PORTRAIT'
-    });
-
-    const {handleScroll, paddingTop, translateY} = useScroll(orientationInfo.initial)
 
     useEffect(() => {
         const spt = data.data.datos_laborales.antiguedad.split(' ')
@@ -91,13 +86,11 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
 
     const LascapePhoneAndTablet = () => {
         return (
-            <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}]`}>
+            <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                 <ScrollView 
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     style={tw`self-stretch`}
-                    /* onScroll={handleScroll}
-                    contentContainerStyle={{paddingTop: paddingTop}} */
                 >
                     <View style={{marginTop: '3%'}}></View>
                     <Title title={language === '1' ? 'DATOS LABORALES' : 'LABORAL INFORMATION'} icon={'briefcase'} tipo={1}/>
@@ -198,7 +191,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                             ?
                                 <>
                                     <View style={tw`flex-row justify-center items-center`}>
-                                        <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                        <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                             <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                 <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                             </View>
@@ -226,7 +219,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     </View>
 
                                     <View style={tw`flex-row justify-center items-center`}>
-                                        <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                        <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                             <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                 <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                             </View>
@@ -256,7 +249,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                 ?
                                     <>
                                         <View style={tw`flex-row justify-center items-center`}>
-                                            <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                            <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                 <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                     <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                 </View>
@@ -288,7 +281,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     &&
                                         <>
                                             <View style={tw`flex-row justify-center items-center`}>
-                                                <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                     <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                         <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                     </View>
@@ -316,7 +309,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                         :
                             <>
                                 <View style={tw`flex-row justify-center items-center pb-2`}>
-                                    <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                    <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                         <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                             <IonIcons name={'credit-card'} size={isTablet() ? 40 : 24} color='#fcb43c' />
                                         </View>
@@ -390,18 +383,18 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
-                    <HeaderPortrait title={language === '1' ? 'Datos Laborales' : 'Laboral Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderPortrait title={language === '1' ? 'Datos Laborales' : 'Laboral Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
                 :
-                    <HeaderLandscape title={language === '1' ? 'Datos Laborales' : 'Laboral Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} translateY={translateY}/>
+                    <HeaderLandscape title={language === '1' ? 'Datos Laborales' : 'Laboral Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} />
             }
             {
                 isTablet()
                 ?
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
-                        <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}]`}>
+                        <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false} 
@@ -501,7 +494,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         ?
                                             <>
                                                 <View style={tw`flex-row justify-center items-center`}>
-                                                    <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                    <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                         <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                             <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                         </View>
@@ -532,7 +525,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 </View>
 
                                                 <View style={tw`flex-row justify-center items-center`}>
-                                                    <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                    <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                         <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                             <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                         </View>
@@ -562,7 +555,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             ?
                                                 <>
                                                     <View style={tw`flex-row justify-center items-center`}>
-                                                        <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                        <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                             <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                                 <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                             </View>
@@ -597,7 +590,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 &&
                                                     <>
                                                         <View style={tw`flex-row justify-center items-center`}>
-                                                            <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                            <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                                 <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                                     <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                                 </View>
@@ -625,7 +618,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     :
                                         <>
                                             <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                     <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                         <IonIcons name={'credit-card'} size={isTablet() ? 40 : 24} color='#fcb43c' />
                                                     </View>
@@ -692,9 +685,9 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     :
                         <LascapePhoneAndTablet />
                 :
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
-                        <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}]`}>
+                        <View style={tw`flex-1 justify-start items-center px-[${isIphone ? '5%' : '3%'}] bg-white`}>
                             <ScrollView 
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
@@ -788,7 +781,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                         ?
                                             <>
                                                 <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                    <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                    <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                         <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                             <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                         </View>
@@ -818,7 +811,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 </View>
 
                                                 <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                    <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                    <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                         <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                             <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                         </View>
@@ -848,7 +841,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                             ?
                                                 <>
                                                     <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                        <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                        <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                             <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                                 <Icon name={'home'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                             </View>
@@ -882,7 +875,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                                 &&
                                                     <>
                                                         <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                            <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                            <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                                 <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                                     <IonIcons name={'cash-100'} size={isTablet() ? 40 : 28} color='#fcb43c' />
                                                                 </View>
@@ -910,7 +903,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                                     :
                                         <>
                                             <View style={tw`flex-row justify-center items-center pb-2`}>
-                                                <View style={tw`w-[${orientationInfo.initial === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
+                                                <View style={tw`w-[${orientation === 'PORTRAIT' ? '9%' : '5%'}] pr-1.5`}>
                                                     <View style={tw`w-[100%] h-10 justify-center items-center`}>
                                                         <IonIcons name={'credit-card'} size={isTablet() ? 40 : 24} color='#fcb43c' />
                                                     </View>

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Image, Text, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useOrientation} from '../../hooks';
 import {BallIndicator} from 'react-native-indicators';
 import {Orange} from '../../colors/colorsApp';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,7 +14,7 @@ let keyLanguage = 'Language';
 let keyUserInfo = 'userInfo';
 let keyTokenInfo = 'tokenInfo';
 
-export default ({navigation, route: {params}}) => {
+export default ({navigation}) => {
     const dispatch = useDispatch()
     const [language, setLanguage] = useState()
     orientation = useSelector(selectOrientation)

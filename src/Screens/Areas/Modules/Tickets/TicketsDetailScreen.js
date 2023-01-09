@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View, Text, StyleSheet, Platform, ScrollView, FlatList, TouchableOpacity, Image, Linking, StatusBar, SafeAreaView, Alert, RefreshControl, Dimensions} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Camera, FailedNetwork, HeaderLandscape, HeaderPortrait, Message, ModalLoading, Modal, MultiText, MultiTextEditable, Select, Title, BottomNavBar} from '../../../../components'
-import {useConnection, useOrientation, useNavigation, useScroll} from '../../../../hooks'
+import {Camera, FailedNetwork, Message, ModalLoading, Modal, MultiText, MultiTextEditable, Select, Title} from '../../../../components'
+import {useConnection, useNavigation} from '../../../../hooks'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {barStyle, barStyleBackground, Blue, Orange, SafeAreaBackground, Yellow} from '../../../../colors/colorsApp'
@@ -17,10 +17,10 @@ import WebView from 'react-native-webview';
 import {useDispatch, useSelector} from 'react-redux';
 import {actionTicket} from '../../../../slices/ticketSlice';
 import {useFocusEffect} from '@react-navigation/native';
-import {selectTokenInfo} from '../../../../slices/varSlice';
+import {selectLanguageApp, selectTokenInfo} from '../../../../slices/varSlice';
+import {getCurrentDate} from '../../../../js/dates';
+import {selectOrientation} from '../../../../slices/orientationSlice';
 import tw from 'twrnc';
-import { getCurrentDate } from '../../../../js/dates';
-import { selectOrientation } from '../../../../slices/orientationSlice';
 
 let token = null;
 
@@ -40,14 +40,14 @@ const htmlProps = {
 };
 
 export default ({navigation, route: {params: {id, id_usuario, id_puesto, active, is_table, html, cuenta}}}) => {
-    
     const dispatch = useDispatch()
-    token = useSelector(selectTokenInfo)
     const orientation = useSelector(selectOrientation)
+    const language = useSelector(selectLanguageApp)
+    token = useSelector(selectTokenInfo)
+
     const refDetail = useRef()
     const spliterData = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}, {id: 8}, {id: 9}, {id: 10}, {id: 11}, {id: 12}, {id: 13}, {id: 14}, {id: 15}, {id: 16}, {id: 17}, {id: 18}, {id: 19}, {id: 20}, {id: 21}, {id: 22}, {id: 23}, {id: 24}, {id: 25}, {id: 26}, {id: 27}, {id: 28}, {id: 29}, {id: 30}, {id: 31}, {id: 32}, {id: 33}, {id: 34}, {id: 35}]
     cuenta = cuenta;
-    const language = '1';
     const {isTablet} = DeviceInfo;
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const {handlePath} = useNavigation()
@@ -55,7 +55,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
     const {hasConnection, askForConnection} = useConnection();
     const [selected, setSelected] = useState(undefined)
     const [visibleTable, setVisibleTable] = useState(false)
-    const {translateY, handleScroll, paddingTop} = useScroll(orientation)
     const [scrolling, setScrolling] = useState(0)
     const [loading, setLoading] = useState(false)
     const [load, setLoad] = useState(false)
@@ -68,7 +67,6 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
         permisos: {},
         areLegendsHiden: false,
         areEvidencesHiden: false,
-        currentOrientation: 'PORTRAIT',
         visibleResponsables: false,
         edit: false,
         motivos: [],
@@ -99,7 +97,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
         bodyHtml: '',
     })
     
-    const {imagen, encryptedImage, nombre_imagen, motivo, motivos, closeOption, closeOptions, mensaje, areLegendsHiden, areEvidencesHiden, currentOrientation, detail, chat, Responsables, Evidencias, calificacion, permisos, visibleResponsables, edit, visibleResponder,  visibleAutorizar, visibleConfirmar, showMensaje, visibleMensaje, reload} = initialState
+    const {imagen, encryptedImage, nombre_imagen, motivo, motivos, closeOption, closeOptions, mensaje, areEvidencesHiden, detail, chat, Responsables, Evidencias, calificacion, permisos, visibleResponsables, edit, visibleResponder,  visibleAutorizar, visibleConfirmar, showMensaje, visibleMensaje, reload} = initialState
 
     useFocusEffect(
         useCallback(() => {

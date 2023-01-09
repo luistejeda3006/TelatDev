@@ -1,28 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, StatusBar, SafeAreaView} from 'react-native';
 import {HeaderLandscape, HeaderPortrait, Title} from '../../../components';
-import {useNavigation, useOrientation} from '../../../hooks'
+import {useNavigation} from '../../../hooks'
 import DeviceInfo from 'react-native-device-info';
-import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../colors/colorsApp';
+import {barStyle, barStyleBackground, SafeAreaBackground} from '../../../colors/colorsApp';
 import {isIphone} from '../../../access/requestedData';
 import {useSelector} from 'react-redux';
-import {selectUserInfo} from '../../../slices/varSlice';
+import {selectLanguageApp, selectUserInfo} from '../../../slices/varSlice';
 import {useFocusEffect} from '@react-navigation/native';
+import {selectOrientation} from '../../../slices/orientationSlice';
 
 let data = ''
 
-export default ({navigation, route: {params: {language, orientation}}}) => {
+export default ({navigation}) => {
+    const language = useSelector(selectLanguageApp)
+    const orientation = useSelector(selectOrientation)
+
     data = useSelector(selectUserInfo)
     const {handlePath} = useNavigation()
     const {isTablet} = DeviceInfo;
     const [info, setInfo] = useState({})
-
-    const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
 
     useFocusEffect(
         useCallback(() => {
@@ -140,7 +137,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
             <SafeAreaView style={{ flex: 0, backgroundColor: SafeAreaBackground }} />
             {
-                orientationInfo.initial === 'PORTRAIT'
+                orientation === 'PORTRAIT'
                 ?
                     <HeaderPortrait title={'Employment Information'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                 :
@@ -149,7 +146,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
             {
                 isTablet()
                 ?
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <View style={styles.container}>
                             <ScrollView 
@@ -224,7 +221,7 @@ export default ({navigation, route: {params: {language, orientation}}}) => {
                     :
                         <LascapePhoneAndTablet />
                 :
-                    orientationInfo.initial === 'PORTRAIT'
+                    orientation === 'PORTRAIT'
                     ?
                         <View style={styles.container}>
                             <ScrollView 

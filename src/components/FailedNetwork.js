@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
-import { isTablet } from 'react-native-device-info';
+import {isTablet} from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useSelector } from 'react-redux';
-import { selectOrientation } from '../slices/orientationSlice';
-import { selectLanguageApp } from '../slices/varSlice';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../slices/orientationSlice';
+import {selectLanguageApp} from '../slices/varSlice';
 
 export default ({askForConnection, reloading = null}) => {
     const language = useSelector(selectLanguageApp)

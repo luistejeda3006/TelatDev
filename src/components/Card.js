@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { useSelector } from 'react-redux';
-import { selectOrientation } from '../slices/orientationSlice';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../slices/orientationSlice';
 
 export default ({screen = '', value, index, total, ...rest}) => {
     const orientation = useSelector(selectOrientation)

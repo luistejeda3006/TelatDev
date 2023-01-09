@@ -1,14 +1,15 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import {View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image, StatusBar, SafeAreaView} from 'react-native'
-import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../../../colors/colorsApp'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../../colors/colorsApp'
 import IonIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
-import { HeaderLandscape, HeaderPortrait } from '../../../../../components';
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
-import { useNavigation, useOrientation, useSound } from '../../../../../hooks';
-import { useFocusEffect } from '@react-navigation/native';
-import { isIphone } from '../../../../../access/requestedData';
+import {HeaderLandscape, HeaderPortrait} from '../../../../../components';
+import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
+import {useNavigation, useSound} from '../../../../../hooks';
+import {useFocusEffect} from '@react-navigation/native';
+import {isIphone} from '../../../../../access/requestedData';
+import {useSelector} from 'react-redux';
+import {selectOrientation} from '../../../../../slices/orientationSlice';
 
 const options = {
 	container: {
@@ -31,7 +32,9 @@ const options = {
 let isIn = null;
 let width = Dimensions.get('screen').width
 let height = Dimensions.get('screen').height
-export default ({navigation, route: {params: {nivel, meta, seconds, id, orientation, enTorneo}}}) => {
+export default ({navigation, route: {params: {nivel, meta, seconds, id, enTorneo}}}) => {
+	const orientation = useSelector(selectOrientation)
+
 	const [contador, setContador] = useState(Math.random().toString())
 	const [time, setTime] = useState('')
 	const [isStopWatchStart, setIsStopWatchStart] = useState(false)
@@ -66,13 +69,6 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 	const {handlePath} = useNavigation()
 
 	const {cards, animation, temporal} = initialState
-	
-	const {orientationInfo} = useOrientation({
-        'isLandscape': false,
-        'name': 'portrait-primary',
-        'rotationDegrees': 0,
-        'initial': orientation
-    });
 
 	useEffect(() => {
 		let n = []
@@ -284,7 +280,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 						key={String(order)}
 						animation={animation}
 						duration={500}>
-						<TouchableOpacity onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientationInfo.initial === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientationInfo.initial === 'PORTRAIT' ? 85 : 65}]}>
+						<TouchableOpacity onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientation === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientation === 'PORTRAIT' ? 85 : 65}]}>
 							{
 								opened
 								?
@@ -297,7 +293,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 				:
 					!completed
 					?
-						<TouchableOpacity key={String(order)} onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientationInfo.initial === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientationInfo.initial === 'PORTRAIT' ? 85 : 65}]}>
+						<TouchableOpacity key={String(order)} onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientation === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientation === 'PORTRAIT' ? 85 : 65}]}>
 							{
 								opened
 								?
@@ -310,7 +306,7 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 							}
 						</TouchableOpacity>
 					:
-						<View key={String(order)} onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientationInfo.initial === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientationInfo.initial === 'PORTRAIT' ? 85 : 65}]}>
+						<View key={String(order)} onPress={() => handleDiscover(order, icon)} style={[styles.chooseItem, {backgroundColor: '#fff', width: width <= 365 ? 40 : orientation === 'PORTRAIT' ? 70 : 50, height: width <= 365 ? 55 : orientation === 'PORTRAIT' ? 85 : 65}]}>
 							{
 								opened
 								?
@@ -330,15 +326,15 @@ export default ({navigation, route: {params: {nivel, meta, seconds, id, orientat
 			<StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
 			<SafeAreaView style={{flex: 0, backgroundColor: SafeAreaBackground}} />
 			{
-				orientationInfo.initial === 'PORTRAIT'
+				orientation === 'PORTRAIT'
 				?
 					<HeaderPortrait title={'Memorama'} screenToGoBack={enTorneo === '1' ? 'Menu_' : 'ChooseMemorama'} navigation={navigation} visible={true} confirmation={true} titleAlert={'Saliendo del juego'} subtitleAlert={'¿Seguro que deseas abandonar la partida?'} normal={true}/>
 				:
 					<HeaderLandscape title={'Memorama'} screenToGoBack={enTorneo === '1' ? 'Menu_' : 'ChooseMemorama'} navigation={navigation} visible={true} confirmation={true} titleAlert={'Saliendo del juego'} subtitleAlert={'¿Seguro que deseas abandonar la partida?'} normal={true}/>
 			}
-			<View style={[styles.selectionContainer, {padding: orientationInfo.initial === 'PORTRAIT' ? '3%' : '1.5%'}]}>
+			<View style={[styles.selectionContainer, {padding: orientation === 'PORTRAIT' ? '3%' : '1.5%'}]}>
 				{
-					orientationInfo.initial === 'PORTRAIT'
+					orientation === 'PORTRAIT'
 					?
 						<>
 							<View style={{flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>

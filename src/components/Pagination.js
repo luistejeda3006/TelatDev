@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native'
-import { Blue } from '../colors/colorsApp'
+import React, {useEffect, useState, useCallback} from 'react'
+import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native'
+import {Blue} from '../colors/colorsApp'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputFilter from './InputFilter';
 

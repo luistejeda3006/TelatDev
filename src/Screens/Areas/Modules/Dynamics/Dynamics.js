@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import {View, Text, Image, StatusBar, SafeAreaView, ImageBackground, FlatList, TouchableWithoutFeedback} from 'react-native'
-import {HeaderPortrait, ModalLoading, NotResults} from '../../../../components'
+import React, { useCallback, useState } from 'react'
+import {View, Text, StatusBar, SafeAreaView, ImageBackground, FlatList, TouchableWithoutFeedback} from 'react-native'
+import {HeaderPortrait, NotResults} from '../../../../components'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground} from '../../../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
 import {selectLanguageApp} from '../../../../slices/varSlice'
@@ -10,8 +10,8 @@ import {isIphone} from '../../../../access/requestedData'
 import {selectOrientation} from '../../../../slices/orientationSlice'
 import {useFocusEffect} from '@react-navigation/native'
 import {useNavigation} from '../../../../hooks'
+import {setCurrent} from '../../../../slices/dynamicsSlice'
 import tw from 'twrnc'
-import { setCurrent } from '../../../../slices/dynamicsSlice'
 
 export default ({navigation}) => {
     const dispatch = useDispatch()
