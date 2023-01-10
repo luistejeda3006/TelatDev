@@ -2,7 +2,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, Alert, Linking, BackHandler, StyleSheet} from 'react-native';
 import {InputForm, Picker, TitleForms, CheckBox, DatePicker, ProgressStepActions} from '../../../../components';
 import generateCurp from '../../../../js/generateCurp'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import DeviceInfo from 'react-native-device-info';
@@ -14,8 +13,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {selectChecked, selectError, selectStep, selectVerified, setChecked, setError, setStep, setVerified} from '../../../../slices/progressStepSlice';
 import {selectOrientation} from '../../../../slices/orientationSlice';
 import {selectLanguageApp} from '../../../../slices/varSlice';
+import {setStateOption, setStepOneMX} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
-import { setStateOption, setStepOneMX } from '../../../../slices/applicationForm';
 
 export default ({navigation, handleScrollTop = () => {}}) => {
     const dispatch = useDispatch()
@@ -32,7 +31,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
 
     const first = {label: language === '1' ? 'Seleccionar' : 'Select', value: 'SEL'}; 
     const NE = {label: language === '1' ? 'NACIDO EN EL EXTRANJERO' : 'BORN ABROAD', value: 'NE'};
-    const {isTablet} = DeviceInfo;
     const [statesData, setStatesData] = useState([])
     
     const {hasConnection} = useConnection();
@@ -174,15 +172,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
             
                     const {response, status} = await request.json();
                     if(status === 200){
-                        /* data = await AsyncStorage.getItem(key) || '';
-                        if(data) {
-                            await AsyncStorage.removeItem(keyState).then( () => AsyncStorage.setItem(keyState, stateSend.label));
-                            await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_1)));
-                        }
-                        else {
-                            data = await AsyncStorage.setItem(keyState, stateSend.label);
-                            data = await AsyncStorage.setItem(key, JSON.stringify(obj_1));
-                        } */
                         dispatch(setStateOption(stateSend.label))
                         dispatch(setStepOneMX(obj_1))
                         dispatch(setStep(step + 1))

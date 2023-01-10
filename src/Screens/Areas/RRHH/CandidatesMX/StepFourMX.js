@@ -9,7 +9,7 @@ import {getCurrentDate} from '../../../../js/dates';
 import {useSelector} from 'react-redux';
 import {selectOrientation} from '../../../../slices/orientationSlice';
 import {selectLanguageApp} from '../../../../slices/varSlice';
-import { selectStepOneMX, selectStepThreeMX, selectStepTwoMX } from '../../../../slices/applicationForm';
+import {selectStepOneMX, selectStepThreeMX, selectStepTwoMX} from '../../../../slices/applicationForm';
 
 let stepOneInfo = null;
 let stepTwoInfo = null;

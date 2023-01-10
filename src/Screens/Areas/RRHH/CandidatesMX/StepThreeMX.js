@@ -4,13 +4,12 @@ import {InputForm, Picker, TitleForms, DatePicker, ProgressStepActions} from '..
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DeviceInfo from 'react-native-device-info';
 import {useFormikContext} from 'formik';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {diffBetweenDates} from '../../../../js/dates'
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 import {selectLanguageApp} from '../../../../slices/varSlice';
 import {selectOrientation} from '../../../../slices/orientationSlice';
-import { setStepThreeMX } from '../../../../slices/applicationForm';
+import {setStepThreeMX} from '../../../../slices/applicationForm';
 
 let inicial = null;
 let terminal = null;
@@ -209,17 +208,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
         terminal = null;
         inicialOpcional = null;
         terminalOpcional = null;
-
-        /* let data = null;
-        let key = 'stepThree'
-
-        data = await AsyncStorage.getItem(key) || '[]';
-        if(data) {
-            await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_3)));
-        }
-        else {
-            data = await AsyncStorage.setItem(key, JSON.stringify(obj_3));
-        } */
 
         dispatch(setStepThreeMX(obj_3))
     }

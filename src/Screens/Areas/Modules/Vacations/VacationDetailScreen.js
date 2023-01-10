@@ -479,34 +479,42 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
 
     const Solicitudes = ({id, inicio, fin, status, dias, oculta, btn_editar, btn_delete, fIndex}) => {
         return(
-            <View style={tw`bg-[#f7f7f7] shadow-md mx-1.5 my-2.5 rounded-xl`}>
+            <View style={tw`bg-[#f7f7f7] shadow-md mx-1.5 my-2.5 rounded justify-center items-center py-1.5`}>
                 <TouchableWithoutFeedback onPress={() => handleHideActions(id, fIndex)}>
-                    <View style={{flex: 1, height: oculta ? 65 : 110, marginHorizontal: orientation === 'PORTRAIT' ? 0 : 2.5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{flex: 1, height: 'auto', marginHorizontal: orientation === 'PORTRAIT' ? 0 : 2.5, justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flexDirection: 'row', height: 50, alignItems: 'center', justifyContent: 'center'}}>
-                            <View style={{width: 'auto', marginLeft: 15, marginRight: 5}}>
+                            <View style={{width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginLeft: 15, marginRight: 5, backgroundColor: status === '0' ? 'rgba(51, 132, 198, 0.4)' : (status === '2' || status === '3') ? 'rgba(220, 50, 50, 0.4)' : 'rgba(95, 167, 93, 0.4)', padding: 5, paddingLeft: isIphone ? status !== '0' ? 6 : 5.5 : 5, paddingBottom: (status === '2' || status === '3') ? 6 : status === '0' ? 5.5 : 5, borderRadius: 25}}>
                                 {
                                     status === '0'
                                     ?
-                                        <IonIcons name={'clock'} color={'#abbac3'} size={26}/>
+                                        <IonIcons name={'progress-clock'} color={Blue} size={18}/>
                                     :
-                                        <Icon name={status === '2' || status === '3' ? 'times' : 'check'} size={status === '3' ? 28 : 24} color={status === '2' || status === '3' ? '#DC3232' : '#5FA75D'} />
+                                        <Icon name={status === '2' || status === '3' ? 'times' : 'check'} size={status === '3' ? 17 : 16} color={status === '2' || status === '3' ? '#DC3232' : '#5FA75D'} />
                                 }
                             </View>
                             <View style={{flex: 1, marginLeft: 10, paddingVertical: 8}}>
                                 <Text style={{fontSize: 13, color: Blue}}>{language === '1' ? 'Fecha seleccionada' : 'Selected Date'}</Text>
-                                <Contenedor title={`${inicio} - ${fin}`} hasBottomLine={false} down={false}/>
+                                <View style={tw`self-stretch items-center justify-start pb-0 ml-0 flex-row`}>
+                                    <Text style={tw`text-sm text-[#000]`}>{inicio}</Text>
+                                    <View style={tw`mx-1 justify-center items-center pt-${isIphone ? 0 : 0.5}`}>
+                                        <IonIcons name={'arrow-right-thin'} color={'#dadada'} size={20}/>
+                                    </View>
+                                    <Text style={tw`text-sm text-[#000]`}>{fin}</Text>
+                                </View>
                             </View>
                             <View style={{width: 'auto', paddingHorizontal: 10}}>
                                 <Text style={{fontSize: 13, color: Blue}}>{language === '1' ? 'Días' : 'Days'}</Text>
-                                <Contenedor title={dias} hasBottomLine={false} down={false} leftPosition={false}/>
+                                <View style={tw`justify-center items-center`}>
+                                    <Text style={tw`text-sm text-[#000]`}>{dias}</Text>
+                                </View>
                             </View>
                         </View>
                         {
                             !oculta
                             &&
-                                <View style={{flexDirection: 'row', paddingHorizontal: 10}}>
+                                <View style={{flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', paddingHorizontal: 10}}>
                                     <View style={{flex: 1}}>
-                                        <TouchableOpacity onPress={() => handleDetails(status)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#74A9C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                        <TouchableOpacity onPress={() => handleDetails(status)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#74A9C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                             <Icon name={'folder-open'} size={18} color={'#fff'} />
                                             <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{status === '0' ? btn_editar && btn_delete ? language === '1' ? 'Ver' : 'View' : language === '1' ? 'Ver Detalles' : 'View Details' : language === '1' ? 'Ver Detalles' : 'View Details'}</Text>
                                         </TouchableOpacity>
@@ -519,7 +527,7 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
                                                 <>
                                                     <View style={{width: 6}}></View>
                                                     <View style={{flex: 1}}>
-                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#C3E5C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                                        <TouchableOpacity onPress={() => setEditVisibility(!editVisibility)} style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#C3E5C4', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                                             <Icon name={'pencil'} size={22} color={'#000'} />
                                                             <Text style={{fontSize: 14, color: '#000', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Editar' : 'Edit'}</Text>
                                                         </TouchableOpacity>
@@ -527,7 +535,7 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
                                                     <View style={{width: 6}}></View>
                                                     <View style={{flex: 1}}>
                                                         <TouchableOpacity onPress={() => setDeleteVisibility(!deleteVisibility)} 
-                                                        style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', marginTop: 10, backgroundColor: '#DC4D4D', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
+                                                        style={{flexDirection: 'row', height: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#DC4D4D', paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8}}>
                                                             <Icon name={'trash'} size={22} color={'#fff'} />
                                                             <Text style={{fontSize: 14, color: '#fff', marginLeft: 12, fontWeight: 'bold'}}>{language === '1' ? 'Borrar' : 'Delete'}</Text>
                                                         </TouchableOpacity>
@@ -837,18 +845,18 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
                             <View style={tw`flex-row justify-center items-center`}>
                                 <Icon name={'info'} size={24} color={Blue} />
                                 <View style={tw`flex-1`}>
-                                    <Text style={tw`ml-4 text-base text-[${Blue}]`}>{language === '1' ? 'Podrá hacer su solicitud de vacaciones siempre y cuando:' : 'You will be able to make your vacation request as long as:'}</Text>
+                                    <Text style={[{fontSize: 16}, tw`ml-4 text-[${Blue}]`]}>{language === '1' ? 'Podrá hacer su solicitud de vacaciones siempre y cuando:' : 'You will be able to make your vacation request as long as:'}</Text>
                                 </View>
                             </View>
                             <View style={tw`flex-row justify-center items-center mt-1.5`}>
                                 <View style={tw`flex-1`}>
-                                    <Text style={tw`text-base text-[${Blue}]`}>{language === '1' ? '1- Tenga días disponibles (Se tomaran primero los días que tenga pendientes de otro periodo).' : '1- Have available days (Days pending from another period will be taken first).'}</Text>
+                                    <Text style={[{fontSize: 16}, tw`text-base text-[${Blue}]`]}>{language === '1' ? '1- Tenga días disponibles (Se tomaran primero los días que tenga pendientes de otro periodo).' : '1- Have available days (Days pending from another period will be taken first).'}</Text>
                                 </View>
                             </View>
                             
                             <View style={tw`flex-row justify-center items-center mt-1.5`}>
                                 <View style={tw`flex-1`}>
-                                    <Text style={tw`text-base text-[${Blue}]`}>{language === '1' ? '2- En caso de no tener días disponibles solo se podrá adelantar un 50% de los días del siguiente período y no antes de 6 meses.' : '2- If there are no days available, only 50% of the days of the following period may be advanced and not earlier than 6 months.'}</Text>
+                                    <Text style={[{fontSize: 16}, tw`text-base text-[${Blue}]`]}>{language === '1' ? '2- En caso de no tener días disponibles solo se podrá adelantar un 50% de los días del siguiente período y no antes de 6 meses.' : '2- If there are no days available, only 50% of the days of the following period may be advanced and not earlier than 6 months.'}</Text>
                                 </View>
                             </View>
                         </View>

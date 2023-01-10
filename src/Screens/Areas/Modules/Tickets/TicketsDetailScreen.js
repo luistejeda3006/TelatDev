@@ -717,7 +717,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.solicitado ? detail.solicitado : '---'}</Text>
                                                 </View>
                                                 <View style={tw`h-12 w-14 justify-center items-end pl-px`}>
-                                                    <View style={tw`w-auto h-auto p-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : '#fff'}] rounded`}>
+                                                    <View style={tw`w-auto h-auto px-1.5 py-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : '#fff'}] rounded border border-[#dadada]`}>
                                                         <Text style={tw`font-bold text-[#fff] text-sm`}>{detail?.prioridad ? detail.prioridad : '---'}</Text>
                                                     </View>
                                                 </View>

@@ -67,7 +67,6 @@ export default ({navigation, route: {params: {id_puesto, id_usuario, btn_editar 
     quincena = useSelector(selectQuincena)
 
     const {isTablet} = DeviceInfo;
-    const [contador, setContador] = useState(Math.random().toString());
     const [visiblePeriodo, setVisiblePeriodo] = useState(false)
     const [visibleAsistencia, setVisibleAsistencia] = useState(false)
     const [deleteVisibility, setDeleteVisibility] = useState(false)
@@ -218,7 +217,6 @@ export default ({navigation, route: {params: {id_puesto, id_usuario, btn_editar 
         }
     
         else if(status === 401){
-            console.log('body: ', body)
             Alert.alert(
                 language === 1 ? 'Sesión Expirada' : 'Expired Session',
                 language === 1 ? 'Su sesión ha expirado' : 'Your session has expired',
@@ -872,8 +870,6 @@ export default ({navigation, route: {params: {id_puesto, id_usuario, btn_editar 
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}
                                     style={tw`self-stretch`}
-                                    /* contentContainerStyle={{paddingTop: paddingTop}}
-                                    onScroll={handleScroll} */
                                 >
                                     <View style={tw`flex-1 self-stretch`}>
                                         <View style={tw`flex-row py-[1.5%] mx-[${isIphone ? 2.5 : 2}]`}>

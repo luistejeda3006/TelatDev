@@ -3,14 +3,12 @@ import {StyleSheet, View, Alert, Text, BackHandler} from 'react-native';
 import {InputForm, Picker, DatePicker, TitleForms, ProgressStepActions} from '../../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useFormikContext} from 'formik';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import DeviceInfo from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectStep, setStep} from '../../../../slices/progressStepSlice';
 import {selectOrientation} from '../../../../slices/orientationSlice';
 import {selectLanguageApp} from '../../../../slices/varSlice';
+import {selectStateOption, setStepTwoMX} from '../../../../slices/applicationForm';
 import tw from 'twrnc'
-import { selectStateOption, setStepTwoMX } from '../../../../slices/applicationForm';
 
 export default ({navigation, handleScrollTop = () => {}}) => {
     const dispatch = useDispatch()
@@ -37,32 +35,12 @@ export default ({navigation, handleScrollTop = () => {}}) => {
     const input_motivo_salida = useRef()
     const input_lugar = useRef()
     const input_tiempo = useRef()
-    const input_motivo_regreso = useRef()
     const input_lugar_nacimiento = useRef()
     const input_nacionalidad = useRef()
     const input_tiempo_mexico = useRef()
 
-    const {isTablet} = DeviceInfo;
     const {submitForm, values} = useFormikContext();
     const first = {label: language === '1' ? 'Seleccionar' : 'Select', value: 'SEL'};
-
-    const experienceData = [
-        first,
-        {label: '6m-1', value: '6m-1'},
-        {label: '1-2', value: '1-2'},
-        {label: '2-3', value: '2-3'},
-        {label: '3-más', value: '3-más'},
-    ]
-
-    const scheduleData = [
-        first,
-        {label: language === '1' ? 'Matutino' : 'Morning shift', value: 'Matutino'},
-        {label: language === '1' ? 'Vespertino' : 'Evening shift', value: 'Vespertino'},
-        {label: language === '1' ? 'Nocturno' : 'Night shift', value: 'Nocturno'},
-        {label: language === '1' ? 'Mixto' : 'Mixed shift', value: 'Mixto'},
-        {label: language === '1' ? 'Rotar' : 'Alternate shifts', value: 'Rotar'},
-        {label: language === '1' ? 'Indistinto' : 'Indistinct', value: 'Indistinto'},
-    ]
     
     const closeOptions = [
         first,
@@ -84,13 +62,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
         {label:'9', value: '9'},
     ]
     
-    const transportData = [
-        first,
-        {label: language === '1' ? 'Transporte Público' : 'Public Transport', value: 'TRANSPORTE PUBLICO'},
-        {label: language === '1' ? 'Transporte Privado' : 'Private Transport', value: 'TRANSPORTE PRIVADO'},
-        {label: language === '1' ? 'Transporte Propio' : 'Personally-Owned Vehicle', value: 'VEHICULO PROPIO'},
-    ]
-    
     const recruitmentData = [
         first,
         {label: 'Facebook', value: 'FACEBOOK'},
@@ -103,23 +74,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
         {label: language === '1' ? 'Reingreso' : 'Re-entry', value: 'REINGRESO'},
         {label: 'App', value: 'APP'},
         {label: language === '1' ? 'Otro' : 'Other', value: 'OTRO'},
-    ]
-    
-    const jobBoardData = [
-        first,
-        {label: 'OCC', value: 'OCC'},
-        {label: 'Indeed', value: 'INDEED'},
-        {label: 'LinkedIn', value: 'LINKEDIN'},
-        {label: 'Talenteca', value: 'TALENTECA'},
-        {label: 'Bolsa Universitaria', value: 'BOLSA UNIVERSITARIA'},
-        {label: 'Computrabajo', value: 'COMPUTRABAJO'}
-    ]
-    
-    const socialNetworksData = [
-        first,
-        {label: 'Facebook', value: 'FACEBOOK'},
-        {label: 'Twitter', value: 'TWITTER'},
-        {label: 'Instagram', value: 'INSTAGRAM'},
     ]
     
     const estadocvData = [
@@ -148,17 +102,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
     const {recruitment, error, worked, foreigh, index} = filters;
     const {emision_2, expiracion_2, lugarNacimiento_1, nombres_1, apellidoPaterno_1, apellidoMaterno_1, genero_1, puestoSolicitado_2, salario_2, experiencia_2, disponibilidadTurno_2, actualmenteTrabaja_2, horarioLaboral_2, trabajoTelat_2, vivisteExtranjero_2, tipoDocumento_2, estadocv_2, medioReclutamiento_2, numeroHijos_2, dependientesEconomicos_2, tipoTransporte_2, calle_2, numeroExterior_2, codigoPostal_2, colonia_2, ciudad_2, estado_2, email_2, numeroPersonal_2, numeroFijo_2, lugarNacimientoExtranjero_2, nacionalidadExtranjero_2, tiempoMexicoExtranjero_2, numeroInterior_2, calle_uno_2, calle_dos_2} = values;
     const {medioReclutamientoDesc_2, cuandoTrabajo_2, motivosSalida_2, numeroDocumento_2, lugarExtranjero_2, tiempoExtranjero_2, motivoRegresoExtranjero_2} = values;
-
-    /* const getPlace = async () => {
-        let keyState = 'place';
-        let data = await AsyncStorage.getItem(keyState) || '';
-        console.log('lugar', data)
-        setLugarNacimiento(data)
-    }
-
-    useEffect(() => {
-        getPlace()
-    },[]) */
     
     const handleAction_dos = (index) => {
         setFilters({...filters, recruitment: index})
@@ -262,16 +205,6 @@ export default ({navigation, handleScrollTop = () => {}}) => {
                     info_doc_expiracion: tipo === '0' ? null : expiracion_2 === 'No seleccionada' || expiracion_2 === 'Not selected' ? null : expiracion_2,
                 }
                 
-                /* let data = null;
-                let key = 'stepTwo'
-                
-                data = await AsyncStorage.getItem(key) || '[]';
-                if(data) {
-                    await AsyncStorage.removeItem(key).then( () => AsyncStorage.setItem(key, JSON.stringify(obj_2)));
-                }
-                else {
-                    data = await AsyncStorage.setItem(key, JSON.stringify(obj_2));
-                } */
                 dispatch(setStepTwoMX(obj_2))
                 dispatch(setStep(step + 1))
                 handleScrollTop()
