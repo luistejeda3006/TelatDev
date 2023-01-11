@@ -19,6 +19,7 @@ let user = null;
 
 export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud_pendiente}}}) => {
     const dispatch = useDispatch()
+    const refVacations = useRef()
     const language = useSelector(selectLanguageApp)
     const orientation = useSelector(selectOrientation)
     token = useSelector(selectTokenInfo)
@@ -30,6 +31,7 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
     const {handlePath} = useNavigation();
     const {hasConnection, askForConnection} = useConnection();
     
+    const [scrolling, setScrolling] = useState(0)
     const [isIphone, setIsPhone] = useState(Platform.OS === 'ios' ? true : false)
     const [loading, setLoading] = useState(true)
     const [actionsVisibility, setActionsVisibility] = useState(false)
@@ -147,6 +149,12 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
     const handleHideActions = (id, fIndex) => {
         const nuevos = solicitudes.map(x => x.id === id ? ({...x, oculta: !x.oculta}) : ({...x, oculta: true}))
         setInitialState({...initialState, solicitudes: nuevos, id: id})
+        let valor = ((fIndex+1) === solicitudes.length) ? 1 : 0
+        if(valor === 1){
+            console.log('entra en se va hasta el fondo')
+            refVacations.current.scrollToEnd({ animated: true })
+        }
+        setScrolling(valor)
         setIndex(fIndex)
     }
 
@@ -487,7 +495,7 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
                                 {
                                     status === '0'
                                     ?
-                                        <IonIcons name={'progress-clock'} color={Blue} size={18}/>
+                                        <IonIcons name={'clock-time-three'} color={Blue} size={18}/>
                                     :
                                         <Icon name={status === '2' || status === '3' ? 'times' : 'check'} size={status === '3' ? 17 : 16} color={status === '2' || status === '3' ? '#DC3232' : '#5FA75D'} />
                                 }
@@ -580,9 +588,11 @@ export default ({navigation, route: {params: {id_usuario, id_empleado, solicitud
                     :
                         <HeaderLandscape title={language === '1' ? 'Detalle de Vacaciones' : 'Vacation Detail'} screenToGoBack={'Vacation'} navigation={navigation} visible={true} />
                 }
-                    <ScrollView 
+                    <ScrollView
+                        ref={refVacations}
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
+                        onContentSizeChange={() => scrolling !== 0 ? refVacations.current.scrollToEnd({ animated: true }) : {}}
                         style={tw`self-stretch bg-white`}
                         refreshControl={
                             <RefreshControl

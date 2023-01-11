@@ -201,7 +201,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
         return(
             <>
                 <View style={{flexDirection: 'row', height: 'auto', alignSelf: 'stretch', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 6, marginTop: 8}}>
-                    <Icon name={'calendar'} size={15} color={Blue} />
+                    <IonIcons name={'calendar-week'} size={18} color={Blue} />
                     <Text style={{fontSize: 12, marginLeft: 5, color: Blue, borderRadius: 8}}>{fecha}</Text>
                 </View>
 
@@ -716,7 +716,7 @@ export default ({navigation, route: {params: {id, id_usuario, id_puesto, active,
                                                     <Text style={tw`text-[#adadad] text-sm`}>Solicitado por:</Text>
                                                     <Text style={tw`text-[#000] font-bold text-sm`}>{detail?.solicitado ? detail.solicitado : '---'}</Text>
                                                 </View>
-                                                <View style={tw`h-12 w-14 justify-center items-end pl-px`}>
+                                                <View style={tw`h-12 w-auto justify-center items-end pl-px`}>
                                                     <View style={tw`w-auto h-auto px-1.5 py-1 justify-center items-center bg-[${detail.prioridadBackgroundColor ? detail.prioridadBackgroundColor : '#fff'}] rounded border border-[#dadada]`}>
                                                         <Text style={tw`font-bold text-[#fff] text-sm`}>{detail?.prioridad ? detail.prioridad : '---'}</Text>
                                                     </View>

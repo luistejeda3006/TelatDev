@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {View, Text, TouchableOpacity, StatusBar, SafeAreaView, ImageBackground, TouchableWithoutFeedback, StyleSheet, Alert, Image, FlatList} from 'react-native'
-import {HeaderPortrait, Modal, MultiText, RadioButton} from '../../../../components'
+import {HeaderPortrait, Modal, MultiText} from '../../../../components'
 import {barStyle, barStyleBackground, Blue, SafeAreaBackground, Yellow} from '../../../../colors/colorsApp'
 import {useDispatch, useSelector} from 'react-redux'
 import {selectLanguageApp, selectUserInfo} from '../../../../slices/varSlice'
@@ -20,7 +20,7 @@ let contador = 0;
 let user = null;
 let current = null;
 
-export default ({navigation, route: {params: {title, description, image, hasQR, date, rated, hasDecimal}}}) => {
+export default ({navigation, route: {params: {title, description, image, hasQR, date, rated, hasDecimal, comments}}}) => {
     const dispatch = useDispatch()
     const refDynamics = useRef()
     const language = useSelector(selectLanguageApp)
@@ -34,6 +34,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     const [admin, setAdmin] = useState(false);
     const [hasCommented, setHasCommented] = useState(false);
     const [visible, setVisible] = useState(false)
+    const [visibleAwards, setVisibleAwards] = useState(false)
     const [visibleList, setVisibleList] = useState(false)
     const [valid, setValid] = useState(1)
 
@@ -41,10 +42,55 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
 	const {sound: invalidSound} = useSound('invalid.mp3')
 
     const [initialState, setInitialState] = useState({
-        filterMain: 1,
-        filterRating: 1,
         active: false,
         selected: undefined,
+        graphics: [
+            {
+                icon: 'emoticon-excited-outline',
+                color: Blue,
+                percentage: 15,
+                total: 3
+            },
+            {
+                icon: 'emoticon-happy-outline',
+                color: '#69aa46',
+                percentage: 33,
+                total: 5
+            },
+            {
+                icon: 'emoticon-neutral-outline',
+                color: Yellow,
+                percentage: 12,
+                total: 2
+            },
+            {
+                icon: 'emoticon-sad-outline',
+                color: '#ff892a',
+                percentage: 77,
+                total: 6
+            },
+            {
+                icon: 'emoticon-angry-outline',
+                color: '#dd5a43',
+                percentage: 0,
+                total: 0
+            },
+        ],
+        awards: [
+            {
+                id: 1,
+                award: `Televisión de Plasma 54'`,
+            },
+            {
+                id: 2,
+                award: `Disfraz de Santa Claus`,
+            },
+            {
+                id: 3,
+                award: `Kit día del niño`,
+            },
+        ],
+        award_detail: undefined,
         list: [
             {
                 id: 1,
@@ -158,9 +204,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         ],
     })
 
-    const [filteredData, setFilteredData] = useState([])
-
-    const {filterMain, filterRating, active, selected, list, masterData} = initialState
+    const {active, selected, list, masterData, graphics, awards, award_detail} = initialState
  
     useFocusEffect(
         useCallback(() => {
@@ -172,20 +216,6 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         refDynamics.current?.scrollToPosition(0, 0)
     }, [current])
 
-    useEffect(() => {
-        let main = filterMain === 1 ? undefined : filterMain
-        let rating = filterRating === 1 ? undefined : filterRating
-        let finalData = null;
-
-        if(!main && !rating) finalData = masterData;
-        else {
-            if(!main && rating) finalData = masterData.filter(x => (x.selected === rating))
-            else if(main && !rating) finalData = masterData.filter(x => (x.active !== (main - 1)))
-            else finalData = masterData.filter(x => (x.active !== (main - 1) && x.selected === rating))
-        }
-        setFilteredData(finalData)
-    }, [filterMain, filterRating])
-
     const {handleInputChange, values, handleSetState, handleSubmitForm} = useForm({
         question_1: '',
         question_2: '',
@@ -193,14 +223,6 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     })
 
     const {question_1, question_2, question_3} = values
-
-    const handleSave = () => {
-        if(question_1 && question_2){
-            console.log('va a guardar con exito')
-        } else {
-            Alerta()
-        }
-    }
 
     const Alerta = () => {
         Alert.alert(
@@ -221,13 +243,13 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                             picture
                             ?
                                 <Image
-                                    style={tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full border-2 border-[#dadada]`}
+                                    style={[tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full`, {borderWidth: modal ? 1 : 1.5, borderColor: '#dadada'}]}
                                     resizeMode={'cover'}
                                     source={{uri: picture}}
                                 />
                             :
                                 <Image
-                                    style={tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full border-2 border-[#dadada]`}
+                                    style={[tw`h-${modal ? 8 : 12} w-${modal ? 8 : 12} rounded-full`, {borderWidth: modal ? 1 : 1.5, borderColor: '#dadada'}]}
                                     resizeMode={'cover'}
                                     source={require('../../../../../assets/user.png')}
                                 />
@@ -249,7 +271,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     const ItemResponse = ({length, id = 10, name = 'Anónimo', active = active === 1 ? true : false, selected = 3, question_1 = 'Me gustó mucho la manera en la que se llevó acabo el sorteo', question_2 = 'Hacer más sorteos en las dinámicas, eso mótiva a las personas', question_3 = ''}) => {
         let actived = active === 1 ? true : false
         return(
-            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5 ${length === 1 ? isIphone ? 'shadow-xl' : 'shadow' : 'shadow-xl'} m-2 rounded ios:mb-${id === filteredData[filteredData.length - 1].id ? 7.5 : 0}`}>
+            <View style={tw`h-auto self-stretch justify-center items-center my-2 bg-white py-1 px-2.5 shadow m-2 rounded`}>
                 <View style={tw`self-stretch flex-row pt-0.5 justify-center items-center`}>
                     <View style={tw`flex-1 justify-center items-start`}>
                         <Text style={tw`text-[#000] text-sm font-bold`}>{actived ? 'Anónimo' : name}</Text>
@@ -298,6 +320,7 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
     }
 
     const handleScan = ({data}) => {
+        console.log('award_detail: ', award_detail)
         if(isNaN(data) && contador === 0 && !visible && data.length >= 15){
             setVisible(true)
             validSound.play()
@@ -335,6 +358,12 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
         } else Alerta()
     }
 
+    const handleAward = (id, event) => {
+        console.log('id: ', id)
+        setVisibleAwards(!visibleAwards)
+        setInitialState({...initialState, award_detail: {id: id, event: event}})
+    }
+
     return(
         <>
             <StatusBar barStyle={barStyle} backgroundColor={barStyleBackground} />
@@ -362,6 +391,8 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                             dispatch(setType('back'))
                                             dispatch(setFlash('off'))
                                             dispatch(setCurrent(2))
+                                            setVisibleAwards(!visibleAwards)
+                                            setInitialState({...initialState, award_detail: undefined})
                                         }}>
                                             <View style={tw`flex-1 justify-center items-center bg-[rgba(50,131,197,.1)]`}>
                                                 <IonIcons name={'qrcode-scan'} size={28} color={current === 2 ? Blue : '#adadad'} />
@@ -432,77 +463,56 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                             </View>
                                             {
                                                 admin
-                                                &&
+                                                ?
                                                     <>
-                                                        <View style={tw`h-12.5 self-stretch flex-row justify-center items-center mt-6.5 bg-[#f9f9f9] border-t border-t-[#dadada] border-b border-b-[#dadada]`}>
-                                                            <RadioButton 
-                                                                legend={language === '1' ? 'Todos' : 'All'}
-                                                                checked={filterMain === 1 ? true : false}
-                                                                width={0}
-                                                                color={'#777'}
-                                                                handleCheck={() => filterMain !== 1 ? setInitialState({...initialState, filterMain: 1}) : {}}/>
-                                                            <RadioButton 
-                                                                legend={language === '1' ? 'Públicas' : 'Public'}
-                                                                checked={filterMain === 2 ? true : false}
-                                                                width={0}
-                                                                color={'#777'}
-                                                                handleCheck={() => filterMain !== 2 ? setInitialState({...initialState, filterMain: 2}) : {}}/>
-                                                            <RadioButton 
-                                                                legend={language === '1' ? 'Anónimas' : 'Anonymous'}
-                                                                checked={filterMain === 3 ? true : false}
-                                                                width={0}
-                                                                color={'#777'}
-                                                                handleCheck={() => filterMain !== 3 ? setInitialState({...initialState, filterMain: 3}) : {}}/>
-                                                        </View>
-                                                        <View style={tw`h-12.5 self-stretch flex-row justify-center items-center bg-[#f9f9f9] border-b border-b-[#dadada]`}>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 1 ? setInitialState({...initialState, filterRating: 1}) : {}}>
-                                                                <Text style={tw`text-[${filterRating === 1 ? Blue : '#777'}] text-sm font-bold`}>Todos</Text>
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 2 ? setInitialState({...initialState, filterRating: 2}) : {}}>
-                                                                <IonIcons name={'emoticon-angry-outline'} size={26} color={filterRating === 2 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 3 ? setInitialState({...initialState, filterRating: 3}) : {}}>
-                                                                <IonIcons name={'emoticon-sad-outline'} size={26} color={filterRating === 3 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 4 ? setInitialState({...initialState, filterRating: 4}) : {}}>
-                                                                <IonIcons name={'emoticon-neutral-outline'} size={26} color={filterRating === 4 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 5 ? setInitialState({...initialState, filterRating: 5}) : {}}>
-                                                                <IonIcons name={'emoticon-happy-outline'} size={26} color={filterRating === 5 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity style={tw`h-[100%] flex-1 rounded-full justify-center items-center`} onPress={() => filterRating !== 6 ? setInitialState({...initialState, filterRating: 6}) : {}}>
-                                                                <IonIcons name={'emoticon-excited-outline'} size={26} color={filterRating === 6 ? Blue : '#777'} />
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                        <View style={tw`h-auto self-stretch py-2 px-3.5 border-b border-b-[#dadada] bg-[#f7f7f7] justify-center items-center`}>
-                                                            <View style={tw`flex-1 justify-center items-center flex-row`}>
-                                                                <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>Total <Text style={tw`font-normal`}>respuestas: </Text></Text>
-                                                                <Text style={[tw`text-xs text-[#777] font-bold`, {fontSize: 14}]}>{filteredData.length}</Text>
+                                                        <View style={tw`h-auto self-stretch justify-center items-center mt-4`}>
+                                                            <View style={tw`w-[20%] h-12.5 bg-[#FEE59A] rounded border border-[#ECD79A] justify-center items-center`}>
+                                                                <Text style={tw`text-[#996633] text-lg font-bold`}>{hasDecimal ? rated : rated.toString() + '.0'}</Text>
+                                                            </View>
+                                                            <View style={tw`h-auto self-stretch py-1.5 justify-center items-center flex-row`}>
+                                                                <View style={tw`w-7 h-7 justify-center items-center`}>
+                                                                    <IonIcons name={rated >= 1 ? 'star' : rated >= 0.5 ? 'star-half-full' : 'star-outline'} size={21} color={'#FEB902'} />
+                                                                </View>
+                                                                <View style={tw`w-7 h-7 justify-center items-center`}>
+                                                                    <IonIcons name={rated >= 2 ? 'star' : rated >= 1.5 ? 'star-half-full' : 'star-outline'} size={21} color={'#FEB902'} />
+                                                                </View>
+                                                                <View style={tw`w-7 h-7 justify-center items-center`}>
+                                                                    <IonIcons name={rated >= 3 ? 'star' : rated >= 2.5 ? 'star-half-full' : 'star-outline'} size={21} color={'#FEB902'} />
+                                                                </View>
+                                                                <View style={tw`w-7 h-7 justify-center items-center`}>
+                                                                    <IonIcons name={rated >= 4 ? 'star' : rated >= 3.5 ? 'star-half-full' : 'star-outline'} size={21} color={'#FEB902'} />
+                                                                </View>
+                                                                <View style={tw`w-7 h-7 justify-center items-center`}>
+                                                                    <IonIcons name={rated >= 5 ? 'star' : rated >= 4.5 ? 'star-half-full' : 'star-outline'} size={21} color={'#FEB902'} />
+                                                                </View>
                                                             </View>
                                                         </View>
-                                                    </>
-                                            }
-
-                                            {
-                                                admin
-                                                ?
-                                                    filteredData.length > 0
-                                                    ?
-                                                        filteredData.map(x => <>
-                                                                <View style={tw`h-3 self-stretch justify-center items-center px-3 android:mt-${x.id === filteredData[0].id ? 2.5 : 0} ios:mt-2.5`}>
-                                                                    {/* <View style={tw`h-0.5 self-stretch bg-[#dadada] justify-center items-center border border-[#adadad] rounded`} /> */}
+                                                        {
+                                                            graphics.map(x => 
+                                                                <View style={tw`h-10 self-stretch justify-center items-center`}>
+                                                                    <View style={tw`h-auto self-stretch justify-center items-center flex-row pr-6 pl-2`}>
+                                                                        <View style={tw`w-12 h-10 justify-center items-center`}>
+                                                                            <IonIcons name={x.icon} size={25} color={x.color} />
+                                                                        </View>
+                                                                        <View style={tw`flex-1 justify-start items-start`}>
+                                                                            <View style={tw`h-[50%] w-[100%] bg-[#e9e9e9]`}>
+                                                                                <View style={tw`h-[100%] w-[${x.percentage + '%'}] bg-[${x.color}] absolute justify-center items-center`}>
+                                                                                    {
+                                                                                        x.total > 0
+                                                                                        &&
+                                                                                            <Text style={[tw`text-[#fff] font-bold`, {fontSize: 10}]}>{x.total}</Text>
+                                                                                    }
+                                                                                </View>
+                                                                            </View>
+                                                                        </View>
+                                                                    </View>
                                                                 </View>
-                                                                <ItemResponse length={filteredData.length} {...x}/>
-                                                            </>
-                                                        )
-                                                    :
-                                                        <View style={tw`flex-1 h-30 justify-center items-center mt-3`}>
-                                                            <Image 
-                                                                style={tw`h-25 w-25`}
-                                                                resizeMode={'cover'}
-                                                                source={{uri: 'https://static.vecteezy.com/system/resources/previews/004/968/520/non_2x/about-me-button-member-registration-complete-personal-data-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-etc-vector.jpg'}}
-                                                            />
+                                                            )
+                                                        }
+                                                        <View style={tw`h-auto self-stretch py-1 justify-center items-center`}>
+                                                            <Text style={tw`text-[#777] font-bold`}>{`${comments}`}<Text style={tw`font-normal`}> Calificaciones</Text></Text>
                                                         </View>
+                                                    </>
                                                 :
                                                     <></>
                                             }
@@ -626,6 +636,14 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                                 <TouchableOpacity style={tw`w-12.5 h-[100%] justify-center items-center`} onPress={() => dispatch(setCurrent(1))}>
                                     <IonIcons name={'arrow-left-circle'} size={26} color={'#fff'} />
                                 </TouchableOpacity>
+                                <View style={tw`flex-1 justify-center items-center`}>
+                                    <View style={tw`w-auto h-auto py-0.5 px-1.5 bg-[rgba(255,255,255,0.4)] rounded`}>
+                                        <Text style={tw`text-base text-[#fff] font-bold`}>{award_detail ? award_detail.event : '---'}</Text>
+                                    </View>
+                                </View>
+                                <View style={tw`w-12.5 h-[100%] justify-center items-center`}>
+                                    <IonIcons name={'arrow-left-circle'} size={26} color={'transparent'} />
+                                </View>
                             </View>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 50}}>
                                 {
@@ -717,6 +735,20 @@ export default ({navigation, route: {params: {title, description, image, hasQR, 
                         </RNCamera>
                 }
             </View>
+            <Modal visibility={visibleAwards} except={false}>
+                {
+                    awards.map(x =>
+                        <TouchableOpacity style={tw`h-12.5 self-stretch justify-start items-center flex-row`} key={x.id} onPress={() => handleAward(x.id, x.award)}>
+                            <View style={tw`w-6 h-10 justify-center items-center`}>
+                                <IonIcons name={'circle-slice-8'} size={14} color={Blue} />
+                            </View>
+                            <View style={tw`flex-1 justify-center items-start ml-3`}>
+                                <Text style={tw`text-lg text-[#000]`}>{x.award}</Text>
+                            </View>
+                        </TouchableOpacity>    
+                    )
+                }
+            </Modal>
         </>
     )
 }

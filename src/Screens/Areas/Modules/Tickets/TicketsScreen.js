@@ -525,7 +525,7 @@ export default ({navigation}) => {
         return(
             permissions.nuevo_ticket
             ?
-                <View style={tw`h-12.5 self-stretch flex-row border-b border-t border-[${Blue}] bg-[#fff]`}>
+                <View style={[tw`h-12.5 self-stretch flex-row border-t border-[${Blue}] bg-[#fff]`, {borderBottomWidth: 0.8}]}>
                     {
                         permissions.tickets
                         ?

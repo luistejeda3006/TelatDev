@@ -151,12 +151,12 @@ export default ({navigation}) => {
                         <>
                             <HeaderPortrait title={language === '1' ? 'Mis Checadas' : 'My Check-Ins'} screenToGoBack={'Dashboard'} navigation={navigation} visible={true} normal={true}/>
                             <View style={tw`w-[100%] h-auto`}>
-                                <View style={tw`h-14 self-stretch flex-row border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
+                                <View style={[tw`h-14 self-stretch flex-row border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`, {borderBottomWidth: 0.8}]}>
                                     <View style={tw`flex-1 flex-row justify-start items-center`}>
                                         <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
                                             <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
                                         </TouchableOpacity>
-                                        <Text style={{color: Blue}}> | </Text>
+                                        <Text style={{color: '#adadad'}}> | </Text>
                                         <TouchableOpacity onPress={() => current !== 2 && setInitialState({...initialState, current: 2})} style={tw`h-[100%] w-auto pl-2 pr-1.5 justify-center items-center`}>
                                             <Text style={tw`font-bold text-lg text-[${current === 2 ? Blue : '#adadad'}]`}>{mes === 1 ? language === '1' ? 'Enero' : 'January' : mes === 2 ? language === '1' ? 'Febrero' : 'February' : mes === 3 ? language === '1' ? 'Marzo' : 'March' : mes === 4 ? language === '1' ? 'Abril' : 'April' : mes === 5 ? language === '1' ? 'Mayo' : 'May' : mes === 6 ? language === '1' ? 'Junio' : 'June' : mes === 7 ? language === '1' ? 'Julio' : 'July' : mes === 8 ? language === '1' ? 'Agosto' : 'August' : mes === 9 ? language === '1' ? 'Septiembre' : 'September' : mes === 10 ? language === '1' ? 'Octubre' : 'October' : mes === 11 ? language === '1' ? 'Noviembre' : 'November' : language === '1' ? 'Diciembre' : 'December'}</Text>
                                         </TouchableOpacity>

@@ -140,6 +140,7 @@ export default ({navigation}) => {
     useEffect(() => {
         refGaceta.current?.scrollToOffset({ animated: true, offset: 0 })
         let temporal = active === 1 ? data.importante : active === 2 ? data.informativo : active === 3 ? data.dinamicas : data.promociones
+        console.log('temporal: ', temporal)
         setGaceta(temporal)
     }, [active, data])
 
@@ -169,9 +170,9 @@ export default ({navigation}) => {
     })
 
 
-    const Card = ({title, picture, w, h}) => {
+    const Card = ({id, title, picture, w, h}) => {
         return(
-            <Animatable.View style={{flex: 1, alignSelf: 'stretch', borderColor: '#CBCBCB', borderWidth: 1, marginBottom: 5}} animation='pulse' duration={2000}>
+            <Animatable.View style={{flex: 1, alignSelf: 'stretch', borderColor: '#CBCBCB', borderWidth: 1, marginBottom: id === gaceta.length ? 20 : 5}} animation='pulse' duration={2000}>
                 { 
                     <>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -198,32 +199,36 @@ export default ({navigation}) => {
     const Header = () => {
         return(
             <View style={{height: 'auto', alignSelf: 'stretch'}}>
-                <View style={{height: 50, alignSelf: 'stretch', flexDirection: 'row', borderColor: '#3283c5', borderTopWidth: 1, borderBottomWidth: 1, backgroundColor: 'rgba(50,131,197,.1)'}}>
+                <View style={{height: 65, alignSelf: 'stretch', flexDirection: 'row', borderColor: Blue, borderBottomWidth: 0.8, backgroundColor: 'rgba(50,131,197,.1)'}}>
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 1 && handleChangeModule(1)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                                <IonIcons name='alert' size={28} color={active === 1 ? '#3283c5' : '#c1c1c1'} />
+                                <IonIcons name='alert' size={28} color={active === 1 ? Blue : '#c1c1c1'} />
+                                <Text style={tw`text-xs text-[${active === 1 ? Blue : '#c1c1c1'}] font-bold mt-0.5`}>Importante</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 2 && handleChangeModule(2)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                                <IonIcons name='information' size={28} color={active === 2 ? '#3283c5' : '#c1c1c1'} />
+                                <IonIcons name='information' size={28} color={active === 2 ? Blue : '#c1c1c1'} />
+                                <Text style={tw`text-xs text-[${active === 2 ? Blue : '#c1c1c1'}] font-bold mt-0.5`}>Informativo</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 3 && handleChangeModule(3)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                                <IonIcons name={'bullseye-arrow'} size={28} color={active === 3 ? '#3283c5' : '#c1c1c1'} />
+                                <IonIcons name={'bullseye-arrow'} size={28} color={active === 3 ? Blue : '#c1c1c1'} />
+                                <Text style={tw`text-xs text-[${active === 3 ? Blue : '#c1c1c1'}] font-bold mt-0.5`}>Dinámicas</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
                     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                         <TouchableWithoutFeedback onPress={() => active !== 4 && handleChangeModule(4)}>
                             <View style={{flex:1, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}>
-                                <IonIcons name='trophy' size={28} color={active === 4 ? '#3283c5' : '#c1c1c1'} />
+                                <IonIcons name='trophy' size={28} color={active === 4 ? Blue : '#c1c1c1'} />
+                                <Text style={tw`text-xs text-[${active === 4 ? Blue : '#c1c1c1'}] font-bold mt-0.5`}>Promociones</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -232,7 +237,7 @@ export default ({navigation}) => {
                     {
                         !hide
                         &&
-                            <View style={tw`h-14 self-stretch flex-row border-b border-b-[#adadad] bg-white border-b border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`}>
+                            <View style={[tw`h-14 self-stretch flex-row border-b border-b-[#adadad] bg-white border-b-[${Blue}] bg-[rgba(50,131,197,.1)]`, {borderBottomWidth: 1}]}>
                                 <View style={tw`flex-1 flex-row justify-start items-center`}>
                                     <TouchableOpacity onPress={() => current !== 1 && setInitialState({...initialState, current: 1})} style={tw`h-[100%] w-16 px-1.5 justify-center items-center`}>
                                         <Text style={tw`font-bold text-lg text-[${current === 1 ? Blue : '#adadad'}]`}>{`${año}`}</Text>
@@ -267,9 +272,6 @@ export default ({navigation}) => {
                                 </View>
                             </View>
                     }
-                    <View style={tw`h-auto self-stretch justify-center items-center border-b border-b-[${Blue}] bg-[${Blue}] py-0.5`}>
-                        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 13}}>{active === 1 ? language === '1' ? 'Importante' : 'Important' : active === 2 ? language === '1' ? 'Informativo' : 'Informative' : active === 3 ? language === '1' ? 'Dinámicas' : 'Dinamics' : language === '1' ? 'Promociones' : 'Promotions'}</Text>
-                    </View>
                 </View>
             </View>
         )
@@ -300,7 +302,7 @@ export default ({navigation}) => {
                                                     showsHorizontalScrollIndicator={false}
                                                     style={styles.list}
                                                     data={gaceta}
-                                                    renderItem={({item}) => <Card title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
+                                                    renderItem={({item}) => <Card id={item.id} title={item.gaceta_titulo} picture={item.gaceta_img_url} w={item.width} h={item.height}/>}
                                                     keyExtractor={item => String(item.id_gaceta)}
                                                     key={'_G'}
                                                 />

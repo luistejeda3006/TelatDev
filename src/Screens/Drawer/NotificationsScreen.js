@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, FlatList, StatusBar, SafeAreaView, Image, TouchableOpacity} from 'react-native';
-import {HeaderPortrait, HeaderLandscape, FailedNetwork, BottomNavBar} from '../../components';
+import {HeaderPortrait, HeaderLandscape, FailedNetwork} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useConnection, useNavigation} from '../../hooks'
 import {BallIndicator} from 'react-native-indicators';
@@ -9,14 +9,16 @@ import messaging from '@react-native-firebase/messaging'
 import {barStyle, barStyleBackground, Orange, SafeAreaBackground} from '../../colors/colorsApp';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectLanguageApp, selectTokenInfo, setNotification} from '../../slices/varSlice';
+import {selectLanguageApp, selectNotification, selectTokenInfo, setNotification} from '../../slices/varSlice';
 import {selectOrientation} from '../../slices/orientationSlice';
 import tw from 'twrnc';
 
 let token = null;
 let lastNotify = 'lastNotify';
+let arrived = null;
 
 export default ({navigation, route: {params: {origin = 1}}}) => {
+    arrived = useSelector(selectNotification)
     const dispatch = useDispatch()
     const language = useSelector(selectLanguageApp)
     const orientation = useSelector(selectOrientation)
@@ -75,7 +77,7 @@ export default ({navigation, route: {params: {origin = 1}}}) => {
 
     useEffect(() => {
         getNotificaciones()
-    },[hasConnection])
+    },[hasConnection, arrived])
 
     const reloading = () => {
         setLoading(true)
